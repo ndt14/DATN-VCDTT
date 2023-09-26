@@ -12,8 +12,7 @@ class TourController extends Controller
      */
     public function index()
     {
-        $tour = Tour::all();
-        return  $tour;
+        
     }
     /**
      * Show the form for creating a new resource.
