@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TourController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TourController;
@@ -27,3 +28,4 @@ Route::prefix('admin')->group(function () {
     Route::put('/tour-edit/{id}', [TourController::class, 'update']);
     Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
 });
+
