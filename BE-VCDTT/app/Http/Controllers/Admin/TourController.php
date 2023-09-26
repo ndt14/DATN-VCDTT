@@ -30,7 +30,8 @@ class TourController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tour = Tour::create($request->all());
+        return new TourResource($tour);
     }
 
     /**
