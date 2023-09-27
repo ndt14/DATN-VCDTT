@@ -22,7 +22,7 @@ return new class extends Migration
             $table->tinyInteger('gender');
             $table->text('image');
             $table->timestamp('email_verified_at')->nullable();
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->tinyInteger('is_admin');
             $table->softDeletes();
             $table->rememberToken();

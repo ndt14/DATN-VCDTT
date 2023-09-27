@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\FAQ;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\FAQResource;
 
 class FAQController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   public function index()
     {
         //
+        $faq = FAQ::all();
+        return FAQResource::collection($faq);
     }
 
     /**
@@ -20,7 +21,8 @@ class FAQController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $faq = FAQ::create($request->all());
+        return new FAQResource($faq);
     }
 
     /**
@@ -29,6 +31,12 @@ class FAQController extends Controller
     public function show(string $id)
     {
         //
+        $faq = FAQ::find($id);
+        if($faq){
+            return new FAQResource($faq);
+        }else{
+            return response()->json(['message'=>'FAQ không tồn tại'],404);
+        }
     }
 
     /**
@@ -37,6 +45,12 @@ class FAQController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $faq = FAQ::find($id);
+        if($faq){
+            $faq->update($request->all());
+        }else{
+            return response()->json(['message'=>"FAQ không tồn tại"],404);
+        }
     }
 
     /**
@@ -45,5 +59,12 @@ class FAQController extends Controller
     public function destroy(string $id)
     {
         //
+        $faq = FAQ::find($id);
+        if($faq){
+            $faq->delete();
+            return response()->json(['message'=>"Xóa thành công"],200);
+        }else{
+            return response()->json(['message'=>"FAQ không tồn tại"],404);
+        }
     }
 }

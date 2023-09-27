@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tour;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TourResource;
 
 class TourController extends Controller
 {
@@ -13,6 +15,8 @@ class TourController extends Controller
     public function index()
     {
         //
+        $tour = Tour::all();
+        return TourResource::collection($tour);
     }
 
     /**
@@ -30,6 +34,12 @@ class TourController extends Controller
     public function show(string $id)
     {
         //
+        $tour = Tour::find($id);
+        if($tour){
+            return new TourResource($tour);
+        }else{
+            return response()->json(['message'=>'Tour không tồn tại'],404);
+        }
     }
 
     /**
@@ -38,6 +48,12 @@ class TourController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $tour = Tour::find($id);
+        if($tour){
+            $tour->update($request->all());
+        }else{
+            return response()->json(['message'=>"Tour không tồn tại"],404);
+        }
     }
 
     /**
@@ -46,5 +62,12 @@ class TourController extends Controller
     public function destroy(string $id)
     {
         //
+        $tour = Tour::find($id);
+        if($tour){
+            $tour->delete();
+            return response()->json(['message'=>"Xóa thành công"],200);
+        }else{
+            return response()->json(['message'=>"Tour không tồn tại"],404);
+        }
     }
 }
