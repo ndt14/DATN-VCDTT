@@ -58,6 +58,7 @@ class TourRequest extends FormRequest
                 'main_img.required' => 'Ảnh chính của tour không được để trống',
                 'status.required' => 'Trạng thái tour không được để trống',
                 'view_count.required' => 'Số lượt xem không được để trống',
+
             ];
     }
 }

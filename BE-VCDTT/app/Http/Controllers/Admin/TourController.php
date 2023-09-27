@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Tour;
-use App\Models\Image;
-use App\Models\Coupon;
-use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TourResource;
-use App\Http\Resources\ImageResource;
-use App\Http\Resources\CouponResource;
+use App\Http\Requests\TourRequest;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CouponResource;
+use App\Http\Resources\ImageResource;
+use App\Http\Resources\TourResource;
+use App\Models\Category;
+use App\Models\Coupon;
+use App\Models\Image;
+use App\Models\Tour;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
 {
@@ -21,8 +23,6 @@ class TourController extends Controller
     public function index()
     {
         //
-        $tour = Tour::all();
-        return TourResource::collection($tour);
     }
 
     /**
@@ -39,7 +39,6 @@ class TourController extends Controller
      */
     public function show(string $id)
     {
-        //
         // get all data from table catalog
         $listCate = Category::select('categories.id as idCat', 'categories.name as catName', 'categories.parent_id as parentId')->get();
         // get all data from table images
@@ -109,29 +108,51 @@ class TourController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'duration' => 'required',
+            'child_price' => 'required',
+            'adult_price' => 'required',
+            'sale_percentage' => 'required',
+            'start_destination' => 'required',
+            'end_destination' => 'required',
+            'tourist_count' => 'required',
+            'details' => 'required',
+            'location' => 'required',
+            'exact_location' => 'required',
+            'main_img' => 'required',
+            'status' => 'required',
+            'view_count' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $input = $request->except('_token');
+
         $tour = Tour::find($id);
-        if ($tour) {
-            $tour->update($request->all());
+        if (!$tour) {
+            return response()->json(['message' => 'Không tìm thấy tour'], 404);
+        }
+
+        $tour->fill($input);
+
+        if ($tour->save()) {
+            $updatedTour = Tour::find($id);
+            return response()->json(['message' => 'Cập nhật tour thành công', 'statusCode' => 200, 'object' => $updatedTour]);
         } else {
-            return response()->json(['message' => "Tour không tồn tại"], 404);
+            return response()->json(['message' => 'Cập nhật tour thất bại'], 500);
         }
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         //
-        $tour = Tour::find($id);
-        if ($tour) {
-            $tour->delete();
-            return response()->json(['message' => "Xóa thành công"], 200);
-        } else {
-            return response()->json(['message' => "Tour không tồn tại"], 404);
-        }
     }
 }
