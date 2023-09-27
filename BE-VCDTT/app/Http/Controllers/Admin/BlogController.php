@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Blog;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\BlogResource;
 
 class BlogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+   public function index()
     {
         //
+
     }
 
     /**
@@ -20,7 +20,7 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -29,6 +29,7 @@ class BlogController extends Controller
     public function show(string $id)
     {
         //
+
     }
 
     /**
@@ -37,6 +38,7 @@ class BlogController extends Controller
     public function update(Request $request, string $id)
     {
         //
+
     }
 
     /**
@@ -45,5 +47,6 @@ class BlogController extends Controller
     public function destroy(string $id)
     {
         //
+
     }
 }
