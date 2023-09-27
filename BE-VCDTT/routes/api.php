@@ -2,12 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TourController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,7 @@ use App\Http\Controllers\Admin\CategoryController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::prefix('admin')->group(function () {
     // Tour management
     Route::get('/tour', [TourController::class, 'index']);
@@ -30,6 +34,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
     Route::put('/tour-edit/{id}', [TourController::class, 'update']);
     Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
+
 
     //Blog
     Route::get('/blog', [BlogController::class, 'index']);
@@ -65,4 +70,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/user-show/{id}', [UserController::class, 'show']);
     Route::put('/user-edit/{id}', [UserController::class, 'update']);
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
+
 });
