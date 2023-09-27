@@ -18,7 +18,7 @@ class PurchaseHistorySeeder extends Seeder
         $faker = Factory::create();
         for ($i = 1; $i < 20; $i++) {
             DB::table('purchase_histories')->insert([
-                'user_id' => $faker->randomDigit(),
+                'user_id' => $faker->numberBetween(1,20),
                 'user_info' => $faker->sentence(),
                 'tour_name' => $faker->word(),
                 'tour_duration' => $faker->randomDigit(),

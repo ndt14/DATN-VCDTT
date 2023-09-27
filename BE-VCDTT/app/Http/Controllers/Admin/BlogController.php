@@ -12,8 +12,7 @@ class BlogController extends Controller
    public function index()
     {
         //
-        $blog = Blog::all();
-        return BlogResource::collection($blog);
+
     }
 
     /**
@@ -21,8 +20,7 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $blog = Blog::create($request->all());
-        return new BlogResource($blog);
+
     }
 
     /**
@@ -31,12 +29,7 @@ class BlogController extends Controller
     public function show(string $id)
     {
         //
-        $blog = Blog::find($id);
-        if($blog){
-            return new BlogResource($blog);
-        }else{
-            return response()->json(['message'=>'Blog không tồn tại'],404);
-        }
+
     }
 
     /**
@@ -45,12 +38,7 @@ class BlogController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $blog = Blog::find($id);
-        if($blog){
-            $blog->update($request->all());
-        }else{
-            return response()->json(['message'=>"Blog không tồn tại"],404);
-        }
+
     }
 
     /**
@@ -59,12 +47,6 @@ class BlogController extends Controller
     public function destroy(string $id)
     {
         //
-        $blog = Blog::find($id);
-        if($blog){
-            $blog->delete();
-            return response()->json(['message'=>"Xóa thành công"],200);
-        }else{
-            return response()->json(['message'=>"Blog không tồn tại"],404);
-        }
+
     }
 }

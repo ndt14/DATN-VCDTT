@@ -12,8 +12,7 @@ class CategoryController extends Controller
    public function index()
     {
         //
-        $category = Category::all();
-        return CategoryResource::collection($category);
+
     }
 
     /**
@@ -21,8 +20,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
-        return new CategoryResource($category);
+
     }
 
     /**
@@ -31,12 +29,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         //
-        $category = Category::find($id);
-        if($category){
-            return new CategoryResource($category);
-        }else{
-            return response()->json(['message'=>'Danh mục không tồn tại'],404);
-        }
+
     }
 
     /**
@@ -45,12 +38,7 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $category = Category::find($id);
-        if($category){
-            $category->update($request->all());
-        }else{
-            return response()->json(['message'=>"Danh mục không tồn tại"],404);
-        }
+
     }
 
     /**
@@ -59,12 +47,6 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         //
-        $category = Category::find($id);
-        if($category){
-            $category->delete();
-            return response()->json(['message'=>"Xóa thành công"],200);
-        }else{
-            return response()->json(['message'=>"Category không tồn tại"],404);
-        }
+
     }
 }

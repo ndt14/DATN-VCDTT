@@ -12,8 +12,7 @@ class UserController extends Controller
    public function index()
     {
         //
-        $user = User::all();
-        return UserResource::collection($user);
+
     }
 
     /**
@@ -21,8 +20,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-        return new UserResource($user);
+
     }
 
     /**
@@ -31,12 +29,6 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
-        $user = User::find($id);
-        if($user){
-            return new UserResource($user);
-        }else{
-            return response()->json(['message'=>'User không tồn tại'],404);
-        }
     }
 
     /**
@@ -45,12 +37,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $user = User::find($id);
-        if($user){
-            $user->update($request->all());
-        }else{
-            return response()->json(['message'=>"User không tồn tại"],404);
-        }
+
     }
 
     /**
@@ -59,12 +46,6 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-        $user = User::find($id);
-        if($user){
-            $user->delete();
-            return response()->json(['message'=>"Xóa thành công"],200);
-        }else{
-            return response()->json(['message'=>"User không tồn tại"],404);
-        }
+
     }
 }
