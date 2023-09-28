@@ -38,6 +38,26 @@ class TourController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function add()
+    {
+        $listCate = Category::select('id', 'name', 'parent_id')
+        ->get();
+        // get all data from table images
+        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
+        ->get();
+        // get all data from table coupon
+        $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
+        ->where('coupons.status', 1)
+        ->get();
+        return response()->json(
+            [
+                'dataCategories' => CategoryResource::collection($listCate),
+                'dataImages' => ImageResource::collection($listImage),
+                'dataCoupons' => CouponResource::collection($listCoupon),
+            ], 200
+        );
+    }
+
     public function store(Request $request)
     {
         $tour = Tour::create($request->all());
