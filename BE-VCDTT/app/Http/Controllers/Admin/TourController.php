@@ -38,6 +38,26 @@ class TourController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function add()
+    {
+        $listCate = Category::select('id', 'name', 'parent_id')
+        ->get();
+        // get all data from table images
+        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
+        ->get();
+        // get all data from table coupon
+        $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
+        ->where('coupons.status', 1)
+        ->get();
+        return response()->json(
+            [
+                'dataCategories' => CategoryResource::collection($listCate),
+                'dataImages' => ImageResource::collection($listImage),
+                'dataCoupons' => CouponResource::collection($listCoupon),
+            ], 200
+        );
+    }
+
     public function store(Request $request)
     {
         $tour = Tour::create($request->all());
@@ -50,58 +70,24 @@ class TourController extends Controller
     public function show(string $id)
     {
         // get all data from table catalog
-        $listCate = Category::select('categories.id as idCat', 'categories.name as catName', 'categories.parent_id as parentId')->get();
+        $listCate = Category::select('id', 'name', 'parent_id')
+        ->get();
         // get all data from table images
-        $listImage = Image::select(
-            'images.id as idImage',
-            'images.name as nameImage',
-            'images.type as typeImage',
-            'images.url as urlImage',
-            'images.tour_id as tourId',
-            'images.blog_id as blogId'
-        )->get();
+        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
+        ->get();
         // get all data from table coupon
-        $listCoupon = Coupon::select(
-            'coupons.id as idCoupon',
-            'coupons.name as nameCoupon',
-            'coupons.description as descCoupon',
-            'coupons.start_date as startDate',
-            'coupons.end_date as endDate',
-            'coupons.tour_id as idTour',
-            'coupons.cate_id as idCate',
-            'coupons.percentage_price as percentagePrice',
-            'coupons.fixed_price as fixedPrice',
-            'coupons.status'
-        )->get();
+        $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
+        ->where('coupons.status', 1)
+        ->get();
         // get info tour by id
         $tour = Tour::join('images', 'tours.main_img', '=', 'images.id')
-            ->join('coupons', 'coupons.tour_id', '=', 'tours.id')
             ->join('tours_to_categories', 'tours_to_categories.tour_id', '=', 'tours.id')
-            ->join('categories', 'categories.id', '=', 'tours_to_categories.cate_id')
-            ->select(
-                'tours.name as tourName',
-                'tours.duration',
-                'tours.child_price as childPrice',
-                'tours.adult_price as adultPrice',
-                'tours.sale_percentage as salePercentage',
-                'tours.start_destination as startDestination',
-                'tours.end_destination as endDestination',
-                'tours.tourist_count as touristCount',
-                'tours.details',
-                'tours.location',
-                'tours.exact_location as exactLocation',
-                'tours.main_img as mainImg',
-                'tours.status',
-                'tours.view_count as viewCount',
-                'tours.created_at as createdAt',
-                'tours.updated_at as updateAt',
-                'images.url as urlImage',
-                'coupons.name as couponName',
-                'categories.name as cateName'
-            )
+            ->select( 'name', 'duration', 'child_price', 'adult_price', 'sale_percentage', 'start_destination', 'end_destination', 'tourist_count',
+            'details', 'location', 'exact_locatio', 'main_img', 'status',
+            'categories.id as cateID')
             ->findOrFail($id);
         if (!$tour) {
-            return response()->json(['message' => '404 Not Found', 'statusCode' => 404]);
+            return response()->json(['message' => '404 Not Found'], 404);
         }
         return response()->json(
             [
@@ -109,8 +95,7 @@ class TourController extends Controller
                 'dataCategories' => CategoryResource::collection($listCate),
                 'dataImages' => ImageResource::collection($listImage),
                 'dataCoupons' => CouponResource::collection($listCoupon),
-                'statusCode' => 200
-            ]
+            ], 200
         );
     }
 
