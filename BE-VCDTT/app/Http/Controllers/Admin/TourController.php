@@ -24,15 +24,24 @@ class TourController extends Controller
     public function index(Request $request)
     {
         // Tích hợp tìm kiếm
-        $keyword = trim($request()->keyword);
+        if(!empty($request->keyword)){
+            $keyword = trim($request->keyword);
+        }
+        // $keyword = null;
         $sql_where ='';
         // $sql_where=' AND delete_at IS NULL';
         if(!empty($keyword)){
-            $sql_where .= ' AND tour_name LIKE %{$keyword}%';
+            $sql_where .= 'name LIKE %{$keyword}%';
         }
-         $sql_order =' ORDER BY DESC';
-         $sql_limit =' LIMIT 9';
-        $tour = DB::select('select * from tours where 1'.$sql_where.$sql_order.$sql_limit);
+        $sql_order ='name';
+        $sql_limit =5;
+        $tours = Tour::select('id','name', 'duration', 'child_price', 'adult_price', 'sale_percentage', 'start_destination',
+        'end_destination', 'tourist_count','details', 'location', 'exact_location', 'main_img', 'status')
+        ->where('name','LIKE','%'.$keyword.'%')->orderBy($sql_order)->limit($sql_limit)->get();
+        return response()->json(
+        ['dataTours' => TourResource::collection($tours),
+        ], 200
+        );
     }
 
     /**
