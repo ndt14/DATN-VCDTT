@@ -16,18 +16,20 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //
-        $check = DB::table('users')->where('id',1)->first();
-        if(isset($check->name)){
-            User::factory()->count(5)->create();
-        }else{
+        $faker = Factory::create();
+        for ($i = 1; $i < 20; $i++) {
             DB::table('users')->insert([
-                'name' => 'admin',
-                'email' => 'admin@gmail.com',
-                'phone'=> '0932284064',
-                'address' => 'Hà Nội',
-                'role' => '1',
-                'password' => Hash::make('123456'),
-        ]);
+                'name' => 'dcm' . $i,
+                'email' => $faker->email(),
+                'password' => $faker->password(),
+                'phone_number' => $faker->phoneNumber(),
+                'date_of_birth' => $faker->date(),
+                'address' => $faker->address(),
+                'gender' => $faker->numberBetween(1,3),
+                'image' => $faker->image(null, 640, 480),
+                'status' => 1,
+                'is_admin' => $faker->numberBetween(1,2),
+            ]);
         }
     }
 }
