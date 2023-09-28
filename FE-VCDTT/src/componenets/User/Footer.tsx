@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer id="colophon" className="site-footer footer-primary">
@@ -6,7 +8,7 @@ const Footer = () => {
           <div className="row">
             <div className="col-lg-3 col-md-6">
               <aside className="widget widget_text">
-                <h3 className="widget-title">About Travel</h3>
+                <h3 className="widget-title">Về VCDTT</h3>
                 <div className="textwidget widget-text">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
                   elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus
@@ -24,7 +26,7 @@ const Footer = () => {
             </div>
             <div className="col-lg-3 col-md-6">
               <aside className="widget widget_text">
-                <h3 className="widget-title">CONTACT INFORMATION</h3>
+                <h3 className="widget-title">THÔNG TIN LIÊN HỆ</h3>
                 <div className="textwidget widget-text">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   <ul>
@@ -55,7 +57,7 @@ const Footer = () => {
             </div>
             <div className="col-lg-3 col-md-6">
               <aside className="widget widget_recent_post">
-                <h3 className="widget-title">Latest Post</h3>
+                <h3 className="widget-title">BÀI VIẾT MỚI NHẤT</h3>
                 <ul>
                   <li>
                     <h5>
@@ -90,13 +92,13 @@ const Footer = () => {
             </div>
             <div className="col-lg-3 col-md-6">
               <aside className="widget widget_newslatter">
-                <h3 className="widget-title">SUBSCRIBE US</h3>
+                <h3 className="widget-title">ĐĂNG KÝ</h3>
                 <div className="widget-text">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </div>
                 <form className="newslatter-form">
-                  <input type="email" name="s" placeholder="Your Email.." />
-                  <input type="submit" name="s" value="SUBSCRIBE NOW" />
+                  <input type="email" name="s" placeholder="Email của bạn.." />
+                  <input type="submit" name="s" value="ĐĂNG KÝ NGAY" />
                 </form>
               </aside>
             </div>
@@ -110,27 +112,27 @@ const Footer = () => {
               <div className="footer-menu">
                 <ul>
                   <li>
-                    <a href="#">Privacy Policy</a>
+                    <a href="#">Chính sách riêng tư</a>
                   </li>
                   <li>
-                    <a href="#">Term & Condition</a>
+                    <a href="#">Thỏa thuận sử dụng</a>
                   </li>
                   <li>
-                    <a href="#">FAQ</a>
+                    <Link to="faqs">FAQ</Link>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="col-md-2 text-center">
               <div className="footer-logo">
-                <a href="#">
+                <Link to="">
                   <img src="assets/images/travele-logo.png" alt="" />
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-md-5">
               <div className="copy-right text-right">
-                Copyright © 2021 Travele. All rights reserveds
+                Copyright © 2023 VCDTT. All rights reserveds
               </div>
             </div>
           </div>
