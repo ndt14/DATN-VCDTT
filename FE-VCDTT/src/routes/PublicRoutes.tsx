@@ -2,7 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/admin/Dashboard";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import LayOutClient from "../layouts/LayOutClient";
-import {HomePage, BlogDetail, BlogsPage, ContactPage, FaqsPage, NotFoundPage, TourDetail } from "../pages/user";
+import ScrollToTop from "../hooks/ScrollToTop";
+import {
+  HomePage,
+  BlogDetail,
+  BlogsPage,
+  ContactPage,
+  FaqsPage,
+  NotFoundPage,
+  TourDetail,
+} from "../pages/user";
 
 const PublicRoutes = () => {
   return (
@@ -15,7 +24,7 @@ const PublicRoutes = () => {
         <Route path="about" element={<HomePage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="blogs" element={<BlogsPage />} />
-        <Route path="blogs/:id" element={<BlogDetail/>} />
+        <Route path="blogs/:id" element={<BlogDetail />} />
         <Route path="faqs" element={<FaqsPage />} />
         <Route path="wish_lists" element={<HomePage />} />
         <Route path="purchase_histories" element={<HomePage />} />
@@ -28,7 +37,7 @@ const PublicRoutes = () => {
         <Route index element={<Dashboard />} />
       </Route>
 
-      
+      <Route path="*" element={<NotFoundPage />}></Route>
     </Routes>
   );
 };
