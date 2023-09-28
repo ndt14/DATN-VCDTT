@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/admin/Dashboard";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import LayOutClient from "../layouts/LayOutClient";
-import ScrollToTop from "../hooks/ScrollToTop";
+// import ScrollToTop from "../hooks/ScrollToTop";
 import {
   HomePage,
   BlogDetail,
