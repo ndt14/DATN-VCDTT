@@ -162,6 +162,12 @@ class TourController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $tour = Tour::find($id);
+        if ($tour) {
+            $tour->delete(); // soft delete
+            return response()->json(['message' => 'Xóa thành công'], 200);
+        } else {
+            return response()->json(['message' => 'Tour không tồn tại'], 404);
+        }
     }
 }

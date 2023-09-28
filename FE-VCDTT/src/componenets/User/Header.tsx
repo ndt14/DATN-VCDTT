@@ -1,5 +1,6 @@
 const Header = () => {
   return (
+    <>
     <header id="masthead" className="site-header header-primary">
       {/* <!-- header html start --> */}
       <div className="top-header"></div>
@@ -10,12 +11,12 @@ const Header = () => {
               <a href="index.html">
                 <img
                   className="white-logo"
-                  src="assets/images/travele-logo.png"
+                  src="../../../assets/images/travele-logo.png"
                   alt="logo"
                 />
                 <img
                   className="black-logo"
-                  src="assets/images/travele-logo1.png"
+                  src="../../../assets/images/travele-logo1.png"
                   alt="logo"
                 />
               </a>
@@ -211,6 +212,10 @@ const Header = () => {
       </div>
       <div className="mobile-menu-container"></div>
     </header>
+    <a id="backTotop" href="#" className="to-top-icon">
+    <i className="fas fa-chevron-up"></i>
+ </a>
+ </>
   );
 };
 

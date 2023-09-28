@@ -34,7 +34,7 @@ const HomePage = () => {
         <div className="slider-shape"></div>
         <div className="container">
           <div className="trip-search-inner white-bg d-flex">
-            <div className="input-group">
+            <div className="input-group width-col-9">
               <label> Search Destination* </label>
               <input type="text" name="s" placeholder="Enter Destination" />
             </div>
@@ -72,7 +72,7 @@ const HomePage = () => {
                       <figure className="desti-image">
                         <img
                           className="w-full"
-                          src="assets/images/img1.jpg"
+                          src="../../../../assets/images/img1.jpg"
                           alt=""
                         />
                       </figure>
@@ -94,7 +94,7 @@ const HomePage = () => {
                       <figure className="desti-image">
                         <img
                           className="w-full"
-                          src="assets/images/img2.jpg"
+                          src="../../../../assets/images/img2.jpg"
                           alt=""
                         />
                       </figure>
@@ -120,7 +120,7 @@ const HomePage = () => {
                       <figure className="desti-image">
                         <img
                           className="w-full"
-                          src="assets/images/img3.jpg"
+                          src="../../../../assets/images/img3.jpg"
                           alt=""
                         />
                       </figure>
@@ -142,7 +142,7 @@ const HomePage = () => {
                       <figure className="desti-image">
                         <img
                           className="w-full"
-                          src="assets/images/img4.jpg"
+                          src="../../../../assets/images/img4.jpg"
                           alt=""
                         />
                       </figure>
@@ -196,7 +196,7 @@ const HomePage = () => {
                     <a href="#">
                       <img
                         className="w-full"
-                        src="assets/images/img5.jpg"
+                        src="../../../../assets/images/img5.jpg"
                         alt=""
                       />
                     </a>
@@ -258,7 +258,7 @@ const HomePage = () => {
                     <a href="#">
                       <img
                         className="w-full"
-                        src="assets/images/img6.jpg"
+                        src="../../../../assets/images/img6.jpg"
                         alt=""
                       />
                     </a>
@@ -318,7 +318,7 @@ const HomePage = () => {
                     <a href="#">
                       <img
                         className="w-full"
-                        src="assets/images/img7.jpg"
+                        src="../../../../assets/images/img7.jpg"
                         alt=""
                       />
                     </a>
@@ -409,7 +409,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon6.png"
+                      src="../../../../assets/images/icon6.png"
                       alt=""
                     />
                   </a>
@@ -428,7 +428,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon10.png"
+                      src="../../../../assets/images/icon10.png"
                       alt=""
                     />
                   </a>
@@ -447,7 +447,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon9.png"
+                      src="../../../../assets/images/icon9.png"
                       alt=""
                     />
                   </a>
@@ -466,7 +466,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon8.png"
+                      src="../../../../assets/images/icon8.png"
                       alt=""
                     />
                   </a>
@@ -485,7 +485,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon7.png"
+                      src="../../../../assets/images/icon7.png"
                       alt=""
                     />
                   </a>
@@ -504,7 +504,7 @@ const HomePage = () => {
                   <a href="#">
                     <img
                       className="mx-auto"
-                      src="assets/images/icon11.png"
+                      src="../../../../assets/images/icon11.png"
                       alt=""
                     />
                   </a>
@@ -545,7 +545,7 @@ const HomePage = () => {
                   <figure className="special-img">
                     <img
                       className="w-full"
-                      src="assets/images/img9.jpg"
+                      src="../../../../assets/images/img9.jpg"
                       alt=""
                     />
                   </figure>
@@ -575,7 +575,7 @@ const HomePage = () => {
                   <figure className="special-img">
                     <img
                       className="w-full"
-                      src="assets/images/img10.jpg"
+                      src="../../../../assets/images/img10.jpg"
                       alt=""
                     />
                   </figure>
@@ -605,7 +605,7 @@ const HomePage = () => {
                   <figure className="special-img">
                     <img
                       className="w-full"
-                      src="assets/images/img11.jpg"
+                      src="../../../../assets/images/img11.jpg"
                       alt=""
                     />
                   </figure>
@@ -666,7 +666,7 @@ const HomePage = () => {
               <article className="post">
                 <figure className="feature-image">
                   <a href="#">
-                    <img src="assets/images/img17.jpg" alt="" />
+                    <img src="../../../../assets/images/img17.jpg" alt="" />
                   </a>
                 </figure>
                 <div className="entry-content">
@@ -693,7 +693,7 @@ const HomePage = () => {
               <article className="post">
                 <figure className="feature-image">
                   <a href="#">
-                    <img src="assets/images/img18.jpg" alt="" />
+                    <img src="../../../../assets/images/img18.jpg" alt="" />
                   </a>
                 </figure>
                 <div className="entry-content">
@@ -718,7 +718,7 @@ const HomePage = () => {
               <article className="post">
                 <figure className="feature-image">
                   <a href="#">
-                    <img src="assets/images/img19.jpg" alt="" />
+                    <img src="../../../../assets/images/img19.jpg" alt="" />
                   </a>
                 </figure>
                 <div className="entry-content">

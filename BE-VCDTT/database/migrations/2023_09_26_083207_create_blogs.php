@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('description');
             $table->bigInteger('main_img'); //main_img lấy từ id của bảng image why the fuk it's varchar ?????
             $table->integer('view_count');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

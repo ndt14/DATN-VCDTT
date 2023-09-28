@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('exact_location');
             //store id of images table
             $table->bigInteger('main_img');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->bigInteger('view_count');
             $table->timestamps();
         });
