@@ -13,6 +13,7 @@ use App\Models\Coupon;
 use App\Models\Image;
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
@@ -20,9 +21,18 @@ class TourController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // Tích hợp tìm kiếm
+        $keyword = trim($request()->keyword);
+        $sql_where ='';
+        // $sql_where=' AND delete_at IS NULL';
+        if(!empty($keyword)){
+            $sql_where .= ' AND tour_name LIKE %{$keyword}%';
+        }
+         $sql_order =' ORDER BY DESC';
+         $sql_limit =' LIMIT 9';
+        $tour = DB::select('select * from tours where 1'.$sql_where.$sql_order.$sql_limit);
     }
 
     /**
@@ -63,7 +73,6 @@ class TourController extends Controller
             'coupons.fixed_price as fixedPrice',
             'coupons.status'
         )->get();
-
         // get info tour by id
         $tour = Tour::join('images', 'tours.main_img', '=', 'images.id')
             ->join('coupons', 'coupons.tour_id', '=', 'tours.id')
