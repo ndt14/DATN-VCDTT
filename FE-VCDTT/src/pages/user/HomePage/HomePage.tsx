@@ -245,7 +245,7 @@ const HomePage = () => {
             <div className="row">
               <div className="col-lg-8 offset-lg-2">
                 <h5 className="dash-style">KHÁM PHÁ CÁC ĐỊA DANH NỔI TIẾNG</h5>
-                <h2 className="">DANH SÁCH TOUR</h2>
+                <h2 className="">DANH SÁCH CÁC TOUR</h2>
                 <p>
                   Mollit voluptatem perspiciatis convallis elementum corporis
                   quo veritatis aliquid blandit, blandit torquent, odit placeat.
