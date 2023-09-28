@@ -34,8 +34,8 @@ class PurchaseHistorySeeder extends Seeder
                 'coupon_percentage' => $faker->randomNumber(true, 2),
                 'refund_percentage' => $faker->randomNumber(true, 2),
                 'coupon_fixed' => $faker->randomNumber(true, 5),
-                'tour_start_time' => $faker->dateTime(),
-                'tour_end_time' => $faker->dateTime()
+                'tour_start_time' => $faker->dateTimeBetween('- 1 year', 'now'),
+                'tour_end_time' => $faker->dateTimeBetween('now', '+ 1 year')
             ]);
         }
     }
