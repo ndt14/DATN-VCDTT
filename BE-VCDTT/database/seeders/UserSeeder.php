@@ -21,12 +21,12 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => 'dcm' . $i,
                 'email' => $faker->email(),
-                'password' => $faker->password(),
+                'password' => Hash::make('123456'),
                 'phone_number' => $faker->phoneNumber(),
                 'date_of_birth' => $faker->date(),
                 'address' => $faker->address(),
                 'gender' => $faker->numberBetween(1,3),
-                'image' => $faker->image(null, 640, 480),
+                'image' => $faker->imageUrl(null, 640, 480),
                 'status' => 1,
                 'is_admin' => $faker->numberBetween(1,2),
             ]);
