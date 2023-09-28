@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\TourController;
 
 
 /*
@@ -70,5 +69,4 @@ Route::prefix('admin')->group(function () {
     Route::get('/user-show/{id}', [UserController::class, 'show']);
     Route::put('/user-edit/{id}', [UserController::class, 'update']);
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
-
 });
