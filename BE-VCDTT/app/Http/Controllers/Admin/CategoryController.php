@@ -50,17 +50,34 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
-
+        $categories = new Category;
+        $category = $categories->find($id)->get();
+        if (!$category) {
+            return response()->json(['message' => 'Không tìm thấy tour'], 404);
+        }
+        foreach($category as $parent){
+            $parent->Child = $categories->getCategoriesChild($parent->id);
+        }
+        return response()->json(
+            [
+                'dataCategory' => CategoryResource::collection($category),
+            ],
+            200
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
-        //
-
+        $category = Category::find($id);
+        if ($category) {
+            $category->update($request->all());
+            return response()->json(['message' => 'Cập nhật thành công'], 200);
+        } else {
+            return response()->json(['message' => 'Category không tồn tại'], 404);
+        }
     }
 
     /**
