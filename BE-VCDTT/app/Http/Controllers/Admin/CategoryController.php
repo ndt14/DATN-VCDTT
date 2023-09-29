@@ -83,9 +83,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-
+    public function destroy(string $id){
+        $category = Category::find($id);
+        if ($category) {
+            $category->delete(); // soft delete
+            return response()->json(['message' => 'Xóa thành công'], 200);
+        } else {
+            return response()->json(['message' => 'Category không tồn tại'], 404);
+        }
     }
 }
