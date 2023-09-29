@@ -24,23 +24,37 @@ class TourController extends Controller
     public function index(Request $request)
     {
         // Tích hợp tìm kiếm
-        if(!empty($request->keyword)){
-            $keyword = trim($request->keyword);
-        }
+        $keyword = trim($request->keyword) ? trim($request->keyword) : '';
         // $keyword = null;
-        $sql_where ='';
+        $sql_where = '';
         // $sql_where=' AND delete_at IS NULL';
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
             $sql_where .= 'name LIKE %{$keyword}%';
         }
-        $sql_order ='name';
-        $sql_limit =5;
-        $tours = Tour::select('id','name', 'duration', 'child_price', 'adult_price', 'sale_percentage', 'start_destination',
-        'end_destination', 'tourist_count','details', 'location', 'exact_location', 'main_img', 'status')
-        ->where('name','LIKE','%'.$keyword.'%')->orderBy($sql_order)->limit($sql_limit)->get();
+        $sql_order = 'name';
+        $limit = intval($request->limit) ? intval($request->limit) : '';
+        $tours = Tour::select(
+            'id',
+            'name',
+            'duration',
+            'child_price',
+            'adult_price',
+            'sale_percentage',
+            'start_destination',
+            'end_destination',
+            'tourist_count',
+            'details',
+            'location',
+            'exact_location',
+            'main_img',
+            'status'
+        )
+            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json(
-        ['dataTours' => TourResource::collection($tours),
-        ], 200
+            [
+                'dataTours' => TourResource::collection($tours),
+            ],
+            200
         );
     }
 
@@ -50,20 +64,21 @@ class TourController extends Controller
     public function add()
     {
         $listCate = Category::select('id', 'name', 'parent_id')
-        ->get();
+            ->get();
         // get all data from table images
-        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
-        ->get();
+        $listImage = Image::select('name', 'type', 'url', 'tour_id')
+            ->get();
         // get all data from table coupon
         $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
-        ->where('coupons.status', 1)
-        ->get();
+            ->where('coupons.status', 1)
+            ->get();
         return response()->json(
             [
                 'dataCategories' => CategoryResource::collection($listCate),
                 'dataImages' => ImageResource::collection($listImage),
                 'dataCoupons' => CouponResource::collection($listCoupon),
-            ], 200
+            ],
+            200
         );
     }
 
@@ -80,20 +95,33 @@ class TourController extends Controller
     {
         // get all data from table catalog
         $listCate = Category::select('id', 'name', 'parent_id')
-        ->get();
+            ->get();
         // get all data from table images
-        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
-        ->get();
+        $listImage = Image::select('name', 'type', 'url', 'tour_id')
+            ->get();
         // get all data from table coupon
         $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
-        ->where('coupons.status', 1)
-        ->get();
+            ->where('coupons.status', 1)
+            ->get();
         // get info tour by id
         $tour = Tour::join('images', 'tours.main_img', '=', 'images.id')
             ->join('tours_to_categories', 'tours_to_categories.tour_id', '=', 'tours.id')
-            ->select( 'name', 'duration', 'child_price', 'adult_price', 'sale_percentage', 'start_destination', 'end_destination', 'tourist_count',
-            'details', 'location', 'exact_locatio', 'main_img', 'status',
-            'categories.id as cateID')
+            ->select(
+                'name',
+                'duration',
+                'child_price',
+                'adult_price',
+                'sale_percentage',
+                'start_destination',
+                'end_destination',
+                'tourist_count',
+                'details',
+                'location',
+                'exact_locatio',
+                'main_img',
+                'status',
+                'categories.id as cateID'
+            )
             ->findOrFail($id);
         if (!$tour) {
             return response()->json(['message' => '404 Not Found'], 404);
@@ -104,7 +132,8 @@ class TourController extends Controller
                 'dataCategories' => CategoryResource::collection($listCate),
                 'dataImages' => ImageResource::collection($listImage),
                 'dataCoupons' => CouponResource::collection($listCoupon),
-            ], 200
+            ],
+            200
         );
     }
 
