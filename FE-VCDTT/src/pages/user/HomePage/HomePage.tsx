@@ -1,5 +1,6 @@
 import React from "react";
 import "./HomePage.css";
+import { Carousel } from "antd";
 
 import { TourPreview } from "../../../componenets";
 import { useGetToursQuery } from "../../../api/tours";
@@ -18,27 +19,34 @@ console.log("error:", error);
       <section className="home-slider-section">
         <div className="home-slider">
           <div className="home-banner-items">
-            <div className="banner-inner-wrap"></div>
+            <div className="banner-inner-wrap">
+              <Carousel autoplay>
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_4.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_5.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_6.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://file.hstatic.net/1000376021/file/1920x720_copy_42b3f822c4ca4cd099bfb116931e6361.png"
+                  alt=""
+                />
+              </Carousel>
+            </div>
             <div className="banner-content-wrap">
-              <div className="container">
-                <div className="banner-content text-center">
-                  <h2 className="banner-title">TRAVELLING AROUND THE WORLD</h2>
-                  <p>
-                    Taciti quasi, sagittis excepteur hymenaeos, id temporibus
-                    hic proident ullam, eaque donec delectus tempor consectetur
-                    nunc, purus congue? Rem volutpat sodales! Mollit. Minus
-                    exercitationem wisi.
-                  </p>
-                  <a href="#" className="button-primary rounded">
-                    ĐỌC THÊM
-                  </a>
-                </div>
-              </div>
+              <div className="container"></div>
             </div>
             <div className="overlay"></div>
           </div>
         </div>
       </section>
+
       {/* <!-- slider html start -->
             <!-- Home search field html start --> */}
       <div className="trip-search-section shape-search-section">
