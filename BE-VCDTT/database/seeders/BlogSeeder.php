@@ -22,7 +22,7 @@ class BlogSeeder extends Seeder
                 'short_desc' => 'abc' . $i,
                 'description' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Pariatur quae et, sequi sed dolores tempore, illum obcaecati voluptatem libero minus voluptatibus? Illum facilis, quod natus esse fugiat excepturi molestiae nobis?',
                 'main_img' => $faker->imageUrl(),
-                'view_count' => $faker->randomNumber(5,true),
+                'view_count' => $faker->randomNumber(true,5),
                 'status' => 1
             ]);
         }
