@@ -1,19 +1,20 @@
-import React from "react";
+
 import "./HomePage.css";
 import { Carousel } from "antd";
 
 import { TourPreview } from "../../../componenets";
 import { useGetToursQuery } from "../../../api/tours";
-import { Link } from "react-router-dom";
 import { Tour } from "../../../interfaces/Tour";
+import { Link } from "react-router-dom";
+import Loader from "../../../componenets/User/Loader";
 
 const HomePage = () => {
-const {data ,error,isLoading}= useGetToursQuery();
-console.log("data", data);
-console.log("isLoading:", isLoading);
-console.log("error:", error);
-
+  const { data } = useGetToursQuery();
+  
   return (
+    <>
+     <Loader/>
+
     <main id="content" className="site-main">
       {/* <!-- Home slider html start --> */}
       <section className="home-slider-section">
@@ -70,132 +71,6 @@ console.log("error:", error);
           </div>
         </div>
       </div>
-      {/* <!-- search search field html end --> */}
-      {/* <section className="destination-section">
-        <div className="container">
-          <div className="section-heading">
-            <div className="row align-items-end">
-              <div className="col-lg-7">
-                <h2>TOP NOTCH DESTINATION</h2>
-              </div>
-              <div className="col-lg-5">
-                <div className="section-disc">
-                  Aperiam sociosqu urna praesent, tristique, corrupti
-                  condimentum asperiores platea ipsum ad arcu. Nostrud. Aut
-                  nostrum, ornare quas provident laoreet nesciunt.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="destination-inner destination-three-column">
-            <div className="row">
-              <div className="col-lg-7">
-                <div className="row">
-                  <div className="col-sm-6">
-                    <div className="desti-item overlay-desti-item">
-                      <figure className="desti-image">
-                        <img
-                          className="w-full"
-                          src="../../../../assets/images/img1.jpg"
-                          alt=""
-                        />
-                      </figure>
-                      <div className="meta-cat bg-meta-cat">
-                        <a href="#">THAILAND</a>
-                      </div>
-                      <div className="desti-content">
-                        <h3>
-                          <a href="#">Disney Land</a>
-                        </h3>
-                        <div className="rating-start" title="Rated 5 out of 4">
-                          <span className="w-1/2"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="desti-item overlay-desti-item">
-                      <figure className="desti-image">
-                        <img
-                          className="w-full"
-                          src="../../../../assets/images/img2.jpg"
-                          alt=""
-                        />
-                      </figure>
-                      <div className="meta-cat bg-meta-cat">
-                        <a href="#">NORWAY</a>
-                      </div>
-                      <div className="desti-content">
-                        <h3>
-                          <a href="#">Besseggen Ridge</a>
-                        </h3>
-                        <div className="rating-start" title="Rated 5 out of 5">
-                          <span className="w-full"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-5">
-                <div className="row">
-                  <div className="col-md-6 col-xl-12">
-                    <div className="desti-item overlay-desti-item">
-                      <figure className="desti-image">
-                        <img
-                          className="w-full"
-                          src="../../../../assets/images/img3.jpg"
-                          alt=""
-                        />
-                      </figure>
-                      <div className="meta-cat bg-meta-cat">
-                        <a href="#">NEW ZEALAND</a>
-                      </div>
-                      <div className="desti-content">
-                        <h3>
-                          <a href="#">Oxolotan City</a>
-                        </h3>
-                        <div className="rating-start" title="Rated 5 out of 5">
-                          <span className="w-full"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-xl-12">
-                    <div className="desti-item overlay-desti-item">
-                      <figure className="desti-image">
-                        <img
-                          className="w-full"
-                          src="../../../../assets/images/img4.jpg"
-                          alt=""
-                        />
-                      </figure>
-                      <div className="meta-cat bg-meta-cat">
-                        <a href="#">SINGAPORE</a>
-                      </div>
-                      <div className="desti-content">
-                        <h3>
-                          <a href="#">Marina Bay Sand City</a>
-                        </h3>
-                        <div
-                          className="rating-start"
-                          title="Rated 5 out of 4"
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="btn-wrap text-center">
-              <a href="#" className="button-primary">
-                MORE DESTINATION
-              </a>
-            </div>
-          </div>
-        </div>
-      </section> */}
-      {/* <!-- Home packages section html start --> */}
       <section className="package-section">
         <div className="container">
           <div className="section-heading text-center">
@@ -273,30 +148,16 @@ console.log("error:", error);
           </div>
           <div className="package-inner">
             <div className="row">
-              {/* {
-               data?.map(({id,name,duration,child_price,adult_price,sale_percentage,
-                start_destination,
-                end_destination,
-                tourist_count,
-                details,
-                location,
-                exact_location,
-                main_img,
-                view_count,
-                status}:Tour)=>{
-                     return{
-
-                     }
-               })
-
-              } */}
-            <div className="col-lg-4 col-md-6">
+{
+   data?.dataTours?.map(({ id, name, details,main_img }:Tour) => {
+    return (
+      <div className="col-lg-4 col-md-6" key={id}>
       <div className="package-wrap">
         <figure className="feature-image">
-          <Link to="tours/1">
+          <Link to={`/tours/${id}`}>
             <img
               className="w-full"
-              src="../../../../assets/images/img5.jpg"
+              src={main_img}
               alt=""
             />
           </Link>
@@ -310,8 +171,8 @@ console.log("error:", error);
           {/* <div className="package-meta text-center"></div> */}
           <div className="package-content">
             <h3 className="margin-top-12">
-              <Link className="mt-12" to="tours/1">
-                Sunset view of beautiful lakeside resident
+              <Link className="mt-12" to={`/tours/${id}`}>
+                {name}
               </Link>
             </h3>
             <div className="review-area">
@@ -321,8 +182,7 @@ console.log("error:", error);
               </div>
             </div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit luctus nec
-              ullam. Ut elit tellus, luctus nec ullam elit tellpus.
+             {details}
             </p>
             <div className="btn-wrap">
               <a href="#" className="button-text width-6">
@@ -335,7 +195,10 @@ console.log("error:", error);
           </div>
         </div>
       </div>
-    </div>    
+    </div>
+    );
+  })
+}
    
               {/* <TourPreview></TourPreview>
               <TourPreview></TourPreview>
@@ -617,6 +480,7 @@ console.log("error:", error);
 
       {/* <!--  contact details html end --> */}
     </main>
+    </>
   );
 };
 

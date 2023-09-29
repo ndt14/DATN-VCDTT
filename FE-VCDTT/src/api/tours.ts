@@ -8,7 +8,7 @@ const TourApi = createApi({
     reducerPath: "tour",
     tagTypes: ['Tour'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://127.0.0.1:8088/api/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/admin/",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
@@ -16,11 +16,11 @@ const TourApi = createApi({
     }),
     endpoints: (builder) => ({
         getTours: builder.query<Tour[], void>({
-            query: () => `/tours`,
+            query: () => `/tour`,
             providesTags: ['Tour']
         }),
         getTourById: builder.query<Tour, number | string>({
-            query: (id) => `/tours/${id}`,
+            query: (id) => `/tour-show/${id}`,
             providesTags: ['Tour']
         }),
         removeTour: builder.mutation<void, number | string>({

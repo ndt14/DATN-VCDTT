@@ -1,14 +1,28 @@
+import { useParams } from "react-router-dom";
+import { useGetTourByIdQuery } from "../../../api/tours";
+import Loader from "../../../componenets/User/Loader";
+import { data } from "jquery";
 
 
 const TourDetail = () => {
+   const { id } = useParams<{ id: string }>();
+   const { data: tourData, } = useGetTourByIdQuery(id || "");
+   console.log(tourData);
+   //  if (!tourData) {
+   //    // Xử lý trường hợp không có sản phẩm nào được chọn
+   //    return <div className="archive-section blog-archive">No product selected.</div>;
+   //  }
+   //  const { name,price,main_img } = ;
     const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg'; // Đường dẫn tới hình ảnh nền
 
     const containerStyle = {
       background: `url(${backgroundImageUrl})`,
       backgroundSize: 'cover', 
     };
+
   return (
    <>
+    <Loader/>
     <main id="content" className="site-main">
             {/* <!-- Inner Banner html start--> */}
             <section className="inner-banner-wrap">
@@ -27,9 +41,9 @@ const TourDetail = () => {
                   <div className="row">
                      <div className="col-lg-8">
                         <div className="single-tour-inner">
-                           <h2>EXPERIENCE THE NATURAL BEAUTY OF ISLAND</h2>
+                           <h2>{tourData?.infoTour.name}</h2>
                            <figure className="feature-image">
-                              <img src="../../../../assets/images/img27.jpg" alt="" />
+                              <img src={tourData?.infoTour.main_img} alt="" />
                               <div className="package-meta text-center">
                                  <ul>
                                     <li>
