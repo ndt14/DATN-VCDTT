@@ -19,7 +19,7 @@ class CategorySeeder extends Seeder
         for ($i = 1; $i < 20; $i++) {
             DB::table('categories')->insert([
                 'name' => 'dcm' . $i,
-                'parent_id' => $faker->randomDigit()
+                'parent_id' =>  Null
             ]);
         }
     }
