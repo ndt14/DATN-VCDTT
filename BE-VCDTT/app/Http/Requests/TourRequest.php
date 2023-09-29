@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class TourRequest extends FormRequest
 {
@@ -22,7 +25,6 @@ class TourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
             'name' => 'required',
             'duration' => 'required',
             'child_price' => 'required',
@@ -60,5 +62,13 @@ class TourRequest extends FormRequest
                 'view_count.required' => 'Số lượt xem không được để trống',
 
             ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = new Response([
+            'errors' => $validator->errors()
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        throw (new ValidationException($validator, $response));
     }
 }

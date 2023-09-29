@@ -95,37 +95,47 @@ class TourController extends Controller
     {
         // get all data from table catalog
         $listCate = Category::select('id', 'name', 'parent_id')
-            ->get();
+
+        ->get();
         // get all data from table images
+        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
+        ->get();
+
         $listImage = Image::select('name', 'type', 'url', 'tour_id')
             ->get();
         // get all data from table coupon
         $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
-            ->where('coupons.status', 1)
-            ->get();
+
+        ->where('coupons.status', 1)
+        ->get();
         // get info tour by id
         $tour = Tour::join('images', 'tours.main_img', '=', 'images.id')
-            ->join('tours_to_categories', 'tours_to_categories.tour_id', '=', 'tours.id')
-            ->select(
-                'name',
-                'duration',
-                'child_price',
-                'adult_price',
-                'sale_percentage',
-                'start_destination',
-                'end_destination',
-                'tourist_count',
-                'details',
-                'location',
-                'exact_locatio',
-                'main_img',
-                'status',
-                'categories.id as cateID'
-            )
-            ->findOrFail($id);
-        if (!$tour) {
-            return response()->json(['message' => '404 Not Found'], 404);
-        }
+    ->join('tours_to_categories', 'tours_to_categories.tour_id', '=', 'tours.id')
+    ->join('categories', 'categories.id', '=', 'tours_to_categories.cate_id')
+    ->select(
+        'tours.id',
+        'tours.name',
+        'tours.duration',
+        'tours.child_price',
+        'tours.adult_price',
+        'tours.sale_percentage',
+        'tours.start_destination',
+        'tours.end_destination',
+        'tours.tourist_count',
+        'tours.details',
+        'tours.location',
+        'tours.exact_location',
+        'tours.main_img',
+        'tours.status',
+        'categories.id'
+    )
+    ->where('tours.id', $id)
+    ->first();
+
+    if (!$tour) {
+        return response()->json(['message' => '404 Not Found'], 404);
+    } else {
+
         return response()->json(
             [
                 'infoTour' => new TourResource($tour),
@@ -136,35 +146,17 @@ class TourController extends Controller
             200
         );
     }
+    
+    }
 
     /**
      * Update the specified resource in storage.
      */
 
-    public function update(Request $request, string $id)
+    public function update(TourRequest $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'duration' => 'required',
-            'child_price' => 'required',
-            'adult_price' => 'required',
-            'sale_percentage' => 'required',
-            'start_destination' => 'required',
-            'end_destination' => 'required',
-            'tourist_count' => 'required',
-            'details' => 'required',
-            'location' => 'required',
-            'exact_location' => 'required',
-            'main_img' => 'required',
-            'status' => 'required',
-            'view_count' => 'required',
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        $input = $request->except('_token');
+        $input = $request->all();
 
         $tour = Tour::find($id);
         if (!$tour) {
@@ -174,10 +166,7 @@ class TourController extends Controller
         $tour->fill($input);
 
         if ($tour->save()) {
-            $updatedTour = Tour::find($id);
-            return response()->json(['message' => 'Cập nhật tour thành công', 'statusCode' => 200, 'object' => $updatedTour]);
-        } else {
-            return response()->json(['message' => 'Cập nhật tour thất bại'], 500);
+            return response()->json(['message' => 'Cập nhật tour thành công', 'statusCode' => 200, 'object' => $tour]);
         }
     }
     /**
