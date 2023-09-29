@@ -30,6 +30,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::prefix('admin')->group(function () {
     // Tour management
     Route::get('/tour', [TourController::class, 'index']);
+    Route::get('/tour-add', [TourController::class,'add']);
     Route::post('/tour-store', [TourController::class, 'store']);
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
     Route::put('/tour-edit/{id}', [TourController::class, 'update']);
@@ -45,6 +46,7 @@ Route::prefix('admin')->group(function () {
 
     // Category
     Route::get('/category', [CategoryController::class, 'index']);
+    Route::post('/category-add', [CategoryController::class, 'add']);
     Route::post('/category-store', [CategoryController::class, 'store']);
     Route::get('/category-show/{id}', [CategoryController::class, 'show']);
     Route::put('/category-edit/{id}', [CategoryController::class, 'update']);

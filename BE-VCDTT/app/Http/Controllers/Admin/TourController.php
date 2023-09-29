@@ -8,10 +8,12 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CouponResource;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\TourResource;
+use App\Http\Resources\TourToCategoryResource;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Image;
 use App\Models\Tour;
+use App\Models\TourToCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -94,42 +96,35 @@ class TourController extends Controller
     public function show(string $id)
     {
         // get all data from table catalog
-        $listCate = Category::select('id', 'name', 'parent_id')
-
+        $listCate = Category::select('id', 'name')
         ->get();
         // get all data from table images
-        $listImage = Image::select( 'name', 'type', 'url', 'tour_id')
+        $listImage = Image::select( 'name', 'type', 'url')->where('tour_id', '=',$id)
+        ->get();
+        // Get all cate for tour id
+        $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=',$id)
         ->get();
 
-        $listImage = Image::select('name', 'type', 'url', 'tour_id')
-            ->get();
-        // get all data from table coupon
-        $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
-
-        ->where('coupons.status', 1)
-        ->get();
         // get info tour by id
-        $tour = Tour::join('images', 'tours.main_img', '=', 'images.id')
-    ->join('tours_to_categories', 'tours_to_categories.tour_id', '=', 'tours.id')
-    ->join('categories', 'categories.id', '=', 'tours_to_categories.cate_id')
-    ->select(
-        'tours.id',
-        'tours.name',
-        'tours.duration',
-        'tours.child_price',
-        'tours.adult_price',
-        'tours.sale_percentage',
-        'tours.start_destination',
-        'tours.end_destination',
-        'tours.tourist_count',
-        'tours.details',
-        'tours.location',
-        'tours.exact_location',
-        'tours.main_img',
-        'tours.status',
-        'categories.id'
+        $tour = Tour::select(
+        'id',
+        'name',
+        'duration',
+        'child_price',
+        'adult_price',
+        'sale_percentage',
+        'start_destination',
+        'end_destination',
+        'tourist_count',
+        'details',
+        'location',
+        'exact_location',
+        'main_img',
+        'view_count',
+        'status',
+       
     )
-    ->where('tours.id', $id)
+    ->where('id', $id)
     ->first();
 
     if (!$tour) {
@@ -139,9 +134,9 @@ class TourController extends Controller
         return response()->json(
             [
                 'infoTour' => new TourResource($tour),
-                'dataCategories' => CategoryResource::collection($listCate),
-                'dataImages' => ImageResource::collection($listImage),
-                'dataCoupons' => CouponResource::collection($listCoupon),
+                'dataCategories' => new CategoryResource($listCate),
+                'dataImages' => new ImageResource($listImage),
+                'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
             ],
             200
         );
