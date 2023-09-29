@@ -8,6 +8,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CouponResource;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\TourResource;
+use App\Http\Resources\TourToCategoryResource;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Image;
@@ -119,6 +120,7 @@ class TourController extends Controller
         'location',
         'exact_location',
         'main_img',
+        'view_count',
         'status',
        
     )
@@ -134,7 +136,7 @@ class TourController extends Controller
                 'infoTour' => new TourResource($tour),
                 'dataCategories' => new CategoryResource($listCate),
                 'dataImages' => new ImageResource($listImage),
-                // 'dataTourToCategories' => 
+                'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
             ],
             200
         );
