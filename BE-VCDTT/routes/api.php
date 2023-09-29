@@ -45,6 +45,7 @@ Route::prefix('admin')->group(function () {
 
     // Category
     Route::get('/category', [CategoryController::class, 'index']);
+    Route::post('/category-add', [CategoryController::class, 'add']);
     Route::post('/category-store', [CategoryController::class, 'store']);
     Route::get('/category-show/{id}', [CategoryController::class, 'show']);
     Route::put('/category-edit/{id}', [CategoryController::class, 'update']);
