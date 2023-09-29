@@ -1,4 +1,5 @@
 import React from 'react'
+import Loader from '../../../componenets/User/Loader';
 
 type Props = {}
 
@@ -11,6 +12,7 @@ const FaqsPage = (props: Props) => {
     };
   return (
     <>
+    <Loader/>
     <div id="page" className="full-page">
        
        <main id="content" className="site-main">
