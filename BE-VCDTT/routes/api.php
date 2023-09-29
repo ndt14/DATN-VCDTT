@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,7 +30,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::prefix('admin')->group(function () {
     // Tour management
     Route::get('/tour', [TourController::class, 'index']);
-    Route::get('/tour-add', [TourController::class, 'add']);
     Route::post('/tour-store', [TourController::class, 'store']);
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
     Route::put('/tour-edit/{id}', [TourController::class, 'update']);
@@ -70,4 +70,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/user-show/{id}', [UserController::class, 'show']);
     Route::put('/user-edit/{id}', [UserController::class, 'update']);
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
+
 });

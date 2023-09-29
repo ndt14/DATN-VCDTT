@@ -29,7 +29,7 @@ class TourSeeder extends Seeder
                 'details' => $faker->sentence(7),
                 'location' => $faker->sentence(),
                 'exact_location' => $faker->sentence(10),
-                'main_img' => $faker->numberBetween(1,20),
+                'main_img' => $faker->imageUrl(),
                 'status' => 1,
                 'view_count' => $faker->randomNumber(5),
             ]);
