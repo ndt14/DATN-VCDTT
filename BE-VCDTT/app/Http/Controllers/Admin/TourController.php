@@ -97,51 +97,50 @@ class TourController extends Controller
     {
         // get all data from table catalog
         $listCate = Category::select('id', 'name')
-        ->get();
+            ->get();
         // get all data from table images
-        $listImage = Image::select( 'name', 'type', 'url')->where('tour_id', '=',$id)
-        ->get();
+        $listImage = Image::select('name', 'type', 'url')->where('tour_id', '=', $id)
+            ->get();
         // Get all cate for tour id
-        $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=',$id)
-        ->get();
+        $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
+            ->get();
 
         // get info tour by id
         $tour = Tour::select(
-        'id',
-        'name',
-        'duration',
-        'child_price',
-        'adult_price',
-        'sale_percentage',
-        'start_destination',
-        'end_destination',
-        'tourist_count',
-        'details',
-        'location',
-        'exact_location',
-        'main_img',
-        'view_count',
-        'status',
-       
-    )
-    ->where('id', $id)
-    ->first();
+            'id',
+            'name',
+            'duration',
+            'child_price',
+            'adult_price',
+            'sale_percentage',
+            'start_destination',
+            'end_destination',
+            'tourist_count',
+            'details',
+            'location',
+            'exact_location',
+            'main_img',
+            'view_count',
+            'status',
 
-    if (!$tour) {
-        return response()->json(['message' => '404 Not Found'], 404);
-    } else {
+        )
+            ->where('id', $id)
+            ->first();
 
-        return response()->json(
-            [
-                'infoTour' => new TourResource($tour),
-                'dataCategories' => new CategoryResource($listCate),
-                'dataImages' => new ImageResource($listImage),
-                'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
-            ],
-            200
-        );
-    }
-    
+        if (!$tour) {
+            return response()->json(['message' => '404 Not Found'], 404);
+        } else {
+
+            return response()->json(
+                [
+                    'infoTour' => new TourResource($tour),
+                    'dataCategories' => new CategoryResource($listCate),
+                    'dataImages' => new ImageResource($listImage),
+                    'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
+                ],
+                200
+            );
+        }
     }
 
     /**
