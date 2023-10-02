@@ -24,8 +24,8 @@ class CouponSeeder extends Seeder
                 'end_date' => $faker->dateTimeBetween('now' ,'+ 1 year'),
                 'tour_id' => $faker->numberBetween(1,20),
                 'cate_id' => $faker->numberBetween(1,20),
-                'percentage_price' => $faker->randomNumber(true,2),
-                'fixed_price' => $faker->randomNumber(true,6),
+                'percentage_price' => $faker->randomNumber(2,true),
+                'fixed_price' => $faker->randomNumber(6,true),
                 'status' => 1,
             ]);
         }

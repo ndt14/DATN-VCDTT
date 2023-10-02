@@ -1,5 +1,6 @@
 import React from "react";
 import "./BlogsPage.css";
+import Loader from "../../../componenets/User/Loader";
 
 const BlogsPage = () => {
   const backgroundImageUrl = "assets/images/inner-banner.jpg";
@@ -10,6 +11,7 @@ const BlogsPage = () => {
   };
   return (
     <>
+    <Loader/>
       <div id="page" className="full-page">
         <main id="content" className="site-main">
           {/* <!-- Inner Banner html start--> */}

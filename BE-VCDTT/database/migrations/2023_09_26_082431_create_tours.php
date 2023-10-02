@@ -27,7 +27,7 @@ return new class extends Migration
             //store id of images table
             $table->text('main_img');
             $table->tinyInteger('status')->default(1);
-            $table->bigInteger('view_count');
+            $table->bigInteger('view_count')->default(0);
             $table->timestamps();
         });
     }
