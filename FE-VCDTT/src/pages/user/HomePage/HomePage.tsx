@@ -22,22 +22,9 @@ const HomePage = () => {
           <div className="home-banner-items">
             <div className="banner-inner-wrap">
               <Carousel autoplay>
-                <img
-                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_4.jpg?v=3691"
-                  alt=""
-                />
-                <img
-                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_5.jpg?v=3691"
-                  alt=""
-                />
-                <img
-                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_6.jpg?v=3691"
-                  alt=""
-                />
-                <img
-                  src="https://file.hstatic.net/1000376021/file/1920x720_copy_42b3f822c4ca4cd099bfb116931e6361.png"
-                  alt=""
-                />
+                <img src="assets/images/slider-banner-1.jpg" alt="" />
+
+                <img src="assets/images/slider-banner-2.jpg" alt="" />
               </Carousel>
             </div>
             <div className="banner-content-wrap">

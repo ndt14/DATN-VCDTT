@@ -108,14 +108,14 @@ const Footer = () => {
       <div className="buttom-footer">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-md-5">
+            <div className="col-md-4">
               <div className="footer-menu">
                 <ul>
                   <li>
-                    <a href="#">Chính sách riêng tư</a>
+                    <a href="#">Chính sách</a>
                   </li>
                   <li>
-                    <a href="#">Thỏa thuận sử dụng</a>
+                    <a href="#">Thỏa thuận</a>
                   </li>
                   <li>
                     <Link to="faqs">FAQ</Link>
@@ -123,16 +123,19 @@ const Footer = () => {
                 </ul>
               </div>
             </div>
-            <div className="col-md-2 text-center">
+            <div className="col-md-4 text-center">
               <div className="footer-logo">
                 <Link to="">
-                  <img src="assets/images/travele-logo.png" alt="" />
+                  <img
+                    src="assets/images/VCDTT_logo-removebg-preview.png"
+                    alt=""
+                  />
                 </Link>
               </div>
             </div>
-            <div className="col-md-5">
+            <div className="col-md-4">
               <div className="copy-right text-right">
-                Copyright © 2023 VCDTT. All rights reserveds
+                Copyright © 2023 VCDTT
               </div>
             </div>
           </div>
