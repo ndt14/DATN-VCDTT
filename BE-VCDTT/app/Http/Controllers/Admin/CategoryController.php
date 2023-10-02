@@ -24,7 +24,18 @@ class CategoryController extends Controller
             $parent->Child = $categories->getCategoriesChild($parent->id);
         }
 
-        return response()->json(['dataCategoriesParent' => CategoryResource::collection($categoriesParent)], 200);
+        return response()->json(
+
+            [
+                'data' => [
+                    'categoriesParent' => CategoryResource::collection($categoriesParent)
+                ],
+                'message' => 'OK',
+                'status' => 200
+            
+            ]
+            
+            );
 
     }
 
@@ -33,16 +44,25 @@ class CategoryController extends Controller
         $categoriesParent = $categories->getCategoriesParent();
         return response()->json(
             [
-                'dataCategories' => CategoryResource::collection($categoriesParent),
-            ],
-            200
+               'data' => [
+                'categories' => CategoryResource::collection($categoriesParent),
+               ],
+               'message' => 'OK',
+               'status' => 200
+            ]
         );
     }
 
     public function store(CategoryRequest $request)
     {
         $category = Category::create($request->all());
-        return new CategoryResource($category);
+        return response()->json([
+            'data' => [
+                'category' => new CategoryResource($category)
+            ],
+            'message' => 'OK',
+            'status' => 201
+        ]);
     }
 
     /**
@@ -60,9 +80,12 @@ class CategoryController extends Controller
         }
         return response()->json(
             [
-                'dataCategory' => CategoryResource::collection($category),
+                'data' => [
+                'category' => CategoryResource::collection($category)
+                ],
+                'message' => 'OK',
+                'status' => 200
             ],
-            200
         );
     }
 
@@ -74,7 +97,10 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if ($category) {
             $category->update($request->all());
-            return response()->json(['message' => 'Cập nhật thành công'], 200);
+            return response()->json(
+                ['message' => 'Cập nhật thành công', 'status' => 200]
+            
+            );
         } else {
             return response()->json(['message' => 'Category không tồn tại'], 404);
         }
@@ -87,7 +113,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if ($category) {
             $category->delete(); // soft delete
-            return response()->json(['message' => 'Xóa thành công'], 200);
+            return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
             return response()->json(['message' => 'Category không tồn tại'], 404);
         }

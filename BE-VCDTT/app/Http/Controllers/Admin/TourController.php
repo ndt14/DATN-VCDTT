@@ -49,14 +49,19 @@ class TourController extends Controller
             'location',
             'exact_location',
             'main_img',
+            'view_count',
             'status'
         )
             ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json(
             [
-                'dataTours' => TourResource::collection($tours),
-            ],
-            200
+                'data' => [
+                    "tours" => TourResource::collection($tours),
+                ],
+                "message" => "OK",
+                "status" => 200
+
+            ]
         );
     }
 
@@ -76,18 +81,29 @@ class TourController extends Controller
             ->get();
         return response()->json(
             [
-                'dataCategories' => CategoryResource::collection($listCate),
-                'dataImages' => ImageResource::collection($listImage),
-                'dataCoupons' => CouponResource::collection($listCoupon),
-            ],
-            200
+                'data' => [
+                    'categories' => CategoryResource::collection($listCate),
+                    'images' => ImageResource::collection($listImage),
+                    'coupons' => CouponResource::collection($listCoupon),
+
+                ],
+                'message' => 'OK',
+                'status' => 200
+
+            ]
         );
     }
 
     public function store(Request $request)
     {
         $tour = Tour::create($request->all());
-        return new TourResource($tour);
+        return response()->json([
+            'data' => [
+                'tour' => new TourResource($tour),
+            ],
+            'message' => 'OK',
+            'status' => 201
+        ]);
     }
 
     /**
@@ -133,12 +149,17 @@ class TourController extends Controller
 
             return response()->json(
                 [
-                    'infoTour' => new TourResource($tour),
-                    'dataCategories' => new CategoryResource($listCate),
-                    'dataImages' => new ImageResource($listImage),
-                    'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
-                ],
-                200
+                    'data' => [
+                        'tour' => new TourResource($tour),
+                        'categories' => new CategoryResource($listCate),
+                        'images' => new ImageResource($listImage),
+                        'tourToCategories' => new TourToCategoryResource($listTourToCate),
+
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
+
+                ]
             );
         }
     }
@@ -160,7 +181,13 @@ class TourController extends Controller
         $tour->fill($input);
 
         if ($tour->save()) {
-            return response()->json(['message' => 'Cập nhật tour thành công', 'statusCode' => 200, 'object' => $tour]);
+            return response()->json([
+                'data' => [
+                    'tour' => $tour
+                ],
+                'message' => 'OK',
+                'status' => 200,
+            ]);
         }
     }
     /**
@@ -171,7 +198,7 @@ class TourController extends Controller
         $tour = Tour::find($id);
         if ($tour) {
             $tour->delete(); // soft delete
-            return response()->json(['message' => 'Xóa thành công'], 200);
+            return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
             return response()->json(['message' => 'Tour không tồn tại'], 404);
         }
