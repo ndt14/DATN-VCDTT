@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\FAQ;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FAQRequest;
 use App\Http\Resources\FAQResource;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,29 +15,35 @@ class FAQController extends Controller
     {
         //
         $listFaqs = FAQ::all();
-        return FAQResource::collection($listFaqs);
+        return response()->json(
+            [
+                'data' => [
+                    'faqs' => FAQResource::collection($listFaqs)
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FAQRequest $request)
     {
-        $validator = Validator::make(
-            $request->all(),
+    
+        $faq = $request->all();
+        $newFaq = FAQ::create($faq);
+        return response()->json(
             [
-                'question' => 'required',
-                'answer' => 'required',
+                'data' => [
+                    'faq' => new FAQResource($newFaq)
+                ],
+                'message' => 'OK',
+                'status' => 201
             ]
         );
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()]);
-        } else {
-
-            $newFaq = FAQ::create($request->all());
-            return new FAQResource($newFaq);
-        }
+        
     }
 
     /**
@@ -48,39 +55,40 @@ class FAQController extends Controller
         $faq = FAQ::find($id);
 
         if (!$faq) {
-            return response()->json(['message' => '404 Not Found', 'statusCode' => 404]);
+            return response()->json(['message' => '404 Not Found', 'status' => 404]);
         }
-        return response()->json(['message' => 'ok', 'statusCode' => 200, 'object' => new FAQResource($faq)]);
+        return response()->json([
+            'data' => [
+                'faq' => new FAQResource($faq)
+
+            ],
+            'message' => 'ok', 
+            'status' => 200, 
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(FAQRequest $request, string $id)
     {
         //
 
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'question' => 'required',
-                'answer' => 'required',
-            ]
-        );
-
-        if ($validator->fails()) {
-
-            return response()->json(['errors' => $validator->errors()], 400);
-        } else {
-
+            $faq = $request->all();
             $updateFaq = FAQ::where('id', $id)->update($request->except('_token'));
             $faq = FAQ::find($id);
             if ($updateFaq) {
-                return response()->json(['message' => 'Cập nhật faq thành công', 'statusCode' => 200, 'object' => $faq]);
+                return response()->json([
+                    'data' => [
+                        'faq' => $faq
+                    ],
+                    'message' => 'OK',
+                     'status' => 200
+                ]);
             } else {
-                return response()->json(['message' => 'Cập nhật tour thất bại'], 500);
+                return response()->json(['message' => 'noSuccess', 'status' => 500]);
             }
-        }
+        
     }
 
     /**
@@ -93,8 +101,8 @@ class FAQController extends Controller
         $faq = FAQ::find($id);
         $deleteFaq = $faq->delete();
         if (!$deleteFaq) {
-            return response()->json(['message' => '404 Not Found', 'statusCode' => 404]);
+            return response()->json(['message' => '404 Not Found', 'status' => 404]);
         }
-        return response()->json(['message' => 'ok', 'statusCode' => 200]);
+        return response()->json(['message' => 'OK', 'status' => 200]);
     }
 }
