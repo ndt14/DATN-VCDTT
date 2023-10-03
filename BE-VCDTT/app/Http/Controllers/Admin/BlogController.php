@@ -22,7 +22,7 @@ class BlogController extends Controller
         // $keyword = 'null';
         $sql_order = 'title';
         $limit = intval($request->limit) ? intval($request->limit) : '';
-        $blog = Blog::select(
+        $blogs = Blog::select(
             'id',
             'title',
             'short_desc',
@@ -31,14 +31,26 @@ class BlogController extends Controller
             'view_count',
             'status'
         )->where('title', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
-        return response()->json(
-            [
-                'dataBlogs' => BlogResource::collection($blog),
+        return response()->json([
+            'data' => [
+                'blogs' => BlogResource::collection($blogs),
             ],
-            200
-        );
+            'message' => 'OK',
+            'status' => 200
+            ],);
     }
 
+    public function add()
+    {
+        $images = Image::select('name', 'type', 'url', 'tour_id')->get();
+        return response()->json([
+                'data' => [
+                    'images' => ImageResource::collection($images),
+                ],
+                'message' => 'OK',
+                'status' => 200,
+            ]);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -54,7 +66,7 @@ class BlogController extends Controller
     public function show(string $id)
     {
         // get all data from table images
-        $listImage = Image::select('name', 'type', 'url')->where('blog_id','=',$id)->get();
+        $images = Image::select('name', 'type', 'url')->where('blog_id','=',$id)->get();
         // get info blog by id
         $blog = Blog::select(
             'title',
@@ -63,17 +75,18 @@ class BlogController extends Controller
             'main_img',
             'view_count',
             'status'
-            )
-            ->findOrFail($id);
+            )->findOrFail($id);
         if (!$blog) {
             return response()->json(['message' => '404 Not Found'], 404);
         }
-        return response()->json(
-            [
-                'infoBlog' => new BlogResource($blog),
-                'dataImages' => ImageResource::collection($listImage),
+        return response()->json([
+            'data' => [
+                'blog' => BlogResource::collection($blog),
+                'images' => ImageResource::collection($images),
             ],
-            200
+            'message' => 'OK',
+            'status' => 200
+            ],
         );
     }
 
@@ -93,9 +106,9 @@ class BlogController extends Controller
 
         if ($blog->save()) {
             $updatedBlog = Blog::find($id);
-            return response()->json(['message' => 'Cập nhật blog thành công', 'statusCode' => 200, 'object' => $updatedBlog]);
+            return response()->json(['message' => 'Cập nhật blog thành công', 'status' => 200, 'object' => $updatedBlog]);
         } else {
-            return response()->json(['message' => 'Cập nhật blog thất bại'], 500);
+            return response()->json(['message' => 'Cập nhật blog thất bại', 'status' => 400]);
         }
     }
 
@@ -107,9 +120,9 @@ class BlogController extends Controller
         $blog = Blog::find($id);
         if ($blog) {
             $blog->delete(); // soft delete
-            return response()->json(['message' => 'Xóa thành công'], 200);
+            return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
-            return response()->json(['message' => 'Blog không tồn tại'], 404);
+            return response()->json(['message' => 'Blog không tồn tại', 'status' => 400]);
         }
     }
 }
