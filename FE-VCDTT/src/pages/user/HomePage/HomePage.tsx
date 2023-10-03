@@ -10,6 +10,8 @@ import Loader from "../../../componenets/User/Loader";
 
 const HomePage = () => {
   const { data } = useGetToursQuery();
+  console.log(data);
+  
   
   return (
     <>
@@ -22,9 +24,22 @@ const HomePage = () => {
           <div className="home-banner-items">
             <div className="banner-inner-wrap">
               <Carousel autoplay>
-                <img src="assets/images/slider-banner-1.jpg" alt="" />
-
-                <img src="assets/images/slider-banner-2.jpg" alt="" />
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_4.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_5.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_6.jpg?v=3691"
+                  alt=""
+                />
+                <img
+                  src="https://file.hstatic.net/1000376021/file/1920x720_copy_42b3f822c4ca4cd099bfb116931e6361.png"
+                  alt=""
+                />
               </Carousel>
             </div>
             <div className="banner-content-wrap">
@@ -136,7 +151,7 @@ const HomePage = () => {
           <div className="package-inner">
             <div className="row">
 {
-   data?.dataTours?.map(({ id, name, details,main_img }:Tour) => {
+   data?.data?.tours?.map(({ id, name, details,main_img }:Tour) => {
     return (
       <div className="col-lg-4 col-md-6" key={id}>
       <div className="package-wrap">
