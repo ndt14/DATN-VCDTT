@@ -64,6 +64,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/faq', [FAQController::class, 'index']);
     Route::post('/faq-store', [FAQController::class, 'store']);
     Route::get('/faq-show/{id}', [FAQController::class, 'show']);
+    Route::get('/faq-search', [FAQController::class, 'search_faq']);
     Route::put('/faq-edit/{id}', [FAQController::class, 'update']);
     Route::delete('/faq-destroy/{id}', [FAQController::class, 'destroy']);
 
