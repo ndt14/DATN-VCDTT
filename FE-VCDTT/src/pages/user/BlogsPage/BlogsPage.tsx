@@ -2,16 +2,21 @@ import React from "react";
 import "./BlogsPage.css";
 import Loader from "../../../componenets/User/Loader";
 
+import { useGetBlogsQuery } from "../../../api/blogs";
+import { Blog } from "../../../interfaces/Blog";
+import { Link } from "react-router-dom";
+
 const BlogsPage = () => {
   const backgroundImageUrl = "assets/images/inner-banner.jpg";
-
+  const { data } = useGetBlogsQuery();
+  console.log(data);
   const containerStyle = {
     background: `url(${backgroundImageUrl})`,
     backgroundSize: "cover",
   };
   return (
     <>
-    <Loader/>
+      <Loader />
       <div id="page" className="full-page">
         <main id="content" className="site-main">
           {/* <!-- Inner Banner html start--> */}
@@ -31,228 +36,50 @@ const BlogsPage = () => {
               <div className="container">
                 <div className="row">
                   <div className="col-lg-8 primary right-sidebar">
-                    {/* <!-- blog post item html start --> */}
+                    {/* Call API */}
                     <div className="grid row">
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img17.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Life is a beautiful journey not a destination
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
+                      {data?.dataBlogs?.map(({ id, main_img, title }: Blog) => {
+                        return (
+                          <div className="grid-item col-md-6" key={id}>
+                            <article className="post">
+                              <figure className="feature-image">
+                                <a href="#">
+                                  <img src={main_img} alt="" />
+                                </a>
+                              </figure>
+                              <div className="entry-content">
+                                <h3>
+                                  <a href="#">{title}</a>
+                                </h3>
+                                <div className="entry-meta">
+                                  <span className="byline">
+                                    <a href="#">Demoteam</a>
+                                  </span>
+                                  <span className="posted-on">
+                                    <a href="#">August 17, 2021</a>
+                                  </span>
+                                  <span className="comments-link">
+                                    <a href="#">No Comments</a>
+                                  </span>
+                                </div>
+                                <p>
+                                  Praesent, risus adipisicing donec! Cras.
+                                  Lobortis id aliquip taciti repudiandae porro
+                                  dolore facere officia! Natoque mollitia
+                                  ultrices convallis nisl suscipit
+                                </p>
+                                <a href="#" className="button-text">
+                                  CONTINUE READING..
+                                </a>
+                              </div>
+                            </article>
                           </div>
-                        </article>
-                      </div>
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img18.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Take only memories, leave only footprints
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
-                          </div>
-                        </article>
-                      </div>
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img19.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Journeys are best measured in new friends
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
-                          </div>
-                        </article>
-                      </div>
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img34.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Let’s start adventure with best tripo guides
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
-                          </div>
-                        </article>
-                      </div>
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img35.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Enjoying the beauty of the great nature
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
-                          </div>
-                        </article>
-                      </div>
-                      <div className="grid-item col-md-6">
-                        <article className="post">
-                          <figure className="feature-image">
-                            <a href="#">
-                              <img src="assets/images/img36.jpg" alt="" />
-                            </a>
-                          </figure>
-                          <div className="entry-content">
-                            <h3>
-                              <a href="#">
-                                Someday I’m going to be free and travel
-                              </a>
-                            </h3>
-                            <div className="entry-meta">
-                              <span className="byline">
-                                <a href="#">Demoteam</a>
-                              </span>
-                              <span className="posted-on">
-                                <a href="#">August 17, 2021</a>
-                              </span>
-                              <span className="comments-link">
-                                <a href="#">No Comments</a>
-                              </span>
-                            </div>
-                            <p>
-                              Praesent, risus adipisicing donec! Cras. Lobortis
-                              id aliquip taciti repudiandae porro dolore facere
-                              officia! Natoque mollitia ultrices convallis nisl
-                              suscipit
-                            </p>
-                            <a href="#" className="button-text">
-                              CONTINUE READING..
-                            </a>
-                          </div>
-                        </article>
-                      </div>
+                        );
+                      })}
                     </div>
                     {/* <!-- blog post item html end -->
                            <!-- pagination html start--> */}
-                    <div className="post-navigation-wrap">
+                    {/* <div className="post-navigation-wrap">
                       <nav>
                         <ul className="pagination">
                           <li>
@@ -276,7 +103,7 @@ const BlogsPage = () => {
                           </li>
                         </ul>
                       </nav>
-                    </div>
+                    </div> */}
                     {/* <!-- pagination html start--> */}
                   </div>
                   <div className="col-lg-4 secondary">

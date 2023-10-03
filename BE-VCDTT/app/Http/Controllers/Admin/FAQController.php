@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FAQRequest;
 use App\Http\Resources\FAQResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FAQController extends Controller
@@ -66,6 +67,28 @@ class FAQController extends Controller
             'status' => 200, 
         ]);
     }
+
+    // search faq
+    // thực hiện tìm kiếm câu hỏi trong bảng faqs sử dụng chỉ mục và truy vấn full-text search
+
+    public function search_faq(Request $request)
+{
+    $question = $request->query('question');
+
+    $results = FAQ::where('question','LIKE',"%$question%")->get();
+
+    if(count($results) > 0) {
+        return response()->json([
+            'data' => [
+                'faqs' => $results
+            ],
+            'message' => 'OK',
+            'status' => 200
+        ]);
+    }else {
+        return response()->json(['message' => 'Không tìm thấy kết quả phù hợp'],404);
+    }
+}
 
     /**
      * Update the specified resource in storage.
