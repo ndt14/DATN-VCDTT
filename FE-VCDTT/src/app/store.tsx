@@ -10,9 +10,12 @@ import {
   persistStore,
 } from "redux-persist";
 
-import storage from "redux-persist/lib/storage";
-import TourApi, { tourReducer } from "../api/tours";
+
+import storage from 'redux-persist/lib/storage';
+import TourApi, { tourReducer } from '../api/tours';
+import FaqApi, { faqReducer } from '../api/faqs';
 import BlogApi, { blogReducer } from "../api/blogs";
+
 
 const persistConfig = {
   key: "root",
@@ -20,12 +23,15 @@ const persistConfig = {
   whitelist: ["cart"],
 };
 const rootReducer = combineReducers({
-  // [productApi.reducerPath]: productReducer,
-  // [authApi.reducerPath]: authApi.reducer,
-  [TourApi.reducerPath]: tourReducer,
-  [BlogApi.reducerPath]: blogReducer,
-});
-const middleware = [TourApi.middleware, BlogApi.middleware];
+
+    // [productApi.reducerPath]: productReducer,
+    // [authApi.reducerPath]: authApi.reducer,
+    [TourApi.reducerPath]: tourReducer,
+    [FaqApi.reducerPath]: faqReducer,
+     [BlogApi.reducerPath]: blogReducer,
+})
+const middleware = [TourApi.middleware, FaqApi.middleware,BlogApi.middleware]
+ 
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
