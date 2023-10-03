@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
 
     //Blog
     Route::get('/blog', [BlogController::class, 'index']);
+    Route::get('/blog-add', [BlogController::class,'add']);
     Route::post('/blog-store', [BlogController::class, 'store']);
     Route::get('/blog-show/{id}', [BlogController::class, 'show']);
     Route::put('/blog-edit/{id}', [BlogController::class, 'update']);
