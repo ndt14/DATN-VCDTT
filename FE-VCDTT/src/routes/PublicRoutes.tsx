@@ -12,6 +12,7 @@ import {
   NotFoundPage,
   TourDetail,
 } from "../pages/user";
+import TourSearch from "../pages/user/TourSearch/TourSearch";
 
 const PublicRoutes = () => {
   return (
@@ -30,6 +31,7 @@ const PublicRoutes = () => {
         <Route path="purchase_histories" element={<HomePage />} />
         <Route path="signin" element={<HomePage />} />
         <Route path="signup" element={<HomePage />} />
+        <Route path="search" element={<TourSearch />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
