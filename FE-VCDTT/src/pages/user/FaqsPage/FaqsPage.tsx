@@ -1,9 +1,14 @@
 import React from 'react'
 import Loader from '../../../componenets/User/Loader';
+import { useGetFaqsQuery } from '../../../api/faqs';
+import { Faq } from '../../../interfaces/Faq';
 
 type Props = {}
 
 const FaqsPage = (props: Props) => {
+   const {data} = useGetFaqsQuery();
+   console.log(data);
+   
     const backgroundImageUrl = 'assets/images/inner-banner.jpg'; 
 
     const containerStyle = {
@@ -36,12 +41,34 @@ const FaqsPage = (props: Props) => {
                       <div className="col-lg-6">
                          <div className="faq-content-wrap">
                             <div className="section-heading">
-                               <h5 className="dash-style">ANY QUESTIONS</h5>
-                               <h2>FREQUENTLY ASKED QUESTIONS</h2>
-                               <p>Aperiam sociosqu urna praesent, tristique, corrupti condimentum asperiores platea ipsum ad arcu. Nostrud. Esse? Aut nostrum, ornare quas provident laoreet nesciunt odio voluptates etiam, omnis.</p>
+                               <h5 className="dash-style">Mọi câu hỏi</h5>
+                               <h2>Một số câu hỏi thường gặp</h2>
+                               
                             </div>
                             <div className="accordion" id="accordionOne">
-                               <div className="card">
+                            {data?.data?.faqs?.map(({id,question,answer}: Faq)=>{
+    return(
+      
+      <div className="card" key={id}>
+      <div className="card-header" id="headingOne">
+         <h4 className="mb-0">
+            <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+             {question}
+            </button>
+         </h4>
+      </div>
+      <div id="collapseOne" className="collapse" aria-labelledby="headingOne" data-parent="#accordionOne">
+         <div className="card-body">
+          {answer}
+         </div>
+      </div>
+   </div>
+   
+    )
+})
+}
+
+                               {/* <div className="card">
                                   <div className="card-header" id="headingOne">
                                      <h4 className="mb-0">
                                         <button className="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -96,7 +123,7 @@ const FaqsPage = (props: Props) => {
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
                                      </div>
                                   </div>
-                               </div>
+                               </div> */}
                             </div>      
                          </div>
                       </div>

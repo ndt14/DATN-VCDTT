@@ -12,6 +12,7 @@ import {
 
 import storage from 'redux-persist/lib/storage';
 import TourApi, { tourReducer } from '../api/tours';
+import FaqApi, { faqReducer } from '../api/faqs';
 
 const persistConfig = {
     key: 'root',
@@ -21,9 +22,10 @@ const persistConfig = {
 const rootReducer = combineReducers({
     // [productApi.reducerPath]: productReducer,
     // [authApi.reducerPath]: authApi.reducer,
-    [TourApi.reducerPath]: tourReducer
+    [TourApi.reducerPath]: tourReducer,
+    [FaqApi.reducerPath]: faqReducer
 })
-const middleware = [TourApi.middleware]
+const middleware = [TourApi.middleware, FaqApi.middleware]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = configureStore({
