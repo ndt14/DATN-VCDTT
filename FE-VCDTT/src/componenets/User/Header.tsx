@@ -7,12 +7,26 @@ import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
 const Header = () => {
   const [showSignIn, setShowSignIn] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
+  // const [showSignUp, setShowSignUp] = useState(false);
 
   const handleCloseSignIn = () => setShowSignIn(false);
-  const handleCloseSignUp = () => setShowSignUp(false);
+  // const handleCloseSignUp = () => setShowSignUp(false);
   const handleShowSignIn = () => setShowSignIn(true);
-  const handleShowSignUp = () => setShowSignUp(true);
+  // const handleShowSignUp = () => setShowSignUp(true);
+
+  const [showSignInForm, setShowSignInForm] = useState(true);
+  const [showSignUpForm, setShowSignUpForm] = useState(false);
+
+  const handleSwapToSignInForm = () => {
+    setShowSignInForm(true);
+    setShowSignUpForm(false);
+  };
+
+  const handleSwapToSignUpForm = () => {
+    setShowSignInForm(false);
+    setShowSignUpForm(true);
+  };
+
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -86,126 +100,131 @@ const Header = () => {
               <div className="">
                 <button
                   className="rounded button-primary"
-                  variant="primary"
                   onClick={handleShowSignIn}
                 >
-                  ĐĂNG NHẬP
+                  ĐĂNG NHẬP/ĐĂNG KÝ
                 </button>
                 <Modal show={showSignIn} onHide={handleCloseSignIn}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>ĐĂNG NHẬP ...</Modal.Title>
-                  </Modal.Header>
+                  <Modal.Header closeButton></Modal.Header>
                   <Modal.Body>
-                    <form>
-                      <label htmlFor="">
-                        Tài khoản <span className="text-danger">*</span>
-                      </label>
-                      <br />
-                      <input
-                        className="w-100 my-2"
-                        type="text"
-                        placeholder="Email"
-                        name="email"
-                      />
-                      <label htmlFor="">
-                        Mật khẩu <span className="text-danger">*</span>
-                      </label>
-                      <br />
-                      <input
-                        className="w-100 my-2"
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                      />
+                    <div className="d-flex">
                       <button
-                        type="submit"
-                        className="w-100 bg-primary text-white py-3 my-3 border-0"
+                        onClick={handleSwapToSignInForm}
+                        className="w-100 border-0 p-3 border-right-1"
                       >
                         ĐĂNG NHẬP
                       </button>
-                    </form>
-                    <div className="d-flex justify-content-between">
-                      <button className="border-0 bg-white ">
-                        Chưa có tài khoản? Đăng ký
-                      </button>
-                      <button className="border-0 bg-white ">
-                        Quên mật khẩu
-                      </button>
-                    </div>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <h5 className="">HOẶC ĐĂNG NHẬP VỚI</h5>
-                    <button className="p-2 w-100 border-0">
-                      <BsGoogle />
-                      <span className="mx-2">Đăng nhập với Google</span>
-                    </button>
-                    <button className="p-2 w-100 border-0">
-                      <BsFacebook />
-                      <span className="mx-2">Đăng nhập với Facebook</span>
-                    </button>
-                  </Modal.Footer>
-                </Modal>
-              </div>
-              <div>
-                <button
-                  className="button-primary rounded bg-primary"
-                  style={{ marginLeft: "12px" }}
-                  onClick={handleShowSignUp}
-                >
-                  ĐĂNG KÝ
-                </button>
-                <Modal show={showSignUp} onHide={handleCloseSignUp}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>ĐĂNG KÝ ...</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <form>
-                      <label htmlFor="">
-                        Tài khoản <span className="text-danger">*</span>
-                      </label>
-                      <br />
-                      <input
-                        className="w-100 my-2"
-                        type="text"
-                        placeholder="Email"
-                        name="email"
-                      />
-                      <label htmlFor="">
-                        Mật khẩu <span className="text-danger">*</span>
-                      </label>
-                      <br />
-                      <input
-                        className="w-100 my-2"
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                      />
                       <button
-                        type="submit"
-                        className="w-100 bg-primary text-white py-3 my-3 border-0"
+                        onClick={handleSwapToSignUpForm}
+                        className="w-100 border-0 p-3"
                       >
                         ĐĂNG KÝ
                       </button>
-                    </form>
-                    <div className="d-flex justify-content-between">
-                      <button className="border-0 bg-white text-info">
-                        Đã có tài khoản? Đăng nhập
-                      </button>
                     </div>
+                    {showSignInForm && (
+                      <div>
+                        <form>
+                          <label htmlFor="">
+                            Tài khoản <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="text"
+                            placeholder="Email"
+                            name="email"
+                          />
+                          <label htmlFor="">
+                            Mật khẩu <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                          />
+                          <button
+                            type="submit"
+                            className="w-100 bg-primary text-white py-3 my-3 border-0"
+                          >
+                            ĐĂNG NHẬP
+                          </button>
+                        </form>
+                        <div className="d-flex justify-content-between">
+                          <button className="border-0 bg-white text-info">
+                            Chưa có tài khoản? Đăng ký
+                          </button>
+                          <button className="border-0 bg-white text-info">
+                            Quên mật khẩu
+                          </button>
+                        </div>
+                        <h4 className="text-center my-3 fw-bold">
+                          HOẶC ĐĂNG NHẬP VỚI
+                        </h4>
+                        <button className="p-2 w-100 border-0 my-2">
+                          <BsGoogle />
+                          <span className="mx-2">Đăng nhập với Google</span>
+                        </button>
+                        <button className="p-2 w-100 border-0 my-2">
+                          <BsFacebook />
+                          <span className="mx-2">Đăng nhập với Facebook</span>
+                        </button>
+                      </div>
+                    )}
+                    {showSignUpForm && (
+                      <div>
+                        <form>
+                          <label htmlFor="">
+                            Tài khoản <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="text"
+                            placeholder="Email"
+                            name="email"
+                          />
+                          <label htmlFor="">
+                            Mật khẩu <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                          />
+                          <button
+                            type="submit"
+                            className="w-100 bg-primary text-white py-3 my-3 border-0"
+                          >
+                            ĐĂNG KÝ
+                          </button>
+                        </form>
+                        <div className="d-flex justify-content-between">
+                          <button className="border-0 bg-white text-info">
+                            Đã có tài khoản? Đăng nhập
+                          </button>
+                        </div>
+                        <h4 className="text-center my-3 fw-bold">
+                          HOẶC ĐĂNG KÝ VỚI
+                        </h4>
+                        <button className="p-2 w-100 border-0 my-2">
+                          <BsGoogle />
+                          <span className="mx-2">Đăng ký với Google</span>
+                        </button>
+                        <button className="p-2 w-100 border-0 my-2">
+                          <BsFacebook />
+                          <span className="mx-2">Đăng ký với Facebook</span>
+                        </button>
+                      </div>
+                    )}
                   </Modal.Body>
-                  <Modal.Footer>
-                    <h5 className="">HOẶC ĐĂNG KÝ VỚI</h5>
-                    <button className="p-2 w-100 border-0">
-                      <BsGoogle />
-                      <span className="mx-2">Đăng ký với Google</span>
-                    </button>
-                    <button className="p-2 w-100 border-0">
-                      <BsFacebook />
-                      <span className="mx-2">Đăng ký với Facebook</span>
-                    </button>
-                  </Modal.Footer>
+                  <Modal.Footer></Modal.Footer>
                 </Modal>
               </div>
+              <div></div>
             </div>
           </div>
         </div>
