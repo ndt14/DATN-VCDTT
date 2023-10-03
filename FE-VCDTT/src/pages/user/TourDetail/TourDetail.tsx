@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import Loader from "../../../componenets/User/Loader";
-import { data } from "jquery";
-
+import "./TourDetail.css"
 
 const TourDetail = () => {
    const { id } = useParams<{ id: string }>();
@@ -29,7 +28,7 @@ const TourDetail = () => {
                <div className="inner-baner-container" style={containerStyle}>
                   <div className="container">
                      <div className="inner-banner-content">
-                        <h1 className="inner-title">Package Detail</h1>
+                        <h1 className="inner-title">Tour chi tiết</h1>
                      </div>
                   </div>
                </div>
@@ -39,12 +38,12 @@ const TourDetail = () => {
             <div className="single-tour-section">
                <div className="container">
                   <div className="row">
-                     <div className="col-lg-8">
+                     <div className="col-lg-7">
                         <div className="single-tour-inner">
-                           <h2>{tourData?.infoTour.name}</h2>
+                           <h2>{tourData?.data?.tour.name}</h2>
                            <figure className="feature-image">
-                              <img src={tourData?.infoTour.main_img} alt="" />
-                              <div className="package-meta text-center">
+                              <img src={tourData?.data?.tour.main_img} alt="" />
+                              {/* <div className="package-meta text-center">
                                  <ul>
                                     <li>
                                        <i className="far fa-clock"></i>
@@ -59,21 +58,22 @@ const TourDetail = () => {
                                        Norway
                                     </li>
                                  </ul>
-                              </div>
+                              </div> */}
+
                            </figure>
                            <div className="tab-container">
                               <ul className="nav nav-tabs" id="myTab" role="tablist">
                                  <li className="nav-item">
-                                    <a className="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">DESCRIPTION</a>
+                                    <a className="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Mô Tả</a>
                                  </li>
                                  <li className="nav-item">
-                                    <a className="nav-link" id="program-tab" data-toggle="tab" href="#program" role="tab" aria-controls="program" aria-selected="false">PROGRAM</a>
+                                    <a className="nav-link" id="program-tab" data-toggle="tab" href="#program" role="tab" aria-controls="program" aria-selected="false">Chương Trình</a>
                                  </li>
                                  <li className="nav-item">
-                                    <a className="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">REVIEW</a>
+                                    <a className="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Đánh Giá</a>
                                  </li>
                                  <li className="nav-item">
-                                    <a className="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">Map</a>
+                                    <a className="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">Bản Đồ</a>
                                  </li>
                               </ul>
                               <div className="tab-content" id="myTabContent">
@@ -256,11 +256,11 @@ const TourDetail = () => {
                            
                         </div>
                      </div>
-                     <div className="col-lg-4">
+                     <div className="col-lg-5">
                         <div className="sidebar">
                            <div className="package-price">
-                              <h5 className="price">
-                                 <span>$649</span> / per person
+                              <h5 className="price rounded-2">
+                                 <span>{tourData?.data?.tour.adult_price} $</span>
                               </h5>
                               <div className="start-wrap">
                                  <div className="rating-start" title="Rated 5 out of 5">
@@ -269,82 +269,47 @@ const TourDetail = () => {
                               </div>
                            </div>
                            <div className="widget-bg booking-form-wrap">
-                              <h4 className="bg-title">Booking</h4>
+                              <h4 className="bg-title">Thông tin đặt tour</h4> 
+               
+          
                               <form className="booking-form">
+                                 
                                  <div className="row">
-                                    <div className="col-sm-12">
-                                       <div className="form-group">
-                                          <input name="name_booking" type="text" placeholder="Full Name"/>
-                                       </div>
+                                    <div className="col-sm-7">
+                                    <label htmlFor="" className="h6">Người lớn(90cm trở lên)</label>
+                                    <div className="price">
+                                    {tourData?.data?.tour.adult_price} $
                                     </div>
-                                    <div className="col-sm-12">
-                                       <div className="form-group">
-                                          <input name="email_booking" type="text" placeholder="Email"/>
-                                       </div>
+                                    <label htmlFor="" className="h6">(Trẻ em miễn phí)</label>
+
                                     </div>
-                                    <div className="col-sm-12">
-                                       <div className="form-group">
-                                          <input name="phone_booking" type="text" placeholder="Number"/>
-                                       </div>
+
+                                    <div className="col-sm-5 mt-2">
+                                    
+                  <a className="minus-btn mr-2" href="#"><i className="fa fa-minus"></i></a>
+                  <input className="quantity" type="text" value="1"/>
+                  <a className="plus-btn ml-2" href="#"><i className="fa fa-plus"></i></a>
+              
                                     </div>
-                                    <div className="col-sm-12">
-                                       <div className="form-group">
-                                          <input className="input-date-picker" type="text" name="s" autoComplete="off" placeholder="Date"/>
-                                       </div>
+                                  
+                                    <div className="col-sm-5 mt-2">
+                                    <label htmlFor="" className="h6">Chọn ngày đi</label>
+                               
+                        <input className="input-date-picker" type="date" name="s" placeholder="MM / DD / YY" autoComplete="on" />
                                     </div>
-                                    <div className="col-sm-12">
-                                       <h4 className="">Add Options</h4>
-                                    </div>
-                                    <div className="col-sm-6">
-                                       <div className="form-group">
-                                          <label className="checkbox-list">
-                                             <input type="checkbox" name="s" />
-                                             <span className="custom-checkbox"></span>
-                                             Tour guide
-                                          </label>
-                                       </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                       <div className="form-group">
-                                          <label className="checkbox-list">
-                                             <input type="checkbox" name="s" />
-                                             <span className="custom-checkbox"></span>
-                                             Insurance 
-                                          </label>
-                                       </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                       <div className="form-group">
-                                          <label className="checkbox-list">
-                                             <input type="checkbox" name="s"/>
-                                             <span className="custom-checkbox"></span>
-                                             Dinner
-                                          </label>
-                                       </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                       <div className="form-group">
-                                          <label className="checkbox-list">
-                                             <input type="checkbox" name="s"/>
-                                             <span className="custom-checkbox"></span>
-                                             Bike rent
-                                          </label>
-                                       </div>
+                                  
+                                    <div className="col-sm-12 mt-2">
+                                    <label htmlFor="" className="h5">Tổng giá : {tourData?.data?.tour.adult_price}</label>
                                     </div>
                                     <div className="col-sm-12">
                                        <div className="form-group submit-btn">
-                                          <input type="submit" name="submit" value="Boook Now"/>
+                                          <input type="submit" name="submit" value="Đặt tour"/>
                                        </div>
                                     </div>
                                  </div>
                               </form>
                            </div>
-                           <div className="widget-bg information-content text-center">
-                              <h5>TRAVEL TIPS</h5>
-                              <h3>NEED TRAVEL RELATED TIPS & INFORMATION</h3>
-                              <p>Mollit voluptatem perspiciatis convallis elementum corporis quo veritatis aliquid blandit, blandit torquent, odit placeat. </p>
-                              <a href="#" className="button-primary">GET A QUOTE</a>
-                           </div>
+                           
                           
                         </div>
                      </div>
