@@ -63,7 +63,7 @@ class FAQController extends Controller
                 'faq' => new FAQResource($faq)
 
             ],
-            'message' => 'ok', 
+            'message' => 'OK', 
             'status' => 200, 
         ]);
     }
@@ -98,7 +98,7 @@ class FAQController extends Controller
         //
 
             $faq = $request->all();
-            $updateFaq = FAQ::where('id', $id)->update($request->except('_token'));
+            $updateFaq = FAQ::where('id', $id)->update($request->except('_tOKen'));
             $faq = FAQ::find($id);
             if ($updateFaq) {
                 return response()->json([
