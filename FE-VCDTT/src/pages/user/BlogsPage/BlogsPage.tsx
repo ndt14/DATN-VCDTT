@@ -19,14 +19,12 @@ const BlogsPage = () => {
   };
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { data } = useGetBlogsQuery();
-  console.log(data);
   const itemsPerPage = 6;
   const pageCount = Math.ceil(data?.data?.blogs.length / itemsPerPage);
   const currentData: Blog[] = (data?.data?.blogs.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   ) || []) as Blog[];
-  console.log(currentData);
 
   return (
     <>
