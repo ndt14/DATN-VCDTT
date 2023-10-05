@@ -25,7 +25,7 @@ class CouponController extends Controller
                 ]
             ]);
         }else {
-            return response()->json(['message' => 'Không tồn tại dữ liệu nào']);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 
@@ -75,7 +75,7 @@ class CouponController extends Controller
             ]);
         }else {
             return response()->json([
-                'message' => 'Not found',
+                'message' => '404 Not found',
                 'status' => 404
             ]);
         }
@@ -101,7 +101,7 @@ class CouponController extends Controller
             );
         }else {
             return response()->json([
-                'message' => 'Not found',
+                'message' => '404 Not found',
                 'status' => 404
             ]);
         }
@@ -118,7 +118,7 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         if (!$coupon) {
-            return response()->json(['message' => 'Không tìm thấy coupon'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
 
         $coupon->fill($input);

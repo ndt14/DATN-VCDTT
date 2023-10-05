@@ -9,6 +9,7 @@ use App\Http\Requests\BlogRequest;
 use App\Http\Resources\BlogResource;
 use App\Http\Resources\ImageResource;
 use App\Models\Image;
+use Exception;
 
 class BlogController extends Controller
 {
@@ -25,11 +26,13 @@ class BlogController extends Controller
         $blogs = Blog::select(
             'id',
             'title',
+            'author',
             'short_desc',
             'description',
             'main_img',
             'view_count',
-            'status'
+            'status',
+            'created_at'
         )->where('title', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json([
             'data' => [
@@ -57,7 +60,18 @@ class BlogController extends Controller
     public function store(BlogRequest $request)
     {
         $blog = Blog::create($request->all());
-        return new BlogResource($blog);
+
+        if($blog->id) {
+
+            return response()->json([
+                'data' => [
+                    'blog' => new BlogResource($blog)
+                ],
+                'message' => 'OK',
+                'status' => 201
+            ]);
+        }
+        
     }
 
     /**
@@ -65,20 +79,23 @@ class BlogController extends Controller
      */
     public function show(string $id)
     {
+        // mình chỉnh sửa lại của bạn để nó hoạt động theo yêu cầu chung
+        try {
+
         // get all data from table images
         $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
         // get info blog by id
         $blog = Blog::select(
             'title',
+            'author',
             'short_desc',
             'description',
             'main_img',
             'view_count',
-            'status'
+            'status',
+            'created_at'
         )->findOrFail($id);
-        if (!$blog) {
-            return response()->json(['message' => '404 Not Found'], 404);
-        }
+
         return response()->json(
             [
                 'data' => [
@@ -89,6 +106,10 @@ class BlogController extends Controller
                 'status' => 200
             ],
         );
+           
+        } catch (Exception $e) {
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        }
     }
 
     /**
@@ -100,7 +121,7 @@ class BlogController extends Controller
 
         $blog = Blog::find($id);
         if (!$blog) {
-            return response()->json(['message' => 'Không tìm thấy blog'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
 
         $blog->fill($input);
@@ -123,7 +144,7 @@ class BlogController extends Controller
             $blog->delete(); // soft delete
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
-            return response()->json(['message' => 'Blog không tồn tại', 'status' => 400]);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 }

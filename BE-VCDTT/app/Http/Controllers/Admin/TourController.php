@@ -48,6 +48,7 @@ class TourController extends Controller
             'details',
             'location',
             'exact_location',
+            'pathway',
             'main_img',
             'view_count',
             'status'
@@ -135,6 +136,7 @@ class TourController extends Controller
             'details',
             'location',
             'exact_location',
+            'pathway',
             'main_img',
             'view_count',
             'status',
@@ -144,7 +146,7 @@ class TourController extends Controller
             ->first();
 
         if (!$tour) {
-            return response()->json(['message' => '404 Not Found'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         } else {
 
             return response()->json(
@@ -175,7 +177,7 @@ class TourController extends Controller
 
         $tour = Tour::find($id);
         if (!$tour) {
-            return response()->json(['message' => 'Không tìm thấy tour'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
 
         $tour->fill($input);
@@ -200,7 +202,7 @@ class TourController extends Controller
             $tour->delete(); // soft delete
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
-            return response()->json(['message' => 'Tour không tồn tại'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 }
