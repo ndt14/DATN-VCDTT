@@ -11,6 +11,7 @@ import {
   FaqsPage,
   NotFoundPage,
   TourDetail,
+  PurchasingInformation,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 
@@ -21,6 +22,7 @@ const PublicRoutes = () => {
         <Route index element={<HomePage />} />
         <Route path="tours" element={<HomePage />} />
         <Route path="tours/:id" element={<TourDetail />} />
+        <Route path="check_order_information" element={<PurchasingInformation />} />
         <Route path="categories" element={<HomePage />} />
         <Route path="about" element={<HomePage />} />
         <Route path="contact" element={<ContactPage />} />

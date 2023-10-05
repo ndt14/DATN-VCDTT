@@ -1,18 +1,20 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css"
+import { DatePicker } from "antd";
+import type { DatePickerProps } from 'antd';
+
+const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+   console.log(date, dateString);
+ };
 
 const TourDetail = () => {
    const { id } = useParams<{ id: string }>();
    const { data: tourData, } = useGetTourByIdQuery(id || "");
    console.log(tourData);
-   //  if (!tourData) {
-   //    // Xử lý trường hợp không có sản phẩm nào được chọn
-   //    return <div className="archive-section blog-archive">No product selected.</div>;
-   //  }
-   //  const { name,price,main_img } = ;
-    const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg'; // Đường dẫn tới hình ảnh nền
+ 
+    const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg';
 
     const containerStyle = {
       background: `url(${backgroundImageUrl})`,
@@ -61,6 +63,7 @@ const TourDetail = () => {
                               </div> */}
 
                            </figure>
+                           
                            <div className="tab-container">
                               <ul className="nav nav-tabs" id="myTab" role="tablist">
                                  <li className="nav-item">
@@ -295,7 +298,7 @@ const TourDetail = () => {
                                     <div className="col-sm-5 mt-2">
                                     <label htmlFor="" className="h6">Chọn ngày đi</label>
                                
-                        <input className="input-date-picker" type="date" name="s" placeholder="MM / DD / YY" autoComplete="on" />
+                                    <DatePicker onChange={onChange} />
                                     </div>
                                   
                                     <div className="col-sm-12 mt-2">
@@ -303,7 +306,10 @@ const TourDetail = () => {
                                     </div>
                                     <div className="col-sm-12">
                                        <div className="form-group submit-btn">
-                                          <input type="submit" name="submit" value="Đặt tour"/>
+                                        <Link to={'/check_order_information'}>
+                                        <input type="submit" name="submit" value="Đặt tour"/>
+                                        </Link>
+                                         
                                        </div>
                                     </div>
                                  </div>
