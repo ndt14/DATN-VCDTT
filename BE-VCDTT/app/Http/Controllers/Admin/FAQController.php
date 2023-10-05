@@ -56,7 +56,7 @@ class FAQController extends Controller
         $faq = FAQ::find($id);
 
         if (!$faq) {
-            return response()->json(['message' => '404 Not Found', 'status' => 404]);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
         return response()->json([
             'data' => [
@@ -86,7 +86,7 @@ class FAQController extends Controller
             'status' => 200
         ]);
     }else {
-        return response()->json(['message' => 'Không tìm thấy kết quả phù hợp'],404);
+        return response()->json(['message' => '404 Not found', 'status' => 404]);
     }
 }
 
@@ -98,7 +98,7 @@ class FAQController extends Controller
         //
 
             $faq = $request->all();
-            $updateFaq = FAQ::where('id', $id)->update($request->except('_tOKen'));
+            $updateFaq = FAQ::where('id', $id)->update($request->except('_token'));
             $faq = FAQ::find($id);
             if ($updateFaq) {
                 return response()->json([
@@ -124,7 +124,7 @@ class FAQController extends Controller
         $faq = FAQ::find($id);
         $deleteFaq = $faq->delete();
         if (!$deleteFaq) {
-            return response()->json(['message' => '404 Not Found', 'status' => 404]);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
         return response()->json(['message' => 'OK', 'status' => 200]);
     }

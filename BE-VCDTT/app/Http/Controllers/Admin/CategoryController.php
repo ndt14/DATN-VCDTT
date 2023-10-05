@@ -73,7 +73,7 @@ class CategoryController extends Controller
         $categories = new Category;
         $category = $categories->find($id)->get();
         if (!$category) {
-            return response()->json(['message' => 'Không tìm thấy tour'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
         foreach($category as $parent){
             $parent->Child = $categories->getCategoriesChild($parent->id);
@@ -102,7 +102,7 @@ class CategoryController extends Controller
             
             );
         } else {
-            return response()->json(['message' => 'Category không tồn tại'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 
@@ -115,7 +115,7 @@ class CategoryController extends Controller
             $category->delete(); // soft delete
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
-            return response()->json(['message' => 'Category không tồn tại'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 }

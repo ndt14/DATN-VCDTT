@@ -23,8 +23,9 @@ class Tour extends Model
         'details',
         'location',
         'exact_location',
+        'pathway',
         'main_img',
         'status',
-        'view_count',
+        'view_count'
     ];
 }
