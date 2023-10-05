@@ -37,19 +37,19 @@ class BlogController extends Controller
             ],
             'message' => 'OK',
             'status' => 200
-            ],);
+        ],);
     }
 
     public function add()
     {
         $images = Image::select('name', 'type', 'url', 'tour_id')->get();
         return response()->json([
-                'data' => [
-                    'images' => ImageResource::collection($images),
-                ],
-                'message' => 'OK',
-                'status' => 200,
-            ]);
+            'data' => [
+                'images' => ImageResource::collection($images),
+            ],
+            'message' => 'OK',
+            'status' => 200,
+        ]);
     }
     /**
      * Store a newly created resource in storage.
@@ -66,7 +66,7 @@ class BlogController extends Controller
     public function show(string $id)
     {
         // get all data from table images
-        $images = Image::select('name', 'type', 'url')->where('blog_id','=',$id)->get();
+        $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
         // get info blog by id
         $blog = Blog::select(
             'title',
@@ -75,17 +75,18 @@ class BlogController extends Controller
             'main_img',
             'view_count',
             'status'
-            )->findOrFail($id);
+        )->findOrFail($id);
         if (!$blog) {
             return response()->json(['message' => '404 Not Found'], 404);
         }
-        return response()->json([
-            'data' => [
-                'blog' => BlogResource::collection($blog),
-                'images' => ImageResource::collection($images),
-            ],
-            'message' => 'OK',
-            'status' => 200
+        return response()->json(
+            [
+                'data' => [
+                    'blog' => new BlogResource($blog),
+                    'images' => ImageResource::collection($images),
+                ],
+                'message' => 'OK',
+                'status' => 200
             ],
         );
     }

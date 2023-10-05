@@ -1,19 +1,33 @@
-import React from "react";
 import "./BlogsPage.css";
 import Loader from "../../../componenets/User/Loader";
 
 import { useGetBlogsQuery } from "../../../api/blogs";
 import { Blog } from "../../../interfaces/Blog";
 import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
+import { useState } from "react";
 
 const BlogsPage = () => {
   const backgroundImageUrl = "assets/images/inner-banner.jpg";
-  const { data } = useGetBlogsQuery();
-  console.log(data);
   const containerStyle = {
     background: `url(${backgroundImageUrl})`,
     backgroundSize: "cover",
   };
+
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const { data } = useGetBlogsQuery();
+  console.log(data);
+  const itemsPerPage = 6;
+  const pageCount = Math.ceil(data?.data?.blogs.length / itemsPerPage);
+  const currentData: Blog[] = (data?.data?.blogs.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  ) || []) as Blog[];
+  console.log(currentData);
+
   return (
     <>
       <Loader />
@@ -38,19 +52,19 @@ const BlogsPage = () => {
                   <div className="col-lg-8 primary right-sidebar">
                     {/* Call API */}
                     <div className="grid row">
-                      {data?.dataBlogs?.map(({ id, main_img, title }: Blog) => {
+                      {currentData?.map(({ id, main_img, title }: Blog) => {
                         return (
                           <div className="grid-item col-md-6" key={id}>
                             <article className="post">
                               <figure className="feature-image">
-                                <a href="#">
+                                <Link to={`${id}`}>
                                   <img src={main_img} alt="" />
-                                </a>
+                                </Link>
                               </figure>
                               <div className="entry-content">
-                                <h3>
-                                  <a href="#">{title}</a>
-                                </h3>
+                                <Link to={`${id}`}>
+                                  <h3>{title}</h3>
+                                </Link>
                                 <div className="entry-meta">
                                   <span className="byline">
                                     <a href="#">Demoteam</a>
@@ -77,6 +91,15 @@ const BlogsPage = () => {
                         );
                       })}
                     </div>
+                    <ReactPaginate
+                      previousLabel={"Back"}
+                      nextLabel={"Next"}
+                      breakLabel={"..."}
+                      pageCount={pageCount}
+                      onPageChange={handlePageChange}
+                      containerClassName={"pagination"}
+                      activeClassName={"active"}
+                    />
                     {/* <!-- blog post item html end -->
                            <!-- pagination html start--> */}
                     {/* <div className="post-navigation-wrap">
@@ -106,7 +129,7 @@ const BlogsPage = () => {
                     </div> */}
                     {/* <!-- pagination html start--> */}
                   </div>
-                  <div className="col-lg-4 secondary">
+                  {/* <div className="col-lg-4 secondary">
                     <div className="sidebar">
                       <aside className="widget author_widget">
                         <h3 className="widget-title">ABOUT AUTHOR</h3>
@@ -331,7 +354,7 @@ const BlogsPage = () => {
                         </div>
                       </aside>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
