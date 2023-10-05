@@ -16,15 +16,23 @@ const Header = () => {
 
   const [showSignInForm, setShowSignInForm] = useState(true);
   const [showSignUpForm, setShowSignUpForm] = useState(false);
+  const [isButtonSignInClicked, setIsButtonSignInClicked] = useState(true);
+  const [isButtonSignUpClicked, setIsButtonSignUpClicked] = useState(false);
+  const buttonColor = isButtonSignInClicked ? "#30C5F7" : "gray";
+  const buttonColor2 = isButtonSignUpClicked ? "#30C5F7" : "gray";
 
   const handleSwapToSignInForm = () => {
     setShowSignInForm(true);
     setShowSignUpForm(false);
+    setIsButtonSignInClicked(true);
+    setIsButtonSignUpClicked(false);
   };
 
   const handleSwapToSignUpForm = () => {
     setShowSignInForm(false);
     setShowSignUpForm(true);
+    setIsButtonSignInClicked(false);
+    setIsButtonSignUpClicked(true);
   };
 
   return (
@@ -107,16 +115,18 @@ const Header = () => {
                 <Modal show={showSignIn} onHide={handleCloseSignIn}>
                   <Modal.Header closeButton></Modal.Header>
                   <Modal.Body>
-                    <div className="d-flex">
+                    <div className="d-flex mb-3">
                       <button
                         onClick={handleSwapToSignInForm}
-                        className="w-100 border-0 p-3 border-right-1"
+                        className="w-100 border-0 p-3 border-right-1 text-white rounded-start"
+                        style={{ backgroundColor: buttonColor }}
                       >
                         ĐĂNG NHẬP
                       </button>
                       <button
                         onClick={handleSwapToSignUpForm}
-                        className="w-100 border-0 p-3"
+                        className="w-100 border-0 p-3 text-white rounded-end"
+                        style={{ backgroundColor: buttonColor2 }}
                       >
                         ĐĂNG KÝ
                       </button>
@@ -124,7 +134,7 @@ const Header = () => {
                     {showSignInForm && (
                       <div>
                         <form>
-                          <label htmlFor="">
+                          <label htmlFor="" className="fw-bold">
                             Tài khoản <span className="text-danger">*</span>
                           </label>
                           <br />
@@ -134,7 +144,7 @@ const Header = () => {
                             placeholder="Email"
                             name="email"
                           />
-                          <label htmlFor="">
+                          <label htmlFor="" className="fw-bold">
                             Mật khẩu <span className="text-danger">*</span>
                           </label>
                           <br />
@@ -146,7 +156,7 @@ const Header = () => {
                           />
                           <button
                             type="submit"
-                            className="w-100 bg-primary text-white py-3 my-3 border-0"
+                            className="w-100 button-primary text-white py-3 my-3 border-0 rounded"
                           >
                             ĐĂNG NHẬP
                           </button>
@@ -162,11 +172,11 @@ const Header = () => {
                         <h4 className="text-center my-3 fw-bold">
                           HOẶC ĐĂNG NHẬP VỚI
                         </h4>
-                        <button className="p-2 w-100 border-0 my-2">
+                        <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                           <BsGoogle />
                           <span className="mx-2">Đăng nhập với Google</span>
                         </button>
-                        <button className="p-2 w-100 border-0 my-2">
+                        <button className="p-2 w-100 border-0 my-2 bg-primary text-white rounded py-3">
                           <BsFacebook />
                           <span className="mx-2">Đăng nhập với Facebook</span>
                         </button>
@@ -175,8 +185,8 @@ const Header = () => {
                     {showSignUpForm && (
                       <div>
                         <form>
-                          <label htmlFor="">
-                            Tài khoản <span className="text-danger">*</span>
+                          <label htmlFor="" className="fw-bold">
+                            Email <span className="text-danger">*</span>
                           </label>
                           <br />
                           <input
@@ -185,8 +195,29 @@ const Header = () => {
                             placeholder="Email"
                             name="email"
                           />
-                          <label htmlFor="">
+                          <label htmlFor="" className="fw-bold">
+                            Số điện thoại <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="text"
+                            placeholder="text"
+                            name="text"
+                          />
+                          <label htmlFor="" className="fw-bold">
                             Mật khẩu <span className="text-danger">*</span>
+                          </label>
+                          <br />
+                          <input
+                            className="w-100 my-2"
+                            type="email"
+                            placeholder="Email"
+                            name="password"
+                          />
+                          <label htmlFor="" className="fw-bold">
+                            Nhập lại mật khẩu{" "}
+                            <span className="text-danger">*</span>
                           </label>
                           <br />
                           <input
@@ -195,9 +226,13 @@ const Header = () => {
                             placeholder="Password"
                             name="password"
                           />
+                          <input type="checkbox" />
+                          <span className="ml-2">
+                            Tôi đồng ý với điều khoản abcxyz
+                          </span>
                           <button
                             type="submit"
-                            className="w-100 bg-primary text-white py-3 my-3 border-0"
+                            className="w-100 button-primary text-white py-3 my-3 border-0 rounded"
                           >
                             ĐĂNG KÝ
                           </button>
@@ -210,11 +245,11 @@ const Header = () => {
                         <h4 className="text-center my-3 fw-bold">
                           HOẶC ĐĂNG KÝ VỚI
                         </h4>
-                        <button className="p-2 w-100 border-0 my-2">
+                        <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                           <BsGoogle />
                           <span className="mx-2">Đăng ký với Google</span>
                         </button>
-                        <button className="p-2 w-100 border-0 my-2">
+                        <button className="p-2 w-100 border-0 my-2 bg-primary text-white rounded py-3">
                           <BsFacebook />
                           <span className="mx-2">Đăng ký với Facebook</span>
                         </button>
