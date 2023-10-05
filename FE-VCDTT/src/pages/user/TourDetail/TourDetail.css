@@ -22,3 +22,12 @@ width: 50px !important;
     font-weight: bold;
 
 }
+table thead tr{
+    background-color: white;
+}
+.ant-picker-content{
+    border: none;
+    border-color: white;
+}
+
+
