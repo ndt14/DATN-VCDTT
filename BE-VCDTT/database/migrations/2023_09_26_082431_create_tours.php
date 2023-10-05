@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('details');
             $table->string('location');
             $table->string('exact_location');
-            //store id of images table
+            $table->text('pathway');
             $table->text('main_img');
             $table->tinyInteger('status')->default(1);
             $table->bigInteger('view_count')->default(0);
