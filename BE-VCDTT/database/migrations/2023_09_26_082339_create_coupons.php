@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('description');
             $table->string('start_date');
             $table->string('end_date');
-            $table->bigInteger('tour_id');
-            $table->bigInteger('cate_id');
+            $table->bigInteger('tour_id')->nullable();
+            $table->bigInteger('cate_id')->nullable();
             $table->integer('percentage_price');
             $table->integer('fixed_price');
             $table->tinyInteger('status')->default(1);
