@@ -35,6 +35,10 @@ const Header = () => {
     setIsButtonSignUpClicked(true);
   };
 
+  const handleSignIn = (event: React.FormEvent) => {
+    // alert("Are you sure?");
+    event.preventDefault();
+  };
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -133,7 +137,7 @@ const Header = () => {
                     </div>
                     {showSignInForm && (
                       <div>
-                        <form>
+                        <form onSubmit={handleSignIn}>
                           <label htmlFor="" className="fw-bold">
                             Tài khoản <span className="text-danger">*</span>
                           </label>
