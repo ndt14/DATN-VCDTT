@@ -98,13 +98,23 @@ class TourController extends Controller
     public function store(Request $request)
     {
         $tour = Tour::create($request->all());
-        return response()->json([
-            'data' => [
-                'tour' => new TourResource($tour),
-            ],
-            'message' => 'OK',
-            'status' => 201
-        ]);
+        if($tour->id) {
+            return response()->json([
+                'data' => [
+                    'tour' => new TourResource($tour),
+                ],
+                'message' => 'OK',
+                'status' => 201
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+        }
+
+
+        
     }
 
     /**
@@ -190,6 +200,11 @@ class TourController extends Controller
                 'message' => 'OK',
                 'status' => 200,
             ]);
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
         }
     }
     /**
@@ -198,10 +213,15 @@ class TourController extends Controller
     public function destroy(string $id)
     {
         $tour = Tour::find($id);
-        if ($tour) {
-            $tour->delete(); // soft delete
+        if($tour) {
+            $delete_tour = $tour->delete();
+        if ($delete_tour) {
+             // soft delete
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
+            return response()->json(['message' => 'internal server error', 'status' => 500]);
+        }
+        }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }

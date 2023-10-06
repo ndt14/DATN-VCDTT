@@ -50,7 +50,7 @@ class CouponController extends Controller
         }else {
             return response()->json(
                 [
-                    'message' => 'Fail',
+                    'message' => 'internal server error',
                     'status' => 500
                 ]
             );
@@ -144,18 +144,28 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         if($coupon) {
-            $coupon->delete();
-            return response()->json([
-                'data' => [
-                    'coupon' => new CouponResource($coupon),
-                    'message' => "OK",
-                    'status' => 200
-                ]
-            ]);
+          $delete_coupon =  $coupon->delete();
+            
+            if($delete_coupon) {
+                return response()->json([
+                    'data' => [
+                        'coupon' => new CouponResource($coupon),
+                        'message' => "OK",
+                        'status' => 200
+                    ]
+                ]);
+            }else {
+
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
         }else {
+            
             return response()->json([
-                'message' => 'Fail',
-                'status' => 500
+                'message' => '404 Not found',
+                'status' => 404
             ]);
         }
 
