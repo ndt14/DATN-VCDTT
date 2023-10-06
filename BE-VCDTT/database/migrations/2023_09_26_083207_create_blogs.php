@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('author');
             $table->string('short_desc'); //viết description gọn thành desc
             $table->string('description');
             $table->text('main_img'); //main_img lấy từ id của bảng image why the fuk it's varchar ?????
-            $table->integer('view_count');
+            $table->integer('view_count')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

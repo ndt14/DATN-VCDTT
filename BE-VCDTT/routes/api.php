@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
 
     //Blog
     Route::get('/blog', [BlogController::class, 'index']);
+    Route::get('/blog-add', [BlogController::class,'add']);
     Route::post('/blog-store', [BlogController::class, 'store']);
     Route::get('/blog-show/{id}', [BlogController::class, 'show']);
     Route::put('/blog-edit/{id}', [BlogController::class, 'update']);
@@ -56,6 +57,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/coupon', [CouponController::class, 'index']);
     Route::post('/coupon-store', [CouponController::class, 'store']);
     Route::get('/coupon-show/{id}', [CouponController::class, 'show']);
+    Route::get('/coupon-search', [CouponController::class, 'search_coupon']);
     Route::put('/coupon-edit/{id}', [CouponController::class, 'update']);
     Route::delete('/coupon-destroy/{id}', [CouponController::class, 'destroy']);
 
@@ -63,6 +65,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/faq', [FAQController::class, 'index']);
     Route::post('/faq-store', [FAQController::class, 'store']);
     Route::get('/faq-show/{id}', [FAQController::class, 'show']);
+    Route::get('/faq-search', [FAQController::class, 'search_faq']);
     Route::put('/faq-edit/{id}', [FAQController::class, 'update']);
     Route::delete('/faq-destroy/{id}', [FAQController::class, 'destroy']);
 

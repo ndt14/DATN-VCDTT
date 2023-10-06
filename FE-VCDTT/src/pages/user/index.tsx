@@ -5,6 +5,7 @@ import FaqsPage from "./FaqsPage/FaqsPage";
 import ContactPage from "./ContactPage/ContactPage";
 import BlogDetail from "./BlogDetail/BlogDetail";
 import TourDetail from "./TourDetail/TourDetail";
+import PurchasingInformation from "./PurchasingInformation/PurchasingInformation";
 
 export { 
 HomePage,
@@ -13,5 +14,6 @@ NotFoundPage,
 FaqsPage,
 ContactPage,
 BlogDetail,
-TourDetail
+TourDetail,
+PurchasingInformation
  };

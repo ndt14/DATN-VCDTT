@@ -1,0 +1,33 @@
+.package-price{
+    border-radius: 8px;
+    /* background-color: gray !important; */
+}
+.quantity{
+width: 50px !important;
+/* padding: 50px; */
+}
+.bg-title{
+    border-radius: 8px; 
+}
+.submit-btn input{
+    border-radius: 8px; 
+    width: 100%;
+}
+.h6,
+.h5{
+    font-weight: bold;
+}
+.price{
+    color: red;
+    font-weight: bold;
+
+}
+table thead tr{
+    background-color: white;
+}
+.ant-picker-content{
+    border: none;
+    border-color: white;
+}
+
+

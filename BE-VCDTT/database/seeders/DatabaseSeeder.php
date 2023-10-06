@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             PurchaseHistorySeeder::class,
             TourSeeder::class,
             UserSeeder::class,
-            TourToCategorySeeder::class
+            TourToCategorySeeder::class,
+            RatingSeeder::class,
         ]);
     }
 }

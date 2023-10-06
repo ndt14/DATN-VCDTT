@@ -48,15 +48,21 @@ class TourController extends Controller
             'details',
             'location',
             'exact_location',
+            'pathway',
             'main_img',
+            'view_count',
             'status'
         )
             ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json(
             [
-                'dataTours' => TourResource::collection($tours),
-            ],
-            200
+                'data' => [
+                    "tours" => TourResource::collection($tours),
+                ],
+                "message" => "OK",
+                "status" => 200
+
+            ]
         );
     }
 
@@ -76,18 +82,29 @@ class TourController extends Controller
             ->get();
         return response()->json(
             [
-                'dataCategories' => CategoryResource::collection($listCate),
-                'dataImages' => ImageResource::collection($listImage),
-                'dataCoupons' => CouponResource::collection($listCoupon),
-            ],
-            200
+                'data' => [
+                    'categories' => CategoryResource::collection($listCate),
+                    'images' => ImageResource::collection($listImage),
+                    'coupons' => CouponResource::collection($listCoupon),
+
+                ],
+                'message' => 'OK',
+                'status' => 200
+
+            ]
         );
     }
 
     public function store(Request $request)
     {
         $tour = Tour::create($request->all());
-        return new TourResource($tour);
+        return response()->json([
+            'data' => [
+                'tour' => new TourResource($tour),
+            ],
+            'message' => 'OK',
+            'status' => 201
+        ]);
     }
 
     /**
@@ -97,51 +114,56 @@ class TourController extends Controller
     {
         // get all data from table catalog
         $listCate = Category::select('id', 'name')
-        ->get();
+            ->get();
         // get all data from table images
-        $listImage = Image::select( 'name', 'type', 'url')->where('tour_id', '=',$id)
-        ->get();
+        $listImage = Image::select('name', 'type', 'url')->where('tour_id', '=', $id)
+            ->get();
         // Get all cate for tour id
-        $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=',$id)
-        ->get();
+        $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
+            ->get();
 
         // get info tour by id
         $tour = Tour::select(
-        'id',
-        'name',
-        'duration',
-        'child_price',
-        'adult_price',
-        'sale_percentage',
-        'start_destination',
-        'end_destination',
-        'tourist_count',
-        'details',
-        'location',
-        'exact_location',
-        'main_img',
-        'view_count',
-        'status',
-       
-    )
-    ->where('id', $id)
-    ->first();
+            'id',
+            'name',
+            'duration',
+            'child_price',
+            'adult_price',
+            'sale_percentage',
+            'start_destination',
+            'end_destination',
+            'tourist_count',
+            'details',
+            'location',
+            'exact_location',
+            'pathway',
+            'main_img',
+            'view_count',
+            'status',
 
-    if (!$tour) {
-        return response()->json(['message' => '404 Not Found'], 404);
-    } else {
+        )
+            ->where('id', $id)
+            ->first();
 
-        return response()->json(
-            [
-                'infoTour' => new TourResource($tour),
-                'dataCategories' => new CategoryResource($listCate),
-                'dataImages' => new ImageResource($listImage),
-                'dataTourToCategories' => new TourToCategoryResource($listTourToCate)
-            ],
-            200
-        );
-    }
-    
+        if (!$tour) {
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        } else {
+
+            return response()->json(
+                [
+                    'data' => [
+                        'tour' => new TourResource($tour),
+                        'categories' => new CategoryResource($listCate),
+                        'images' => new ImageResource($listImage),
+                        'tourToCategories' => new TourToCategoryResource($listTourToCate),
+
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
+
+                ]
+            );
+        }
     }
 
     /**
@@ -155,13 +177,19 @@ class TourController extends Controller
 
         $tour = Tour::find($id);
         if (!$tour) {
-            return response()->json(['message' => 'Không tìm thấy tour'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
 
         $tour->fill($input);
 
         if ($tour->save()) {
-            return response()->json(['message' => 'Cập nhật tour thành công', 'statusCode' => 200, 'object' => $tour]);
+            return response()->json([
+                'data' => [
+                    'tour' => $tour
+                ],
+                'message' => 'OK',
+                'status' => 200,
+            ]);
         }
     }
     /**
@@ -172,9 +200,9 @@ class TourController extends Controller
         $tour = Tour::find($id);
         if ($tour) {
             $tour->delete(); // soft delete
-            return response()->json(['message' => 'Xóa thành công'], 200);
+            return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
         } else {
-            return response()->json(['message' => 'Tour không tồn tại'], 404);
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 }

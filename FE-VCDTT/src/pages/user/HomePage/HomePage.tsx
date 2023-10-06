@@ -7,9 +7,35 @@ import { useGetToursQuery } from "../../../api/tours";
 import { Tour } from "../../../interfaces/Tour";
 import { Link } from "react-router-dom";
 import Loader from "../../../componenets/User/Loader";
+import { useState } from "react";
+import ReactPaginate from "react-paginate";
+import _ from 'lodash'; 
 
 const HomePage = () => {
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const { data } = useGetToursQuery();
+  // console.log(data);
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  const itemsPerPage = 6;
+  const pageCount = Math.ceil(data?.data?.tours.length / itemsPerPage);
+  const currentData: Tour[] = (data?.data?.tours.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  ) || []) as Tour[];
+  // console.log(currentData);
+
+  //tour nổi bật
+  // Sắp xếp danh sách tour theo view_count giảm dần
+  const sortedTours = _.orderBy(data?.data.tours, ['view_count'], ['desc']);
+  const featuredTours = sortedTours.slice(0, 3);
+
+  //tour giảm giá
+  const sortedDiscountedTours = _.orderBy(data?.data.tours, ['tourist_count'], ['desc']);
+  const  saleTours = sortedDiscountedTours.slice(0, 3);
+
+   
   
   return (
     <>
@@ -88,16 +114,63 @@ const HomePage = () => {
             </div>
           </div>
           <div className="package-inner">
+      
             <div className="row">
-              <TourPreview></TourPreview>
-              <TourPreview></TourPreview>
-              <TourPreview></TourPreview>
+           
+            {
+   featuredTours?.map(({ id, name, details,main_img,view_count,adult_price}:Tour) => {
+    return (
+      <div className="col-lg-4 col-md-6" key={id}>
+      <div className="package-wrap">
+        <figure className="feature-image">
+          <Link to={`/tours/${id}`}>
+            <img
+              className="w-full"
+              src={main_img}
+              alt=""
+            />
+          </Link>
+        </figure>
+        <div className="package-price">
+          <h6>
+            <span>VND {adult_price} </span> / mỗi người
+          </h6>
+        </div>
+        <div className="package-content-wrap">
+          {/* <div className="package-meta text-center"></div> */}
+          <div className="package-content">
+            <h3 className="margin-top-12">
+              <Link className="mt-12" to={`/tours/${id}`}>
+                {name}
+              </Link>
+            </h3>
+            <div className="review-area">
+              <span className="review-text">({view_count} reviews)</span>
+              <div className="rating-start" title="Rated 5 out of 5">
+                <span className="w-3/5"></span>
+              </div>
             </div>
-            <div className="btn-wrap text-center">
-              <a href="#" className="button-primary">
-                XEM TẤT CẢ TOUR
+            <p>
+             {details}
+            </p>
+            <div className="btn-wrap">
+              <a href="#" className="button-text width-6">
+                Đặt ngay<i className="fas fa-arrow-right"></i>
+              </a>
+              <a href="#" className="button-text width-6">
+                Thêm vào yêu thích<i className="far fa-heart"></i>
               </a>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    );
+  })
+}
+
+            </div>
+           
           </div>
         </div>
       </section>
@@ -122,9 +195,57 @@ const HomePage = () => {
           </div>
           <div className="special-inner">
             <div className="row">
-              <TourPreview></TourPreview>
-              <TourPreview></TourPreview>
-              <TourPreview></TourPreview>
+            {
+   saleTours?.map(({ id, name, details,main_img,view_count,adult_price}:Tour) => {
+    return (
+      <div className="col-lg-4 col-md-6" key={id}>
+      <div className="package-wrap">
+        <figure className="feature-image">
+          <Link to={`/tours/${id}`}>
+            <img
+              className="w-full"
+              src={main_img}
+              alt=""
+            />
+          </Link>
+        </figure>
+        <div className="package-price">
+          <h6>
+            <span>VND {adult_price} </span> / mỗi người
+          </h6>
+        </div>
+        <div className="package-content-wrap">
+          {/* <div className="package-meta text-center"></div> */}
+          <div className="package-content">
+            <h3 className="margin-top-12">
+              <Link className="mt-12" to={`/tours/${id}`}>
+                {name}
+              </Link>
+            </h3>
+            <div className="review-area">
+              <span className="review-text">({view_count} reviews)</span>
+              <div className="rating-start" title="Rated 5 out of 5">
+                <span className="w-3/5"></span>
+              </div>
+            </div>
+            <p>
+             {details}
+            </p>
+            <div className="btn-wrap">
+              <a href="#" className="button-text width-6">
+                Đặt ngay<i className="fas fa-arrow-right"></i>
+              </a>
+              <a href="#" className="button-text width-6">
+                Thêm vào yêu thích<i className="far fa-heart"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    );
+  })
+}
             </div>
           </div>
         </div>
@@ -149,7 +270,7 @@ const HomePage = () => {
           <div className="package-inner">
             <div className="row">
 {
-   data?.dataTours?.map(({ id, name, details,main_img }:Tour) => {
+   currentData?.map(({ id, name, details,main_img,view_count,adult_price}:Tour) => {
     return (
       <div className="col-lg-4 col-md-6" key={id}>
       <div className="package-wrap">
@@ -164,7 +285,7 @@ const HomePage = () => {
         </figure>
         <div className="package-price">
           <h6>
-            <span>VND 2,900,000 </span> / mỗi người
+            <span>VND {adult_price} </span> / mỗi người
           </h6>
         </div>
         <div className="package-content-wrap">
@@ -176,7 +297,7 @@ const HomePage = () => {
               </Link>
             </h3>
             <div className="review-area">
-              <span className="review-text">(25 reviews)</span>
+              <span className="review-text">({view_count} reviews)</span>
               <div className="rating-start" title="Rated 5 out of 5">
                 <span className="w-3/5"></span>
               </div>
@@ -199,6 +320,15 @@ const HomePage = () => {
     );
   })
 }
+<ReactPaginate
+                      previousLabel={"Back"}
+                      nextLabel={"Next"}
+                      breakLabel={"..."}
+                      pageCount={pageCount}
+                      onPageChange={handlePageChange}
+                      containerClassName={"pagination"}
+                      activeClassName={"active"}
+                    />
    
               {/* <TourPreview></TourPreview>
               <TourPreview></TourPreview>
@@ -207,11 +337,11 @@ const HomePage = () => {
               <TourPreview></TourPreview>
               <TourPreview></TourPreview> */}
             </div>
-            <div className="btn-wrap text-center ">
+            {/* <div className="btn-wrap text-center ">
               <a href="#" className="button-primary rounded">
                 XEM TẤT CẢ TOUR
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
