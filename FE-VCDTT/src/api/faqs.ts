@@ -8,7 +8,7 @@ const FaqApi = createApi({
     reducerPath: "faq",
     tagTypes: ['Faq'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/admin/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
