@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use Illuminate\Http\Request;
 
-class UserController extends Controller
+class RatingController extends Controller
 {
-   public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
         //
-
     }
 
     /**
@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
+        //
     }
 
     /**
@@ -37,7 +37,6 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         //
-
     }
 
     /**
@@ -46,6 +45,5 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ImageController extends Controller
+class SEOController extends Controller
 {
     /**
      * Display a listing of the resource.
