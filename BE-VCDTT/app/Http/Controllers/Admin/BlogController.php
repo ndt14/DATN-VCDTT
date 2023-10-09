@@ -53,6 +53,7 @@ class BlogController extends Controller
             'message' => 'OK',
             'status' => 200,
         ]);
+        
     }
     /**
      * Store a newly created resource in storage.
@@ -69,6 +70,11 @@ class BlogController extends Controller
                 ],
                 'message' => 'OK',
                 'status' => 201
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
             ]);
         }
         
@@ -130,7 +136,7 @@ class BlogController extends Controller
             $updatedBlog = Blog::find($id);
             return response()->json(['message' => 'Cập nhật blog thành công', 'status' => 200, 'object' => $updatedBlog]);
         } else {
-            return response()->json(['message' => 'Cập nhật blog thất bại', 'status' => 400]);
+            return response()->json(['message' => 'internal server error', 'status' => 500]);
         }
     }
 
@@ -141,8 +147,16 @@ class BlogController extends Controller
     {
         $blog = Blog::find($id);
         if ($blog) {
-            $blog->delete(); // soft delete
+          $delete_blog =  $blog->delete(); // soft delete
+           
+          if($delete_blog) {
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+          }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+          }
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }

@@ -56,13 +56,20 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $category = Category::create($request->all());
-        return response()->json([
-            'data' => [
-                'category' => new CategoryResource($category)
-            ],
-            'message' => 'OK',
-            'status' => 201
-        ]);
+        if($category->id) {
+            return response()->json([
+                'data' => [
+                    'category' => new CategoryResource($category)
+                ],
+                'message' => 'OK',
+                'status' => 201
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+        }
     }
 
     /**
@@ -96,11 +103,19 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if ($category) {
-            $category->update($request->all());
+           $cate_upd = $category->update($request->all());
+            
+           if($cate_upd) {
             return response()->json(
                 ['message' => 'Cập nhật thành công', 'status' => 200]
             
             );
+           }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+           }
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -112,8 +127,16 @@ class CategoryController extends Controller
     public function destroy(string $id){
         $category = Category::find($id);
         if ($category) {
-            $category->delete(); // soft delete
+           $delete_cate = $category->delete(); // soft delete
+           if($delete_cate) {
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+           }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+           }
+            
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }

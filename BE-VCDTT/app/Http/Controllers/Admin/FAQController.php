@@ -35,16 +35,23 @@ class FAQController extends Controller
     
         $faq = $request->all();
         $newFaq = FAQ::create($faq);
-        return response()->json(
-            [
-                'data' => [
-                    'faq' => new FAQResource($newFaq)
-                ],
-                'message' => 'OK',
-                'status' => 201
-            ]
-        );
-        
+        if($newFaq->id) {
+            return response()->json(
+                [
+                    'data' => [
+                        'faq' => new FAQResource($newFaq)
+                    ],
+                    'message' => 'OK',
+                    'status' => 201
+                ]
+            );
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+        }
+
     }
 
     /**
@@ -109,7 +116,7 @@ class FAQController extends Controller
                      'status' => 200
                 ]);
             } else {
-                return response()->json(['message' => 'noSuccess', 'status' => 500]);
+                return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
         
     }
@@ -122,10 +129,15 @@ class FAQController extends Controller
         //
 
         $faq = FAQ::find($id);
-        $deleteFaq = $faq->delete();
-        if (!$deleteFaq) {
+       
+        if($faq) {
+            $deleteFaq = $faq->delete();
+            if (!$deleteFaq) {
+                return response()->json(['message' => 'internal server error', 'status' => 500]);
+            }
+            return response()->json(['message' => 'OK', 'status' => 200]);
+        }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
-        return response()->json(['message' => 'OK', 'status' => 200]);
     }
 }
