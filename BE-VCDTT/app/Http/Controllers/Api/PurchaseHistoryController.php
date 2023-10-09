@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\PurchaseHistory;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PurchaseHistoryResource;
 
-class RatingController extends Controller
+class PurchaseHistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
@@ -20,7 +19,7 @@ class RatingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -29,6 +28,7 @@ class RatingController extends Controller
     public function show(string $id)
     {
         //
+
     }
 
     /**
@@ -37,6 +37,7 @@ class RatingController extends Controller
     public function update(Request $request, string $id)
     {
         //
+
     }
 
     /**
@@ -45,5 +46,6 @@ class RatingController extends Controller
     public function destroy(string $id)
     {
         //
+
     }
 }

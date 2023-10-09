@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\PurchaseHistory;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PurchaseHistoryResource;
+use App\Http\Resources\UserResource;
 
-class PurchaseHistoryController extends Controller
+class UserController extends Controller
 {
-    public function index()
+   public function index()
     {
         //
+
     }
 
     /**
@@ -28,7 +29,6 @@ class PurchaseHistoryController extends Controller
     public function show(string $id)
     {
         //
-
     }
 
     /**
