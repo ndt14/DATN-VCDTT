@@ -8,7 +8,7 @@ const TourApi = createApi({
     reducerPath: "tour",
     tagTypes: ['Tour'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/admin/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);

@@ -27,7 +27,9 @@
     "react-router-dom": "^6.15.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "tiny-slider": "^2.9.4",
+    "tiny-slider-react": "^0.5.7"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.16",

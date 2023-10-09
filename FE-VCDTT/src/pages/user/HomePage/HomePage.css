@@ -17,3 +17,15 @@ img {
     font-size: 23px;
     line-height: 1.2;
 }
+
+.tns-controls {
+    display: none;
+}
+
+.tns-visually-hidden {
+    display: none;
+}
+
+.hide-autoplay-button .tns-nav-autoplay {
+    display: none;
+}
