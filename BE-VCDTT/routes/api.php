@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -79,3 +81,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class,  'logout'])->middleware(['auth:sanctum']);
+
+    Route::post('/reset-password', [ResetPasswordController::class, 'sendMail']);
+    Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);

@@ -15,11 +15,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Dashboard - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
     <!-- CSS files -->
-    <link href="{{ asset('admin/assets/css/tabler.min.css?1692870487') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-flags.min.css?1692870487') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-payments.min.css?1692870487') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-vendors.min.css?1692870487') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/demo.min.css?1692870487') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/css/tabler.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/css/tabler-flags.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/css/tabler-payments.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/css/tabler-vendors.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/css/demo.min.css') }}" rel="stylesheet" />
     <style>
         @import url('https://rsms.me/inter/inter.css');
 
@@ -34,7 +34,7 @@
 </head>
 
 <body>
-    <script src="{{ asset('admin/assets/js/demo-theme.min.js?1692870487') }}"></script>
+    <script src="{{ asset('admin/assets/js/demo-theme.min.js') }}"></script>
     <div class="page">
         @include('admin.layouts.sidebar')
         <div class="page-wrapper">
