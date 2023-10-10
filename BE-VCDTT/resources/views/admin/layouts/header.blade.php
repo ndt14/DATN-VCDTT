@@ -136,7 +136,7 @@
             <div class="col">
                 <!-- Page pre-title -->
                 <h2 class="page-title">
-                    Dashboard
+                    <!-- Dashboard -->
                 </h2>
             </div>
         </div>

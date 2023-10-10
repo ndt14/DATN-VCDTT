@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Validator;
 
 class FAQController extends Controller
 {
+
+
+    // ================================================= Dành cho API ====================================
     public function index()
     {
         //
@@ -139,5 +142,21 @@ class FAQController extends Controller
         }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+    }
+
+
+    # /\/\/\/\ ======================================  Dành cho blade ================================== /\/\/\/\/\/\ #endregion
+
+    public function get_form_add() {
+
+        return view("admin.faq.add");
+    }
+
+    public function get_list_faq() {
+        return view("admin.faq.list");
+    }
+
+    public function get_form_update(){
+        return view("admin.faq.update");
     }
 }

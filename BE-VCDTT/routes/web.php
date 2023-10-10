@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FAQController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,5 +22,11 @@ Route::get('/', function () {
 Route::get('/test', function(){
     return view('admin.layouts.app');
 });
+
+# /\/\/\/\/\/\/\ ================================== List Route FAQ ========================= /\/\/\/\/\/\/\/\/\ #
+
+Route::get('faq/create', [FAQController::class, 'get_form_add'])->name('faq.create');
+Route::get('faq/update', [FAQController::class, 'get_form_update'])->name('faq.update');
+Route::get("faq/list", [FAQController::class,'get_list_faq'])->name('faq.list');
 
 require __DIR__.'/auth.php';
