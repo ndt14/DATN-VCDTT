@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\TourToCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +20,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call(FAQSeeder::class);
+        $this->call([
+            FAQSeeder::class,
+            BlogSeeder::class,
+            CategorySeeder::class,
+            CouponSeeder::class,
+            PurchaseHistorySeeder::class,
+            TourSeeder::class,
+            UserSeeder::class,
+            TourToCategorySeeder::class,
+            RatingSeeder::class,
+        ]);
     }
 }

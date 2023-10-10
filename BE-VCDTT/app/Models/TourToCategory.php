@@ -9,7 +9,7 @@ class TourToCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'tour_to_categories';
+    protected $table = 'tours_to_categories';
 
     protected $fillable = [
         'cate_id',
