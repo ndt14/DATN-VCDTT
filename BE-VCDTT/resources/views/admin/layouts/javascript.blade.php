@@ -1,11 +1,11 @@
 <!-- Libs JS -->
-<script src="./dist/libs/apexcharts/dist/apexcharts.min.js?1692870487" defer></script>
-<script src="./dist/libs/jsvectormap/dist/js/jsvectormap.min.js?1692870487" defer></script>
-<script src="./dist/libs/jsvectormap/dist/maps/world.js?1692870487" defer></script>
-<script src="./dist/libs/jsvectormap/dist/maps/world-merc.js?1692870487" defer></script>
+<script src="{{ asset('admin/assets/libs/apexcharts/dist/apexcharts.min.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/js/jsvectormap.min.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
 <!-- Tabler Core -->
-<script src="./dist/js/tabler.min.js?1692870487" defer></script>
-<script src="./dist/js/demo.min.js?1692870487" defer></script>
+<script src="{{ asset('admin/assets/js/tabler.min.js') }}" defer></script>
+<script src="{{ asset('admin/assets/js/demo.min.js') }}" defer></script>
 <script>
     // @formatter:off
     document.addEventListener("DOMContentLoaded", function() {
