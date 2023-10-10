@@ -5,6 +5,7 @@ import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
 import { DatePicker } from "antd";
 import type { DatePickerProps } from "antd";
+import moment from 'moment';
 
 const onChange: DatePickerProps["onChange"] = (date, dateString) => {
   console.log(date, dateString);
@@ -13,9 +14,17 @@ const onChange: DatePickerProps["onChange"] = (date, dateString) => {
 const TourDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { data: tourData } = useGetTourByIdQuery(id || "");
-  console.log(tourData);
   const tourPrice = tourData?.data?.tour.adult_price;
-  console.log(tourPrice);
+  const tourChildPrice = tourData?.data?.tour.child_price;
+  const formattedTourPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourPrice);
+const formattedTourChildPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourChildPrice);
+
+//validate date
+const disabledDate = (current: moment.Moment | null) => {
+  // Disable past dates by comparing with the current date
+  return current && current < moment().startOf('day');
+};
+  // console.log(formattedTourPrice+ formattedTourChildPrice);
 
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
 
@@ -25,19 +34,38 @@ const TourDetail = () => {
   };
   //
   const [productNumber, setProductNumber] = useState(0);
+  const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
+  const [childPrice, setChildPrice] = useState(tourChildPrice);
+// console.log(tourPrice);
+
+  
+  
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newProductNumber = parseInt(event.target.value, 10);
     if (newProductNumber >= 0) {
       setProductNumber(newProductNumber);
-
       // Update the price based on the new product number
-      const newPrice = newProductNumber * tourPrice; // Assuming the price increases by 10 for each product
+      const newPrice = (newProductNumber * tourPrice) ; // Assuming the price increases by 10 for each product
       setPrice(newPrice);
     }
   };
+  const handleProductChildNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newProductNumber = parseInt(event.target.value, 10);
+    if (newProductNumber >= 0) {
+      setProductChildNumber(newProductNumber)
+      // Update the price based on the new product number
+      const newPrice = (newProductNumber*tourChildPrice); // Assuming the price increases by 10 for each product
+      setChildPrice(newPrice);
+    }
+  };
+  console.log(price,childPrice,"111");
+const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price+childPrice);
+
 
   return (
     <>
@@ -471,7 +499,7 @@ const TourDetail = () => {
                 <div className="sidebar">
                   <div className="package-price">
                     <h5 className="price rounded-2">
-                      <span>{tourData?.data?.tour.adult_price} $</span>
+                      <span> {formattedTourPrice} </span>
                     </h5>
                     <div className="start-wrap">
                       <div className="rating-start" title="Rated 5 out of 5">
@@ -489,11 +517,14 @@ const TourDetail = () => {
                             Người lớn(90cm trở lên)
                           </label>
                           <div className="price">
-                            {tourData?.data?.tour.adult_price} $
+                            {formattedTourPrice} 
                           </div>
                           <label htmlFor="" className="h6">
-                            Trẻ em dưới 90cm (miễn phí)
+                            Trẻ em dưới 90cm 
                           </label>
+                          <div className="price">
+                          {formattedTourChildPrice} 
+                          </div>
                         </div>
 
                         <div className="col-sm-5 mt-2">
@@ -511,8 +542,10 @@ const TourDetail = () => {
                             className="quantity"
                             style={{ marginTop: "36px" }}
                             type="number"
-                            min={0}
-                            value={0}
+                            // min={0}
+                            onChange={handleProductChildNumberChange}
+
+                            value={productChildNumber}
                           />
                           {/* <a className="plus-btn ml-2" href="#">
                             <i className="fa fa-plus"></i>
@@ -524,12 +557,12 @@ const TourDetail = () => {
                             Chọn ngày đi
                           </label>
 
-                          <DatePicker onChange={onChange} />
+                          <DatePicker onChange={onChange} disabledDate={disabledDate}/>
                         </div>
 
                         <div className="col-sm-12 mt-2">
-                          <label htmlFor="" className="h5">
-                            Tổng giá : ${price}
+                          <label htmlFor="" className="h5 ">
+                            Tổng giá : {(price||childPrice >0 ? formattedResultPrice:0)}
                           </label>
                         </div>
                         <div className="col-sm-12">
