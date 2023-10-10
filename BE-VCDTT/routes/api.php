@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,9 +11,6 @@ use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\CategoryController;
-
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,9 +23,8 @@ use App\Http\Controllers\Api\CategoryController;
 */
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    
-});
 
+});
 
     // Tour management
     Route::get('/tour', [TourController::class, 'index']);
@@ -78,5 +75,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
 
-    
+
     Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class,  'logout'])->middleware(['auth:sanctum']);
