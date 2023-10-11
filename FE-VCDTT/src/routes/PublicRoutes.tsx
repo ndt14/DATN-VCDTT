@@ -24,7 +24,7 @@ const PublicRoutes = () => {
         <Route path="tours" element={<HomePage />} />
         <Route path="tours/:id" element={<TourDetail />} />
         <Route
-          path="check_order_information"
+          path="check_order_information/:id"
           element={<PurchasingInformation />}
         />
         <Route path="categories" element={<HomePage />} />

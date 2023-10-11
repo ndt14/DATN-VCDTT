@@ -7,7 +7,11 @@ import { DatePicker } from "antd";
 import type { DatePickerProps } from "antd";
 import moment from 'moment';
 
-const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+
+// const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+ // Initialize with null or a default date if needed
+
+ const onChange: DatePickerProps["onChange"] = (date, dateString) => {
   console.log(date, dateString);
 };
 
@@ -18,6 +22,8 @@ const TourDetail = () => {
   const tourChildPrice = tourData?.data?.tour.child_price;
   const formattedTourPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourPrice);
 const formattedTourChildPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourChildPrice);
+
+
 
 //validate date
 const disabledDate = (current: moment.Moment | null) => {
@@ -33,10 +39,12 @@ const disabledDate = (current: moment.Moment | null) => {
     backgroundSize: "cover",
   };
   //
-  const [productNumber, setProductNumber] = useState(0);
+  const [productNumber, setProductNumber] = useState(1);
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
   const [childPrice, setChildPrice] = useState(tourChildPrice);
+  
+
 // console.log(tourPrice);
 
   
@@ -63,7 +71,7 @@ const disabledDate = (current: moment.Moment | null) => {
       setChildPrice(newPrice);
     }
   };
-  console.log(price,childPrice,"111");
+ 
 const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price+childPrice);
 
 
@@ -567,7 +575,7 @@ const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency',
                         </div>
                         <div className="col-sm-12">
                           <div className="form-group submit-btn">
-                            <Link to={"/check_order_information"}>
+                          <Link to={`/check_order_information/${id}`} state={{ tourData, productNumber,productChildNumber,childPrice, price ,formattedResultPrice}}>
                               <input
                                 type="submit"
                                 name="submit"
