@@ -12,6 +12,7 @@ import {
   NotFoundPage,
   TourDetail,
   PurchasingInformation,
+  PrivacyPolicy,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
@@ -39,12 +40,14 @@ const PublicRoutes = () => {
         <Route path="signup" element={<HomePage />} />
         <Route path="search" element={<TourSearch />} />
         <Route path="profile" element={<UserProfile />} />
+        <Route path="privacy_policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       <Route path="admin" element={<LayoutAdmin />}>
         <Route index element={<Dashboard />} />
       </Route>
+        
 
       <Route path="*" element={<NotFoundPage />}></Route>
     </Routes>

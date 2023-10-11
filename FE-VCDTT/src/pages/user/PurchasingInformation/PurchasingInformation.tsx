@@ -1,10 +1,12 @@
 import React, { useState, ChangeEvent } from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
+import { useAddBillMutation } from "../../../api/bill";
 
 type Props = {};
 
 const PurchasingInformation = (props: Props) => {
+  const[addBill] = useAddBillMutation();
   const location = useLocation();
   const {
     tourData,
@@ -19,7 +21,7 @@ const PurchasingInformation = (props: Props) => {
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   // Xử lý xác nhận thông tin form
   const [formData, setFormData] = useState({
-    name: "",
+    user_info: "",
     email: "",
     phone_number: "",
     message: "",
@@ -36,9 +38,28 @@ const PurchasingInformation = (props: Props) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Access the form data
-    console.log(formData);
-    // Perform further actions, such as submitting the data to a server
+    
+    const variables = {
+      use_info: formData.user_info,
+      email: formData.email,
+      phone_number: formData.phone_number,
+      // Add other variables as needed
+    };
+  
+    addBill({variables }as any)
+      .then((response) => {
+        // Handle the response here
+      alert("mua thành công")
+        console.log(response);
+      
+
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+
+   
   };
   // console.log(onChange);
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
@@ -90,8 +111,8 @@ const PurchasingInformation = (props: Props) => {
                           </label>
                           <input
                             type="text"
-                            name="name"
-                            value={formData.name}
+                            name="user_info"
+                            value={formData.user_info}
                             onChange={handleChange}
                             className="input-border"
                           />
@@ -191,11 +212,12 @@ const PurchasingInformation = (props: Props) => {
                     </div>
                     {/* Button trigger modal xác nhận thông tin */}
                     <button
-                      type="submit"
+                      type="button"
                       data-toggle="modal"
                       data-target="#confirmTourForm"
+                      className="btn-continue"
                     >
-                      Submit
+                      Tiếp tục
                     </button>
                   </form>
                   {/* Modal xác nhận thông tin */}
@@ -230,7 +252,7 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="text"
                                     name="name"
-                                    value={formData.name}
+                                    value={formData.user_info}
                                     disabled
                                   />{" "}
                                 </div>
@@ -307,8 +329,8 @@ const PurchasingInformation = (props: Props) => {
                                 />
                                 Ngân hàng
                               </div>
-                              <button type="button" className="btn btn-primary">
-                                Save changes
+                              <button type="submit" className="btn btn-primary">
+                                Xác nhận thanh toán
                               </button>
                             </form>
                           </div>

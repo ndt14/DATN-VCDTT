@@ -6,6 +6,9 @@ import ContactPage from "./ContactPage/ContactPage";
 import BlogDetail from "./BlogDetail/BlogDetail";
 import TourDetail from "./TourDetail/TourDetail";
 import PurchasingInformation from "./PurchasingInformation/PurchasingInformation";
+import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy";
+import BillDetail from "./BillDetail/BillDetail";
+
 
 export { 
 HomePage,
@@ -15,5 +18,7 @@ FaqsPage,
 ContactPage,
 BlogDetail,
 TourDetail,
-PurchasingInformation
+PurchasingInformation,
+PrivacyPolicy,
+BillDetail
  };
