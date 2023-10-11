@@ -23,6 +23,8 @@ Route::get('/test', function(){
     return view('admin.common.layout');
 });
 
-Route::get('/tour', [TourController::class, 'tourManagement']);
+Route::get('/tour', [TourController::class, 'tourManagementList']);
+Route::get('/tour/add', [TourController::class, 'tourManagementAdd']);
+
 
 require __DIR__.'/auth.php';

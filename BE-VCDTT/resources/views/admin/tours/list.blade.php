@@ -10,7 +10,7 @@
             </div>
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="/admin/cms/posts/add" class="btn btn-primary d-none d-sm-inline-block">
+                    <a href="javascript: viewAdd();" class="btn btn-primary d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -18,7 +18,7 @@
                         </svg>
                         Add new
                     </a>
-                    <a href="/admin/cms/posts/add" class="btn btn-primary d-sm-none btn-icon">
+                    <a href="javascript: viewAdd();" class="btn btn-primary d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -133,7 +133,25 @@
                             <option value="250">250</option>
                             <option value="500">500</option>
                         </select>
-                        <!-- phân trang ở đây -->
+
+                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span> bản ghi</p>
+                            <ul class="pagination m-0 ms-auto">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>prev</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
+                                    </a>
+                                </li>
+                            </ul>
+
                     </div>
                 </div>
             </div>
@@ -142,7 +160,8 @@
 </div>
 <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content"></div>
+        <div class="modal-content">
+        </div>
     </div>
 </div>
 @endSection
@@ -186,8 +205,8 @@
         }
     });
 
-    let viewItem = function(id) {
-        axios.get(`/admin/cms/posts/view/${id}`)
+    let viewAdd = function() {
+        axios.get(`/tour/add`)
             .then(function(response) {
                 // console.log(response);
                 $('#modalContainer div.modal-content').html(response.data.html);

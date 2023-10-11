@@ -66,15 +66,6 @@ class TourController extends Controller
         );
     }
 
-    public function tourManagement(Request $request)
-    {
-        // Tích hợp tìm kiếm
-        $keyword = trim($request->keyword) ? trim($request->keyword) : '';
-        $sql_order = 'name';
-        $limit = intval($request->limit) ? intval($request->limit) : '';
-
-        return view('admin.tours.list');
-    }
     /**
      * Store a newly created resource in storage.
      */
@@ -233,5 +224,17 @@ class TourController extends Controller
         }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+    }
+
+    
+    public function tourManagementList(Request $request)
+    {
+
+        return view('admin.tours.list');
+    }
+    public function tourManagementAdd(Request $request)
+    {
+        $html = view('admin.tours.add')->render();
+        return response()->json(['html' => $html]);
     }
 }

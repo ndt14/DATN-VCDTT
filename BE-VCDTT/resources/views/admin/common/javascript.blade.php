@@ -6,5 +6,8 @@
 <!-- Tabler Core -->
 <script src="{{ asset('admin/assets/js/tabler.min.js') }}" defer></script>
 <script src="{{ asset('admin/assets/js/demo.min.js') }}" defer></script>
-
-
+<!-- Jquery -->
+<script src="{{ asset('admin/assets/js/vendors/jquery-3.6.3.min.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/Bs5Utils.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/jquery.form.min.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/axios.min.js') }}"></script>
