@@ -1,35 +1,42 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
 import { DatePicker } from "antd";
 import type { DatePickerProps } from "antd";
-import moment from 'moment';
-
+import moment from "moment";
 
 // const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
- // Initialize with null or a default date if needed
-
- const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-  console.log(date, dateString);
-};
+// Initialize with null or a default date if needed
 
 const TourDetail = () => {
+  const [dateTour, setDateTour] = useState<string>(" ");
+  const location = useLocation();
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+    setDateTour(dateString);
+  };
+  console.log(dateTour);
+  //
   const { id } = useParams<{ id: string }>();
   const { data: tourData } = useGetTourByIdQuery(id || "");
   const tourPrice = tourData?.data?.tour.adult_price;
   const tourChildPrice = tourData?.data?.tour.child_price;
-  const formattedTourPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourPrice);
-const formattedTourChildPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tourChildPrice);
+  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(tourPrice);
+  const formattedTourChildPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(tourChildPrice);
 
+  //validate date
+  const disabledDate = (current: moment.Moment | null) => {
+    // Disable past dates by comparing with the current date
+    return current && current < moment().startOf("day");
+  };
 
-
-//validate date
-const disabledDate = (current: moment.Moment | null) => {
-  // Disable past dates by comparing with the current date
-  return current && current < moment().startOf('day');
-};
   // console.log(formattedTourPrice+ formattedTourChildPrice);
 
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
@@ -43,12 +50,10 @@ const disabledDate = (current: moment.Moment | null) => {
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
   const [childPrice, setChildPrice] = useState(tourChildPrice);
-  
+  console.log(typeof productNumber);
 
-// console.log(tourPrice);
+  // console.log(tourPrice);
 
-  
-  
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -56,7 +61,7 @@ const disabledDate = (current: moment.Moment | null) => {
     if (newProductNumber >= 0) {
       setProductNumber(newProductNumber);
       // Update the price based on the new product number
-      const newPrice = (newProductNumber * tourPrice) ; // Assuming the price increases by 10 for each product
+      const newPrice = newProductNumber * tourPrice; // Assuming the price increases by 10 for each product
       setPrice(newPrice);
     }
   };
@@ -65,15 +70,17 @@ const disabledDate = (current: moment.Moment | null) => {
   ) => {
     const newProductNumber = parseInt(event.target.value, 10);
     if (newProductNumber >= 0) {
-      setProductChildNumber(newProductNumber)
+      setProductChildNumber(newProductNumber);
       // Update the price based on the new product number
-      const newPrice = (newProductNumber*tourChildPrice); // Assuming the price increases by 10 for each product
+      const newPrice = newProductNumber * tourChildPrice; // Assuming the price increases by 10 for each product
       setChildPrice(newPrice);
     }
   };
- 
-const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price+childPrice);
 
+  const formattedResultPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(price + childPrice);
 
   return (
     <>
@@ -524,15 +531,11 @@ const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency',
                           <label htmlFor="" className="h6">
                             Người lớn(90cm trở lên)
                           </label>
-                          <div className="price">
-                            {formattedTourPrice} 
-                          </div>
+                          <div className="price">{formattedTourPrice}</div>
                           <label htmlFor="" className="h6">
-                            Trẻ em dưới 90cm 
+                            Trẻ em dưới 90cm
                           </label>
-                          <div className="price">
-                          {formattedTourChildPrice} 
-                          </div>
+                          <div className="price">{formattedTourChildPrice}</div>
                         </div>
 
                         <div className="col-sm-5 mt-2">
@@ -552,7 +555,6 @@ const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency',
                             type="number"
                             // min={0}
                             onChange={handleProductChildNumberChange}
-
                             value={productChildNumber}
                           />
                           {/* <a className="plus-btn ml-2" href="#">
@@ -565,17 +567,32 @@ const formattedResultPrice = new Intl.NumberFormat('vi-VN', { style: 'currency',
                             Chọn ngày đi
                           </label>
 
-                          <DatePicker onChange={onChange} disabledDate={disabledDate}/>
+                          <DatePicker
+                            onChange={onChange}
+                            disabledDate={disabledDate}
+                          />
                         </div>
 
                         <div className="col-sm-12 mt-2">
                           <label htmlFor="" className="h5 ">
-                            Tổng giá : {(price||childPrice >0 ? formattedResultPrice:0)}
+                            Tổng giá :{" "}
+                            {price || childPrice > 0 ? formattedResultPrice : 0}
                           </label>
                         </div>
                         <div className="col-sm-12">
                           <div className="form-group submit-btn">
-                          <Link to={`/check_order_information/${id}`} state={{ tourData, productNumber,productChildNumber,childPrice, price ,formattedResultPrice}}>
+                            <Link
+                              to={`/check_order_information/${id}`}
+                              state={{
+                                tourData,
+                                productNumber,
+                                productChildNumber,
+                                childPrice,
+                                price,
+                                formattedResultPrice,
+                                dateTour,
+                              }}
+                            >
                               <input
                                 type="submit"
                                 name="submit"
