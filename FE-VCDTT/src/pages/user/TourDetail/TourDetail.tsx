@@ -510,6 +510,7 @@ const TourDetail = () => {
                   </div>
                 </div>
               </div>
+
               <div className="col-lg-5">
                 <div className="sidebar">
                   <div className="package-price">
@@ -606,6 +607,8 @@ const TourDetail = () => {
                   </div>
                 </div>
               </div>
+
+              
             </div>
           </div>
         </div>

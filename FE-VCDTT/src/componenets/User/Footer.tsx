@@ -112,7 +112,8 @@ const Footer = () => {
               <div className="footer-menu">
                 <ul>
                   <li>
-                    <a href="#">Chính sách</a>
+                    {/* <a href="#">Chính sách</a> */}
+                    <Link to={"/privacy_policy"}>Chính sách</Link>
                   </li>
                   <li>
                     <a href="#">Thỏa thuận</a>

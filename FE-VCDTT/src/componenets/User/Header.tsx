@@ -5,7 +5,14 @@ import { useState } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
+import { useLoginMutation } from "../../api/auth.js";
+
+
 const Header = () => {
+  const [login,{error}] = useLoginMutation();
+  const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+
   const [showSignIn, setShowSignIn] = useState(false);
   // const [showSignUp, setShowSignUp] = useState(false);
 
@@ -34,11 +41,28 @@ const Header = () => {
     setIsButtonSignInClicked(false);
     setIsButtonSignUpClicked(true);
   };
+ 
 
-  const handleSignIn = (event: React.FormEvent) => {
-    // alert("Are you sure?");
-    event.preventDefault();
-  };
+
+const handleSignIn = async (event) => {
+  event.preventDefault();
+  try {
+    const { data } = await login({ email, password });
+    console.log(data);
+    
+    if (data && data.user) {
+      // Thành công: Lưu thông tin đăng nhập và token
+      alert('Đăng nhập thành công!');
+    } else {
+      alert('Đăng nhập thất bại!');
+    }
+  } catch (error) {
+    console.error('Lỗi đăng nhập: ', error);
+  }
+};
+
+  
+  
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -147,6 +171,8 @@ const Header = () => {
                             type="text"
                             placeholder="Email"
                             name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                           <label htmlFor="" className="fw-bold">
                             Mật khẩu <span className="text-danger">*</span>
@@ -157,6 +183,8 @@ const Header = () => {
                             type="password"
                             placeholder="Password"
                             name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                           <button
                             type="submit"
@@ -232,7 +260,7 @@ const Header = () => {
                           />
                           <input type="checkbox" />
                           <span className="ml-2">
-                            Tôi đồng ý với điều khoản abcxyz
+                            Tôi đồng ý với <Link to={"/privacy_policy"}>Chính sách</Link> của trang
                           </span>
                           <button
                             type="submit"
