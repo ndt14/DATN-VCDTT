@@ -9,12 +9,7 @@
     @yield('meta_tags')
 
 
-    <!-- CSS files -->
-    <link href="{{ asset('admin/assets/css/tabler.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-flags.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-payments.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/tabler-vendors.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('admin/assets/css/demo.min.css') }}" rel="stylesheet" />
+    @include('admin.common.css')
     @yield('header_js')
     <style>
         @import url('https://rsms.me/inter/inter.css');

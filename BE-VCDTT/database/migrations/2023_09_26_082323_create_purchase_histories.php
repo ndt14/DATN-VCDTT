@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string('tour_end_destination');
             $table->string('tour_location');
             $table->string('coupon_info');
-            $table->integer('coupon_percentage');
-            $table->integer('refund_percentage');
-            $table->integer('coupon_fixed');
+            $table->integer('coupon_percentage')->nullable();
+            $table->integer('refund_percentage')->nullable();
+            $table->integer('coupon_fixed')->nullable();
             $table->string('tour_start_time');
             $table->string('tour_end_time');
             $table->tinyInteger('payment_status')->default(1);

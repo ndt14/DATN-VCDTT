@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Models\PurchaseHistory;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,8 +78,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user-edit/{id}', [UserController::class, 'update']);
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
+    //PurchaseHistory
+    Route::post('/purchase-history-store', [PurchaseHistoryController::class, 'store']);
 
-
+    //Auth
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class,  'logout'])->middleware(['auth:sanctum']);
