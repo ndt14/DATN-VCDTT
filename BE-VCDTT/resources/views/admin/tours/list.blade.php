@@ -1,4 +1,5 @@
-@extend('admin.common.layout')
+@extends('admin.common.layout')
+@section('content')
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
@@ -68,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table">
                         <table class="table card-table table-vcenter text-nowrap datatable">
                             <thead>
                                 <tr>
@@ -84,57 +85,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($items) : ?>
-                                    <?php foreach ($items as $item) : ?>
                                         <tr>
-                                            <td><span class="text-muted"><?php echo $item->id; ?></span></td>
+                                            <td><span class="text-muted">1</span></td>
                                             <td>
-                                                <?php echo $item->lang_code; ?>
+                                                en
                                             </td>
                                             <td class="text-wrap text-break">
-                                                <a href="javascript: viewItem(<?php echo $item->id; ?>);"><?php echo $item->title; ?></a>
+                                                title
                                             </td>
                                             <td class="text-wrap text-break">
-                                                <?php if ($item->lang_code == 'en') : ?>
-                                                    <?php echo word_limiter(strip_tags($item->description), 6); ?>
-                                                <?php else : ?>
-                                                    <?php echo mb_substr($item->description, 0, 10) . "..."; ?>
-                                                <?php endif; ?>
+                                                descreption
                                             </td>
                                             <td>
-                                                <?php echo ($item->feature_post == '0') ? 'Default' : 'Hot Post'; ?>
+                                                Default
                                             </td>
                                             <td>
-                                                <?php echo $item->created_at; ?>
                                             </td>
                                             <td>
-                                                <?php echo $item->updated_at; ?>
                                             </td>
                                             <td class="text-center">
-                                                <?php if ($item->active == 0) : ?>
-                                                    <span class="badge bg-muted" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Not active"></span>
-                                                <?php elseif ($item->active == 1) : ?>
                                                     <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Activated"></span>
-                                                <?php endif; ?>
                                             </td>
                                             <td class="text-end">
                                                 <span class="dropdown">
                                                     <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                                     <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="/admin/cms/posts/edit/<?php echo $item->id; ?>">Edit</a>
-                                                        <a class="dropdown-item" href="javascript: removeItem(<?php echo $item->id; ?>);">Remove</a>
+                                                        <a class="dropdown-item" href="">Edit</a>
+                                                        <a class="dropdown-item" href="javascript: removeItem(1);">Remove</a>
                                                     </div>
                                                 </span>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
                                     <tr>
                                         <td colspan="9">
                                             <div>No data</div>
                                         </td>
                                     </tr>
-                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -159,7 +145,8 @@
         <div class="modal-content"></div>
     </div>
 </div>
-
+@endSection
+@section('page_js')
 <script type="text/javascript">
     let modalContainer;
     $(document).ready(function() {
@@ -240,3 +227,4 @@
         });
     };
 </script>
+@endSection

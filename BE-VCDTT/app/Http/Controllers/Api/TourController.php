@@ -66,6 +66,15 @@ class TourController extends Controller
         );
     }
 
+    public function tourManagement(Request $request)
+    {
+        // Tích hợp tìm kiếm
+        $keyword = trim($request->keyword) ? trim($request->keyword) : '';
+        $sql_order = 'name';
+        $limit = intval($request->limit) ? intval($request->limit) : '';
+
+        return view('admin.tours.list');
+    }
     /**
      * Store a newly created resource in storage.
      */

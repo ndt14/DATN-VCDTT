@@ -27,7 +27,7 @@
 
 </head>
 
-<body>
+<body class="layout-fluid">
     <script src="{{ asset('admin/assets/js/demo-theme.min.js') }}"></script>
     <div class="page">
         @include('admin.common.sidebar')
