@@ -225,4 +225,16 @@ class TourController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
+
+    
+    public function tourManagementList(Request $request)
+    {
+
+        return view('admin.tours.list');
+    }
+    public function tourManagementAdd(Request $request)
+    {
+        $html = view('admin.tours.add')->render();
+        return response()->json(['html' => $html]);
+    }
 }

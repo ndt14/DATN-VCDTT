@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // return ['Laravel' => app()->version()];
-    return view('admin.layouts.app');
+    return view('admin.common.layout');
 });
 
 Route::get('/test', function(){
-    return view('admin.layouts.app');
+    return view('admin.common.layout');
 });
+
+Route::get('/tour', [TourController::class, 'tourManagementList']);
+Route::get('/tour/add', [TourController::class, 'tourManagementAdd']);
+
 
 require __DIR__.'/auth.php';
