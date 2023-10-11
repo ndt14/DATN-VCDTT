@@ -23,7 +23,7 @@ class PurchaseHistory extends Model
         'tour_sale_percentage',
         'tour_start_destination',
         'tour_end_destination',
-        'tour_the_location',
+        'tour_location',
         'coupon_info',
         'coupon_percentage',
         'refund_percentage',

@@ -19,7 +19,23 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
+        $purchaseHistory = PurchaseHistory::create($request->all());
 
+        if($purchaseHistory->id) {
+
+            return response()->json([
+                'data' => [
+                    'purchase history' => new PurchaseHistoryResource($purchaseHistory)
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'internal server error',
+                'status' => 500
+            ]);
+        }
     }
 
     /**

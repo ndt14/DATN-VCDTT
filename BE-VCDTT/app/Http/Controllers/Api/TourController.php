@@ -114,7 +114,7 @@ class TourController extends Controller
         }
 
 
-        
+
     }
 
     /**
@@ -226,7 +226,7 @@ class TourController extends Controller
         }
     }
 
-    
+
     public function tourManagementList(Request $request)
     {
 
