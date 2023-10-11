@@ -135,15 +135,19 @@ class TourController extends Controller
         $firstTourToCate =  TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
         ->first();
 
-        $toursSameCate = $tours = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status')
-        ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
-        ->where('tours.id', '<>', $id)
-        ->where('tours_to_categories.cate_id', $firstTourToCate->cate_id)
-        ->groupBy('tours.id')
-        // ->orderBy('tours.view_count', 'DESC') // sau khi view_count hoạt động thì xóa cái dưới
-        ->orderBy('tours.id', 'ASC')
-        ->get();
-
+        if($firstTourToCate){
+            $toursSameCate = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status')
+            ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
+            ->where('tours.id', '<>', $id)
+            ->where('tours_to_categories.cate_id', $firstTourToCate->cate_id)
+            ->groupBy('tours.id')
+            // ->orderBy('tours.view_count', 'DESC') // sau khi view_count hoạt động thì xóa cái dưới
+            ->orderBy('tours.id', 'ASC')
+            ->get();
+        }
+        else{
+            $toursSameCate = Tour::select('tours.*')->orderBy('id', 'DESC')->limit(10)->get();
+        }
 
 
 
