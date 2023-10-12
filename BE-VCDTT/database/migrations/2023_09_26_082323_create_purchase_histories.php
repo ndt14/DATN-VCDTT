@@ -14,7 +14,16 @@ return new class extends Migration
         Schema::create('purchase_histories', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->nullable();
-            $table->string('user_info')->nullable();
+            // $table->string('user_info')->nullable();
+
+            // hotfix
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone_number');
+            $table->string('address');
+            $table->tinyInteger('gender');
+
+            $table->string('user_name')->nullable();
             $table->string('tour_name')->nullable();
             $table->string('tour_duration')->nullable();
             $table->bigInteger('tour_child_price')->nullable();
