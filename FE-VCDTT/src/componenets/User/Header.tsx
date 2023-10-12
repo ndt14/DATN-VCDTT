@@ -20,7 +20,7 @@ const [password, setPassword] = useState("");
   // const handleCloseSignUp = () => setShowSignUp(false);
   const handleShowSignIn = () => setShowSignIn(true);
   // const handleShowSignUp = () => setShowSignUp(true);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSignInForm, setShowSignInForm] = useState(true);
   const [showSignUpForm, setShowSignUpForm] = useState(false);
   const [isButtonSignInClicked, setIsButtonSignInClicked] = useState(true);
@@ -52,6 +52,8 @@ const handleSignIn = async (event) => {
     
     if (data && data.user) {
       // Thành công: Lưu thông tin đăng nhập và token
+      setIsLoggedIn(true);
+      setShowSignIn(false);
       alert('Đăng nhập thành công!');
     } else {
       alert('Đăng nhập thất bại!');
@@ -133,6 +135,33 @@ const handleSignIn = async (event) => {
               </nav>
             </div>
             <div className="header-btn">
+            {isLoggedIn ? (
+    <div>
+      {/* Hiển thị tên tài khoản sau khi đăng nhập thành công */}
+      <div className="user-profile">
+      <div className="main-navigation d-none d-lg-block">
+              <nav id="navigation" className="navigation">
+                <ul>
+      <li className="menu-item-has-children">
+                    <Link to="blogs">Tài khoản của bạn</Link>
+                    <ul>
+                      <li>
+                        <Link to="blogs/1">Bài viết 1</Link>
+                      </li>
+                      <li>
+                        <Link to="blogs/2">Bài viết 2</Link>
+                      </li>
+                      <li>
+                        <Link to="blogs/3">Bài viết 3</Link>
+                      </li>
+                    </ul>
+                  </li>
+                  </ul>
+                  </nav>
+                  </div>
+      </div>
+    </div>
+  ) : (
               <div className="">
                 <button
                   className="rounded button-primary"
@@ -291,7 +320,9 @@ const handleSignIn = async (event) => {
                   <Modal.Footer></Modal.Footer>
                 </Modal>
               </div>
-              <div></div>
+                )}
+              <div>
+              </div>
             </div>
           </div>
         </div>

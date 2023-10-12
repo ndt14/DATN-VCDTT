@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('purchase_histories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->string('user_info');
-            $table->string('tour_name');
+            $table->bigInteger('user_id')->nullable();
+            $table->string('user_info')->nullable();
+            $table->string('tour_name')->nullable();
             $table->string('tour_duration')->nullable();
             $table->bigInteger('tour_child_price')->nullable();
             $table->integer('child_count')->nullable();

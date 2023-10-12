@@ -1,16 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { AuthSignin, AuthSignup } from '../interfaces/Auth';
 
-
-interface AuthSignup {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string
-}
-interface AuthSignin {
-    email: string;
-    password: string;
-}
 const AuthApi = createApi({
     reducerPath: 'auth',
     baseQuery: fetchBaseQuery({
