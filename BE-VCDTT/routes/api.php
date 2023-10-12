@@ -90,4 +90,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'sendMail']);
     Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);
 
-    Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']); //pey route
+    Route::match(['get', 'post'], '/vnpay-payment',[PaymentController::class,'vnpayPayment']); //pay route
+    // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);

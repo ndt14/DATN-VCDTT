@@ -11,14 +11,14 @@ class PaymentController extends Controller
     public function vnpayPayment(Request $request)
     {
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://localhost/vnpay_php/vnpay_return.php";
+        $vnp_Returnurl = url("/vnpay_php/vnpay_return.php");
         $vnp_TmnCode = "SE3S8FW2"; //Mã website tại VNPAY
         $vnp_HashSecret = "KLEUGTZDAKRFAFIDTJEWEBTJSWRJETJT"; //Chuỗi bí mật
 
-        $vnp_TxnRef = "10000"; ///$_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+        $vnp_TxnRef = ""; ///$_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnp_OrderInfo = "Thanh toán hóa đơn"; //$_POST['order_desc'];
         $vnp_OrderType = "Traveling"; //$_POST['order_type'];
-        $vnp_Amount = 10000 * 100; //$_POST['amount]' * 100;
+        $vnp_Amount = 50000 * 100; //$_POST['amount]' * 100;
         $vnp_Locale = "VN"; //$_POST['language'];
         $vnp_BankCode = "NCB"; //$_POST['bank_code'];
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -102,13 +102,17 @@ class PaymentController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-        $returnData = array(
-            'code' => '00', 'message' => 'success', 'data' => $vnp_Url
-        );
-        if ($request->input('redirect')) {
-            return Response::redirectTo($vnp_Url);
+        // $returnData = array(
+        //     'code' => '00', 'message' => 'success', 'data' => $vnp_Url
+        // );
+        if (true) {
+            return redirect($vnp_Url);
         } else {
-            return response()->json($returnData);
+            return response()->json([
+                'code' => '00',
+                'message' => 'success',
+                'data' => $vnp_Url
+            ]);
         }
         // vui lòng tham khảo thêm tại code demo
     }
