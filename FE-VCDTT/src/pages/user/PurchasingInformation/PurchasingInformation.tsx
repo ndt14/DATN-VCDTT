@@ -40,13 +40,14 @@ const PurchasingInformation = (props: Props) => {
     e.preventDefault();
     
     const variables = {
-      use_info: formData.user_info,
+      user_info: formData.user_info,
       email: formData.email,
       phone_number: formData.phone_number,
       // Add other variables as needed
     };
+  console.log(variables);
   
-    addBill({variables }as any)
+    addBill(variables)
       .then((response) => {
         // Handle the response here
       alert("mua thành công")
