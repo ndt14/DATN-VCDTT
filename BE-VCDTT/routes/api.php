@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Models\PurchaseHistory;
 
@@ -88,3 +89,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/reset-password', [ResetPasswordController::class, 'sendMail']);
     Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);
+
+    Route::match(['get', 'post'], '/vnpay-payment/{id}',[PaymentController::class,'vnpayPayment']); //pay route
+    // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
