@@ -6,7 +6,7 @@ import { useAddBillMutation } from "../../../api/bill";
 type Props = {};
 
 const PurchasingInformation = (props: Props) => {
-  const[addBill] = useAddBillMutation();
+  const [addBill] = useAddBillMutation();
   const location = useLocation();
   const {
     tourData,
@@ -16,9 +16,15 @@ const PurchasingInformation = (props: Props) => {
     childPrice,
     formattedResultPrice,
     dateTour,
+    tourName,
+    tourLocation,
   } = location.state;
+  console.log(tourName);
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  const userId = userData?.id;
   // Xử lý xác nhận thông tin form
   const [formData, setFormData] = useState({
     user_info: "",
@@ -38,30 +44,39 @@ const PurchasingInformation = (props: Props) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    
+
     const variables = {
+      user_id: userId,
       user_info: formData.user_info,
-      email: formData.email,
-      phone_number: formData.phone_number,
+      tour_name: tourName,
+      child_count: productChildNumber,
+      adult_count: productNumber,
+      tour_start_time: formattedDate,
+      tour_location: tourLocation,
+      tour_child_price: childPrice,
+      tour_adult_price: price,
+
       // Add other variables as needed
     };
-  console.log(variables);
-  
+    console.log(variables);
+
     addBill(variables)
       .then((response) => {
         // Handle the response here
-      alert("mua thành công")
-        console.log(response);
-      
+        alert("mua thành công");
 
+        const billID = response?.data.data.purchase_history.id;
+        console.log(billID);
+        window.open(
+          `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
+        );
       })
       .catch((error) => {
         // Handle any errors here
         console.error(error);
       });
-
-   
   };
+
   // console.log(onChange);
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
