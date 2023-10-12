@@ -25,7 +25,7 @@ class PurchaseHistoryController extends Controller
 
             return response()->json([
                 'data' => [
-                    'purchase history' => new PurchaseHistoryResource($purchaseHistory)
+                    'purchase_history' => new PurchaseHistoryResource($purchaseHistory)
                 ],
                 'message' => 'OK',
                 'status' => 200
