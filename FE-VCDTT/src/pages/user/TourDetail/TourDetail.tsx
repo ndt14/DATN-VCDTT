@@ -16,10 +16,12 @@ const TourDetail = () => {
   const onChange: DatePickerProps["onChange"] = (date, dateString) => {
     setDateTour(dateString);
   };
-  console.log(dateTour);
+
   //
   const { id } = useParams<{ id: string }>();
   const { data: tourData } = useGetTourByIdQuery(id || "");
+  const tourName = tourData?.data?.tour.name;
+  const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
   const tourChildPrice = tourData?.data?.tour.child_price;
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
@@ -50,7 +52,6 @@ const TourDetail = () => {
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
   const [childPrice, setChildPrice] = useState(tourChildPrice);
-  console.log(typeof productNumber);
 
   // console.log(tourPrice);
 
@@ -592,6 +593,8 @@ const TourDetail = () => {
                                 price,
                                 formattedResultPrice,
                                 dateTour,
+                                tourName,
+                                tourLocation,
                               }}
                             >
                               <input
@@ -607,8 +610,6 @@ const TourDetail = () => {
                   </div>
                 </div>
               </div>
-
-              
             </div>
           </div>
         </div>
