@@ -91,10 +91,9 @@
                                     <th>Title</th>
                                     <th>Author</th>
                                     <th>Short description</th>
-                                    <th>Description</th>
-                                    <th>main_img</th>
                                     <th>View count</th>
                                     <th>Created at</th>
+                                    <th>Last update</th>
                                     <th class="text-center">Active</th>
                                     <th></th>
                                 </tr>
@@ -105,25 +104,22 @@
                                         <tr>
                                         <td><span class="text-muted">{{$data['id']}}</span></td>
                                         <td>
-                                            {{$data['title']}}
+                                            <a href="javascript: viewDetail({{$data['id']}});" title="Show Detail">{{string_truncate($data['title'])}}</a>
                                         </td>
                                         <td>
                                             {{$data['author']}}
                                         </td>
                                         <td>
-                                            {{$data['short_desc']}}
-                                        </td>
-                                        <td>
-                                            {{$data['description']}}
-                                        </td>
-                                        <td>
-                                            {{$data['main_img']}}
+                                            {{string_truncate($data['short_desc'], 50)}}                     
                                         </td>
                                         <td>
                                             {{$data['view_count']}}
                                         </td>
                                         <td>
-                                            {{$data['created_at']}}
+                                            {{time_format($data['created_at'])}}
+                                        </td>
+                                        <td>
+                                            {{time_format($data['updated_at'])}}
                                         </td>
                                         <td class="text-center">
                                             @if($data['status'] == 1)
@@ -139,7 +135,7 @@
                                                     <a class="dropdown-item" href="{{route('blog.edit', ['id'=>$data['id']])}}">Edit</a>
                                                     <a class="dropdown-item" href="{{route('blog.delete', ['id'=>$data['id']])}}">Remove</a>
                                                 </div>
-                                            </span>
+                                            </span> 
                                         </td>
                                     </tr>
                                     @endforeach
@@ -187,27 +183,48 @@
         </div>
     </div>
 </div>
-<div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
         </div>
     </div>
 </div>
 @endSection
+@section('page_css')
+<style>
+    .modal-content{
+        z-index: 80 !important;
+    }
+    .modal{
+        z-index: 80 !important;
+    }
+    .modal-dialog-scrollable{
+        z-index: 81 !important;
+    }
+    .modal-backdrop{z-index: 78 !important;
+
+    }
+    .modal-blur {
+        z-index: 79 !important;
+    }
+
+    
+</style>
+@endSection
 @section('page_js')
 <script type="text/javascript">
     let modalContainer;
     $(document).ready(function() {
+        Fancybox.bind('[data-fancybox]');
         modalContainer = new bootstrap.Modal('#modalContainer', {
             keyboard: true,
             backdrop: 'static'
         });
     });
 
-    let viewAdd = function() {
-        axios.get(`/blog/add`)
+    let viewDetail = function(id) {
+        axios.get(`/blog/detail/${id}`)
             .then(function(response) {
-                // console.log(response);
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
             })
@@ -215,7 +232,6 @@
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
             .finally(function() {
-                // always executed
             });
     };
 

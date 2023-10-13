@@ -33,7 +33,8 @@ class BlogController extends Controller
             'main_img',
             'view_count',
             'status',
-            'created_at'
+            'created_at',
+            'updated_at'
         )->where('title', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json([
             'data' => [
@@ -101,7 +102,8 @@ class BlogController extends Controller
             'main_img',
             'view_count',
             'status',
-            'created_at'
+            'created_at',
+            'updated_at'
         )->findOrFail($id);
 
         return response()->json(
@@ -199,6 +201,14 @@ class BlogController extends Controller
             return redirect()->route('blog.edit', ['id'=>$request->id])->with('success', 'Thêm mới blog thành công');
         }
         return redirect()->route('blog.edit', ['id'=>$request->id])->with('fail', 'Đã xảy ra lỗi');
+    }
+    
+    public function blogManagementDetail(Request $request) {
+
+        $data = $request->except('_token');
+        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/'.$request->id)->json()['data']['blog'];
+        $html = view('admin.blogs.detail', compact('item'))->render();
+        return response()->json(['html' => $html, 'status' => 200]);
     }
 
     public function blogManagementDelete($id) {
