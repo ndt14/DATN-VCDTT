@@ -14,8 +14,11 @@ use App\Models\Coupon;
 use App\Models\Image;
 use App\Models\Tour;
 use App\Models\TourToCategory;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
@@ -51,7 +54,8 @@ class TourController extends Controller
             'pathway',
             'main_img',
             'view_count',
-            'status'
+            'status',
+            'created_at'
         )
             ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
         return response()->json(
@@ -132,26 +136,34 @@ class TourController extends Controller
         $listTourToCate = TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
             ->get();
         // Get id first for tour_id
-        $firstTourToCate =  TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
-        ->first();
+        // $firstTourToCate =  TourToCategory::select('id', 'cate_id')->where('tour_id', '=', $id)
+        // ->first();
 
-        if($firstTourToCate){
-            $toursSameCate = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status')
-            ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
-            ->where('tours.id', '<>', $id)
-            ->where('tours_to_categories.cate_id', $firstTourToCate->cate_id)
-            ->groupBy('tours.id')
-            // ->orderBy('tours.view_count', 'DESC') // sau khi view_count hoạt động thì xóa cái dưới
-            ->orderBy('tours.id', 'ASC')
-            ->get();
-        }
-        else{
-            $toursSameCate = Tour::select('tours.*')->orderBy('id', 'DESC')->limit(10)->get();
-        }
+        $firstTourToCate = TourToCategory::select('id', 'cate_id')
+    ->where('tour_id', '=', $id)
+    ->get();
+
+if ($firstTourToCate->isNotEmpty()) {
+    $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
+
+    $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status')
+        ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
+        ->where('tours.id', '<>', $id)
+        ->whereIn('tours_to_categories.cate_id', $cateIds)
+        ->groupBy('tours.id')
+        ->orderBy('tours.id', 'ASC');
+
+    $toursSameCate = $query->get();
+} else {
+    $toursSameCate = Tour::select('tours.*')
+        ->orderBy('id', 'DESC')
+        ->limit(10)
+        ->get();
+}
 
 
 
-        
+
         // get info tour by id
         $tour = Tour::select(
             'id',
@@ -247,14 +259,42 @@ class TourController extends Controller
     }
 
 
+   // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
     public function tourManagementList(Request $request)
     {
-
-        return view('admin.tours.list');
+        $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour')->json()['data']['tours'];
+        return view('admin.tours.list', compact('items'));
     }
-    public function tourManagementAdd(Request $request)
+    public function tourManagementAdd()
     {
-        $html = view('admin.tours.add')->render();
-        return response()->json(['html' => $html]);
+        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
+        return view('admin.tours.add', compact('categories'));
     }
+
+    public function tourManagementAddAction(Request $request) {
+
+        $data = $request->all();
+        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
+
+        if($response->status() == 201) {
+            return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
+        }
+        return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
+    }
+
+    public function tourManagementDelete($id) {
+
+        $response = Http::delete('http://be-vcdtt.datn-vcdtt.test/api/tour-destroy/'.$id);
+
+        if($response->status() == 200) {
+            return redirect()->route('tour.list')->with('success', 'Xóa tour thành công');
+        }else {
+            return redirect()->route('tour.list')->with('fail', 'Đã xảy ra lỗi');
+
+        }
+
+        return redirect()->route('tour.list');
+     }
+
 }
