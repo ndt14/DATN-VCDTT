@@ -10,6 +10,7 @@ use App\Http\Resources\BlogResource;
 use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class BlogController extends Controller
 {
@@ -53,7 +54,7 @@ class BlogController extends Controller
             'message' => 'OK',
             'status' => 200,
         ]);
-        
+
     }
     /**
      * Store a newly created resource in storage.
@@ -77,7 +78,7 @@ class BlogController extends Controller
                 'status' => 500
             ]);
         }
-        
+
     }
 
     /**
@@ -92,6 +93,7 @@ class BlogController extends Controller
         $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
         // get info blog by id
         $blog = Blog::select(
+            'id',
             'title',
             'author',
             'short_desc',
@@ -106,13 +108,12 @@ class BlogController extends Controller
             [
                 'data' => [
                     'blog' => new BlogResource($blog),
-                    'images' => ImageResource::collection($images),
+                    'images' => new ImageResource($images),
                 ],
                 'message' => 'OK',
                 'status' => 200
             ],
         );
-           
         } catch (Exception $e) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -148,17 +149,69 @@ class BlogController extends Controller
         $blog = Blog::find($id);
         if ($blog) {
           $delete_blog =  $blog->delete(); // soft delete
-           
-          if($delete_blog) {
+        if($delete_blog) {
             return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
-          }else {
+        }else {
             return response()->json([
                 'message' => 'internal server error',
                 'status' => 500
             ]);
-          }
+        }
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+    }
+
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
+    public function blogManagementList(Request $request)
+    {
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog')->json()['data']['blogs'];
+        return view('admin.blogs.list', compact('data'));
+    }
+    public function blogManagementAdd()
+    {
+        return view('admin.blogs.add');
+    }
+
+    public function blogManagementAddAction(Request $request) {
+
+        $data = $request->except('_token');
+        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/blog-store', $data);
+        if($response->status() == 200) {
+            return redirect()->route('blog.list')->with('success', 'Thêm mới blog thành công');
+        }
+        return redirect()->route('blog.add')->with('fail', 'Đã xảy ra lỗi');
+    }
+
+    public function blogManagementEdit(Request $request)
+    {
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/'.$request->id)->json()['data']['blog'];
+        return view('admin.blogs.edit',compact('data'));
+    }
+
+    public function blogManagementEditAction(Request $request) {
+
+        $data = $request->except('_token');
+        $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/blog-edit/'.$request->id, $data);
+
+        if($response->status() == 200) {
+            return redirect()->route('blog.edit', ['id'=>$request->id])->with('success', 'Thêm mới blog thành công');
+        }
+        return redirect()->route('blog.edit', ['id'=>$request->id])->with('fail', 'Đã xảy ra lỗi');
+    }
+
+    public function blogManagementDelete($id) {
+
+        $response = Http::delete('http://be-vcdtt.datn-vcdtt.test/api/blog-destroy/'.$id);
+
+        if($response->status() == 200) {
+            return redirect()->route('blog.list')->with('success', 'Xóa blog thành công');
+        }else {
+            return redirect()->route('blog.list')->with('fail', 'Đã xảy ra lỗi');
+
+        }
+
+        return redirect()->route('blog.list');
     }
 }
