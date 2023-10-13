@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tours_to_categories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cate_id');
-            $table->bigInteger('tour_id');
+            $table->bigInteger('cate_id')->nullable();
+            $table->bigInteger('tour_id')->nullable();
             $table->timestamps();
         });
     }

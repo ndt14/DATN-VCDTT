@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->string('url');
-            $table->bigInteger('tour_id');
-            $table->bigInteger('blog_id');
+            $table->string('name')->nullable();
+            $table->string('type')->nullable();
+            $table->string('url')->nullable();
+            $table->bigInteger('tour_id')->nullable();
+            $table->bigInteger('blog_id')->nullable();
             $table->timestamps();
         });
     }

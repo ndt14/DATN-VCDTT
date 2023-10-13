@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('wish_lists', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('tour_id');
+            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('tour_id')->nullable();
             $table->timestamps();
         });
     }
