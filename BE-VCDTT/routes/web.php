@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,11 @@ Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->na
 Route::post('/blog/edit/post', [BlogController::class, 'blogManagementEditAction'])->name('blog.edit.post');
 Route::get('/blog/delete/{id}', [BlogController::class, 'blogManagementDelete'])->name('blog.delete');
 
+Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
+Route::get('/faq/delete/{id}', [FAQController::class, 'faqManagementDelete'])->name('faq.delete');
+Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
+Route::post('/faq/add/new', [FAQController::class,'faqManagementAddAction'])->name('faq.add.new');
+Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
+Route::post('/faq/edit/post', [FAQController::class,'faqManagementEditAction'])->name('faq.edit.faq');
 
 require __DIR__.'/auth.php';
