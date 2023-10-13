@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
-            $table->string('start_date');
-            $table->string('end_date');
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('start_date')->nullable();
+            $table->string('end_date')->nullable();
             $table->bigInteger('tour_id')->nullable();
             $table->bigInteger('cate_id')->nullable();
-            $table->integer('percentage_price');
-            $table->integer('fixed_price');
-            $table->tinyInteger('status')->default(1);
+            $table->integer('percentage_price')->nullable();
+            $table->integer('fixed_price')->nullable();
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
