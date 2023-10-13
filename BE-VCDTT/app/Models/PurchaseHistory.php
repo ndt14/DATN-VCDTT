@@ -21,6 +21,8 @@ class PurchaseHistory extends Model
         'phone_number',
         'address',
         'gender',
+        'honorific',
+        'suggestion',
 
         'tour_name',
         'tour_duration',

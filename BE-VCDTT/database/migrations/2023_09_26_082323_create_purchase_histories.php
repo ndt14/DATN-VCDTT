@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
             $table->tinyInteger('gender')->nullable();
+            $table->string('honorific')->nullable(); //danh xưng
+            $table->text('suggestion')->nullable(); //Đề xuất
 
             $table->string('user_name')->nullable();
             $table->string('tour_name')->nullable();
