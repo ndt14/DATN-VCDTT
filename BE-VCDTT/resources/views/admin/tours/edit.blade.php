@@ -57,12 +57,12 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form  class="card" action="{{ route('tour.add.new') }}" method="POST">
+            <form  class="card" action=" {{ route('tour.edit', ['id'=>request()->route('id')]) }} " method="POST">
             @csrf
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="Name">
+                        <input type="text" name="name" class="form-control" placeholder="Name" value="{{ $tour['name'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('name')
                                 {{ $message }}
@@ -71,7 +71,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Image</label>
-                        <input type="text" name="main_img" class="form-control" placeholder="Image">
+                        <input type="text" name="main_img" class="form-control" placeholder="Image" value="{{ $tour['main_img'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('main_img')
                                 {{ $message }}
@@ -80,7 +80,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Duration</label>
-                        <input type="text" name="duration" class="form-control" placeholder="Duration" value="">
+                        <input type="text" name="duration" class="form-control" placeholder="Duration" value="{{ $tour['duration'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('duration')
                                 {{ $message }}
@@ -90,7 +90,7 @@
                     <div class="row">
                         <div class="mb-3 col-6">
                             <div class="form-label">Adult price</div>
-                            <input name="adult_price" type="text" class="form-control" >
+                            <input name="adult_price" type="text" class="form-control" value="{{ $tour['adult_price'] }}">
                             <span class="text-danger d-flex justify-content-start">
                             @error('adult_price')
                                 {{ $message }}
@@ -99,7 +99,7 @@
                         </div>
                         <div class="mb-3 col-6">
                             <div class="form-label">Child price</div>
-                            <input name="child_price" type="text" class="form-control" >
+                            <input name="child_price" type="text" class="form-control" value="{{ $tour['child_price'] }}">
                             <span class="text-danger d-flex justify-content-start">
                             @error('child_price')
                                 {{ $message }}
@@ -109,7 +109,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Location</div>
-                        <input name="location" type="text" class="form-control" >
+                        <input name="location" type="text" class="form-control" value="{{ $tour['location'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('location')
                                 {{ $message }}
@@ -118,7 +118,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Exact Location</div>
-                        <input name="exact_location" type="text" class="form-control" >
+                        <input name="exact_location" type="text" class="form-control" value="{{ $tour['exact_location'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('exact_location')
                                 {{ $message }}
@@ -127,7 +127,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Pathway</div>
-                        <input name="pathway" type="text" class="form-control" >
+                        <input name="pathway" type="text" class="form-control" value="{{ $tour['pathway'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('pathway')
                                 {{ $message }}
@@ -136,7 +136,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">View Count</div>
-                        <input name="view_count" type="text" class="form-control" >
+                        <input name="view_count" type="text" class="form-control" value="{{ $tour['view_count'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('view_count')
                                 {{ $message }}
@@ -145,7 +145,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Sale percentage</div>
-                        <input name="sale_percentage" type="text" class="form-control" >
+                        <input name="sale_percentage" type="text" class="form-control" value="{{ $tour['sale_percentage'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('sale_percentage')
                                 {{ $message }}
@@ -154,7 +154,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Start destination</div>
-                        <input name="start_destination" type="text" class="form-control" >
+                        <input name="start_destination" type="text" class="form-control" value="{{ $tour['start_destination'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('start_destination')
                                 {{ $message }}
@@ -163,7 +163,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">End destination</div>
-                        <input name="end_destination" type="text" class="form-control" >
+                        <input name="end_destination" type="text" class="form-control" value="{{ $tour['end_destination'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('end_destination')
                                 {{ $message }}
@@ -172,7 +172,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Number of tourist</div>
-                        <input name="tourist_count" type="text" class="form-control" >
+                        <input name="tourist_count" type="text" class="form-control" value="{{ $tour['tourist_count'] }}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('tourist_count')
                                 {{ $message }}
@@ -195,7 +195,7 @@
                     @endif
                     <div class="mb-3">
                         <div class="form-label">Detail</div>
-                        <textarea id="editor" rows="6" class="form-control text-editor" name="details" placeholder="Content"></textarea>
+                        <textarea id="editor" rows="6" class="form-control text-editor" name="details" placeholder="Content" value="{{ $tour['details'] }}"></textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('details')
                                 {{ $message }}
