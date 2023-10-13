@@ -6,11 +6,18 @@ import "./TourDetail.css";
 import { DatePicker } from "antd";
 import type { DatePickerProps } from "antd";
 import moment from "moment";
+import TinySlider from "tiny-slider-react";
+import "tiny-slider/dist/tiny-slider.css";
+import { Tour } from "../../../interfaces/Tour";
 
 // const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
 // Initialize with null or a default date if needed
 
 const TourDetail = () => {
+  //validate
+
+  //
+
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
 
@@ -21,6 +28,15 @@ const TourDetail = () => {
     // localStorage.setItem("dateTour", dateString);
   };
 
+  const settings = {
+    lazyload: false,
+    nav: false,
+    mouseDrag: true,
+    items: 3,
+    autoplay: true,
+    autoplayButtonOutput: false,
+  };
+
   //
   const { id } = useParams<{ id: string }>();
   const { data: tourData } = useGetTourByIdQuery(id || "");
@@ -28,6 +44,8 @@ const TourDetail = () => {
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
   const tourChildPrice = tourData?.data?.tour.child_price;
+  // console.log(tourChildPrice);
+
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -52,22 +70,20 @@ const TourDetail = () => {
   };
   //
 
-  
   const [productNumber, setProductNumber] = useState(1);
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
-  const [childPrice, setChildPrice] = useState(tourChildPrice||0);
-  console.log(childPrice);
-  console.log(productChildNumber);
-  
+  const [childPrice, setChildPrice] = useState(tourChildPrice || 0);
+
   useEffect(() => {
     // Update price state when tourPrice is available
     if (tourPrice !== undefined) {
       setPrice(tourPrice);
     }
-  }, [tourPrice])
+  }, [tourPrice]);
 
-  console.log(price);
+  const tourSameCategory = tourData?.data?.toursSameCate;
+  console.log(tourSameCategory);
 
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -76,7 +92,7 @@ const TourDetail = () => {
     if (newProductNumber > 0) {
       setProductNumber(newProductNumber);
       // Update the price based on the new product number
-      const newPrice = newProductNumber * tourPrice ; // Assuming the price increases by 10 for each product
+      const newPrice = newProductNumber * tourPrice; // Assuming the price increases by 10 for each product
       setPrice(newPrice);
       console.log(newPrice);
     }
@@ -96,7 +112,7 @@ const TourDetail = () => {
   const formattedResultPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format((price+childPrice));
+  }).format(price + childPrice);
 
   return (
     <>
@@ -592,47 +608,117 @@ const TourDetail = () => {
 
                         <div className="col-sm-12 mt-2">
                           <label htmlFor="" className="h5 d-flex">
-                            <p className="mr-2">Tổng giá :</p> <p className="price"> {(price +childPrice > 0) ? formattedResultPrice : formattedTourPrice}</p>
-                          
-
-
+                            <p className="mr-2">Tổng giá :</p>{" "}
+                            <p className="price">
+                              {" "}
+                              {price + childPrice > 0
+                                ? formattedResultPrice
+                                : formattedTourPrice}
+                            </p>
                           </label>
                         </div>
                         <div className="col-sm-12">
-                        {isDateSelected ? (
-                          <div className="form-group submit-btn">
-                            
-                            <Link
-                              to={`/check_order_information/${id}`}
-                              state={{
-                                tourData,
-                                productNumber,
-                                productChildNumber,
-                                childPrice,
-                                price,
-                                formattedResultPrice,
-                                dateTour,
-                                tourName,
-                                tourLocation,
-                              }}
-                            >
-                              <input
-                                type="submit"
-                                name="submit"
-                                value="Đặt tour"
-                                disabled={!isDateSelected}
-                              />
-                            </Link>
-
-                          </div>
-                           ) : (
-                            <p style={{ color: 'red' }}>Vui lòng chọn ngày đi để tiếp tục.</p>
+                          {isDateSelected ? (
+                            <div className="form-group submit-btn">
+                              <Link
+                                to={`/check_order_information/${id}`}
+                                state={{
+                                  tourData,
+                                  productNumber,
+                                  productChildNumber,
+                                  childPrice,
+                                  price,
+                                  formattedResultPrice,
+                                  dateTour,
+                                  tourName,
+                                  tourLocation,
+                                  tourPrice,
+                                  tourChildPrice,
+                                }}
+                              >
+                                <input
+                                  type="submit"
+                                  name="submit"
+                                  value="Đặt tour"
+                                  disabled={!isDateSelected}
+                                />
+                              </Link>
+                            </div>
+                          ) : (
+                            <p style={{ color: "red" }}>
+                              Vui lòng chọn ngày đi để tiếp tục.
+                            </p>
                           )}
                         </div>
                       </div>
                     </form>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div>
+              <h2>Tour tương tự </h2>
+
+              <div className="row">
+                {tourSameCategory?.map(
+                  ({
+                    id,
+                    name,
+                    details,
+                    main_img,
+                    view_count,
+                    adult_price,
+                  }: Tour) => {
+                    return (
+                      <div className="col-lg-4 col-md-6" key={id}>
+                        <div className="package-wrap">
+                          <figure className="feature-image">
+                            <Link to={`/tours/${id}`}>
+                              <img className="w-full" src={main_img} alt="" />
+                            </Link>
+                          </figure>
+                          <div className="package-price">
+                            <h6>
+                              <span>VND {adult_price} </span> / mỗi người
+                            </h6>
+                          </div>
+                          <div className="package-content-wrap">
+                            {/* <div className="package-meta text-center"></div> */}
+                            <div className="package-content">
+                              <h3 className="margin-top-12">
+                                <Link className="mt-12" to={`/tours/${id}`}>
+                                  {name}
+                                </Link>
+                              </h3>
+                              <div className="review-area">
+                                <span className="review-text">
+                                  ({view_count} reviews)
+                                </span>
+                                <div
+                                  className="rating-start"
+                                  title="Rated 5 out of 5"
+                                >
+                                  <span className="w-3/5"></span>
+                                </div>
+                              </div>
+                              <p>{details}</p>
+                              <div className="btn-wrap">
+                                <a href="#" className="button-text width-6">
+                                  Đặt ngay
+                                  <i className="fas fa-arrow-right"></i>
+                                </a>
+                                <a href="#" className="button-text width-6">
+                                  Thêm vào yêu thíc
+                                  <i className="far fa-heart"></i>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>
