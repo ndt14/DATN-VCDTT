@@ -5,13 +5,22 @@ import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
-import { useLoginMutation } from "../../api/auth.js";
+import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 
 const Header = () => {
-  const [login, { error }] = useLoginMutation();
+  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+const [registerPassword, setRegisterPassword] = useState("");
+const [registerPhone, setRegisterPhone] = useState("");
+const [registerName, setRegisterName] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
+
+// Thêm các trường thông tin cần thiết khác nếu cần
+
   console.log(email);
 
   const [showSignIn, setShowSignIn] = useState(false);
@@ -55,6 +64,7 @@ const Header = () => {
     try {
       const { data } = await login({ email, password });
       // console.log(data);
+console.log( data);
 
       if (data && data.user) {
         // Thành công: Lưu thông tin đăng nhập và token
@@ -76,6 +86,42 @@ const Header = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
   };
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    const variables ={
+      email: registerEmail,
+      password: registerPassword,
+      name: registerName,
+      phone_number: registerPhone,
+      c_password: confirmPassword,
+    }
+    if (registerPassword !== confirmPassword) {
+      alert("Mật khẩu và xác nhận mật khẩu không khớp!");
+      return;
+    }
+  console.log(variables);
+  register(variables)
+  .then((response) => {
+    // Handle the response here
+    setIsLoggedIn(true);
+    setShowSignIn(false);
+    console.log(response);
+    
+    // const userName = response?.data.user.name;
+    // console.log(userName);
+    
+    localStorage.setItem("user", JSON.stringify(userName));
+    // localStorage.setItem("accessToken", response.token);
+    alert("đăng ký thành công");
+
+    
+  })
+  .catch((error) => {
+    // Handle any errors here
+    console.error(error);
+  });
+  };
+  
 
   const userData = JSON.parse(localStorage.getItem("user"));
 
@@ -161,7 +207,7 @@ const Header = () => {
                       <nav id="navigation" className="navigation">
                         <ul>
                           <li className="menu-item-has-children">
-                            <Link to="blogs">{userName}</Link>
+                            <Link to="profile">{userName}</Link>
                             <ul>
                               {/* <li>
                                 <Link to="blogs/1">Bài viết 1</Link>
@@ -265,7 +311,19 @@ const Header = () => {
                       )}
                       {showSignUpForm && (
                         <div>
-                          <form>
+                          <form onSubmit={handleRegister}>
+                          <label htmlFor="" className="fw-bold">
+                              Tên tài khoản <span className="text-danger">*</span>
+                            </label>
+                            <br />
+                            <input
+                              className="w-100 my-2"
+                              type="text"
+                              placeholder="Tên tài khoản"
+                              name="name"
+                              value={registerName}
+                              onChange={(e) => setRegisterName(e.target.value)}
+                            />
                             <label htmlFor="" className="fw-bold">
                               Email <span className="text-danger">*</span>
                             </label>
@@ -275,6 +333,8 @@ const Header = () => {
                               type="text"
                               placeholder="Email"
                               name="email"
+                              value={registerEmail}
+                              onChange={(e) => setRegisterEmail(e.target.value)}
                             />
                             <label htmlFor="" className="fw-bold">
                               Số điện thoại{" "}
@@ -283,9 +343,11 @@ const Header = () => {
                             <br />
                             <input
                               className="w-100 my-2"
-                              type="text"
-                              placeholder="text"
-                              name="text"
+                              type="number"
+                              placeholder="Số điện thoại"
+                              name="phone_number"
+                              value={registerPhone}
+                              onChange={(e) => setRegisterPhone(e.target.value)}
                             />
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
@@ -293,9 +355,11 @@ const Header = () => {
                             <br />
                             <input
                               className="w-100 my-2"
-                              type="email"
-                              placeholder="Email"
+                              type="password"
+                              placeholder="Nhập mật khẩu"
                               name="password"
+                              value={registerPassword}
+                              onChange={(e) => setRegisterPassword(e.target.value)}
                             />
                             <label htmlFor="" className="fw-bold">
                               Nhập lại mật khẩu{" "}
@@ -305,8 +369,10 @@ const Header = () => {
                             <input
                               className="w-100 my-2"
                               type="password"
-                              placeholder="Password"
-                              name="password"
+                              placeholder="Nhập lại mật khẩu"
+                              name="c_password"
+                              value={confirmPassword}
+                              onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <input type="checkbox" />
                             <span className="ml-2">

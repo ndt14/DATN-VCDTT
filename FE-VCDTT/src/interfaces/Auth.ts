@@ -1,8 +1,9 @@
 export interface AuthSignup {
     email: string;
     password: string;
+    phone_number: string;
+    c_password: string;
     name: string;
-    confirmPassword: string
 }
 export interface AuthSignin {
     email: string;
