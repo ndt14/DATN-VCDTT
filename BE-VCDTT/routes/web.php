@@ -35,6 +35,7 @@ Route::get('/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blo
 Route::post('/blog/add/new', [BlogController::class, 'blogManagementAddAction'])->name('blog.add.new');
 Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
 Route::post('/blog/edit/post', [BlogController::class, 'blogManagementEditAction'])->name('blog.edit.post');
+Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
 Route::get('/blog/delete/{id}', [BlogController::class, 'blogManagementDelete'])->name('blog.delete');
 
 Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
