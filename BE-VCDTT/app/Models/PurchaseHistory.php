@@ -13,7 +13,15 @@ class PurchaseHistory extends Model
 
     protected $fillable = [
         'user_id',
-        'user_info',
+        // 'user_info',
+
+        // hotfix
+        'name',
+        'email',
+        'phone_number',
+        'address',
+        'gender',
+
         'tour_name',
         'tour_duration',
         'tour_child_price',
