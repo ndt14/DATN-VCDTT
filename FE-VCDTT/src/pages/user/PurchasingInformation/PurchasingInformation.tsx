@@ -1,11 +1,47 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const PurchasingInformation = (props: Props) => {
+  //validate
+  interface FormValues {
+    name: string;
+    email: string;
+    phone_number: string;
+  }
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      name: "",
+      email: "",
+      phone_number: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên"),
+      email: Yup.string()
+        .email("Sai định dạng email")
+        .required("Email không được để trống"),
+      phone_number: Yup.string().required("Nhập số điện thoại"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+    validateOnMount: true,
+  });
+
+  useEffect(() => {
+    formik.validateForm();
+  }, []);
+
+  const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  //
+  const navigate = useNavigate();
+
   const [addBill] = useAddBillMutation();
   const location = useLocation();
   const {
@@ -18,13 +54,18 @@ const PurchasingInformation = (props: Props) => {
     dateTour,
     tourName,
     tourLocation,
+    tourPrice,
+    tourChildPrice,
   } = location.state;
   console.log(tourName);
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   const userData = JSON.parse(localStorage.getItem("user"));
-
+  const userName = userData?.name;
   const userId = userData?.id;
+  const userEmail = userData?.email;
+  const phoneNumber = userData?.phone_number;
+  const userAddress = userData?.address;
   // Xử lý xác nhận thông tin form
   const [formData, setFormData] = useState({
     user_info: "",
@@ -46,15 +87,18 @@ const PurchasingInformation = (props: Props) => {
     e.preventDefault();
 
     const variables = {
+      name: userName,
       user_id: userId,
-      user_info: formData.user_info,
       tour_name: tourName,
       child_count: productChildNumber,
       adult_count: productNumber,
       tour_start_time: formattedDate,
       tour_location: tourLocation,
-      tour_child_price: childPrice,
-      tour_adult_price: price,
+      tour_child_price: tourChildPrice,
+      tour_adult_price: tourPrice,
+      email: userEmail,
+      phone_number: phoneNumber,
+      address: userAddress,
 
       // Add other variables as needed
     };
@@ -62,14 +106,15 @@ const PurchasingInformation = (props: Props) => {
 
     addBill(variables)
       .then((response) => {
-        // Handle the response here
-        alert("mua thành công");
+        alert("Đặt tour thành công");
 
         const billID = response?.data.data.purchase_history.id;
         console.log(billID);
-        window.open(
-          `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
-        );
+        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        // window.open(
+        //   `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
+        // );
+        window.location.href = VnpayURL;
       })
       .catch((error) => {
         // Handle any errors here
@@ -106,32 +151,37 @@ const PurchasingInformation = (props: Props) => {
             <div className="row">
               <div className="col-md-8 right-sidebar">
                 <div className="checkout-field-wrap">
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={formik.handleSubmit}>
                     <h3>Thông tin liên hệ</h3>
                     <div className="row">
                       <div className="col-sm-4">
                         <div className="form-group">
                           <label>Danh xưng</label>
                           <select className="input-border">
-                            <option value="0">Ông</option>
-                            <option value="0">Bà</option>
-                            <option value="0">Cô</option>
+                            <option value="1">Ông</option>
+                            <option value="2">Bà</option>
+                            <option value="3">Khác</option>
                           </select>
                         </div>
                         {/* {selectedTitle === "" && <div className="validation-error">Please select a title.</div>} */}
                       </div>
                       <div className="col-sm-12">
                         <div className="form-group">
-                          <label className="d-inline-flex">
+                          <label htmlFor="name" className="d-inline-flex">
                             Họ và tên <div className=" ml-1 text-danger">*</div>
                           </label>
                           <input
                             type="text"
-                            name="user_info"
-                            value={formData.user_info}
-                            onChange={handleChange}
+                            id="name"
+                            name="name"
+                            value={userName ? userName : formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             className="input-border"
                           />
+                          {formik.touched.name && formik.errors.name && (
+                            <p className="text-danger">{formik.errors.name}</p>
+                          )}
                         </div>
                         {/* {nameError && <div className="validation-error text-danger">{nameError}</div>} */}
                       </div>
@@ -145,10 +195,21 @@ const PurchasingInformation = (props: Props) => {
                           <input
                             type="text"
                             name="phone_number"
-                            value={formData.phone_number}
-                            onChange={handleChange}
+                            value={
+                              phoneNumber
+                                ? phoneNumber
+                                : formik.values.phone_number
+                            }
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             className="input-border"
                           />
+                          {formik.touched.phone_number &&
+                            formik.errors.phone_number && (
+                              <p className="text-danger">
+                                {formik.errors.phone_number}
+                              </p>
+                            )}
                         </div>
                         {/* {phoneNumberError && <div className="validation-error text-danger">{phoneNumberError}</div>} */}
                       </div>
@@ -159,11 +220,16 @@ const PurchasingInformation = (props: Props) => {
                           </label>
                           <input
                             type="email"
+                            id="email"
                             name="email"
-                            value={formData.email}
-                            onChange={handleChange}
+                            value={userEmail ? userEmail : formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             className="input-border"
                           />
+                          {formik.touched.email && formik.errors.email && (
+                            <p className="text-danger">{formik.errors.email}</p>
+                          )}
                         </div>
                         {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
                       </div>
@@ -232,6 +298,7 @@ const PurchasingInformation = (props: Props) => {
                       data-toggle="modal"
                       data-target="#confirmTourForm"
                       className="btn-continue"
+                      disabled={isSubmitDisabled}
                     >
                       Tiếp tục
                     </button>
@@ -268,7 +335,9 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="text"
                                     name="name"
-                                    value={formData.user_info}
+                                    value={
+                                      userName ? userName : formik.values.name
+                                    }
                                     disabled
                                   />{" "}
                                 </div>
@@ -277,7 +346,11 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="text"
                                     name="phone_number"
-                                    value={formData.phone_number}
+                                    value={
+                                      phoneNumber
+                                        ? phoneNumber
+                                        : formik.values.phone_number
+                                    }
                                     disabled
                                   />{" "}
                                 </div>
@@ -286,7 +359,11 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="email"
                                     name="email"
-                                    value={formData.email}
+                                    value={
+                                      userEmail
+                                        ? userEmail
+                                        : formik.values.email
+                                    }
                                     disabled
                                   />
                                 </div>

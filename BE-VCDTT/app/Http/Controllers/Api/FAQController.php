@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FAQRequest;
 use App\Http\Resources\FAQResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class FAQController extends Controller
@@ -139,5 +140,65 @@ class FAQController extends Controller
         }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+    }
+
+
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
+    public function faqManagementList() {
+
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq');
+        if($data->status() == 200) {
+
+            $data = json_decode(json_encode($data->json()['data']['faqs']), false);
+            return view('admin.faqs.list', compact('data'));
+        }else{
+            $data = [];
+            return view('admin.faqs.list', compact('data'));
+        }
+    }
+
+    public function faqManagementAdd() {
+        return view('admin.faqs.add');
+    }
+
+    public function faqManagementAddAction(FAQRequest $request) {
+
+        $data = $request->except('_token');
+        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/faq-store', $data);
+        if($response->status() == 200) {
+            return redirect()->route('faq.list')->with('success', 'Thêm faq thành công');
+        }
+        return redirect()->route('faq.list')->with('fail', 'Có lỗi xảy ra');
+    }
+
+    public function faqManagementEdit($id) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$id);
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['faq']), false);
+            return view('admin.faqs.update', compact('data'));
+        }
+    }
+
+    public function faqManagementEditAction(FAQRequest $request) {
+
+            $data = $request->except('_token','btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/faq-edit/'.$request->id, $data);
+            if($response->status() == 200) {
+                return redirect()->route('faq.edit', ['id' => $request->id])->with('success', 'Cập nhật faq thành công');
+            }
+            return redirect()->route('faq.edit', ['id' => $request->id])->with('success', 'Có lỗi xảy ra');
+    }
+
+    public function faqManagementDelete($id) {
+
+        $response = Http::delete('http://be-vcdtt.datn-vcdtt.test/api/faq-destroy/'.$id);
+
+        if($response->status() == 200) {
+
+            return redirect()->route('faq.list')->with('success', 'Xóa faq thành công');
+        }
+
+        return redirect()->route('faq.list')->with('fail', 'Có lỗi xảy ra');
     }
 }
