@@ -25,8 +25,7 @@ Route::get('/test', function(){
 });
 
 Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
-Route::get('/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
-Route::post('/tour/add/new', [TourController::class, 'tourManagementAddAction'])->name('tour.add.new');
+Route::match(['GET','POST'],'/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
 Route::match(['GET','POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
 Route::get('/tour/delete/{id}', [TourController::class, 'tourManagementDelete'])->name('tour.delete');
 

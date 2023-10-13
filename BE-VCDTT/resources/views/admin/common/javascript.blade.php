@@ -11,3 +11,8 @@
 <script src="{{ asset('admin/assets/js/vendors/Bs5Utils.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/jquery.form.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/axios.min.js') }}"></script>
+{{-- ckedit --}}
+<script src="{{ asset('ckedit_js/jquery-2.2.4.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('ckedit_js/bootstrap/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('ckedit_js/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+<script src="{{ asset('ckedit_js/main.js') }}" type="text/javascript"></script>
