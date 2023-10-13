@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +29,13 @@ Route::get('/tour/add', [TourController::class, 'tourManagementAdd'])->name('tou
 Route::post('/tour/add/new', [TourController::class, 'tourManagementAddAction'])->name('tour.add.new');
 Route::match(['GET','POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
 Route::get('/tour/delete/{id}', [TourController::class, 'tourManagementDelete'])->name('tour.delete');
+
+Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list');
+Route::get('/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
+Route::post('/blog/add/new', [BlogController::class, 'blogManagementAddAction'])->name('blog.add.new');
+Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
+Route::post('/blog/edit/post', [BlogController::class, 'blogManagementEditAction'])->name('blog.edit.post');
+Route::get('/blog/delete/{id}', [BlogController::class, 'blogManagementDelete'])->name('blog.delete');
+
 
 require __DIR__.'/auth.php';
