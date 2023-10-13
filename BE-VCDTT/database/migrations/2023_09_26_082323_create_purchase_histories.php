@@ -17,11 +17,11 @@ return new class extends Migration
             // $table->string('user_info')->nullable();
 
             // hotfix
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone_number');
-            $table->string('address');
-            $table->tinyInteger('gender');
+            $table->string('name')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('address')->nullable();
+            $table->tinyInteger('gender')->nullable();
 
             $table->string('user_name')->nullable();
             $table->string('tour_name')->nullable();

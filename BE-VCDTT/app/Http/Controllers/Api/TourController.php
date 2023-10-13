@@ -266,6 +266,7 @@ if ($firstTourToCate->isNotEmpty()) {
         $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour')->json()['data']['tours'];
         return view('admin.tours.list', compact('items'));
     }
+
     public function tourManagementAdd()
     {
         $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
@@ -276,8 +277,7 @@ if ($firstTourToCate->isNotEmpty()) {
 
         $data = $request->all();
         $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
-
-        if($response->status() == 201) {
+        if($response->status() == 200) {
             return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
         }
         return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
@@ -296,5 +296,20 @@ if ($firstTourToCate->isNotEmpty()) {
 
         return redirect()->route('tour.list');
      }
+
+    public function tourManagementEdit(Request $request, $id){
+        $tour = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/'.$id)->json()['data']['tour'];
+        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
+        if($request->isMethod('POST')) {
+            $data = $request->all();
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/'.$id, $data);
+            if($response->status() == 200) {
+                return redirect()->route('tour.list')->with('success', 'Sửa tour thành công');
+            }
+            return redirect()->route('tour.list')->with('fail', 'Đã xảy ra lỗi');
+        }
+
+        return view('admin.tours.edit', compact('tour', 'categories'));
+    }
 
 }

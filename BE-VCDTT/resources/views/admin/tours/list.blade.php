@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                        <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
+                                        <input type="text" name="keyword" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -132,7 +132,7 @@
                                             <span class="dropdown">
                                                 <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="">Edit</a>
+                                                    <a class="dropdown-item" href=" {{route('tour.edit', ['id'=>$item['id']])}}">Edit</a>
                                                     <a class="dropdown-item" href="{{route('tour.delete', ['id'=>$item['id']])}}">Remove</a>
                                                 </div>
                                             </span>
