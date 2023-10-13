@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
@@ -12,9 +12,13 @@ import moment from "moment";
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
+  const [isDateSelected, setIsDateSelected] = useState(false);
+
   const location = useLocation();
   const onChange: DatePickerProps["onChange"] = (date, dateString) => {
     setDateTour(dateString);
+    setIsDateSelected(true);
+    // localStorage.setItem("dateTour", dateString);
   };
 
   //
@@ -35,7 +39,6 @@ const TourDetail = () => {
 
   //validate date
   const disabledDate = (current: moment.Moment | null) => {
-    // Disable past dates by comparing with the current date
     return current && current < moment().startOf("day");
   };
 
@@ -48,22 +51,34 @@ const TourDetail = () => {
     backgroundSize: "cover",
   };
   //
+
+  
   const [productNumber, setProductNumber] = useState(1);
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
-  const [childPrice, setChildPrice] = useState(tourChildPrice);
+  const [childPrice, setChildPrice] = useState(tourChildPrice||0);
+  console.log(childPrice);
+  console.log(productChildNumber);
+  
+  useEffect(() => {
+    // Update price state when tourPrice is available
+    if (tourPrice !== undefined) {
+      setPrice(tourPrice);
+    }
+  }, [tourPrice])
 
-  // console.log(tourPrice);
+  console.log(price);
 
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newProductNumber = parseInt(event.target.value, 10);
-    if (newProductNumber >= 0) {
+    if (newProductNumber > 0) {
       setProductNumber(newProductNumber);
       // Update the price based on the new product number
-      const newPrice = newProductNumber * tourPrice; // Assuming the price increases by 10 for each product
+      const newPrice = newProductNumber * tourPrice ; // Assuming the price increases by 10 for each product
       setPrice(newPrice);
+      console.log(newPrice);
     }
   };
   const handleProductChildNumberChange = (
@@ -81,7 +96,7 @@ const TourDetail = () => {
   const formattedResultPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(price + childPrice);
+  }).format((price+childPrice));
 
   return (
     <>
@@ -576,13 +591,17 @@ const TourDetail = () => {
                         </div>
 
                         <div className="col-sm-12 mt-2">
-                          <label htmlFor="" className="h5 ">
-                            Tổng giá :{" "}
-                            {price || childPrice > 0 ? formattedResultPrice : 0}
+                          <label htmlFor="" className="h5 d-flex">
+                            <p className="mr-2">Tổng giá :</p> <p className="price"> {(price +childPrice > 0) ? formattedResultPrice : formattedTourPrice}</p>
+                          
+
+
                           </label>
                         </div>
                         <div className="col-sm-12">
+                        {isDateSelected ? (
                           <div className="form-group submit-btn">
+                            
                             <Link
                               to={`/check_order_information/${id}`}
                               state={{
@@ -601,9 +620,14 @@ const TourDetail = () => {
                                 type="submit"
                                 name="submit"
                                 value="Đặt tour"
+                                disabled={!isDateSelected}
                               />
                             </Link>
+
                           </div>
+                           ) : (
+                            <p style={{ color: 'red' }}>Vui lòng chọn ngày đi để tiếp tục.</p>
+                          )}
                         </div>
                       </div>
                     </form>
