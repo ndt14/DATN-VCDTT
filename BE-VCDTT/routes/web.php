@@ -23,8 +23,9 @@ Route::get('/test', function(){
     return view('admin.common.layout');
 });
 
-Route::get('/tour', [TourController::class, 'tourManagementList']);
-Route::get('/tour/add', [TourController::class, 'tourManagementAdd']);
-
+Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
+Route::get('/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
+Route::post('/tour/add/new', [TourController::class, 'tourManagementAddAction'])->name('tour.add.new');
+Route::get('/tour/delete/{id}', [TourController::class, 'tourManagementDelete'])->name('tour.delete');
 
 require __DIR__.'/auth.php';

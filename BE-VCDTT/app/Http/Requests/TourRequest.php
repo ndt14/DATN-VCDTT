@@ -60,15 +60,16 @@ class TourRequest extends FormRequest
                 'main_img.required' => 'Ảnh chính của tour không được để trống',
                 'status.required' => 'Trạng thái tour không được để trống',
                 'view_count.required' => 'Số lượt xem không được để trống',
+                'pathway.required' => 'Đường dẫn không được trống'
 
             ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $response = new Response([
-            'errors' => $validator->errors()
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        throw (new ValidationException($validator, $response));
-    }
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     $response = new Response([
+    //         'errors' => $validator->errors()
+    //     ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     throw (new ValidationException($validator, $response));
+    // }
 }

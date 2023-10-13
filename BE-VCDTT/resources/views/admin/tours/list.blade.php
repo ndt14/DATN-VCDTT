@@ -8,9 +8,23 @@
                     Tours management
                 </h2>
             </div>
+            <div class="col-12 ">
+                @if (Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+                @if (Session::has('fail'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                    {{ Session::get('fail') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+            </div>
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="javascript: viewAdd();" class="btn btn-primary d-none d-sm-inline-block">
+                    <a href="{{ route('tour.add')}}" class="btn btn-primary d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -18,7 +32,7 @@
                         </svg>
                         Add new
                     </a>
-                    <a href="javascript: viewAdd();" class="btn btn-primary d-sm-none btn-icon">
+                    <a href="{{ url('/tour-add')}}" class="btn btn-primary d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -51,11 +65,11 @@
                             <div class="ms-auto text-muted">
                                 <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                     <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingSelect">Language</label>
+                                        <label class="visually-hidden" for="autoSizingSelect">Status</label>
                                         <select class="form-select" name="lang_code">
-                                            <option value="">Select language...</option>
-                                            <option value="ja">Japanese</option>
-                                            <option value="en">English</option>
+                                            <option value="">Select status...</option>
+                                            <option value="ja">Active</option>
+                                            <option value="en">Unactive</option>
                                         </select>
                                     </div>
                                     <div class="col-auto">
@@ -69,58 +83,69 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table">
+                    <div class="table table-responsive">
                         <table class="table card-table table-vcenter text-nowrap datatable">
                             <thead>
                                 <tr>
                                     <th class="w-1">ID</th>
-                                    <th>Language</th>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Feature</th>
-                                    <th>Created</th>
-                                    <th>Updated</th>
+                                    <th>Name</th>
+                                    <th>Tourist count</th>
+                                    <th>Details</th>
+                                    <th>location</th>
+                                    <th>View count</th>
+                                    <th>Created at</th>
                                     <th class="text-center">Active</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @if($items)
+                                    @foreach($items as $item)
                                         <tr>
-                                            <td><span class="text-muted">1</span></td>
-                                            <td>
-                                                en
-                                            </td>
-                                            <td class="text-wrap text-break">
-                                                title
-                                            </td>
-                                            <td class="text-wrap text-break">
-                                                descreption
-                                            </td>
-                                            <td>
-                                                Default
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td class="text-center">
-                                                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Activated"></span>
-                                            </td>
-                                            <td class="text-end">
-                                                <span class="dropdown">
-                                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="">Edit</a>
-                                                        <a class="dropdown-item" href="javascript: removeItem(1);">Remove</a>
-                                                    </div>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    <tr>
-                                        <td colspan="9">
-                                            <div>No data</div>
+                                        <td><span class="text-muted">{{$item['id']}}</span></td>
+                                        <td>
+                                            {{$item['name']}}
+                                        </td>
+                                        <td class="text-wrap text-break">
+                                            {{$item['tourist_count']}}
+                                        </td>
+                                        <td class="text-wrap text-break">
+                                            {{$item['details']}}
+                                        </td>
+                                        <td>
+                                            {{$item['location']}}
+                                        </td>
+                                        <td>
+                                            {{$item['view_count']}}
+                                        </td>
+                                        <td>
+                                            {{$item['created_at']}}
+                                        </td>
+                                        <td class="text-center">
+                                            @if($item['status'] == 1)
+                                            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Activated"></span>
+                                            @else
+                                            <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                            @endif
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="dropdown">
+                                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="">Edit</a>
+                                                    <a class="dropdown-item" href="{{route('tour.delete', ['id'=>$item['id']])}}">Remove</a>
+                                                </div>
+                                            </span>
                                         </td>
                                     </tr>
+                                    @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="9">
+                                        <div>No data</div>
+                                    </td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -173,36 +198,6 @@
             keyboard: true,
             backdrop: 'static'
         });
-
-        if ($('#frmAdd').length) {
-            $('#frmAdd').submit(function() {
-                let options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitAdd').addClass('btn-loading');
-                        $('#btnSubmitAdd').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                        modalContainer.hide();
-                    },
-                    error: function() {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
-        }
     });
 
     let viewAdd = function() {
@@ -245,5 +240,6 @@
             }
         });
     };
+
 </script>
 @endSection
