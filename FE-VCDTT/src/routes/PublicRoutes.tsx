@@ -12,9 +12,11 @@ import {
   NotFoundPage,
   TourDetail,
   PurchasingInformation,
+  PrivacyPolicy,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
+import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
 
 const PublicRoutes = () => {
   return (
@@ -24,9 +26,10 @@ const PublicRoutes = () => {
         <Route path="tours" element={<HomePage />} />
         <Route path="tours/:id" element={<TourDetail />} />
         <Route
-          path="check_order_information"
+          path="check_order_information/:id"
           element={<PurchasingInformation />}
         />
+        <Route path="vnpay?" element={<BillSuccess />} />
         <Route path="categories" element={<HomePage />} />
         <Route path="about" element={<HomePage />} />
         <Route path="contact" element={<ContactPage />} />
@@ -39,6 +42,7 @@ const PublicRoutes = () => {
         <Route path="signup" element={<HomePage />} />
         <Route path="search" element={<TourSearch />} />
         <Route path="profile" element={<UserProfile />} />
+        <Route path="privacy_policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 

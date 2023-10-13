@@ -24,22 +24,67 @@ class TourRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'duration' => 'required',
-            'child_price' => 'required',
-            'adult_price' => 'required',
-            'sale_percentage' => 'required',
-            'start_destination' => 'required',
-            'end_destination' => 'required',
-            'tourist_count' => 'required',
-            'details' => 'required',
-            'location' => 'required',
-            'exact_location' => 'required',
-            'main_img' => 'required',
-            'status' => 'required',
-            'view_count' => 'required',
-        ];
+
+
+        $rule = [];
+        $currentAction = $this->route()->getActionMethod();
+
+        switch ($this->method()):
+            case 'POST':
+                switch ($currentAction):
+                    case 'tourManagementAddAction':
+
+                        // xây dựng validate
+
+                        $rule = [
+                            'name' => 'required',
+                            'duration' => 'required',
+                            'child_price' => 'required',
+                            'adult_price' => 'required',
+                            'sale_percentage' => 'required',
+                            'start_destination' => 'required',
+                            'end_destination' => 'required',
+                            'tourist_count' => 'required',
+                            'details' => 'required',
+                            'pathway' => 'required',
+                            'location' => 'required',
+                            'exact_location' => 'required',
+                            'main_img' => 'required',
+                            'status' => 'required',
+                            'view_count' => 'required',
+                        ];
+
+                        break;
+                    case 'tourManagementUpdate':
+
+                        // xây dựng validate
+
+                        $rule = [
+                            'name' => 'required',
+                            'duration' => 'required',
+                            'child_price' => 'required',
+                            'adult_price' => 'required',
+                            'sale_percentage' => 'required',
+                            'start_destination' => 'required',
+                            'end_destination' => 'required',
+                            'tourist_count' => 'required',
+                            'details' => 'required',
+                            'pathway' => 'required',
+                            'location' => 'required',
+                            'exact_location' => 'required',
+                            'main_img' => 'required',
+                            'status' => 'required',
+                            'view_count' => 'required',
+                        ];
+
+                        break;
+
+                endswitch;
+                break;
+        endswitch;
+
+        return $rule;
+
     }
 
     public function messages()
@@ -55,20 +100,22 @@ class TourRequest extends FormRequest
                 'end_destination.required' => 'Điểm kết thúc không được để trống',
                 'tourist_count.required' => 'Số lượng khách du lịch không được để trống',
                 'details.required' => 'Chi tiết tour không được để trống',
+                'pathway.required' => 'Lịch trình tour du lịch không được để trống',
                 'location.required' => 'Vị trí tour du lịch không được để trống',
                 'exact_location.required' => 'Ví trí chính xác tour du lịch không được để trống',
                 'main_img.required' => 'Ảnh chính của tour không được để trống',
                 'status.required' => 'Trạng thái tour không được để trống',
                 'view_count.required' => 'Số lượt xem không được để trống',
+                'pathway.required' => 'Đường dẫn không được trống'
 
             ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $response = new Response([
-            'errors' => $validator->errors()
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        throw (new ValidationException($validator, $response));
-    }
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     $response = new Response([
+    //         'errors' => $validator->errors()
+    //     ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     throw (new ValidationException($validator, $response));
+    // }
 }

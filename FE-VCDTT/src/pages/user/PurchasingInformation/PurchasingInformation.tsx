@@ -1,226 +1,483 @@
-import React from 'react'
+import React, { useState, ChangeEvent, useEffect } from "react";
+import "./PurchasingInformation.css";
+import { useLocation } from "react-router-dom";
+import { useAddBillMutation } from "../../../api/bill";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
-type Props = {}
+type Props = {};
 
 const PurchasingInformation = (props: Props) => {
-  return (
-   <>
-    <main id="content" className="site-main">
-            {/* <!-- Inner Banner html start--> */}
-            <section className="inner-banner-wrap">
-               <div className="inner-baner-container">
-                  <div className="container">
-                     <div className="inner-banner-content">
-                        <h1 className="inner-title">Checkout</h1>
-                     </div>
-                  </div>
-               </div>
-               <div className="inner-shape"></div>
-            </section>
-            {/* <!-- Inner Banner html end--> */}
-            <div className="checkout-section">
-               <div className="container">
-                  <div className="row">
-                     <div className="col-md-8 right-sidebar">
-                        <div className="checkout-field-wrap">
-                           <h3>Thông tin liên hệ</h3> 
-                           <div className="coupon-field">
-                              <label>Have a Coupon? <a href="#">Click here to enter your code</a></label>
-                              <div className="form-group">
-                                 <input type="text" name="coupon" placeholder="Coupon code"/>
-                                 <input type="submit" name="submit" value="Apply coupon"/>
-                              </div>
-                           </div>
-                           <div className="row">
-                              <div className="col-sm-6">
-                                 <div className="form-group">
-                                   <label>First Name *</label>
-                                   <input type="text" name="name"/>
-                                 </div>
-                              </div>
-                            <div className="col-sm-6">
-                              <div className="form-group">
-                                <label>last Name *</label>
-                                <input type="text" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-12">
-                              <div className="form-group">
-                                 <label>Company Name (optional)</label>
-                                 <input type="text" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-12">
-                              <div className="form-group">
-                                 <label>Country *</label>
-                                 <select>
-                                    <option value="0">France</option>
-                                    <option value="0">England</option>
-                                    <option value="0">Brazil</option>
-                                 </select>
-                              </div>
-                            </div>
-                            <div className="col-sm-12">
-                              <label>Street address *</label>
-                              <div className="row">
-                                 <div className="col-sm-6">
-                                    <div className="form-group">
-                                       <input type="text" name="name" placeholder="Street name"/>
-                                    </div>
-                                 </div>
-                                 <div className="col-sm-6">
-                                    <div className="form-group">
-                                       <input type="text" name="address" placeholder="Street name (optional)"/>
-                                    </div>
-                                 </div>
-                              </div>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="form-group">
-                                 <label>Postcode / ZIP *</label>
-                                 <input type="text" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="form-group">
-                                 <label>Town / City *</label>
-                                 <input type="text" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="form-group">
-                                 <label>Province *</label>
-                                 <select>
-                                    <option value="0">Bedfordshire</option>
-                                    <option value="0">Essex</option>
-                                    <option value="0">Suffolk</option>
-                                 </select>
-                              </div>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="form-group">
-                                 <label>Phone *</label>
-                                 <input type="text" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-12">
-                              <div className="form-group">
-                                 <label>Email address *</label>
-                                 <input type="email" name="name"/>
-                              </div>
-                            </div>
-                            <div className="col-sm-12">
-                              <div className="form-group">
-                                 <label>Additional Informarion </label>
-                                 <textarea rows={6} placeholder="Notes about your order, eg.special notes for delivery"></textarea>
-                              </div>
-                            </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="col-md-4">
-                        <aside className="sidebar">
-                           <div className="widget-bg widget-table-summary">
-                              <h4 className="bg-title">Our order</h4>
-                              <table>
-                                 <tbody>
-                                    <tr>
-                                       <td>
-                                          Album X 1
-                                       </td>
-                                       <td className="text-right">
-                                          $300
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          Beanie X 5
-                                       </td>
-                                       <td className="text-right">
-                                          $34
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <strong>Subtotal</strong>
-                                       </td>
-                                       <td className="text-right">
-                                          $334
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          tax
-                                       </td>
-                                       <td className="text-right">
-                                          13%
-                                       </td>
-                                    </tr>
-                                    <tr className="total">
-                                       <td>
-                                          <strong>Total cost</strong>
-                                       </td>
-                                       <td className="text-right">
-                                          <strong>$480</strong>
-                                       </td>
-                                    </tr>
-                                 </tbody>
-                              </table>
-                           </div>
-                           <div className="widget-bg widget-paymet-bank">
-                              <div className="payment-wrap">
-                                 <h4 className="bg-title">Payment</h4>
-                                 <div className="form-group">
-                                    <div className="custom-radio-field">
-                                       <label>
-                                          <input type="radio" checked name="s" value="1"/>
-                                          <span className="radio-field"></span>
-                                          Direct bank transfer
-                                       </label>
-                                    </div>
-                                    <div className="desc">
-                                       Make your payment directly into our bank accound. please use your Order ID as the payment reference. Your order will not not be shipped until the funds have cleared in our account.
-                                    </div>
-                                 </div>
-                                 <div className="form-group">
-                                    <div className="custom-radio-field">
-                                       <label>
-                                          <input type="radio" name="s" value="2"/>
-                                          <span className="radio-field"></span>
-                                          Check payment
-                                       </label>
-                                    </div>
-                                 </div>
-                                 <div className="form-group">
-                                    <div className="custom-radio-field">
-                                       <label>
-                                          <input type="radio" name="s" value="3"/>
-                                          <span className="radio-field"></span>
-                                          Cash on delivery
-                                       </label>
-                                    </div>
-                                 </div>
-                                 <div className="form-group">
-                                    <div className="custom-radio-field">
-                                       <label>
-                                          <input type="radio" name="s" value="4"/>
-                                          <span className="radio-field"></span>
-                                          Paypal
-                                          <img src="assets/images/cards.png" alt=""/>
-                                       </label>
-                                    </div>
-                                 </div>
-                              </div>
-                              <button className="button-primary">Place Order</button>
-                           </div>
-                        </aside>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </main>
-   </>
-  )
-}
+  //validate
+  interface FormValues {
+    name: string;
+    email: string;
+    phone_number: string;
+  }
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      name: "",
+      email: "",
+      phone_number: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên"),
+      email: Yup.string()
+        .email("Sai định dạng email")
+        .required("Email không được để trống"),
+      phone_number: Yup.string().required("Nhập số điện thoại"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+    validateOnMount: true,
+  });
 
-export default PurchasingInformation
+  useEffect(() => {
+    formik.validateForm();
+  }, []);
+
+  const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  //
+  const navigate = useNavigate();
+
+  const [addBill] = useAddBillMutation();
+  const location = useLocation();
+  const {
+    tourData,
+    productNumber,
+    productChildNumber,
+    price,
+    childPrice,
+    formattedResultPrice,
+    dateTour,
+    tourName,
+    tourLocation,
+    tourPrice,
+    tourChildPrice,
+  } = location.state;
+  console.log(tourName);
+  const parts = dateTour.split("-");
+  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userName = userData?.name;
+  const userId = userData?.id;
+  const userEmail = userData?.email;
+  const phoneNumber = userData?.phone_number;
+  const userAddress = userData?.address;
+  // Xử lý xác nhận thông tin form
+  const [formData, setFormData] = useState({
+    user_info: "",
+    email: "",
+    phone_number: "",
+    message: "",
+  });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    const variables = {
+      name: userName,
+      user_id: userId,
+      tour_name: tourName,
+      child_count: productChildNumber,
+      adult_count: productNumber,
+      tour_start_time: formattedDate,
+      tour_location: tourLocation,
+      tour_child_price: tourChildPrice,
+      tour_adult_price: tourPrice,
+      email: userEmail,
+      phone_number: phoneNumber,
+      address: userAddress,
+
+      // Add other variables as needed
+    };
+    console.log(variables);
+
+    addBill(variables)
+      .then((response) => {
+        alert("Đặt tour thành công");
+
+        const billID = response?.data.data.purchase_history.id;
+        console.log(billID);
+        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        // window.open(
+        //   `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
+        // );
+        window.location.href = VnpayURL;
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+  };
+
+  // console.log(onChange);
+  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(price);
+  const formattedTourChildPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(childPrice);
+  return (
+    <>
+      <main id="content" className="site-main">
+        {/* <!-- Inner Banner html start--> */}
+        <section className="inner-banner-wrap">
+          <div className="inner-baner-container">
+            <div className="container">
+              <div className="inner-banner-content">
+                <h1 className="inner-title">Checkout</h1>
+              </div>
+            </div>
+          </div>
+          <div className="inner-shape"></div>
+        </section>
+        {/* <!-- Inner Banner html end--> */}
+        <div className="checkout-section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-8 right-sidebar">
+                <div className="checkout-field-wrap">
+                  <form onSubmit={formik.handleSubmit}>
+                    <h3>Thông tin liên hệ</h3>
+                    <div className="row">
+                      <div className="col-sm-4">
+                        <div className="form-group">
+                          <label>Danh xưng</label>
+                          <select className="input-border">
+                            <option value="1">Ông</option>
+                            <option value="2">Bà</option>
+                            <option value="3">Khác</option>
+                          </select>
+                        </div>
+                        {/* {selectedTitle === "" && <div className="validation-error">Please select a title.</div>} */}
+                      </div>
+                      <div className="col-sm-12">
+                        <div className="form-group">
+                          <label htmlFor="name" className="d-inline-flex">
+                            Họ và tên <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={userName ? userName : formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="input-border"
+                          />
+                          {formik.touched.name && formik.errors.name && (
+                            <p className="text-danger">{formik.errors.name}</p>
+                          )}
+                        </div>
+                        {/* {nameError && <div className="validation-error text-danger">{nameError}</div>} */}
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Số điện thoại{" "}
+                            <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            name="phone_number"
+                            value={
+                              phoneNumber
+                                ? phoneNumber
+                                : formik.values.phone_number
+                            }
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="input-border"
+                          />
+                          {formik.touched.phone_number &&
+                            formik.errors.phone_number && (
+                              <p className="text-danger">
+                                {formik.errors.phone_number}
+                              </p>
+                            )}
+                        </div>
+                        {/* {phoneNumberError && <div className="validation-error text-danger">{phoneNumberError}</div>} */}
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Email <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={userEmail ? userEmail : formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="input-border"
+                          />
+                          {formik.touched.email && formik.errors.email && (
+                            <p className="text-danger">{formik.errors.email}</p>
+                          )}
+                        </div>
+                        {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
+                      </div>
+                      <div className="col-sm-12">
+                        <div className="form-group">
+                          <label>Yêu cầu đặc biệt </label>
+                          <textarea
+                            rows={6}
+                            placeholder="Yêu cầu đặc biệt dành cho tour"
+                            className="border"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h3>Thông tin địa điểm</h3>
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.0877378831387!2d105.77566300940596!3d21.069157686311605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134552c4daa2e41%3A0xc52e6ea7f463d8a0!2zNDk1IMSQLiBD4buVIE5odeG6vywgQ-G7lSBOaHXhur8sIFThu6sgTGnDqm0sIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1695805354232!5m2!1svi!2s"
+                      width="600"
+                      height="450"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+
+                    <h3 className="mt-4">Thanh toán</h3>
+                    <div className="row mt-2">
+                      <div className="col-sm-6">
+                        <p>Giá bạn phải trả</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>{formattedResultPrice}</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>Trẻ em({productChildNumber}x)</p>
+                        <p>Người lớn({productNumber}x)</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p> {formattedTourPrice}</p>
+                        <p>{formattedTourChildPrice}</p>
+                      </div>
+                      <div className="coupon-field">
+                        {/* <label>Have a Coupon? <a href="#">Click here to enter your code</a></label> */}
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            name="coupon"
+                            placeholder="Nhập mã giảm giá"
+                            className="input-border"
+                          />
+                          <input
+                            type="submit"
+                            name="submit"
+                            value="Áp mã giảm giá"
+                            className="border"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {/* Button trigger modal xác nhận thông tin */}
+                    <button
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#confirmTourForm"
+                      className="btn-continue"
+                      disabled={isSubmitDisabled}
+                    >
+                      Tiếp tục
+                    </button>
+                  </form>
+                  {/* Modal xác nhận thông tin */}
+                  <div className="">
+                    <div
+                      className="modal fade"
+                      id="confirmTourForm"
+                      role="dialog"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">
+                              Xác nhận thông tin
+                            </h5>
+                            <button
+                              type="button"
+                              className="close"
+                              data-dismiss="modal"
+                              aria-label="Close"
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">
+                            <form onSubmit={handleSubmit}>
+                              <div className="row">
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Họ và tên</label>
+                                  <input
+                                    type="text"
+                                    name="name"
+                                    value={
+                                      userName ? userName : formik.values.name
+                                    }
+                                    disabled
+                                  />{" "}
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Số điện thoại</label>
+                                  <input
+                                    type="text"
+                                    name="phone_number"
+                                    value={
+                                      phoneNumber
+                                        ? phoneNumber
+                                        : formik.values.phone_number
+                                    }
+                                    disabled
+                                  />{" "}
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Email</label>
+                                  <input
+                                    type="email"
+                                    name="email"
+                                    value={
+                                      userEmail
+                                        ? userEmail
+                                        : formik.values.email
+                                    }
+                                    disabled
+                                  />
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Ngày đặt tour</label>
+                                  <input
+                                    type="text"
+                                    name="tour_start_time"
+                                    value={formattedDate}
+                                    disabled
+                                  />
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Số lượng trẻ em</label>
+                                  <input
+                                    type="text"
+                                    name="child_count"
+                                    value={productChildNumber}
+                                    disabled
+                                  />
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Số lượng người lớn</label>
+                                  <input
+                                    type="text"
+                                    name="adult_count"
+                                    value={productNumber}
+                                    disabled
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-group">
+                                <label htmlFor="">Giá tour</label>
+                                <input
+                                  type="text"
+                                  name="created_at"
+                                  value={formattedResultPrice}
+                                  disabled
+                                />
+                              </div>
+                              <div className="form-group">
+                                <label htmlFor="">Phương thức thanh toán</label>
+                                <div className="mr-3">
+                                  <input
+                                    type="radio"
+                                    name="payment_status"
+                                    className="mr-2"
+                                  />
+                                  Tiền mặt
+                                </div>
+                                <input
+                                  type="radio"
+                                  name="payment_status"
+                                  className="mr-2"
+                                />
+                                Ngân hàng
+                              </div>
+                              <button type="submit" className="btn btn-primary">
+                                Xác nhận thanh toán
+                              </button>
+                            </form>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              data-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <aside className="sidebar">
+                  <div className="widget-bg widget-table-summary">
+                    <h4 className="bg-title">Tóm tắt tour</h4>
+                    <hr />
+                    <h5 className="mt-2">{tourData?.data?.tour.name}</h5>
+                    <figure className="feature-image">
+                      <img src={tourData?.data?.tour.main_img} alt="" />
+                    </figure>
+                    <div className="row mt-2">
+                      <div className="col-sm-6">
+                        <p>Ngày đặt tour</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>{formattedDate}</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>Áp dụng cho</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>Người lớn : {productNumber}</p>
+                        <p>Trẻ em : {productChildNumber}</p>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+};
+
+export default PurchasingInformation;

@@ -1,16 +1,20 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\FAQController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\TourController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\CouponController;
-use App\Http\Controllers\Admin\CategoryController;
-
-
+use App\Http\Controllers\Api\FAQController;
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\TourController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Models\PurchaseHistory;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +27,10 @@ use App\Http\Controllers\Admin\CategoryController;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+
 });
 
-Route::prefix('admin')->group(function () {
     // Tour management
     Route::get('/tour', [TourController::class, 'index']);
     Route::get('/tour-add', [TourController::class,'add']);
@@ -76,4 +79,16 @@ Route::prefix('admin')->group(function () {
     Route::put('/user-edit/{id}', [UserController::class, 'update']);
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
-});
+    //PurchaseHistory
+    Route::post('/purchase-history-store', [PurchaseHistoryController::class, 'store']);
+
+    //Auth
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class,  'logout'])->middleware(['auth:sanctum']);
+
+    Route::post('/reset-password', [ResetPasswordController::class, 'sendMail']);
+    Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);
+
+    Route::match(['get', 'post'], '/vnpay-payment/{id}',[PaymentController::class,'vnpayPayment']); //pay route
+    // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);

@@ -13,24 +13,35 @@ return new class extends Migration
     {
         Schema::create('purchase_histories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->string('user_info');
-            $table->string('tour_name');
-            $table->string('tour_duration');
-            $table->bigInteger('tour_child_price');
-            $table->integer('child_count');
-            $table->bigInteger('tour_adult_price');
-            $table->integer('adult_count');
-            $table->integer('tour_sale_percentage');
-            $table->string('tour_start_destination');
-            $table->string('tour_end_destination');
-            $table->string('tour_location');
-            $table->string('coupon_info');
-            $table->integer('coupon_percentage');
-            $table->integer('refund_percentage');
-            $table->integer('coupon_fixed');
-            $table->string('tour_start_time');
-            $table->string('tour_end_time');
+            $table->bigInteger('user_id')->nullable();
+            // $table->string('user_info')->nullable();
+
+            // hotfix
+            $table->string('name')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('address')->nullable();
+            $table->tinyInteger('gender')->nullable();
+            $table->string('honorific')->nullable(); //danh xưng
+            $table->text('suggestion')->nullable(); //Đề xuất
+
+            $table->string('user_name')->nullable();
+            $table->string('tour_name')->nullable();
+            $table->string('tour_duration')->nullable();
+            $table->bigInteger('tour_child_price')->nullable();
+            $table->integer('child_count')->nullable();
+            $table->bigInteger('tour_adult_price')->nullable();
+            $table->integer('adult_count')->nullable();
+            $table->integer('tour_sale_percentage')->nullable();
+            $table->string('tour_start_destination')->nullable();
+            $table->string('tour_end_destination')->nullable();
+            $table->string('tour_location')->nullable();
+            $table->string('coupon_info')->nullable();
+            $table->integer('coupon_percentage')->nullable();
+            $table->integer('refund_percentage')->nullable();
+            $table->integer('coupon_fixed')->nullable();
+            $table->string('tour_start_time')->nullable();
+            $table->string('tour_end_time')->nullable();
             $table->tinyInteger('payment_status')->default(1);
             $table->tinyInteger('purchase_status')->default(1);
             $table->timestamps();

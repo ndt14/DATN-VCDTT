@@ -13,7 +13,17 @@ class PurchaseHistory extends Model
 
     protected $fillable = [
         'user_id',
-        'user_info',
+        // 'user_info',
+
+        // hotfix
+        'name',
+        'email',
+        'phone_number',
+        'address',
+        'gender',
+        'honorific',
+        'suggestion',
+
         'tour_name',
         'tour_duration',
         'tour_child_price',
@@ -23,7 +33,7 @@ class PurchaseHistory extends Model
         'tour_sale_percentage',
         'tour_start_destination',
         'tour_end_destination',
-        'tour_the_location',
+        'tour_location',
         'coupon_info',
         'coupon_percentage',
         'refund_percentage',

@@ -1,0 +1,20 @@
+.input-border{
+    border-radius: 8px !important;
+    height: 48px !important;
+}
+.border{
+    border-radius: 8px !important;
+}
+.btn-continue{
+    height: 48px;
+    border-radius: 8px !important;
+    border: none;
+background-color: #FF5E1F;
+color: white;
+font-weight: bold;
+width: 100px;
+}
+.btn-continue:focus{
+background-color: #30C5F7;
+
+}

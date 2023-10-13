@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('tours', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('duration');
-            $table->bigInteger('child_price');
-            $table->bigInteger('adult_price');
-            $table->integer('sale_percentage');
-            $table->string('start_destination');
-            $table->string('end_destination');
-            $table->integer('tourist_count');
-            $table->string('details');
-            $table->string('location');
-            $table->string('exact_location');
-            $table->text('pathway');
-            $table->text('main_img');
+            $table->string('name')->nullable();
+            $table->string('duration')->nullable();
+            $table->bigInteger('child_price')->nullable();
+            $table->bigInteger('adult_price')->nullable();
+            $table->integer('sale_percentage')->nullable();
+            $table->string('start_destination')->nullable();
+            $table->string('end_destination')->nullable();
+            $table->integer('tourist_count')->nullable();
+            $table->string('details')->nullable();
+            $table->string('location')->nullable();
+            $table->string('exact_location')->nullable();
+            $table->text('pathway')->nullable();
+            $table->text('main_img')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->bigInteger('view_count')->default(0);
             $table->timestamps();
