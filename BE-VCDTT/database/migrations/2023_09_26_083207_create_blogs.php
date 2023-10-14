@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('author')->nullable();
-            $table->string('short_desc')->nullable(); //viết description gọn thành desc
-            $table->string('description')->nullable();
+            $table->text('short_desc')->nullable(); //viết description gọn thành desc
+            $table->longText('description')->nullable();
             $table->text('main_img'); //main_img lấy từ id của bảng image why the fuk it's varchar ?????
             $table->integer('view_count')->default(0);
             $table->tinyInteger('status')->default(1);
