@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->bigInteger('user_id')->nullable();
-            $table->string('content')->nullable();
-            $table->string('admin_answer')->nullable();
+            $table->longText('content')->nullable();
+            $table->longText('admin_answer')->nullable();
             $table->bigInteger('tour_id')->nullable();
             $table->timestamps();
         });

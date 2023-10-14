@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('end_destination')->nullable();
             $table->integer('tourist_count')->nullable();
             $table->string('details')->nullable();
-            $table->string('location')->nullable();
+            $table->text('location')->nullable();
             $table->string('exact_location')->nullable();
             $table->text('pathway')->nullable();
             $table->text('main_img')->nullable();

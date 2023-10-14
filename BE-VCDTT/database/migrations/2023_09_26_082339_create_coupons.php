@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('start_date')->nullable();
             $table->string('end_date')->nullable();
             $table->bigInteger('tour_id')->nullable();
