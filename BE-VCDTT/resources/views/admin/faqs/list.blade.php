@@ -8,7 +8,7 @@
                         Faqs management
                     </h2>
                 </div>
-                <div class="col-12 ">
+                <!-- <div class="col-12 ">
                     @if (Session::has('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                             {{ Session::get('success') }}
@@ -21,7 +21,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-                </div>
+                </div> -->
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <a href="{{ route('faq.add') }}" class="btn btn-primary d-none d-sm-inline-block">
@@ -96,7 +96,9 @@
                                         <th>Question</th>
                                         <th>Answer</th>
                                         <th>Created at</th>
-                                        <th class="text-center">Active</th>
+                                        <th>Updated at</th>
+                                        <th></th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -105,25 +107,25 @@
                                             <tr>
                                                 <td><span class="text-muted">{{ $data->id }}</span></td>
                                                 <td>
-                                                    {{ string_truncate($data->question) }}
+                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->question, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($data->answer) }}
+                                                    {{ string_truncate($data->answer, 70) }}
                                                 </td>
                                                 <td>
-                                                    {{ $data->created_at }}
+                                                    {{ time_format($data->created_at) }}
                                                 </td>
-
+                                                <td>
+                                                    {{ time_format($data->updated_at) }}
+                                                </td>
                                                 <td class="text-end">
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
                                                             data-bs-toggle="dropdown">Actions</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('faq.edit', ['id' => $data->id]) }}">Edit</a>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('faq.delete', ['id' => $data->id]) }}">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('faq.edit', ['id' => $data->id]) }}">Edit</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Remove</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -201,46 +203,41 @@
             });
         });
 
-        let viewAdd = function() {
-            axios.get(`/blog/add`)
-                .then(function(response) {
-                    // console.log(response);
-                    $('#modalContainer div.modal-content').html(response.data.html);
-                    modalContainer.show();
-                })
-                .catch(function(error) {
-                    bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-                })
-                .finally(function() {
-                    // always executed
-                });
+        let viewDetail = function(id) {
+        axios.get(`/faq/detail/${id}`)
+            .then(function(response) {
+                $('#modalContainer div.modal-content').html(response.data.html);
+                modalContainer.show();
+            })
+            .catch(function(error) {
+                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            })
+            .finally(function() {
+            });
         };
 
         let removeItem = function(id) {
-            $.confirm({
-                theme: theme,
-                title: 'Confirm',
-                content: 'Are you sure to remove?',
-                columnClass: 'col-md-3 col-sm-6',
-                buttons: {
-                    removeButton: {
-                        text: 'Yes',
-                        btnClass: 'btn-danger',
-                        action: function() {
-                            let postData = new FormData();
-                            postData.append('id', id);
-                            axios.post(`/admin/cms/posts/remove`, postData).then(function(response) {
-                                bs5Utils.Snack.show('success', 'Success', delay = 5000,
-                                    dismissible = true);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 2000);
-                            });
-                        }
-                    },
-                    close: function() {}
-                }
-            });
-        };
+        $.confirm({
+            theme: theme,
+            title: 'Confirm',
+            content: 'Are you sure to remove?',
+            columnClass: 'col-md-3 col-sm-6',
+            buttons: {
+                removeButton: {
+                    text: 'Yes',
+                    btnClass: 'btn-danger',
+                    action: function() {
+                        axios.delete(`/api/faq-destroy/${id}`).then(function(response) {
+                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2000);
+                        });
+                    }
+                },
+                close: function() {}
+            }
+        });
+    };
     </script>
 @endSection

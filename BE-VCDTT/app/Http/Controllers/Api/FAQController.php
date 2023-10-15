@@ -16,7 +16,7 @@ class FAQController extends Controller
     public function index()
     {
         //
-        $listFaqs = FAQ::all();
+        $listFaqs = FAQ::orderBy('updated_at', 'desc')->get();
         return response()->json(
             [
                 'data' => [
@@ -33,17 +33,15 @@ class FAQController extends Controller
      */
     public function store(FAQRequest $request)
     {
-    
-        $faq = $request->all();
-        $newFaq = FAQ::create($faq);
+        $newFaq = FAQ::create($request->all());
         if($newFaq->id) {
             return response()->json(
                 [
                     'data' => [
                         'faq' => new FAQResource($newFaq)
                     ],
-                    'message' => 'OK',
-                    'status' => 201
+                    'message' => 'Add success',
+                    'status' => 200
                 ]
             );
         }else {
@@ -106,18 +104,18 @@ class FAQController extends Controller
         //
 
             $faq = $request->all();
-            $updateFaq = FAQ::where('id', $id)->update($request->except('_token'));
+            $updateFaq = FAQ::where('id', $id)->update($request->except('_token','_method'));
             $faq = FAQ::find($id);
             if ($updateFaq) {
                 return response()->json([
                     'data' => [
                         'faq' => $faq
                     ],
-                    'message' => 'OK',
+                    'message' => 'Edit success',
                      'status' => 200
                 ]);
             } else {
-                return response()->json(['message' => 'internal server error', 'status' => 500]);
+                return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
             }
         
     }
@@ -162,43 +160,23 @@ class FAQController extends Controller
         return view('admin.faqs.add');
     }
 
-    public function faqManagementAddAction(FAQRequest $request) {
-
-        $data = $request->except('_token');
-        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/faq-store', $data);
-        if($response->status() == 200) {
-            return redirect()->route('faq.list')->with('success', 'Thêm faq thành công');
-        }
-        return redirect()->route('faq.list')->with('fail', 'Có lỗi xảy ra');
-    }
-
-    public function faqManagementEdit($id) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$id);
+    public function faqManagementEdit(Request $request) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$request->id);
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['faq']), false);
-            return view('admin.faqs.update', compact('data'));
+            return view('admin.faqs.edit', compact('data'));
         }
     }
 
-    public function faqManagementEditAction(FAQRequest $request) {
-
-            $data = $request->except('_token','btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/faq-edit/'.$request->id, $data);
-            if($response->status() == 200) {
-                return redirect()->route('faq.edit', ['id' => $request->id])->with('success', 'Cập nhật faq thành công');
-            }
-            return redirect()->route('faq.edit', ['id' => $request->id])->with('success', 'Có lỗi xảy ra');
-    }
-
-    public function faqManagementDelete($id) {
-
-        $response = Http::delete('http://be-vcdtt.datn-vcdtt.test/api/faq-destroy/'.$id);
-
+    public function faqManagementDetail(Request $request) {
+        $data = $request->except('_token');
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$request->id);
         if($response->status() == 200) {
-
-            return redirect()->route('faq.list')->with('success', 'Xóa faq thành công');
+            $item = json_decode(json_encode($response->json()['data']['faq']), false);
+            $html = view('admin.faqs.detail', compact('item'))->render();
+            return response()->json(['html' => $html, 'status' => 200]);
         }
-
-        return redirect()->route('faq.list')->with('fail', 'Có lỗi xảy ra');
     }
+
+
 }

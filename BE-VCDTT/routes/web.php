@@ -36,10 +36,8 @@ Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->na
 Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
 
 Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
-Route::get('/faq/delete/{id}', [FAQController::class, 'faqManagementDelete'])->name('faq.delete');
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
-Route::post('/faq/add/new', [FAQController::class,'faqManagementAddAction'])->name('faq.add.new');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
-Route::post('/faq/edit/post', [FAQController::class,'faqManagementEditAction'])->name('faq.edit.faq');
+Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
 
 require __DIR__.'/auth.php';

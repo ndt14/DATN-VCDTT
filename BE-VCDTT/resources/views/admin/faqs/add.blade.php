@@ -30,7 +30,7 @@
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="{{url('/blog')}}" class="btn btn-default d-none d-sm-inline-block">
+                    <a href="{{url('/faq')}}" class="btn btn-default d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M5 12l14 0"></path>
@@ -39,7 +39,7 @@
                         </svg>
                         Back
                     </a>
-                    <a href="{{url('/blog')}}" class="btn btn-default d-sm-none btn-icon">
+                    <a href="{{url('/faq')}}" class="btn btn-default d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M5 12l14 0"></path>
@@ -57,7 +57,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form  class="card" action="" method="POST">
+            <form id="frmAdd" class="card" action="/api/faq-store" method="POST">
             @csrf
                 <div class="card-body">
                     <div class="mb-3">
@@ -81,7 +81,7 @@
                     
                     </div>
                     <div class="card-footer text-right">
-                        <button id="" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -90,7 +90,7 @@
 </div>
 @endsection
 @section('page_js')
-<!-- {{-- <script type="text/javascript">
+<script type="text/javascript">
         if ($('#frmAdd').length) {
             $('#frmAdd').submit(function() {
                 let options = {
@@ -102,17 +102,17 @@
                         $('#btnSubmitAdd').removeClass('btn-loading');
                         if(response.status == 404){
                             $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.errors, delay = 5000, dismissible = true);
+                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
                         }
                         if(response.status == 200){
                             $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.errors, delay = 6000, dismissible = true);
+                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
                         }
                     },
                     error: function() {
                         $('#btnSubmitAdd').removeClass('btn-loading');
                         $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
                     },
                     dataType: 'json',
                     clearForm: false,
@@ -122,5 +122,5 @@
                 return false;
             });
     }
-</script> --}} -->
+</script>
 @endSection
