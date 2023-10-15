@@ -58,6 +58,11 @@
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
             <form id="frmAdd" class="card" action="/api/blog-store" method="POST">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Add new blog
+                </h2>
+            </div>
             @csrf
                 <div class="card-body">
                     <div class="row">

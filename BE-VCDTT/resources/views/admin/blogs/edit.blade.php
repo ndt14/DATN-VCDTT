@@ -58,6 +58,11 @@
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
             <form id="frmEdit" class="card" action="{{ route('api.blog.edit', ['id' => $data['id']])}}" method="POST">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Edit {{$data['title']}}
+                </h2>
+            </div>
             @csrf
             @method('PUT')
             <input type="hidden" name="id" value="{{$data['id']}}">

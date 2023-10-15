@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tour-add', [TourController::class,'add']);
     Route::post('/tour-store', [TourController::class, 'store']);
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
-    Route::put('/tour-edit/{id}', [TourController::class, 'update']);
+    Route::put('/tour-edit/{id}', [TourController::class, 'update'])->name('api.tour.edit');
     Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
 
 
