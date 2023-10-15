@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                @if (Session::has('success'))
+                <!-- @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif
+                @endif -->
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -57,19 +57,31 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form  class="card" action="{{ route('blog.add.new') }}" method="POST">
+            <form id="frmAdd" class="card" action="/api/blog-store" method="POST">
             @csrf
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Title" value="" >
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('title')
-                                {{ $message }}
-                            @enderror
-                        </span>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Title" value="" >
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('title')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label class="form-label">Author</label>
+                            <input type="text" name="author" class="form-control" placeholder="" value="">
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('author')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                        </div>
+
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 col-8">
                         <label class="form-label">Image</label>
                         <input type="text" name="main_img" class="form-control" placeholder="Image" value="">
                         <span class="text-danger d-flex justify-content-start">
@@ -78,18 +90,9 @@
                             @enderror
                         </span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Author</label>
-                        <input type="text" name="author" class="form-control" placeholder="" value="">
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('author')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    <div class="mb-3">
+                    <div class="mb-3 col-10">
                         <div class="form-label">Short description</div>
-                        <input name="short_desc" type="text" class="form-control" >
+                        <textarea name="short_desc" rows="5" type="text" class="form-control" ></textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('short_desc')
                                 {{ $message }}
@@ -98,18 +101,9 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Description</div>
-                        <input name="description" type="text" class="form-control" >
+                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description"></textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('description')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-label">View Count</div>
-                        <input name="view_count" type="text" class="form-control" value="0" >
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('view_count')
                                 {{ $message }}
                             @enderror
                         </span>
@@ -135,7 +129,7 @@
                     </div>
                     </div>
                     <div class="card-footer text-right">
-                        <button id="" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -144,7 +138,7 @@
 </div>
 @endsection
 @section('page_js')
-<!-- {{-- <script type="text/javascript">
+<script type="text/javascript">
         if ($('#frmAdd').length) {
             $('#frmAdd').submit(function() {
                 let options = {
@@ -154,13 +148,13 @@
                     },
                     success: function(response, statusText, xhr, $form) {
                         $('#btnSubmitAdd').removeClass('btn-loading');
-                        if(response.status == 404){
+                        if(response.status == 500){
                             $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.errors, delay = 5000, dismissible = true);
+                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
                         }
                         if(response.status == 200){
                             $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.errors, delay = 6000, dismissible = true);
+                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
                         }
                     },
                     error: function() {
@@ -176,5 +170,5 @@
                 return false;
             });
     }
-</script> --}} -->
+</script>
 @endSection

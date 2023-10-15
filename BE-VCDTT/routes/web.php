@@ -32,11 +32,8 @@ Route::get('/tour/delete/{id}', [TourController::class, 'tourManagementDelete'])
 
 Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list');
 Route::get('/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
-Route::post('/blog/add/new', [BlogController::class, 'blogManagementAddAction'])->name('blog.add.new');
 Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
-Route::post('/blog/edit/post', [BlogController::class, 'blogManagementEditAction'])->name('blog.edit.post');
 Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
-Route::get('/blog/delete/{id}', [BlogController::class, 'blogManagementDelete'])->name('blog.delete');
 
 Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
 Route::get('/faq/delete/{id}', [FAQController::class, 'faqManagementDelete'])->name('faq.delete');

@@ -45,7 +45,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/blog-add', [BlogController::class,'add']);
     Route::post('/blog-store', [BlogController::class, 'store']);
     Route::get('/blog-show/{id}', [BlogController::class, 'show']);
-    Route::put('/blog-edit/{id}', [BlogController::class, 'update']);
+    Route::put('/blog-edit/{id}', [BlogController::class, 'update'])->name('api.blog.edit');
     Route::delete('/blog-destroy/{id}', [BlogController::class, 'destroy']);
 
     // Category
