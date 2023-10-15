@@ -6,7 +6,7 @@
     <div class="row g-0">
         <div class="col d-flex flex-column">
             <div class="card-body">
-                <h3 class="card-title">{{ $item->answer }}</h3>
+                <h3 class="card-title">{{ $item->question }}</h3>
 
                 <div class="row g-3">
                     <!--{{-- <div class="col-md">
