@@ -35,9 +35,9 @@ class RegisterController extends Controller
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;
+        $token = $user->createToken('api-token')->plainTextToken;
 
-
-        return response()->json(['message' => 'Đăng kí thành công', 'status' => 200]);
+        return response()->json(['user' => $user,'token' => $token,'message' => 'Đăng kí thành công', 'status' => 200]);
 
     }
 }
