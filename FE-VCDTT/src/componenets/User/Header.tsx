@@ -71,6 +71,8 @@ console.log( data);
         setIsLoggedIn(true);
         setShowSignIn(false);
         localStorage.setItem("user", JSON.stringify(data.user));
+        console.log(data.user);
+        
         localStorage.setItem("accessToken", data.token);
         alert("Đăng nhập thành công!");
       } else {
@@ -107,12 +109,15 @@ console.log( data);
     setShowSignIn(false);
     console.log(response);
     
-    // const userName = response?.data.user.name;
+    const userName = response?.data.user;
+    // console.log(userName);
+    
     // console.log(userName);
     
     localStorage.setItem("user", JSON.stringify(userName));
     // localStorage.setItem("accessToken", response.token);
     alert("đăng ký thành công");
+    // console.log(userName);
 
     
   })
@@ -126,6 +131,8 @@ console.log( data);
   const userData = JSON.parse(localStorage.getItem("user"));
 
   const userName = userData?.name;
+  console.log(userName);
+  
   // const userData = JSON.parse(storedData);
   // const  = userData?.user?.email;
 
@@ -207,7 +214,7 @@ console.log( data);
                       <nav id="navigation" className="navigation">
                         <ul>
                           <li className="menu-item-has-children">
-                            <Link to="profile">{userName}</Link>
+                            <Link to="/">{userName}</Link>
                             <ul>
                               {/* <li>
                                 <Link to="blogs/1">Bài viết 1</Link>

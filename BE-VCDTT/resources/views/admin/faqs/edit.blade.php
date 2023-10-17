@@ -4,7 +4,7 @@
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
-        <!-- <div class="col-12 ">
+            <!-- <div class="col-12 ">
                 @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
@@ -57,30 +57,30 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form id="frmEdit"  class="card" action="{{ route('api.faq.edit', ['id' => $data->id])}}" method="POST">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="id" value="{{$data->id}}">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Question</label>
-                        <input type="text" name="question" class="form-control" placeholder="Enter question" value="{{$data->question}}" >
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('question')
+                <form id="frmEdit" class="card" action="{{ route('api.faq.edit', ['id' => $data->id])}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="id" value="{{$data->id}}">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Question</label>
+                            <input type="text" name="question" class="form-control" placeholder="Enter question" value="{{$data->question}}">
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('question')
                                 {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Answer</label>
-                        <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$data->answer}}</textarea>
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('answer')
+                                @enderror
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Answer</label>
+                            <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$data->answer}}</textarea>
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('answer')
                                 {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    
+                                @enderror
+                            </span>
+                        </div>
+
                     </div>
                     <div class="card-footer text-right">
                         <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
@@ -93,36 +93,36 @@
 @endsection
 @section('page_js')
 <script type="text/javascript">
-        if ($('#frmEdit').length) {
-            $('#frmEdit').submit(function() {
-                let options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitEdit').addClass('btn-loading');
-                        $('#btnSubmitEdit').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
-                        if(response.status == 404){
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                        }
-                        if(response.status == 200){
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-                        }
-                    },
-                    error: function() {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
+    if ($('#frmEdit').length) {
+        $('#frmEdit').submit(function() {
+            let options = {
+                beforeSubmit: function(formData, jqForm, options) {
+                    $('#btnSubmitEdit').addClass('btn-loading');
+                    $('#btnSubmitEdit').addClass("disabled");
+                },
+                success: function(response, statusText, xhr, $form) {
+                    $('#btnSubmitEdit').removeClass('btn-loading');
+                    if (response.status == 404) {
                         $('#btnSubmitEdit').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
+                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+                    }
+                    if (response.status == 200) {
+                        $('#btnSubmitEdit').removeClass("disabled");
+                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+                    }
+                },
+                error: function() {
+                    $('#btnSubmitEdit').removeClass('btn-loading');
+                    $('#btnSubmitEdit').removeClass("disabled");
+                    bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+                },
+                dataType: 'json',
+                clearForm: false,
+                resetForm: false
+            };
+            $(this).ajaxSubmit(options);
+            return false;
+        });
     }
 </script>
 @endSection
