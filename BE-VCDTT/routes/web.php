@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
+use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,5 +40,7 @@ Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list'
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 
 require __DIR__.'/auth.php';

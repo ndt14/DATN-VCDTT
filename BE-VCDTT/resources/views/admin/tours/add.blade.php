@@ -54,6 +54,9 @@
 </div>
         <div class="page-body">
             <div class="container-xl">
+
+
+
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
                         <form id="frmAdd" class="card" action="/api/tour-store" method="POST">
@@ -255,6 +258,7 @@
                                         </span>
                                     </div>
                                 </div>
+                                <input name="imgArray" type="hidden" id="imgArray">
                             </div>
                             <div class="card-footer">
                                 <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
@@ -262,10 +266,36 @@
                         </form>
                     </div>
                 </div>
+
+                <div class="row row-deck row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Files upload</h3>
+                                <form class="dropzone dz-clickable" id="dropzone-files" action="{{ route('file.store') }}" autocomplete="off" novalidate>
+                                    @csrf
+                                    <div class="fallback">
+                                        <input name="files[]" type="file"/>
+                                    </div>
+                                    <div class="dz-message">
+                                        <h3 class="dropzone-msg-title">Your text here</h3>
+                                        <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
 @endsection
+@section('page_css')
+<link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
+@endsection
 @section('page_js')
+<script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
 <script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {
@@ -298,5 +328,28 @@
             return false;
         });
     }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        var imgArray = [];
+        new Dropzone("#dropzone-files", {
+            paramName: "files", // The name that will be used to transfer the file
+            maxFilesize: 100, // MB
+            uploadMultiple: true,
+            accept: function(file, done) {
+                done();
+            },
+            success: function(file, response) {
+                if (response.status === 200) {
+                    imgArray.push(response.files); // Thêm giá trị files vào mảng
+                }
+                document.getElementById('imgArray').value = JSON.stringify(imgArray);
+                console.log(document.getElementById('imgArray').value);
+            },
+            error: function(file, response) {
+                console.error(response.message);
+            }
+        });
+    })
+
 </script>
     @endSection

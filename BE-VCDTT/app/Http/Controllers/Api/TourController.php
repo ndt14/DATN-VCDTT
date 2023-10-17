@@ -101,12 +101,26 @@ class TourController extends Controller
     }
 
     public function store(TourRequest $request)
-    {
+    {   
+        $imgArray = $request->input('imgArray');
         $tour = Tour::create($request->all());
         if ($tour->id) {
+
+            if(!empty($imgArray)){
+                $images = [];
+                foreach(json_decode($imgArray, true) as $img){
+                    $data= [
+                        'url' => '/upload'.$img,
+                        'tour_id' => $tour->id
+                    ];
+                    $newImage = Image::create($data);
+                    $images[] = $newImage;
+                }                
+            }
             return response()->json([
                 'data' => [
                     'tour' => new TourResource($tour),
+                    'tourImages' => !empty($images) ? $images : 'No image added'
                 ],
                 'message' => 'Add success',
                 'status' => 200
