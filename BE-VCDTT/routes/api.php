@@ -76,7 +76,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/user-store', [UserController::class, 'store']);
     Route::get('/user-show/{id}', [UserController::class, 'show']);
-    Route::put('/user-edit/{id}', [UserController::class, 'update']);
+    Route::get('/user-search', [UserController::class, 'search_user']);
+    Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('api.user.edit');
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
     //PurchaseHistory
