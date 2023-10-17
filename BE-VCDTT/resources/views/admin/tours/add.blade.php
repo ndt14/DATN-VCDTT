@@ -1,61 +1,70 @@
 @extends('admin.common.layout')
 @section('content')
 
-    <div class="page-header d-print-none">
-        <div class="container-xl">
-            <div class="row g-2 align-items-center">
-                <div class="col-12 ">
-                    @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @if (Session::has('fail'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+        <div class="col-12 ">
+                <!-- @if (Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="row">
-
+                @endif
+                @if (Session::has('fail'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                    {{ Session::get('fail') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <!-- Page title actions -->
-                <div class="col-auto ms-auto d-print-none">
-                    <div class="btn-list">
-                        <a href="{{ url('/tour') }}" class="btn btn-default d-none d-sm-inline-block">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M5 12l14 0"></path>
-                                <path d="M5 12l4 4"></path>
-                                <path d="M5 12l4 -4"></path>
-                            </svg>
-                            Back
-                        </a>
-                        <a href="{{ url('/tour') }}" class="btn btn-default d-sm-none btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M5 12l14 0"></path>
-                                <path d="M5 12l4 4"></path>
-                                <path d="M5 12l4 -4"></path>
-                            </svg>
-                        </a>
-                    </div>
+                @endif -->
+            </div>
+            <div class="col">
+                <!-- Page pre-title -->
+                <!-- <div class="page-pretitle">
+                    Overview
+                </div> -->
+                <h2 class="page-title">
+                    Tours management
+                </h2>
+            </div>
+            <!-- Page title actions -->
+            <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                    <a href="{{url('/tour')}}" class="btn btn-default d-none d-sm-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                        Back
+                    </a>
+                    <a href="{{url('/tour')}}" class="btn btn-default d-sm-none btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <h1 class="text-center">Thêm mới tour</h3>
+</div>
         <div class="page-body">
             <div class="container-xl">
+
+
+
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form class="card" action="{{ route('tour.add') }}" method="POST">
+                        <form id="frmAdd" class="card" action="/api/tour-store" method="POST">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    Add new tour
+                                </h2>
+                            </div>
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3">
@@ -162,6 +171,7 @@
                                     </div>
 
                                 </div>
+
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
@@ -169,17 +179,6 @@
                                             placeholder="Nhập lịch trình của tour" value="{{ old('pathway') ?? '' }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                    <div class="mb-3 col-6">
-                                        <div class="form-label">Số lượt xem tour</div>
-                                        <input name="view_count" type="text" class="form-control"
-                                            placeholder="Nhập số lượt xem của tour"
-                                            value="{{ old('view_count') ?? '' }}">
-                                        <span class="text-danger d-flex justify-content-start">
-                                            @error('view_count')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -259,49 +258,98 @@
                                         </span>
                                     </div>
                                 </div>
+                                <input name="imgArray" type="hidden" id="imgArray">
                             </div>
-                            <div class="card-footer text-center">
-                                <!-- {{-- <button id="" type="submit" class="btn btn-primary">Submit</button> --}} -->
-                                <input type="submit" value="Submit" name="btnSubmit" class="btn btn-primary">
+                            <div class="card-footer">
+                                <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <div class="row row-deck row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Files upload</h3>
+                                <form class="dropzone dz-clickable" id="dropzone-files" action="{{ route('file.store') }}" autocomplete="off" novalidate>
+                                    @csrf
+                                    <div class="fallback">
+                                        <input name="files[]" type="file"/>
+                                    </div>
+                                    <div class="dz-message">
+                                        <h3 class="dropzone-msg-title">Your text here</h3>
+                                        <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
-    @endsection
-    @section('page_js')
-        <!-- {{-- <script type="text/javascript">
-        if ($('#frmAdd').length) {
-            $('#frmAdd').submit(function() {
-                let options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitAdd').addClass('btn-loading');
-                        $('#btnSubmitAdd').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        if(response.status == 404){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.errors, delay = 5000, dismissible = true);
-                        }
-                        if(response.status == 200){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.errors, delay = 6000, dismissible = true);
-                        }
-                    },
-                    error: function() {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
+@endsection
+@section('page_css')
+<link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
+@endsection
+@section('page_js')
+<script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
+<script type="text/javascript">
+    if ($('#frmAdd').length) {
+        $('#frmAdd').submit(function() {
+            let options = {
+                beforeSubmit: function(formData, jqForm, options) {
+                    $('#btnSubmitAdd').addClass('btn-loading');
+                    $('#btnSubmitAdd').addClass("disabled");
+                },
+                success: function(response, statusText, xhr, $form) {
+                    $('#btnSubmitAdd').removeClass('btn-loading');
+                    if(response.status == 500){
                         $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
+                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+                    }
+                    if(response.status == 200){
+                        $('#btnSubmitAdd').removeClass("disabled");
+                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+                    }
+                },
+                error: function() {
+                    $('#btnSubmitAdd').removeClass('btn-loading');
+                    $('#btnSubmitAdd').removeClass("disabled");
+                    bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+                },
+                dataType: 'json',
+                clearForm: false,
+                resetForm: false
+            };
+            $(this).ajaxSubmit(options);
+            return false;
+        });
     }
-</script> --}} -->
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        var imgArray = [];
+        new Dropzone("#dropzone-files", {
+            paramName: "files", // The name that will be used to transfer the file
+            maxFilesize: 100, // MB
+            uploadMultiple: true,
+            accept: function(file, done) {
+                done();
+            },
+            success: function(file, response) {
+                if (response.status === 200) {
+                    imgArray.push(response.files); // Thêm giá trị files vào mảng
+                }
+                document.getElementById('imgArray').value = JSON.stringify(imgArray);
+                console.log(document.getElementById('imgArray').value);
+            },
+            error: function(file, response) {
+                console.error(response.message);
+            }
+        });
+    })
+
+</script>
     @endSection

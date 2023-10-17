@@ -1,62 +1,69 @@
 @extends('admin.common.layout')
 @section('content')
 
-    <div class="page-header d-print-none">
-        <div class="container-xl">
-            <div class="row g-2 align-items-center">
-                <div class="col-12 ">
-                    @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @if (Session::has('fail'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+        <div class="col-12 ">
+                <!-- @if (Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="row">
-
+                @endif
+                @if (Session::has('fail'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                    {{ Session::get('fail') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <!-- Page title actions -->
-                <div class="col-auto ms-auto d-print-none">
-                    <div class="btn-list">
-                        <a href="{{ url('/tour') }}" class="btn btn-default d-none d-sm-inline-block">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M5 12l14 0"></path>
-                                <path d="M5 12l4 4"></path>
-                                <path d="M5 12l4 -4"></path>
-                            </svg>
-                            Back
-                        </a>
-                        <a href="{{ url('/tour') }}" class="btn btn-default d-sm-none btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M5 12l14 0"></path>
-                                <path d="M5 12l4 4"></path>
-                                <path d="M5 12l4 -4"></path>
-                            </svg>
-                        </a>
-                    </div>
+                @endif -->
+            </div>
+            <div class="col">
+                <!-- Page pre-title -->
+                <!-- <div class="page-pretitle">
+                    Overview
+                </div> -->
+                <h2 class="page-title">
+                    Tours management
+                </h2>
+            </div>
+            <!-- Page title actions -->
+            <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                    <a href="{{url('/tour')}}" class="btn btn-default d-none d-sm-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                        Back
+                    </a>
+                    <a href="{{url('/tour')}}" class="btn btn-default d-sm-none btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <h1 class="text-center">Cập nhật tour</h3>
+</div>
         <div class="page-body">
             <div class="container-xl">
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form class="card" action="{{ route('tour.edit', ['id' => $tour['id']]) }}" method="POST">
+                        <form id="frmEdit" class="card" action="{{ route('api.tour.edit', ['id' => $tour['id']])}}" method="POST">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    Edit {{ $tour['name'] }}
+                                </h2>
+                            </div>
                             @csrf
+                            @method('PUT')
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label">Tên tour</label>
@@ -257,8 +264,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center">
-                                <!-- {{-- <button id="" type="submit" class="btn btn-primary">Submit</button> --}} -->
-                                <input type="submit" value="Submit" name="btnSubmit" class="btn btn-primary">
+                                <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -267,28 +273,28 @@
         </div>
     @endsection
     @section('page_js')
-        <!-- {{-- <script type="text/javascript">
-        if ($('#frmAdd').length) {
-            $('#frmAdd').submit(function() {
+<script type="text/javascript">
+        if ($('#frmEdit').length) {
+            $('#frmEdit').submit(function() {
                 let options = {
                     beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitAdd').addClass('btn-loading');
-                        $('#btnSubmitAdd').addClass("disabled");
+                        $('#btnSubmitEdit').addClass('btn-loading');
+                        $('#btnSubmitEdit').addClass("disabled");
                     },
                     success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
+                        $('#btnSubmitEdit').removeClass('btn-loading');
                         if(response.status == 404){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.errors, delay = 5000, dismissible = true);
+                            $('#btnSubmitEdit').removeClass("disabled");
+                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
                         }
                         if(response.status == 200){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.errors, delay = 6000, dismissible = true);
+                            $('#btnSubmitEdit').removeClass("disabled");
+                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
                         }
                     },
                     error: function() {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        $('#btnSubmitAdd').removeClass("disabled");
+                        $('#btnSubmitEdit').removeClass('btn-loading');
+                        $('#btnSubmitEdit').removeClass("disabled");
                         bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
                     },
                     dataType: 'json',
@@ -299,5 +305,5 @@
                 return false;
             });
     }
-</script> --}} -->
+</script>
     @endSection

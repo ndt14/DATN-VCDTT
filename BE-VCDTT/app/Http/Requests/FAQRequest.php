@@ -25,19 +25,18 @@ class FAQRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'question' => 'required',
-            'answer' => 'required',
+            // 'question' => 'required',
+            // 'answer' => 'required',
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'question.required' => 'Câu hỏi không được trống',
-            'answer.required' => 'Câu trả lời không được trống'
-        ];
-    }
+    // public function messages()
+    // {
+        // return [
+        //     'question.required' => 'Câu hỏi không được trống',
+        //     'answer.required' => 'Câu trả lời không được trống'
+        // ];
+    // }
 
     // protected function failedValidation(Validator $validator)
     // {

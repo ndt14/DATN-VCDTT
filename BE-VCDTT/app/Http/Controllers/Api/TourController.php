@@ -36,7 +36,7 @@ class TourController extends Controller
         if (!empty($keyword)) {
             $sql_where .= 'name LIKE %{$keyword}%';
         }
-        $sql_order = 'name';
+        $sql_order = 'updated_at';
         $limit = intval($request->limit) ? intval($request->limit) : '';
         $tours = Tour::select(
             'id',
@@ -55,9 +55,10 @@ class TourController extends Controller
             'main_img',
             'view_count',
             'status',
-            'created_at'
+            'created_at',
+            'updated_at'
         )
-            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order)->limit($limit)->get();
+            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'DESC')->limit($limit)->get();
         return response()->json(
             [
                 'data' => [
@@ -99,20 +100,34 @@ class TourController extends Controller
         );
     }
 
-    public function store(Request $request)
-    {
+    public function store(TourRequest $request)
+    {   
+        $imgArray = $request->input('imgArray');
         $tour = Tour::create($request->all());
         if ($tour->id) {
+
+            if(!empty($imgArray)){
+                $images = [];
+                foreach(json_decode($imgArray, true) as $img){
+                    $data= [
+                        'url' => '/upload'.$img,
+                        'tour_id' => $tour->id
+                    ];
+                    $newImage = Image::create($data);
+                    $images[] = $newImage;
+                }                
+            }
             return response()->json([
                 'data' => [
                     'tour' => new TourResource($tour),
+                    'tourImages' => !empty($images) ? $images : 'No image added'
                 ],
-                'message' => 'OK',
-                'status' => 201
+                'message' => 'Add success',
+                'status' => 200
             ]);
         } else {
             return response()->json([
-                'message' => 'internal server error',
+                'message' => 'Add fail',
                 'status' => 500
             ]);
         }
@@ -143,7 +158,7 @@ class TourController extends Controller
         if ($firstTourToCate->isNotEmpty()) {
             $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
 
-            $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status')
+            $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status', 'tours.created_at', 'tours.updated_at')
                 ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
                 ->where('tours.id', '<>', $id)
                 ->whereIn('tours_to_categories.cate_id', $cateIds)
@@ -179,6 +194,8 @@ class TourController extends Controller
             'main_img',
             'view_count',
             'status',
+            'created_at',
+            'updated_at'
 
         )
             ->where('id', $id)
@@ -226,12 +243,12 @@ class TourController extends Controller
                 'data' => [
                     'tour' => $tour
                 ],
-                'message' => 'OK',
+                'message' => 'Edit tour success',
                 'status' => 200,
             ]);
         } else {
             return response()->json([
-                'message' => 'internal server error',
+                'message' => 'Can not edit, internal server error',
                 'status' => 500
             ]);
         }
@@ -267,48 +284,21 @@ class TourController extends Controller
     public function tourManagementAdd(Request $request)
     {
         $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
-        if ($request->isMethod('POST')) {
-            $data = $request->all();
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
-            if ($response->status() == 200) {
-                $idTour = $response->json()['data']['tour']['id'];
-                $newTourToCate = DB::table('tours_to_categories')->insert(['cate_id' => $data['category'], 'tour_id' => $idTour]); //tạm thời chưa có tour to cate nên phải dùng db query
-                return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
-            }
-            return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
-        }
-
         return view('admin.tours.add', compact('categories'));
     }
 
-    public function tourManagementDelete($id)
+
+    public function tourManagementEdit(Request $request)
     {
-
-        $response = Http::delete('http://be-vcdtt.datn-vcdtt.test/api/tour-destroy/' . $id);
-
-        if ($response->status() == 200) {
-            return redirect()->route('tour.list')->with('success', 'Xóa tour thành công');
-        } else {
-            return redirect()->route('tour.list')->with('fail', 'Đã xảy ra lỗi');
-        }
-
-        return redirect()->route('tour.list');
+        $tour = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)->json()['data']['tour'];
+        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
+        return view('admin.tours.edit', compact('tour', 'categories'));
     }
 
-    public function tourManagementEdit(Request $request, $id)
-    {
-        $tour = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)->json()['data']['tour'];
-        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
-        if ($request->isMethod('POST')) {
-            $data = $request->all();
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                $newTourToCate = DB::table('tours_to_categories')->where('tour_id', $id)->update(['cate_id' => $data['category']]);
-                return redirect()->route('tour.list')->with('success', 'Sửa tour thành công');
-            }
-            return redirect()->route('tour.list')->with('fail', 'Đã xảy ra lỗi');
-        }
-
-        return view('admin.tours.edit', compact('tour', 'categories'));
+    public function tourManagementDetail(Request $request) {
+        $data = $request->except('_token');
+        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/'.$request->id)->json()['data']['tour'];
+        $html = view('admin.tours.detail', compact('item'))->render();
+        return response()->json(['html' => $html, 'status' => 200]);
     }
 }

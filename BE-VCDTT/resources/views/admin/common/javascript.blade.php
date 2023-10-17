@@ -1,9 +1,3 @@
-<!-- Libs JS -->
-<script src="{{ asset('admin/assets/libs/apexcharts/dist/apexcharts.min.js') }}" defer></script>
-<script src="{{ asset('admin/assets/libs/jsvectormap/dist/js/jsvectormap.min.js') }}" defer></script>
-<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world.js') }}" defer></script>
-<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
-<script src="{{ asset('admin/assets/libs/fslightbox/index.js') }}" defer></script>
 <!-- Tabler Core -->
 <script src="{{ asset('admin/assets/js/tabler.min.js') }}" defer></script>
 <script src="{{ asset('admin/assets/js/demo.min.js') }}" defer></script>
@@ -16,6 +10,13 @@
 <script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
 <!-- Plugins -->
 <script src="{{ asset('ckedit_js/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+<!-- Libs JS -->
+<script src="{{ asset('admin/assets/libs/apexcharts/dist/apexcharts.min.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/js/jsvectormap.min.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/fslightbox/index.js') }}" defer></script>
+<script src="{{ asset('admin/assets/libs/jquery-confirm/jquery-confirm.min.js')}}"></script>
 <!-- JS -->
 <script type="text/javascript">
     Bs5Utils.defaults.toasts.position = 'top-center';
@@ -49,4 +50,17 @@
         }
         return uri + hash;
     };
+    let theme = localStorage.getItem('tablerTheme') ? localStorage.getItem('tablerTheme') : 'light';
+    $(document).ready(function () {
+    $('body').attr('data-bs-theme', theme);
+        if($('#rpp').length){
+            $('#rpp').change(function(){
+                let objectClicked = $(this);
+                let rppValue = objectClicked.val();
+                let currentUrl = document.location.href;
+                let newUrl = updateUrlParameter('limit', rppValue, currentUrl);
+                document.location.replace(newUrl);
+            });
+        }
+    });
 </script>
