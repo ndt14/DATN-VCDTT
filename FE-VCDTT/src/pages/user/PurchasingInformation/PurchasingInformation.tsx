@@ -14,12 +14,16 @@ const PurchasingInformation = (props: Props) => {
     name: string;
     email: string;
     phone_number: string;
+    message: string;
+    honorific: string;
   }
   const formik = useFormik<FormValues>({
     initialValues: {
       name: "",
       email: "",
       phone_number: "",
+      message: "",
+      honorific: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên"),
@@ -27,6 +31,7 @@ const PurchasingInformation = (props: Props) => {
         .email("Sai định dạng email")
         .required("Email không được để trống"),
       phone_number: Yup.string().required("Nhập số điện thoại"),
+      honorific: Yup.string().required("Please select an option"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -57,7 +62,6 @@ const PurchasingInformation = (props: Props) => {
     tourPrice,
     tourChildPrice,
   } = location.state;
-  console.log(tourName);
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -87,7 +91,7 @@ const PurchasingInformation = (props: Props) => {
     e.preventDefault();
 
     const variables = {
-      name: userName,
+      name: formik.values.name,
       user_id: userId,
       tour_name: tourName,
       child_count: productChildNumber,
@@ -96,9 +100,10 @@ const PurchasingInformation = (props: Props) => {
       tour_location: tourLocation,
       tour_child_price: tourChildPrice,
       tour_adult_price: tourPrice,
-      email: userEmail,
-      phone_number: phoneNumber,
-      address: userAddress,
+      email: formik.values.email,
+      phone_number: formik.values.phone_number,
+      suggestion: formik.values.message,
+      honorific: formik.values.honorific,
 
       // Add other variables as needed
     };
@@ -107,14 +112,13 @@ const PurchasingInformation = (props: Props) => {
     addBill(variables)
       .then((response) => {
         alert("Đặt tour thành công");
-
-        const billID = response?.data.data.purchase_history.id;
+        const billID = response?.data?.data?.purchase_history.id;
         console.log(billID);
-        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        // const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
         // window.open(
         //   `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
         // );
-        window.location.href = VnpayURL;
+        // window.location.href = VnpayURL;
       })
       .catch((error) => {
         // Handle any errors here
@@ -157,11 +161,24 @@ const PurchasingInformation = (props: Props) => {
                       <div className="col-sm-4">
                         <div className="form-group">
                           <label>Danh xưng</label>
-                          <select className="input-border">
-                            <option value="1">Ông</option>
-                            <option value="2">Bà</option>
-                            <option value="3">Khác</option>
+                          <select
+                            className="input-border"
+                            name="honorific"
+                            value={formik.values.honorific}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="">-- Lựa chọn --</option>
+                            <option value="Ông">Ông</option>
+                            <option value="Bà">Bà</option>
+                            <option value="Khác">Khác</option>
                           </select>
+                          {formik.touched.honorific &&
+                            formik.errors.honorific && (
+                              <p className="text-danger">
+                                {formik.errors.honorific}
+                              </p>
+                            )}
                         </div>
                         {/* {selectedTitle === "" && <div className="validation-error">Please select a title.</div>} */}
                       </div>
@@ -240,6 +257,10 @@ const PurchasingInformation = (props: Props) => {
                             rows={6}
                             placeholder="Yêu cầu đặc biệt dành cho tour"
                             className="border"
+                            name="message"
+                            value={formik.values.message}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           ></textarea>
                         </div>
                       </div>
