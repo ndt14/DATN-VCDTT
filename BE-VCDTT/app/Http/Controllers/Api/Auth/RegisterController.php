@@ -24,7 +24,7 @@ class RegisterController extends Controller
             'c_password' => 'required|same:password',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['message' => 'Error, please check your input!', 'status' => 404]);
         }
         $input = $request->all();
@@ -37,7 +37,6 @@ class RegisterController extends Controller
         $success['name'] =  $user->name;
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json(['user' => $user,'token' => $token,'message' => 'Đăng kí thành công', 'status' => 200]);
-
+        return response()->json(['user' => $user, 'token' => $token, 'message' => 'Đăng kí thành công', 'status' => 200]);
     }
 }

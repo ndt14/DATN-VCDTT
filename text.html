@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import "../../../assets/js/modal.js";
 // import { Modal, Form, Input, Checkbox, Button } from "antd";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
-import '../User/css/Header.css'
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
+import '../User/css/Header.css'
 
 const Header = () => {
   const [login] = useLoginMutation();
@@ -62,67 +63,66 @@ const [confirmPassword, setConfirmPassword] = useState("");
     setIsButtonSignUpClicked(true);
   };
 
-  const handleSignIn = async () => {
-    // event.preventDefault();
+  const handleSignIn = async (event) => {
+    event.preventDefault();
     try {
-      const { data } = await login({
-        email: loginFormik.values.email, // Access email value from Formik
-        password: loginFormik.values.password, // Access password value from Formik
-      });
-      console.log(data);
-      
+      const { data } = await login({ email, password });
+      // console.log(data);
+console.log( data);
+
       if (data && data.user) {
-        // Login successful
+        // Thành công: Lưu thông tin đăng nhập và token
         setIsLoggedIn(true);
         setShowSignIn(false);
         localStorage.setItem("user", JSON.stringify(data.user));
+        console.log(data.user);
+        
         localStorage.setItem("accessToken", data.token);
         alert("Đăng nhập thành công!");
       } else {
-        // Invalid credentials or other login error
-        alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+        alert("Đăng nhập thất bại!");
       }
     } catch (error) {
       console.error("Lỗi đăng nhập: ", error);
-      alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
     }
   };
-  
   const handleSignOut = () => {
     alert("Đăng xuất thành công");
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
   };
-  const handleRegister = async () => {
-    // event.preventDefault();
+  const handleRegister = async (event) => {
+    event.preventDefault();
     const variables ={
-      email: registrationFormik.values.email,
-      password: registrationFormik.values.password,
-      name: registrationFormik.values.name,
-      phone_number: registrationFormik.values.phone_number,
-      c_password: registrationFormik.values.c_password,
+      email: registerEmail,
+      password: registerPassword,
+      name: registerName,
+      phone_number: registerPhone,
+      c_password: confirmPassword,
     }
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-  console.log(variables);
+  
   register(variables)
   .then((response) => {
     // Handle the response here
-    if(response && response?.data.user){
-      setIsLoggedIn(true);
-      setShowSignIn(false);
-      
-      const userName = response?.data.user;
-      localStorage.setItem("user", JSON.stringify(userName));
-      // localStorage.setItem("accessToken", response.token);
-      alert("đăng ký thành công");
-      // console.log(userName);
-  }else{
-    alert("đăng ký thất bại")
-  }
+if(response && response?.data.user){
+    setIsLoggedIn(true);
+    setShowSignIn(false);
+    
+    const userName = response?.data.user;
+  
+    
+    localStorage.setItem("user", JSON.stringify(userName));
+    // localStorage.setItem("accessToken", response.token);
+    alert("đăng ký thành công");
+    // console.log(userName);
+}else{
+  alert("đăng ký thất bại")
+}
     
   })
   .catch((error) => {
@@ -130,8 +130,9 @@ const [confirmPassword, setConfirmPassword] = useState("");
     console.error(error);
   });
   };
-   //validate
-   const loginFormik = useFormik({
+  
+  //validate
+  const loginFormik = useFormik({
     initialValues: {
       email: "",
       password: "",
@@ -150,6 +151,8 @@ const [confirmPassword, setConfirmPassword] = useState("");
     validationSchema: registrationSchema,
     onSubmit: handleRegister, // Your handleRegister function
   });
+  
+  
 
   const userData = JSON.parse(localStorage.getItem("user"));
 
@@ -286,24 +289,23 @@ const [confirmPassword, setConfirmPassword] = useState("");
                       </div>
                       {showSignInForm && (
                         <div>
-                          <form onSubmit={loginFormik.handleSubmit}>
+                          <form onSubmit={handleSignIn}>
                             <label htmlFor="" className="fw-bold">
                               Tài khoản <span className="text-danger">*</span>
                             </label>
                             <br />
                             <input
                               className="w-100 my-2"
-                              type="email"
+                              type="text"
                               placeholder="Email"
                               name="email"
                               value={loginFormik.values.email}
-                              onChange={loginFormik.handleChange}
-                              onBlur={loginFormik.handleBlur}
-                                                        />
-                                                        {loginFormik.touched.email && loginFormik.errors.email && (
-                              <div className="text-danger">{loginFormik.errors.email}</div>
-                            )}
-                            
+  onChange={loginFormik.handleChange}
+  onBlur={loginFormik.handleBlur}
+                            />
+                            {loginFormik.touched.email && loginFormik.errors.email && (
+  <div className="text-danger">{loginFormik.errors.email}</div>
+)}
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
                             </label>
@@ -350,7 +352,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
                       )}
                       {showSignUpForm && (
                         <div>
-                          <form onSubmit={registrationFormik.handleSubmit}>
+                          <form onSubmit={handleRegister}>
                           <label htmlFor="" className="fw-bold">
                               Tên tài khoản <span className="text-danger">*</span>
                             </label>
