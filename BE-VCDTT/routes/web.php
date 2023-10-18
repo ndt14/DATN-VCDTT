@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,14 @@ Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list'
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
+Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');
+Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
+Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
+
+
+
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 
