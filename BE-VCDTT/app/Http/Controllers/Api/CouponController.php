@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
 use App\Http\Requests\TourRequest;
 use App\Http\Resources\CouponResource;
+use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class CouponController extends Controller
 {
@@ -144,8 +146,8 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         if($coupon) {
-          $delete_coupon =  $coupon->delete();
-            
+            $delete_coupon =  $coupon->delete();
+
             if($delete_coupon) {
                 return response()->json([
                     'data' => [
@@ -162,7 +164,7 @@ class CouponController extends Controller
                 ]);
             }
         }else {
-            
+
             return response()->json([
                 'message' => '404 Not found',
                 'status' => 404
@@ -170,4 +172,51 @@ class CouponController extends Controller
         }
 
     }
+
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
+    public function couponManagementList() {
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon');
+        if($data->status() == 200) {
+
+            $data = json_decode(json_encode($data->json()['data']['coupons']), false);
+            return view('admin.coupons.list', compact('data'));
+        }else{
+            $data = [];
+            return view('admin.coupons.list', compact('data'));
+        }
+    }
+
+    public function couponManagementAdd() {
+        //$tours
+        //$categories
+
+        return view('admin.coupons.add');
+    }
+
+    public function couponManagementEdit(Request $request) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['coupon']), false);
+            return view('admin.coupons.edit', compact('data'));
+        }
+    }
+
+    public function couponManagementDetail(Request $request) {
+        $data = $request->except('_token');
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
+        if($response->status() == 200) {
+            $item = json_decode(json_encode($response->json()['data']['coupon']), false);
+            $html = view('admin.coupons.detail', compact('item'))->render();
+            return response()->json(['html' => $html, 'status' => 200]);
+        }
+    }
+
+    // =================================== Function user ======================================
+
+    public function hasUsedCoupon($userId,$couponId)
+    {
+    return User::find($couponId)->where('user_id',$userId)->exists(); //Trả về true false để kiểm tra có hay chưa
+    }
 }
+
