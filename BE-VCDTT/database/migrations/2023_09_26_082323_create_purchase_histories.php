@@ -18,7 +18,7 @@ return new class extends Migration
 
             // hotfix
             $table->text('name')->nullable();
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
             $table->tinyInteger('gender')->nullable();
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->text('tour_start_destination')->nullable();
             $table->text('tour_end_destination')->nullable();
             $table->text('tour_location')->nullable();
-            $table->text('coupon_info')->nullable();
+            $table->text('coupon_name')->nullable();
             $table->integer('coupon_percentage')->nullable();
             $table->integer('refund_percentage')->nullable();
             $table->integer('coupon_fixed')->nullable();
