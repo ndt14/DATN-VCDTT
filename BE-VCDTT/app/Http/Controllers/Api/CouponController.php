@@ -212,11 +212,5 @@ class CouponController extends Controller
         }
     }
 
-    // =================================== Function user ======================================
-
-    public function hasUsedCoupon($userId,$couponId)
-    {
-    return User::find($couponId)->where('user_id',$userId)->exists(); //Trả về true false để kiểm tra có hay chưa
-    }
 }
 

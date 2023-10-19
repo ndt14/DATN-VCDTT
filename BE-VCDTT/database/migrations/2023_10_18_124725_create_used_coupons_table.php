@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('used_coupons', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->nullable();
-            $table->bigInteger('coupon_code')->nullable();
+            $table->string('coupon_code')->nullable();
             $table->timestamps();
         });
     }
