@@ -19,8 +19,9 @@ class Category extends Model
 
     public function getCategoriesParent($keyword = '', $sql_order = '', $limit = ''){
         $query = $this->select( 'id', 'name', 'parent_id')
-        ->where('parent_id', NULL)
         ->where('name', 'LIKE', '%' . $keyword . '%');
+        // ->where('parent_id', NULL);
+        
         if(!empty($sql_order)){
             $query->orderBy($sql_order);
         }
@@ -34,5 +35,14 @@ class Category extends Model
         return $this->select( 'id', 'name')
         ->where('parent_id', $parentID)
         ->get();
+    }
+
+    public function getNameParent($data) {
+        if($data->parent_id != NULL) {
+            $nameParent = Category::where('parent_id', $data->parent_id)->select('name')->first();
+            return $nameParent['name'];
+        }else {
+            return "Chưa có danh mục cha";
+        }
     }
 }
