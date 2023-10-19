@@ -186,7 +186,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
               <nav id="navigation" className="navigation">
                 <ul>
                   <li className="menu-item-has-children">
-                    <Link to={""}>Trang chủ</Link>
+                    <Link to={"/"}>Trang chủ</Link>
                   </li>
                   <li className="menu-item-has-children">
                     <a href="#">Danh mục</a>
@@ -513,9 +513,9 @@ const [confirmPassword, setConfirmPassword] = useState("");
           </div>
         </div>
       </header>
-      <a id="backTotop" href="#" className="to-top-icon">
+      {/* <a id="backTotop" href="#" className="to-top-icon">
         <i className="fas fa-chevron-up"></i>
-      </a>
+      </a> */}
     </>
   );
 };

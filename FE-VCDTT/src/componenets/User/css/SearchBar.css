@@ -1,0 +1,17 @@
+.ais-SearchBox-submit,
+.ais-SearchBox-reset{
+    display: none !important;
+}
+.ais-SearchBox-input{
+    /* width: 1000px !important; */
+}
+
+/* CSS */
+/* .search-results {
+    display: none;
+  }
+  
+  .input-focused .search-results {
+    display: block;
+  } */
+  

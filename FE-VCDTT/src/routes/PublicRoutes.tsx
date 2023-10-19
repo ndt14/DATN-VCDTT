@@ -17,6 +17,7 @@ import {
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
 import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
+import SearchBar from "../componenets/User/SearchBar";
 
 const PublicRoutes = () => {
   return (
@@ -51,6 +52,7 @@ const PublicRoutes = () => {
       </Route>
 
       <Route path="*" element={<NotFoundPage />}></Route>
+      <Route path="/se" element={<SearchBar />}></Route>
     </Routes>
   );
 };

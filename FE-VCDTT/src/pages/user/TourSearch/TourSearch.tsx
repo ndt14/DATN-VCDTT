@@ -60,17 +60,6 @@ const TourSearch = () => {
         <div className="breadcrumb-outer">
           <div className="container">
             <div className="breadcrumb-content text-center">
-              {/* <h1 className="mb-3">Tour List</h1> */}
-              {/* <nav aria-label="breadcrumb" className="d-block">
-                <ul className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="#">Home</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Tour Lists Rightside
-                  </li>
-                </ul>
-              </nav> */}
             </div>
           </div>
         </div>
@@ -438,24 +427,6 @@ const TourSearch = () => {
                   </div>
                   <div className="sidebar-item mb-4">
                     <h3>Khoảng giá</h3>
-                    {/* <div className="range-slider mt-0">
-                      <p className="text-start mb-2">Price Range</p>
-                      <div
-                        data-min="0"
-                        data-max="2000"
-                        data-unit="$"
-                        data-min-name="min_price"
-                        data-max-name="max_price"
-                        className="range-slider-ui ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                        aria-disabled="false"
-                      >
-                        <span className="min-value">0 $</span>
-                        <span className="max-value">20000 $</span>
-                        <div className="ui-slider-range ui-widget-header ui-corner-all full"></div>
-                      </div>
-                      <div className="clearfix"></div>
-                    </div> */}
-
                     <div>
                       <Range
                         step={100000}
@@ -508,67 +479,6 @@ const TourSearch = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="sidebar-item">
-                    <h3>Related Destinations</h3>
-                    <div className="sidebar-destination">
-                      <div className="row about-slider">
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-4">
-                          <div className="trend-item1">
-                            <div className="trend-image position-relative rounded">
-                              <img
-                                src="images/destination/destination17.jpg"
-                                alt="image"
-                              />
-                              <div className="trend-content d-flex align-items-center justify-content-between position-absolute bottom-0 p-4 w-100 z-index">
-                                <div className="trend-content-title">
-                                  <h5 className="mb-0">
-                                    <a
-                                      href="tour-single.html"
-                                      className="theme1"
-                                    >
-                                      Italy
-                                    </a>
-                                  </h5>
-                                  <h4 className="mb-0 white">Caspian Valley</h4>
-                                </div>
-                                <span className="white bg-theme p-1 px-2 rounded">
-                                  18 Tours
-                                </span>
-                              </div>
-                              <div className="color-overlay"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-4">
-                          <div className="trend-item1">
-                            <div className="trend-image position-relative rounded">
-                              <img
-                                src="images/destination/destination14.jpg"
-                                alt="image"
-                              />
-                              <div className="trend-content d-flex align-items-center justify-content-between position-absolute bottom-0 p-4 w-100 z-index">
-                                <div className="trend-content-title">
-                                  <h5 className="mb-0">
-                                    <a
-                                      href="tour-single.html"
-                                      className="theme1"
-                                    >
-                                      Tokyo
-                                    </a>
-                                  </h5>
-                                  <h4 className="mb-0 white">Japan</h4>
-                                </div>
-                                <span className="white bg-theme p-1 px-2 rounded">
-                                  21 Tours
-                                </span>
-                              </div>
-                              <div className="color-overlay"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
