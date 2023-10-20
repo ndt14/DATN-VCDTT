@@ -36,7 +36,7 @@ return new class extends Migration
             $table->text('tour_start_destination')->nullable();
             $table->text('tour_end_destination')->nullable();
             $table->text('tour_location')->nullable();
-            $table->text('coupon_info')->nullable();
+            $table->text('coupon_name')->nullable();
             $table->integer('coupon_percentage')->nullable();
             $table->integer('refund_percentage')->nullable();
             $table->integer('coupon_fixed')->nullable();

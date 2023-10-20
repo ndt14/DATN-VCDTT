@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Resources\PurchaseHistoryResource;
 use App\Notifications\PurchaseNotification;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Resources\CouponResource;
+use App\Http\Resources\PurchaseHistoryResource;
+use App\Models\Coupon;
+use App\Models\UsedCoupon;
+use Illuminate\Support\Str;
+
 
 class PurchaseHistoryController extends Controller
 {
@@ -34,18 +40,16 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $purchaseHistory = PurchaseHistory::create($request->all());
         $users = User::where('is_admin',1)->get();
         Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
-
-        $users2 = User::where('is_admin',2)->get();
-        Notification::send($users2, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
-
+        $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
+      
         if ($purchaseHistory->id) {
-
+            $coupon = UsedCoupon::create($request->only(['user_id','coupon_code']));
             return response()->json([
                 'data' => [
-                    'purchase_history' => new PurchaseHistoryResource($purchaseHistory)
+                    'purchase_history' => new PurchaseHistoryResource($purchaseHistory),
+                    'coupon' => new CouponResource($coupon),
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -86,7 +90,7 @@ class PurchaseHistoryController extends Controller
         }
     }
 
-    public function showById(string $id) //show theo user_id
+    public function showById(string $id) //show theo id đơn hàng
     {
         //
         $purchaseHistory = PurchaseHistory::where('id', $id)->first();
@@ -172,7 +176,6 @@ class PurchaseHistoryController extends Controller
     {
         $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         return view('admin.purchase_histories.edit', compact('items'));
-        // dd($items);
     }
 
     public function purchaseHistoryManagementDetail(Request $request)
@@ -181,5 +184,27 @@ class PurchaseHistoryController extends Controller
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
+    }
+
+    public function check_coupon(Request $request){
+        if($request->user_id!=null){
+            if($request->coupon_code!=null){
+                $code = Str::upper($request->coupon_code);
+                if(Coupon::select()->where('code',$code)->exists()){
+                if(UsedCoupon::select()->where('user_id',$request->user_id)->where('coupon_code',$code)->exists()){
+                    return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
+                }else{
+                    $coupon = Coupon::select()->where('code',$code)->first();
+                    return response()->json([
+                        'coupon' => new CouponResource($coupon),
+                        'message' => 'This coupon code is valid',
+                        'status' => 200
+                ]);
+                }
+                }else{
+                    return response()->json(['message' => 'This coupon code is unvalid', 'status' => 500]);
+                }
+            }
+        }
     }
 }

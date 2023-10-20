@@ -51,9 +51,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Category
     Route::get('/category', [CategoryController::class, 'index']);
     Route::post('/category-add', [CategoryController::class, 'add']);
-    Route::post('/category-store', [CategoryController::class, 'store']);
+    Route::post('/category-store', [CategoryController::class, 'store'])->name('api.category.store');
     Route::get('/category-show/{id}', [CategoryController::class, 'show']);
-    Route::put('/category-edit/{id}', [CategoryController::class, 'update']);
+    Route::put('/category-edit/{id}', [CategoryController::class, 'update'])->name('api.category.edit');
     Route::delete('/category-destroy/{id}', [CategoryController::class, 'destroy']);
 
     // Coupon
@@ -76,7 +76,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/user-store', [UserController::class, 'store']);
     Route::get('/user-show/{id}', [UserController::class, 'show']);
-    Route::put('/user-edit/{id}', [UserController::class, 'update']);
+    Route::get('/user-search', [UserController::class, 'search_user']);
+    Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('api.user.edit');
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
     //PurchaseHistory
@@ -97,3 +98,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::match(['get', 'post'], '/vnpay-payment/{id}',[PaymentController::class,'vnpayPayment']); //pay route
     // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
+
+    Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);

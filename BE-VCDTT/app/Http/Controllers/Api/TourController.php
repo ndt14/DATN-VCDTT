@@ -101,7 +101,7 @@ class TourController extends Controller
     }
 
     public function store(TourRequest $request)
-    {   
+    {
         $imgArray = $request->input('imgArray');
         $tour = Tour::create($request->all());
         if ($tour->id) {
@@ -115,7 +115,7 @@ class TourController extends Controller
                     ];
                     $newImage = Image::create($data);
                     $images[] = $newImage;
-                }                
+                }
             }
             return response()->json([
                 'data' => [
@@ -154,6 +154,9 @@ class TourController extends Controller
         $firstTourToCate = TourToCategory::select('id', 'cate_id')
             ->where('tour_id', '=', $id)
             ->get();
+
+        $listCoupon = Coupon::select()->where('tour_id', '=', $id)
+        ->get();
 
         if ($firstTourToCate->isNotEmpty()) {
             $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
@@ -212,7 +215,8 @@ class TourController extends Controller
                         'categories' => new CategoryResource($listCate),
                         'images' => new ImageResource($listImage),
                         'tourToCategories' => new TourToCategoryResource($listTourToCate),
-                        'toursSameCate' => new TourResource($toursSameCate)
+                        'toursSameCate' => new TourResource($toursSameCate),
+                        'coupons' => new CouponResource($listCoupon)
                     ],
                     'message' => 'OK',
                     'status' => 200

@@ -2,10 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
+
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Http\Controllers\Api\UserController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +47,16 @@ Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list'
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
+Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');
+Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
+Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
+
+Route::get('/category', [CategoryController::class,'cateManagementList'])->name('category.list');
+Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add');
+Route::get('/category/edit/{id}', [CategoryController::class,'cateManagementEdit'])->name('category.edit');
+
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 

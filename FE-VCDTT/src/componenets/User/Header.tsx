@@ -6,6 +6,9 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
+import { useFormik } from "formik";
+import '../User/css/Header.css'
+import { loginSchema, registrationSchema } from "../../schemas/auth.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
@@ -21,7 +24,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
 
 // Thêm các trường thông tin cần thiết khác nếu cần
 
-  console.log(email);
+  // console.log(email);
 
   const [showSignIn, setShowSignIn] = useState(false);
   // const [showSignUp, setShowSignUp] = useState(false);
@@ -59,43 +62,46 @@ const [confirmPassword, setConfirmPassword] = useState("");
     setIsButtonSignUpClicked(true);
   };
 
-  const handleSignIn = async (event) => {
-    event.preventDefault();
+  const handleSignIn = async () => {
+    // event.preventDefault();
     try {
-      const { data } = await login({ email, password });
-      // console.log(data);
-console.log( data);
-
+      const { data } = await login({
+        email: loginFormik.values.email, // Access email value from Formik
+        password: loginFormik.values.password, // Access password value from Formik
+      });
+      console.log(data);
+      
       if (data && data.user) {
-        // Thành công: Lưu thông tin đăng nhập và token
+        // Login successful
         setIsLoggedIn(true);
         setShowSignIn(false);
         localStorage.setItem("user", JSON.stringify(data.user));
-        console.log(data.user);
-        
         localStorage.setItem("accessToken", data.token);
         alert("Đăng nhập thành công!");
       } else {
-        alert("Đăng nhập thất bại!");
+        // Invalid credentials or other login error
+        alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
       }
     } catch (error) {
       console.error("Lỗi đăng nhập: ", error);
+      alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
     }
   };
+  
   const handleSignOut = () => {
     alert("Đăng xuất thành công");
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
   };
-  const handleRegister = async (event) => {
-    event.preventDefault();
+  const handleRegister = async () => {
+    // event.preventDefault();
     const variables ={
-      email: registerEmail,
-      password: registerPassword,
-      name: registerName,
-      phone_number: registerPhone,
-      c_password: confirmPassword,
+      email: registrationFormik.values.email,
+      password: registrationFormik.values.password,
+      name: registrationFormik.values.name,
+      phone_number: registrationFormik.values.phone_number,
+      c_password: registrationFormik.values.c_password,
     }
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
@@ -105,20 +111,18 @@ console.log( data);
   register(variables)
   .then((response) => {
     // Handle the response here
-    setIsLoggedIn(true);
-    setShowSignIn(false);
-    console.log(response);
-    
-    const userName = response?.data.user;
-    // console.log(userName);
-    
-    // console.log(userName);
-    
-    localStorage.setItem("user", JSON.stringify(userName));
-    // localStorage.setItem("accessToken", response.token);
-    alert("đăng ký thành công");
-    // console.log(userName);
-
+    if(response && response?.data.user){
+      setIsLoggedIn(true);
+      setShowSignIn(false);
+      
+      const userName = response?.data.user;
+      localStorage.setItem("user", JSON.stringify(userName));
+      // localStorage.setItem("accessToken", response.token);
+      alert("đăng ký thành công");
+      // console.log(userName);
+  }else{
+    alert("đăng ký thất bại")
+  }
     
   })
   .catch((error) => {
@@ -126,12 +130,31 @@ console.log( data);
     console.error(error);
   });
   };
-  
+   //validate
+   const loginFormik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: loginSchema,
+    onSubmit: handleSignIn, // Your handleSignIn function
+  });
+  const registrationFormik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      phone_number: "",
+      c_password: "",
+    },
+    validationSchema: registrationSchema,
+    onSubmit: handleRegister, // Your handleRegister function
+  });
 
   const userData = JSON.parse(localStorage.getItem("user"));
 
   const userName = userData?.name;
-  console.log(userName);
+  // console.log(userName);
   
   // const userData = JSON.parse(storedData);
   // const  = userData?.user?.email;
@@ -263,19 +286,24 @@ console.log( data);
                       </div>
                       {showSignInForm && (
                         <div>
-                          <form onSubmit={handleSignIn}>
+                          <form onSubmit={loginFormik.handleSubmit}>
                             <label htmlFor="" className="fw-bold">
                               Tài khoản <span className="text-danger">*</span>
                             </label>
                             <br />
                             <input
                               className="w-100 my-2"
-                              type="text"
+                              type="email"
                               placeholder="Email"
                               name="email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                            />
+                              value={loginFormik.values.email}
+                              onChange={loginFormik.handleChange}
+                              onBlur={loginFormik.handleBlur}
+                                                        />
+                                                        {loginFormik.touched.email && loginFormik.errors.email && (
+                              <div className="text-danger">{loginFormik.errors.email}</div>
+                            )}
+                            
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
                             </label>
@@ -285,9 +313,13 @@ console.log( data);
                               type="password"
                               placeholder="Password"
                               name="password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
+                              value={loginFormik.values.password}
+                              onChange={loginFormik.handleChange}
+                              onBlur={loginFormik.handleBlur}
                             />
+                            {loginFormik.touched.password && loginFormik.errors.password && (
+  <div className="text-danger">{loginFormik.errors.password}</div>
+)}
                             <button
                               type="submit"
                               className="w-100 button-primary text-white py-3 my-3 border-0 rounded"
@@ -318,7 +350,7 @@ console.log( data);
                       )}
                       {showSignUpForm && (
                         <div>
-                          <form onSubmit={handleRegister}>
+                          <form onSubmit={registrationFormik.handleSubmit}>
                           <label htmlFor="" className="fw-bold">
                               Tên tài khoản <span className="text-danger">*</span>
                             </label>
@@ -328,9 +360,13 @@ console.log( data);
                               type="text"
                               placeholder="Tên tài khoản"
                               name="name"
-                              value={registerName}
-                              onChange={(e) => setRegisterName(e.target.value)}
+                              value={registrationFormik.values.name}
+                              onChange={registrationFormik.handleChange}
+                              onBlur={registrationFormik.handleBlur}
                             />
+                            {registrationFormik.touched.name && registrationFormik.errors.name && (
+                              <div className="text-danger">{registrationFormik.errors.name}</div>
+                            )}
                             <label htmlFor="" className="fw-bold">
                               Email <span className="text-danger">*</span>
                             </label>
@@ -340,9 +376,13 @@ console.log( data);
                               type="text"
                               placeholder="Email"
                               name="email"
-                              value={registerEmail}
-                              onChange={(e) => setRegisterEmail(e.target.value)}
+                              value={registrationFormik.values.email}
+                              onChange={registrationFormik.handleChange}
+                              onBlur={registrationFormik.handleBlur}
                             />
+                            {registrationFormik.touched.email && registrationFormik.errors.email && (
+                              <div className="text-danger">{registrationFormik.errors.email}</div>
+                            )}
                             <label htmlFor="" className="fw-bold">
                               Số điện thoại{" "}
                               <span className="text-danger">*</span>
@@ -351,11 +391,16 @@ console.log( data);
                             <input
                               className="w-100 my-2"
                               type="number"
+                              min={0}
                               placeholder="Số điện thoại"
                               name="phone_number"
-                              value={registerPhone}
-                              onChange={(e) => setRegisterPhone(e.target.value)}
+                              value={registrationFormik.values.phone_number}
+                              onChange={registrationFormik.handleChange}
+                              onBlur={registrationFormik.handleBlur}
                             />
+                            {registrationFormik.touched.phone_number && registrationFormik.errors.phone_number && (
+                              <div className="text-danger">{registrationFormik.errors.phone_number}</div>
+                            )}
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
                             </label>
@@ -365,9 +410,13 @@ console.log( data);
                               type="password"
                               placeholder="Nhập mật khẩu"
                               name="password"
-                              value={registerPassword}
-                              onChange={(e) => setRegisterPassword(e.target.value)}
+                              value={registrationFormik.values.password}
+                              onChange={registrationFormik.handleChange}
+                              onBlur={registrationFormik.handleBlur}
                             />
+                            {registrationFormik.touched.password && registrationFormik.errors.password && (
+                              <div className="text-danger">{registrationFormik.errors.password}</div>
+                            )}
                             <label htmlFor="" className="fw-bold">
                               Nhập lại mật khẩu{" "}
                               <span className="text-danger">*</span>
@@ -378,9 +427,13 @@ console.log( data);
                               type="password"
                               placeholder="Nhập lại mật khẩu"
                               name="c_password"
-                              value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              value={registrationFormik.values.c_password}
+                              onChange={registrationFormik.handleChange}
+                              onBlur={registrationFormik.handleBlur}
                             />
+                            {registrationFormik.touched.c_password && registrationFormik.errors.c_password && (
+                              <div className="text-danger">{registrationFormik.errors.c_password}</div>
+                            )}
                             <input type="checkbox" />
                             <span className="ml-2">
                               Tôi đồng ý với{" "}

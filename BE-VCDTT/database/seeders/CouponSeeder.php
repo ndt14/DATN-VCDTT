@@ -19,9 +19,10 @@ class CouponSeeder extends Seeder
         for ($i = 1; $i < 20; $i++) {
             DB::table('coupons')->insert([
                 'name' => 'dcm' . $i,
-                'description' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur quae e sequi sed dolores tempore illum obcaecati voluptatem libero minus voluptatibus? Illum facilis quod natus esse fugiat excepturi molestiae nobis?',
+                // 'description' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur quae e sequi sed dolores tempore illum obcaecati voluptatem libero minus voluptatibus? Illum facilis quod natus esse fugiat excepturi molestiae nobis?',
+                'code' => 'CODE' . $i,
                 'start_date' => $faker->dateTimeBetween('- 1 year', 'now'),
-                'end_date' => $faker->dateTimeBetween('now' ,'+ 1 year'),
+                'expiration_date' => $faker->dateTimeBetween('now' ,'+ 1 year'),
                 'tour_id' => $faker->numberBetween(1,20),
                 'cate_id' => $faker->numberBetween(1,20),
                 'percentage_price' => $faker->randomNumber(2,true),

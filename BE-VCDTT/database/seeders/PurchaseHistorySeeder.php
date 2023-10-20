@@ -40,7 +40,7 @@ class PurchaseHistorySeeder extends Seeder
                 'tour_start_destination' => $faker->sentence(3),
                 'tour_end_destination' => $faker->sentence(3),
                 'tour_location' => $faker->sentence(),
-                'coupon_info' => $faker->sentence(),
+                'coupon_name' => $faker->sentence(),
                 'coupon_percentage' => $faker->randomNumber(2, true),
                 'refund_percentage' => $faker->randomNumber(2, true),
                 'coupon_fixed' => $faker->randomNumber(5, true),
