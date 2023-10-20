@@ -4,7 +4,7 @@
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
-            <div class="col-12 ">
+            <!-- <div class="col-12 ">
                 @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
@@ -17,7 +17,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
-            </div>
+            </div> -->
             <div class="col">
                 <!-- Page pre-title -->
                 <!-- <div class="page-pretitle">
@@ -60,7 +60,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmAdd" class="card" action="{{route('category.store')}}" method="POST">
+                <form id="frmAdd" class="card" action="{{route('api.category.store')}}" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
@@ -77,10 +77,9 @@
 
                             <select class="form-select" name="parent_id" {{ count($data) <= 0 ? 'disabled' : '' }}>
                                 <option value="">Choose</option>
-                               @foreach($data as $item)
-                               <option value="{{$item->id}}">{{$item->name}}</option>
-                               @endforeach
-                               
+                                @foreach($data as $item)
+                                <option value="{{$item->id}}">{{$item->name}}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -95,7 +94,7 @@
 </div>
 @endsection
 @section('page_js')
-{{-- <script type="text/javascript">
+<script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {
             let options = {
@@ -127,5 +126,5 @@
             return false;
         });
     }
-</script> --}}
+</script>
 @endSection

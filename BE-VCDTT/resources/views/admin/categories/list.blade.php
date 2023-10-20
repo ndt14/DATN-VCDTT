@@ -34,7 +34,7 @@
                             </svg>
                             Add new
                         </a>
-                        <a href="{{ url('/category-add') }}" class="btn btn-primary d-sm-none btn-icon">
+                        <a href="{{ route('category.add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -92,38 +92,76 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
+                                        <th class="w-1">Child count</th>
                                         <th class="w-1">ID</th>
                                         <th>Name</th>
-                                        <th>Parent Category</th>
+                                        <th>Create at</th>
+                                        <th>Last update</th>
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($data)
-                                        @foreach ($data as $data)
+                                        @foreach ($data as $item)
                                             <tr>
-                                                <td><span class="text-muted">{{ $data->id }}</span></td>
+                                                <td>{{ count($item->child) != 0 ? count($item->child)." child" : "" }}</td>
+                                                <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->name, 70) }}</a>
+                                                {{ string_truncate($item->name, 70) }}
                                                 </td>
                                                 
                                             <td>
-                                                {{ string_truncate($data->parent_name, 70) }}
+                                                {{ time_format($item->created_at) }}
                                             </td>
-                                              
+                                            <td>
+                                                {{ time_format($item->updated_at) }}
+                                            </td>
                                                 <td class="text-end">
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
                                                             data-bs-toggle="dropdown">Actions</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="{{ route('category.edit', ['id' => $data->id]) }}">Edit</a>
-                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('category.edit', ['id' => $item->id]) }}">Edit</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $item->id}})">Remove</a>
                                                         </div>
                                                     </span>
                                                 </td>
                                             </tr>
+                                            @if($item->child)
+                                                @foreach ($item->child as $child)
+                                                <tr>
+                                                <td class="bg-secondary-subtle text-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-corner-down-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M6 6v6a3 3 0 0 0 3 3h10l-4 -4m0 8l4 -4"></path>
+                                                    </svg>
+                                                </td>
+                                                <td>
+                                                    <span class="text-muted">{{ $child->id }}</span></td>
+                                                <td>
+                                                    {{ string_truncate($child->name, 70) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($child->created_at) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($child->updated_at) }}
+                                                </td>
+                                                    <td class="text-end">
+                                                        <span class="dropdown">
+                                                            <button class="btn dropdown-toggle align-text-top"
+                                                                data-bs-boundary="viewport"
+                                                                data-bs-toggle="dropdown">Actions</button>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a class="dropdown-item" href="{{ route('category.edit', ['id' => $child->id]) }}">Edit</a>
+                                                                <a class="dropdown-item" href="javascript: removeItem({{ $child->id}})">Remove</a>
+                                                            </div>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
                                         @endforeach
                                     @else
                                         <tr>
@@ -147,9 +185,10 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
                                 bản ghi</p>
+                                
                             <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -157,13 +196,26 @@
                                             <path d="M15 6l-6 6l6 6"></path>
                                         </svg>prev</a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                </li>
+                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
+
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                    </li>
+
+                                @endfor
+                                @if($data->currentPage()+3 != $data->lastPage())
                                 <li class="page-item">
-                                    <a class="page-link" href="#">
+                                        ...
+                                </li>
+                                @endif
+                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url($page) }}">{{ $data->lastPage() }}</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">

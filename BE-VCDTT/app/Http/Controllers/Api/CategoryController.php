@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class CategoryController extends Controller
@@ -17,12 +19,12 @@ class CategoryController extends Controller
 
         $keyword = trim($request->keyword) ? trim($request->keyword) : '';
         $limit = intval($request->limit);
-        $sql_order = 'name';
+        $sql_order = 'updated_at';
 
         $categoriesParent = $categories->getCategoriesParent($keyword, $sql_order, $limit);
 
         foreach($categoriesParent as $parent){
-            $parent->Child = $categories->getCategoriesChild($parent->id);
+            $parent->child = $categories->getCategoriesChild($parent->id);
         }
 
         return response()->json(
@@ -63,7 +65,7 @@ class CategoryController extends Controller
                     'category' => new CategoryResource($category)
                 ],
                 'message' => 'OK',
-                'status' => 201
+                'status' => 200
             ]);
         }else {
             return response()->json([
@@ -152,54 +154,32 @@ class CategoryController extends Controller
 
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
     
-    public function cateManagementList() {
+    public function cateManagementList()
+    {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category');
-        if($response->status() == 200) {
+        if ($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
-            foreach($data as $key => $item ) {
-                if($item['parent_id'] == NULL) {
-                    $data[$key]['parent_name'] = "Chưa có danh mục cha";
-                }else {
-                    $nameParent = Category::where('id', $item['parent_id'])->select('name')->first();
-                    $data[$key]['parent_name'] = $nameParent['name'];
-                }
-            }
-            $data = json_decode(json_encode($data),false);
-            return view('admin.categories.list', compact('data')); 
-        }else {
+            $data = json_decode(json_encode($data), false);
+        } else {
             $data = [];
-            return view('admin.categories.list', compact('data')); 
         }
-        
-    }
+        $perPage = 10; // Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url());
+        return view('admin.categories.list', compact('data'));
+    }   
 
     public function cateManagementAdd() {
         $data = Category::whereNull('parent_id')->get();
         return view('admin.categories.add', compact('data'));
     }
 
-    public function cateManagementStore(CategoryRequest $request) {
-        $data = $request->all();
-        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/category-store', $data);
-        if($response->status() == 200) {
-            return redirect()->route('category.add')->with('success','Add data Success');
-        }else {
-            return redirect()->route('category.add')->with('fail','Add data Fail');
-        }
-    }
 
     public function cateManagementEidt(Request $request, $id) {
 
-        if($request->isMethod('POST')) {
-
-            $data = $request->all();
-            $response = Http::put("http://be-vcdtt.datn-vcdtt.test/api/category-edit/{$id}", $data);
-            if($response->status() == 200) {
-                return redirect()->route('category.edit', ['id' => $id])->with('success','Edit data Success');
-            }else {
-                return redirect()->route('category.edit', ['id' => $id])->with('fail','Edit data Fail');
-            }
-        }
         $listCateParent = Category::whereNull('parent_id')->get();
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category-show/'.$id);
         if($response->status() == 200) {

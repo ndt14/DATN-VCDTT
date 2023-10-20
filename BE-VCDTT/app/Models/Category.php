@@ -18,12 +18,12 @@ class Category extends Model
     ];
 
     public function getCategoriesParent($keyword = '', $sql_order = '', $limit = ''){
-        $query = $this->select( 'id', 'name', 'parent_id')
-        ->where('name', 'LIKE', '%' . $keyword . '%');
-        // ->where('parent_id', NULL);
+        $query = $this->select( 'id', 'name', 'parent_id', 'created_at', 'updated_at')
+        ->where('name', 'LIKE', '%' . $keyword . '%')
+        ->where('parent_id', NULL);
         
         if(!empty($sql_order)){
-            $query->orderBy($sql_order);
+            $query->orderBy($sql_order, 'DESC');
         }
         if(!empty($limit)){
             $query->limit($limit);
@@ -32,7 +32,7 @@ class Category extends Model
     }
 
     public function getCategoriesChild($parentID = ''){
-        return $this->select( 'id', 'name')
+        return $this->select( 'id', 'name','created_at', 'updated_at')
         ->where('parent_id', $parentID)
         ->get();
     }
