@@ -71,11 +71,11 @@
 
                                             <div class="col text-truncate">
                                                 <table class="table">
-                                                        <tr>
-                                                            <td>Trạng thái</td>
-                                                            <td>Mã giao dịch</td>
-                                                            <td>Thông báo</td>
-                                                        </tr>
+                                                    <tr>
+                                                        <td>Trạng thái</td>
+                                                        <td>Mã giao dịch</td>
+                                                        <td>Thông báo</td>
+                                                    </tr>
                                                     @foreach ($users->notifications as $notification)
                                                         <tr>
                                                             <td class="d-flex justify-content-center">
