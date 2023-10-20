@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\UserController;
@@ -47,7 +48,9 @@ Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])
 Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
 Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
 
-
+Route::get('/category', [CategoryController::class,'cateManagementList'])->name('category.list');
+Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add');
+Route::get('/category/edit/{id}', [CategoryController::class,'cateManagementEdit'])->name('category.edit');
 
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
