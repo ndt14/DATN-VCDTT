@@ -181,10 +181,10 @@
                     </div>
                     <div class="mb-3 col-3">
                         <div class="form-label">Mã giảm giá</div>
-                        <input name="coupon_info" type="text" class="form-control"
-                            placeholder="Nhập mã giảm giá" value="{{ $item['coupon_info'] }}" disabled>
+                        <input name="coupon_name" type="text" class="form-control"
+                            placeholder="Nhập mã giảm giá" value="{{ $item['coupon_name'] }}" disabled>
                         <span class="text-danger d-flex justify-content-start">
-                            @error('coupon_info')
+                            @error('coupon_name')
                                 {{ $message }}
                             @enderror
                         </span>
