@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 class CategoryController extends Controller
 {
@@ -16,12 +19,12 @@ class CategoryController extends Controller
 
         $keyword = trim($request->keyword) ? trim($request->keyword) : '';
         $limit = intval($request->limit);
-        $sql_order = 'name';
+        $sql_order = 'updated_at';
 
         $categoriesParent = $categories->getCategoriesParent($keyword, $sql_order, $limit);
 
         foreach($categoriesParent as $parent){
-            $parent->Child = $categories->getCategoriesChild($parent->id);
+            $parent->child = $categories->getCategoriesChild($parent->id);
         }
 
         return response()->json(
@@ -62,7 +65,7 @@ class CategoryController extends Controller
                     'category' => new CategoryResource($category)
                 ],
                 'message' => 'OK',
-                'status' => 201
+                'status' => 200
             ]);
         }else {
             return response()->json([
@@ -77,18 +80,24 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        $categories = new Category;
-        $category = $categories->find($id)->get();
+
+        // Vì để thực hiện phần show info để sửa, mình buộc phải comment dòng của bạn lại, có gì
+        // ae mình trao đổi lại sau nhé
+
+        // $categories = new Category;
+        // $category = $categories->find($id)->first();
+        $category = Category::find($id);
         if (!$category) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
-        foreach($category as $parent){
-            $parent->Child = $categories->getCategoriesChild($parent->id);
-        }
+        // foreach($category as $parent){
+        //     $parent->Child = $categories->getCategoriesChild($parent->id);
+        // }
+       
         return response()->json(
             [
                 'data' => [
-                'category' => CategoryResource::collection($category)
+                'category' => new CategoryResource($category)
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -141,4 +150,45 @@ class CategoryController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
+
+
+    # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
+    
+    public function cateManagementList()
+    {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category');
+        if ($response->status() == 200) {
+            $data = $response->json()['data']['categoriesParent'];
+            $data = json_decode(json_encode($data), false);
+        } else {
+            $data = [];
+        }
+        $perPage = 10; // Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url());
+        return view('admin.categories.list', compact('data'));
+    }   
+
+    public function cateManagementAdd() {
+        $data = Category::whereNull('parent_id')->get();
+        return view('admin.categories.add', compact('data'));
+    }
+
+
+    public function cateManagementEidt(Request $request, $id) {
+
+        $listCateParent = Category::whereNull('parent_id')->get();
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category-show/'.$id);
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['category']));
+        return view('admin.categories.edit', compact('data','listCateParent'));
+        }else {
+            return redirect()->route('category.list');
+        }
+    }
+
+    
 }

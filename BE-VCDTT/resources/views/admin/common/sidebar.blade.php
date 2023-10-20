@@ -98,6 +98,18 @@
               </span>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('category.list')}}" >
+              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="fa-brands fa-microsoft"></i>
+              </span>
+              <span class="nav-link-title">
+                Categories
+              </span>
+            </a>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="{{route('user.list')}}" >
               <span class="nav-link-icon d-md-none d-lg-inline-block">

@@ -24,7 +24,7 @@
                     Overview
                 </div> -->
                 <h2 class="page-title">
-                    Faqs management
+                    Categories management
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -32,7 +32,7 @@
                 <div class="btn-list">
                    
                       
-                        <a href="{{route('faq.list')}}" class="btn btn-default d-none d-sm-inline-block">
+                        <a href="{{route('category.list')}}" class="btn btn-default d-none d-sm-inline-block">
                           
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -42,7 +42,7 @@
                             </svg>
                             Back
                         </a>
-                        <a href="{{url('/faq')}}" class="btn btn-default d-sm-none btn-icon">
+                        <a href="{{url('/category')}}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M5 12l14 0"></path>
@@ -60,26 +60,28 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmAdd" class="card" action="/api/faq-store" method="POST">
+                <form id="frmAdd" class="card" action="{{route('category.edit', ['id' => $data->id])}}" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Question</label>
-                            <input type="text" name="question" class="form-control" placeholder="Enter question" value="">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter question" value="{{$data->name}}">
                             <span class="text-danger d-flex justify-content-start">
-                                @error('question')
+                                @error('name')
                                 {{ $message }}
                                 @enderror
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Answer</label>
-                            <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10"></textarea>
-                            <span class="text-danger d-flex justify-content-start">
-                                @error('answer')
-                                {{ $message }}
-                                @enderror
-                            </span>
+                            <label class="form-label">Parent Category</label>
+
+                            <select class="form-select" name="parent_id" {{ count($listCateParent) <= 0 ? 'disabled' : '' }}>
+                                <option value="">Chưa thuộc danh mục cha nào</option>
+                               @foreach($listCateParent as $item)
+                               <option value="{{$item->id}}" {{$data->parent_id == $item->id ? 'selected' : ''}}>{{$item->name}}</option>
+                               @endforeach
+                               
+                            </select>
                         </div>
 
                     </div>
@@ -93,7 +95,7 @@
 </div>
 @endsection
 @section('page_js')
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {
             let options = {
@@ -125,5 +127,5 @@
             return false;
         });
     }
-</script>
+</script> --}}
 @endSection
