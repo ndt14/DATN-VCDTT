@@ -17,6 +17,8 @@ import {
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
 import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
+import UserTour from "../pages/user/UserTour/UserTour";
+import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
 
 const PublicRoutes = () => {
   return (
@@ -41,7 +43,9 @@ const PublicRoutes = () => {
         <Route path="signin" element={<HomePage />} />
         <Route path="signup" element={<HomePage />} />
         <Route path="search" element={<TourSearch />} />
-        <Route path="profile" element={<UserProfile />} />
+        <Route path="user/profile" element={<UserProfile />} />
+        <Route path="user/tours" element={<UserTour />} />
+        <Route path="user/favorite" element={<UserFavorite />} />
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
