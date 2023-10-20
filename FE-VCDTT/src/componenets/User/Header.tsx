@@ -9,10 +9,14 @@ import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
+import { useGetCategoriesQuery } from "../../api/category.js";
+import { Category } from "../../interfaces/Category.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
+  const {data:dataCate} = useGetCategoriesQuery();
+  console.log(dataCate?.data.categoriesParent)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -185,12 +189,24 @@ const Header = () => {
               <nav id="navigation" className="navigation">
                 <ul>
                   <li className="menu-item-has-children">
-                    <Link to={""}>Trang chủ</Link>
+                    <Link to={"/"}>Trang chủ</Link>
                   </li>
                   <li className="menu-item-has-children">
                     <a href="#">Danh mục</a>
                     <ul>
-                      <li>
+                    {dataCate?.data.categoriesParent.map(({id,name}:Category)=>{
+                      return(
+                        <li key={id}>
+                          <Link to={`/search/${id}`}>{name}</Link>
+                        {/* <a href="destination.html"></a> */}
+                      </li>
+                      )
+                    })
+
+                    }
+                    </ul>
+
+                      {/* <li>
                         <a href="destination.html">Miền Bắc</a>
                       </li>
                       <li>
@@ -205,7 +221,7 @@ const Header = () => {
                       <li>
                         <a href="tour-cart.html">Vùng biển</a>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
                   <li className="menu-item-has-children">
                     <Link to="blogs">Bài viết</Link>
@@ -537,9 +553,9 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <a id="backTotop" href="#" className="to-top-icon">
+      {/* <a id="backTotop" href="#" className="to-top-icon">
         <i className="fas fa-chevron-up"></i>
-      </a>
+      </a> */}
     </>
   );
 };

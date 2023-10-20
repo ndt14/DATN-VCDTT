@@ -19,6 +19,7 @@ import UserProfile from "../pages/user/UserProfile/UserProfile";
 import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
 import UserTour from "../pages/user/UserTour/UserTour";
 import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
+import SearchBar from "../componenets/User/SearchBar";
 
 const PublicRoutes = () => {
   return (
@@ -42,7 +43,7 @@ const PublicRoutes = () => {
         <Route path="purchase_histories" element={<HomePage />} />
         <Route path="signin" element={<HomePage />} />
         <Route path="signup" element={<HomePage />} />
-        <Route path="search" element={<TourSearch />} />
+        <Route path="search/:id" element={<TourSearch />} />
         <Route path="user/profile" element={<UserProfile />} />
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />
@@ -55,6 +56,7 @@ const PublicRoutes = () => {
       </Route>
 
       <Route path="*" element={<NotFoundPage />}></Route>
+      <Route path="/se" element={<SearchBar/>}></Route>
     </Routes>
   );
 };
