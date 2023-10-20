@@ -31,7 +31,7 @@ const TourSearch = () => {
     setIsButtonListClicked(true);
     setIsButtonGridClicked(false);
   };
-  const backgroundImage = "../../../../assets/images/bg/bg1.jpg";
+  
   return (
     <div>
       <section className="inner-banner-wrap">
