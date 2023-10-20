@@ -18,13 +18,12 @@ return new class extends Migration
 
             // hotfix
             $table->text('name')->nullable();
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
             $table->tinyInteger('gender')->nullable();
-            $table->string('honorific')->nullable(); //danh xưng
             $table->text('suggestion')->nullable(); //Đề xuất
-            $table->string('order_id')->nullable(); //mã đơn hàng
+            $table->string('transaction_id')->nullable(); //mã giao dịch
 
             // $table->string('user_name')->nullable();
             $table->text('tour_name')->nullable();

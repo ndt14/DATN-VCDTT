@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
-use App\Models\PurchaseHistory;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +80,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 
     //PurchaseHistory
+    Route::get('/purchase-history', [PurchaseHistoryController::class, 'index']);
     Route::post('/purchase-history-store', [PurchaseHistoryController::class, 'store']);
+    Route::get('/purchase-history-show/{id}', [PurchaseHistoryController::class, 'showById']);
+    Route::get('/purchase-history-show-by-user/{user_id}', [PurchaseHistoryController::class, 'showByUser']); //show tất cả hóa đơn của người dùng
+    Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'update'])->name('api.purchase_histories.edit');
+    Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
 
     //Auth
     Route::post('/register', [RegisterController::class, 'register']);
