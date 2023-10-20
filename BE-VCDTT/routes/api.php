@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
-
+use App\Http\Controllers\Api\TourToCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
     Route::put('/tour-edit/{id}', [TourController::class, 'update'])->name('api.tour.edit');
     Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
-
+    // Route::get('/tour/cate/{id}', [TourToCategoryController::class,'show']);
 
     //Blog
     Route::get('/blog', [BlogController::class, 'index']);
