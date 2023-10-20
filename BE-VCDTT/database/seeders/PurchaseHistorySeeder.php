@@ -27,7 +27,8 @@ class PurchaseHistorySeeder extends Seeder
                 'address' => $faker->address(),
                 'phone_number' => $faker->phoneNumber(),
                 'gender' => $faker->numberBetween(1,3),
-                'honorific' => 'Ông' ,
+                'transaction_id' => $faker->randomNumber(8, true),
+
                 'suggestion' => $faker->sentence(20),
                 'tour_name' => $faker->sentence(10),
                 'tour_duration' => $faker->randomDigit(),
