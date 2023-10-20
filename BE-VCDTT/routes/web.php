@@ -6,7 +6,6 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FAQController;
-use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\UserController;
