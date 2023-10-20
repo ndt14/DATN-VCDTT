@@ -43,7 +43,7 @@ const PublicRoutes = () => {
         <Route path="purchase_histories" element={<HomePage />} />
         <Route path="signin" element={<HomePage />} />
         <Route path="signup" element={<HomePage />} />
-        <Route path="search" element={<TourSearch />} />
+        <Route path="search/:id" element={<TourSearch />} />
         <Route path="user/profile" element={<UserProfile />} />
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />

@@ -51,11 +51,16 @@ const SearchBar = (props: Props) => {
 
 const HitItem = ({ hit }: any) => {
   return (
-    <div className="hit-item d-flex my-2">
+    <div className="hit-item  my-2 ">
       <Link to={`/tours/${hit.objectID}`}>
-        <div className='d-flex flex-row'>
-          <h6 className='mr-2'>{hit.name}</h6>
-          <img className='ml-2' src={hit.main_img} alt="" />
+        <div className='d-flex'>
+          <div className='mr-2  my-2 h6 col-lg-5'>
+          <h6 >{hit.name}</h6>
+          </div>
+          <div className='ml-2  col-lg-7'>
+          <img className='image' src={hit.main_img} alt="" />
+          </div>
+          
         </div>
       </Link>
       
