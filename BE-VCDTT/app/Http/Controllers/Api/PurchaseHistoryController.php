@@ -8,13 +8,13 @@ use App\Models\PurchaseHistory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Http\Resources\PurchaseHistoryResource;
 use App\Notifications\PurchaseNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\CouponResource;
 use App\Http\Resources\PurchaseHistoryResource;
 use App\Models\Coupon;
 use App\Models\UsedCoupon;
+use App\Notifications\SendMailToClient;
 use Illuminate\Support\Str;
 
 
@@ -43,7 +43,7 @@ class PurchaseHistoryController extends Controller
         $users = User::where('is_admin',1)->get();
         Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
-      
+
         if ($purchaseHistory->id) {
             $coupon = UsedCoupon::create($request->only(['user_id','coupon_code']));
             return response()->json([
@@ -117,6 +117,9 @@ class PurchaseHistoryController extends Controller
         $input = $request->all();
 
         $purchaseHistory = PurchaseHistory::find($id);
+
+        // $email = $user->email;
+
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -124,6 +127,7 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
+            $purchaseHistory->notify(new SendMailToClient());
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -185,6 +189,10 @@ class PurchaseHistoryController extends Controller
         $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
+
+
+
+    //coupon
 
     public function check_coupon(Request $request){
         if($request->user_id!=null){
