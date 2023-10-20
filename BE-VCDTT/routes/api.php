@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tour-show/{id}', [TourController::class, 'show']);
     Route::put('/tour-edit/{id}', [TourController::class, 'update'])->name('api.tour.edit');
     Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
-    Route::get('/tour/cate/{id}', [TourToCategoryController::class,'show']);
+    // Route::get('/tour/cate/{id}', [TourToCategoryController::class,'show']);
 
     //Blog
     Route::get('/blog', [BlogController::class, 'index']);

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TourResource;
+use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -90,6 +92,15 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+
+        $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status', 'tours.created_at', 'tours.updated_at')
+                ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
+                ->where('tours_to_categories.cate_id', $id)
+                ->groupBy('tours.id')
+                ->orderBy('tours.id', 'ASC');
+
+        $toursByCate = $query->get();
+
         // foreach($category as $parent){
         //     $parent->Child = $categories->getCategoriesChild($parent->id);
         // }
@@ -97,7 +108,8 @@ class CategoryController extends Controller
         return response()->json(
             [
                 'data' => [
-                'category' => new CategoryResource($category)
+                'category' => new CategoryResource($category),
+                'toursByCate' => new TourResource($toursByCate)
                 ],
                 'message' => 'OK',
                 'status' => 200
