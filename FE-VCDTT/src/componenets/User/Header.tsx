@@ -7,22 +7,22 @@ import Modal from "react-bootstrap/Modal";
 import { BsGoogle, BsFacebook } from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
-import '../User/css/Header.css'
+import "../User/css/Header.css";
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
-  const [register] = useRegisterMutation()
+  const [register] = useRegisterMutation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
-const [registerPassword, setRegisterPassword] = useState("");
-const [registerPhone, setRegisterPhone] = useState("");
-const [registerName, setRegisterName] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerPhone, setRegisterPhone] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-// Thêm các trường thông tin cần thiết khác nếu cần
+  // Thêm các trường thông tin cần thiết khác nếu cần
 
   // console.log(email);
 
@@ -70,7 +70,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
         password: loginFormik.values.password, // Access password value from Formik
       });
       console.log(data);
-      
+
       if (data && data.user) {
         // Login successful
         setIsLoggedIn(true);
@@ -87,7 +87,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
       alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
     }
   };
-  
+
   const handleSignOut = () => {
     alert("Đăng xuất thành công");
     setIsLoggedIn(false);
@@ -96,42 +96,41 @@ const [confirmPassword, setConfirmPassword] = useState("");
   };
   const handleRegister = async () => {
     // event.preventDefault();
-    const variables ={
+    const variables = {
       email: registrationFormik.values.email,
       password: registrationFormik.values.password,
       name: registrationFormik.values.name,
       phone_number: registrationFormik.values.phone_number,
       c_password: registrationFormik.values.c_password,
-    }
+    };
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-  console.log(variables);
-  register(variables)
-  .then((response) => {
-    // Handle the response here
-    if(response && response?.data.user){
-      setIsLoggedIn(true);
-      setShowSignIn(false);
-      
-      const userName = response?.data.user;
-      localStorage.setItem("user", JSON.stringify(userName));
-      // localStorage.setItem("accessToken", response.token);
-      alert("đăng ký thành công");
-      // console.log(userName);
-  }else{
-    alert("đăng ký thất bại")
-  }
-    
-  })
-  .catch((error) => {
-    // Handle any errors here
-    console.error(error);
-  });
+    console.log(variables);
+    register(variables)
+      .then((response) => {
+        // Handle the response here
+        if (response && response?.data.user) {
+          setIsLoggedIn(true);
+          setShowSignIn(false);
+
+          const userName = response?.data.user;
+          localStorage.setItem("user", JSON.stringify(userName));
+          // localStorage.setItem("accessToken", response.token);
+          alert("đăng ký thành công");
+          // console.log(userName);
+        } else {
+          alert("đăng ký thất bại");
+        }
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
   };
-   //validate
-   const loginFormik = useFormik({
+  //validate
+  const loginFormik = useFormik({
     initialValues: {
       email: "",
       password: "",
@@ -155,7 +154,7 @@ const [confirmPassword, setConfirmPassword] = useState("");
 
   const userName = userData?.name;
   // console.log(userName);
-  
+
   // const userData = JSON.parse(storedData);
   // const  = userData?.user?.email;
 
@@ -239,12 +238,15 @@ const [confirmPassword, setConfirmPassword] = useState("");
                           <li className="menu-item-has-children">
                             <Link to="/">{userName}</Link>
                             <ul>
-                              {/* <li>
-                                <Link to="blogs/1">Bài viết 1</Link>
+                              <li>
+                                <Link to="user/profile">Thông tin cá nhân</Link>
                               </li>
                               <li>
-                                <Link to="blogs/2">Bài viết 2</Link>
-                              </li> */}
+                                <Link to="user/tour">Tour đã mua</Link>
+                              </li>
+                              <li>
+                                <Link to="user/favorite">Tour yêu thích</Link>
+                              </li>
                               <li>
                                 <a onClick={handleSignOut} href="#">
                                   Đăng xuất
@@ -299,11 +301,14 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               value={loginFormik.values.email}
                               onChange={loginFormik.handleChange}
                               onBlur={loginFormik.handleBlur}
-                                                        />
-                                                        {loginFormik.touched.email && loginFormik.errors.email && (
-                              <div className="text-danger">{loginFormik.errors.email}</div>
-                            )}
-                            
+                            />
+                            {loginFormik.touched.email &&
+                              loginFormik.errors.email && (
+                                <div className="text-danger">
+                                  {loginFormik.errors.email}
+                                </div>
+                              )}
+
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
                             </label>
@@ -317,9 +322,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={loginFormik.handleChange}
                               onBlur={loginFormik.handleBlur}
                             />
-                            {loginFormik.touched.password && loginFormik.errors.password && (
-  <div className="text-danger">{loginFormik.errors.password}</div>
-)}
+                            {loginFormik.touched.password &&
+                              loginFormik.errors.password && (
+                                <div className="text-danger">
+                                  {loginFormik.errors.password}
+                                </div>
+                              )}
                             <button
                               type="submit"
                               className="w-100 button-primary text-white py-3 my-3 border-0 rounded"
@@ -351,8 +359,9 @@ const [confirmPassword, setConfirmPassword] = useState("");
                       {showSignUpForm && (
                         <div>
                           <form onSubmit={registrationFormik.handleSubmit}>
-                          <label htmlFor="" className="fw-bold">
-                              Tên tài khoản <span className="text-danger">*</span>
+                            <label htmlFor="" className="fw-bold">
+                              Tên tài khoản{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <br />
                             <input
@@ -364,9 +373,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={registrationFormik.handleChange}
                               onBlur={registrationFormik.handleBlur}
                             />
-                            {registrationFormik.touched.name && registrationFormik.errors.name && (
-                              <div className="text-danger">{registrationFormik.errors.name}</div>
-                            )}
+                            {registrationFormik.touched.name &&
+                              registrationFormik.errors.name && (
+                                <div className="text-danger">
+                                  {registrationFormik.errors.name}
+                                </div>
+                              )}
                             <label htmlFor="" className="fw-bold">
                               Email <span className="text-danger">*</span>
                             </label>
@@ -380,9 +392,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={registrationFormik.handleChange}
                               onBlur={registrationFormik.handleBlur}
                             />
-                            {registrationFormik.touched.email && registrationFormik.errors.email && (
-                              <div className="text-danger">{registrationFormik.errors.email}</div>
-                            )}
+                            {registrationFormik.touched.email &&
+                              registrationFormik.errors.email && (
+                                <div className="text-danger">
+                                  {registrationFormik.errors.email}
+                                </div>
+                              )}
                             <label htmlFor="" className="fw-bold">
                               Số điện thoại{" "}
                               <span className="text-danger">*</span>
@@ -398,9 +413,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={registrationFormik.handleChange}
                               onBlur={registrationFormik.handleBlur}
                             />
-                            {registrationFormik.touched.phone_number && registrationFormik.errors.phone_number && (
-                              <div className="text-danger">{registrationFormik.errors.phone_number}</div>
-                            )}
+                            {registrationFormik.touched.phone_number &&
+                              registrationFormik.errors.phone_number && (
+                                <div className="text-danger">
+                                  {registrationFormik.errors.phone_number}
+                                </div>
+                              )}
                             <label htmlFor="" className="fw-bold">
                               Mật khẩu <span className="text-danger">*</span>
                             </label>
@@ -414,9 +432,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={registrationFormik.handleChange}
                               onBlur={registrationFormik.handleBlur}
                             />
-                            {registrationFormik.touched.password && registrationFormik.errors.password && (
-                              <div className="text-danger">{registrationFormik.errors.password}</div>
-                            )}
+                            {registrationFormik.touched.password &&
+                              registrationFormik.errors.password && (
+                                <div className="text-danger">
+                                  {registrationFormik.errors.password}
+                                </div>
+                              )}
                             <label htmlFor="" className="fw-bold">
                               Nhập lại mật khẩu{" "}
                               <span className="text-danger">*</span>
@@ -431,9 +452,12 @@ const [confirmPassword, setConfirmPassword] = useState("");
                               onChange={registrationFormik.handleChange}
                               onBlur={registrationFormik.handleBlur}
                             />
-                            {registrationFormik.touched.c_password && registrationFormik.errors.c_password && (
-                              <div className="text-danger">{registrationFormik.errors.c_password}</div>
-                            )}
+                            {registrationFormik.touched.c_password &&
+                              registrationFormik.errors.c_password && (
+                                <div className="text-danger">
+                                  {registrationFormik.errors.c_password}
+                                </div>
+                              )}
                             <input type="checkbox" />
                             <span className="ml-2">
                               Tôi đồng ý với{" "}
