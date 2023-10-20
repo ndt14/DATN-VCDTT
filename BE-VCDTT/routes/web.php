@@ -1,12 +1,17 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
+
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FAQController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\TourController;
+use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\FileController;
-use Illuminate\Support\Facades\Route;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +59,11 @@ Route::get('/category/edit/{id}', [CategoryController::class,'cateManagementEdit
 
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
+
+Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list');
+Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit');
+Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
+
+// Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
 
 require __DIR__.'/auth.php';
