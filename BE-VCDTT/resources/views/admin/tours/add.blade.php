@@ -228,7 +228,7 @@
                                 <div class="mb-3">
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Choose Category</label>
-                                        <select type="text" class="form-select" name="categories_data" placeholder="Select category" id="select-category" value="" multiple></select>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
                                     </div>
                                 </div>
 

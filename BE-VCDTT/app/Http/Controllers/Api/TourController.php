@@ -118,21 +118,23 @@ class TourController extends Controller
                     $images[] = $newImage;
                 }
             }
-            if (!empty($imgArray)) {
-                $images = [];
-                foreach (json_decode($imgArray, true) as $img) {
+            if (!empty($categoriesArray)) {
+                $categories = [];
+                foreach ($categoriesArray as $cate) {
                     $data = [
-                        'url' => '/upload' . $img,
+                        'cate_id' => $cate,
                         'tour_id' => $tour->id
                     ];
-                    $newImage = Image::create($data);
-                    $images[] = $newImage;
+                    $newCate = TourToCategory::create($data);
+                    $categories[] = $newCate;
                 }
             }
             return response()->json([
                 'data' => [
                     'tour' => new TourResource($tour),
-                    'tourImages' => !empty($images) ? $images : 'No image added'
+                    'tourImages' => !empty($images) ? $images : 'No image added',
+                    'tourCategories' => !empty($categories) ? $categories : 'No category added',
+
                 ],
                 'message' => 'Add success',
                 'status' => 200
