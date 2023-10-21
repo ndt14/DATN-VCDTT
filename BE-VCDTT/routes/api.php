@@ -61,7 +61,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/coupon-store', [CouponController::class, 'store']);
     Route::get('/coupon-show/{id}', [CouponController::class, 'show']);
     Route::get('/coupon-search', [CouponController::class, 'search_coupon']);
-    Route::put('/coupon-edit/{id}', [CouponController::class, 'update']);
+    Route::put('/coupon-edit/{id}', [CouponController::class, 'update'])->name('api.coupon.edit');
     Route::delete('/coupon-destroy/{id}', [CouponController::class, 'destroy']);
 
     //FAQ
