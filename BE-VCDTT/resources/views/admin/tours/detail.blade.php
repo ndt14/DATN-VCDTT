@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h1 class="modal-title fs-4" id="exampleModalFullscreenMdLabel">Blog Details</h1>
+    <h1 class="modal-title fs-4" id="exampleModalFullscreenMdLabel">Tour Details</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="card">
@@ -9,7 +9,7 @@
                 <h3 class="card-title">{{ $item['name'] }}</h3>
 
                 <div class="row g-3">
-                    <div class="col-md">    
+                    <div class="col-md">
                         <div class="form-label">Create at</div>
                         {{ time_format($item['created_at']) }}
                     </div>
@@ -24,7 +24,7 @@
                         @elseif ($item['status'] == 1)
                             <span class="badge bg-success me-1 text-light">Activated</span>
                         @endif
-                    </div> 
+                    </div>
                 </div>
                 <hr>
                 <div class="row g-3">
@@ -51,7 +51,7 @@
 
                 <h3 class="card-title">Location</h3>
                 <div class="row g-3">
-                    <div class="col-md-6">    
+                    <div class="col-md-6">
                         <div class="form-label">Location</div>
                         {{ $item['location'] }}
                     </div>
@@ -59,7 +59,7 @@
                         <div class="form-label">Exact location</div>
                         {{ $item['exact_location'] }}
                     </div>
-                    <div class="col-md-6">    
+                    <div class="col-md-6">
                         <div class="form-label">Start destination</div>
                         {{ $item['start_destination'] }}
                     </div>
@@ -71,7 +71,7 @@
                 <hr>
                 <h3 class="card-title mt-4">Price</h3>
                 <div class="row g-3">
-                    <div class="col-md">    
+                    <div class="col-md">
                         <div class="form-label">Child price</div>
                         {{ money_format($item['child_price']) }}
                     </div>
@@ -82,7 +82,7 @@
                     <div class="col-md-1">
                         <div class="form-label">Sale</div>
                         <span class="badge bg-red me-1 text-light">{{ $item['sale_percentage'] }}%</span>
-                        
+
                     </div>
                     <div class="col-md">
                         <div class="form-label">Final price</div>

@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import "./TourSearch.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Range } from "react-range";
 import Loader from "../../../componenets/User/Loader";
+import {  useGetCategoryByIdQuery } from "../../../api/category";
+import { Tour } from "../../../interfaces/Tour";
 const TourSearch = () => {
+  const {id} = useParams<{id: string}>();
+  const {data:cateData} = useGetCategoryByIdQuery(id ||"");
+  console.log(cateData);
+ 
+  
   const [showGridSearch, setShowGridSearch] = useState(false);
   const [showListSearch, setShowListSearch] = useState(true);
   const [isButtonListClicked, setIsButtonListClicked] = useState(true);
@@ -31,7 +38,9 @@ const TourSearch = () => {
     setIsButtonListClicked(true);
     setIsButtonGridClicked(false);
   };
-  const backgroundImage = "../../../../assets/images/bg/bg1.jpg";
+
+  
+  
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -60,17 +69,6 @@ const TourSearch = () => {
         <div className="breadcrumb-outer">
           <div className="container">
             <div className="breadcrumb-content text-center">
-              {/* <h1 className="mb-3">Tour List</h1> */}
-              {/* <nav aria-label="breadcrumb" className="d-block">
-                <ul className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="#">Home</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Tour Lists Rightside
-                  </li>
-                </ul>
-              </nav> */}
             </div>
           </div>
         </div>
@@ -140,7 +138,7 @@ const TourSearch = () => {
                 {showListSearch && (
                   <div>
                     <Loader />
-                    <h4 className="my-3">Tìm thấy 2 tour</h4>
+                    {/* <h4 className="my-3">Tìm thấy 2 tour</h4> */}
                     <div
                       id="tourList"
                       className="destination-list accordion-collapse collapse show"
@@ -148,14 +146,21 @@ const TourSearch = () => {
                       data-bs-parent="#tourSearch"
                     >
                       <div className="accordion-body">
-                        <div className="trend-full bg-white rounded box-shadow overflow-hidden p-4 mb-4 border">
+{cateData?.data.toursByCate.map(({ id, name,details, main_img,  view_count,  adult_price,}: Tour)=>{
+  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(adult_price);
+  return(
+    <>
+    <div className="trend-full bg-white rounded box-shadow overflow-hidden p-4 mb-4 border" key={id}>
                           <div className="row">
                             <div className="col-lg-4 col-md-3">
                               <div className="trend-item2 rounded">
                                 <a href="tour-single.html">
                                   <img
                                     className="w-full"
-                                    src="https://via.placeholder.com/640x480.png/00dd55?text=itaque"
+                                    src={main_img}
                                     alt=""
                                   />
                                 </a>
@@ -165,8 +170,8 @@ const TourSearch = () => {
                             <div className="col-lg-5 col-md-6">
                               <div className="trend-content position-relative text-md-start text-center">
                                 <h3 className="mb-1">
-                                  <Link to={"/tours/1"}>
-                                    Adriatic Adventure–Zagreb To Athens
+                                  <Link to={`/tours/${id}`}>
+                                    {name}
                                   </Link>
                                 </h3>
                                 <h6 className="theme mb-0 my-2">
@@ -186,10 +191,10 @@ const TourSearch = () => {
                                   <span className="fa fa-star checked"></span>
                                   <span className="fa fa-star checked"></span>
                                 </div>
-                                <small>200 Reviews</small>
+                                <small>{view_count} Reviews</small>
                                 <div className="trend-price my-2">
                                   <span className="mb-0">Từ</span>
-                                  <h3 className="mb-0">2.000.000 VNĐ</h3>
+                                  <h3 className="mb-0">{formattedTourPrice}</h3>
                                   <small>mỗi người lớn</small>
                                 </div>
                                 <a href="tour-single.html" className="nir-btn">
@@ -199,64 +204,10 @@ const TourSearch = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="trend-full bg-white rounded box-shadow overflow-hidden p-4 mb-4 border">
-                          <div className="row">
-                            <div className="col-lg-4 col-md-3">
-                              <div className="trend-item2 rounded">
-                                <a href="tour-single.html">
-                                  <img
-                                    className="w-full"
-                                    src="https://via.placeholder.com/640x480.png/00dd55?text=itaque"
-                                    alt=""
-                                  />
-                                </a>
-                                <div className="color-overlay"></div>
-                              </div>
-                            </div>
-                            <div className="col-lg-5 col-md-6">
-                              <div className="trend-content position-relative text-md-start text-center">
-                                <small>6+ Hours | Full Day Tours</small>
-                                <h3 className="mb-1">
-                                  <Link to={"/tours/1"}>
-                                    Adriatic Adventure–Zagreb To Athens
-                                  </Link>
-                                </h3>
-                                <h6 className="theme mb-0">
-                                  <i className="icon-location-pin"></i> Greece
-                                </h6>
-                                <p className="mt-4 mb-0">
-                                  Taking Safety Measures <br />
-                                  <a href="#">
-                                    <span className="theme">
-                                      {" "}
-                                      Free cancellation
-                                    </span>
-                                  </a>
-                                </p>
-                              </div>
-                            </div>
-                            <div className="col-lg-3 col-md-3">
-                              <div className="trend-content text-md-end text-center">
-                                <div className="rating">
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                </div>
-                                <small>200 Reviews</small>
-                                <div className="trend-price my-2">
-                                  <span className="mb-0">Từ</span>
-                                  <h3 className="mb-0">2.000.000 VNĐ</h3>
-                                  <small>mỗi người lớn</small>
-                                </div>
-                                <a href="tour-single.html" className="nir-btn">
-                                  View Detail
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+    </>
+  )
+})
+}
                       </div>
                     </div>
                   </div>
@@ -267,33 +218,40 @@ const TourSearch = () => {
                     <Loader />
                     <h4 className="my-3">Tìm thấy 2 tour</h4>
                     <div className="row my-3 destination-list accordion-collapse collapse show">
-                      <div className="col-lg-6 col-md-6">
+                    {cateData?.data.toursByCate.map(({ id, name,details, main_img,  view_count,  adult_price,}: Tour)=>{
+  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(adult_price);
+  return(
+    <>   
+    <div className="col-lg-6 col-md-6" key={id}>
                         <div className="package-wrap">
                           <figure className="feature-image">
                             <Link to="tours/1">
                               <img
                                 className="w-full"
-                                src="../../../../assets/images/img5.jpg"
+                                src={main_img}
                                 alt=""
                               />
                             </Link>
                           </figure>
                           <div className="package-price">
                             <h6>
-                              <span>VND 2,900,000 </span> / mỗi người
+                              <span>{formattedTourPrice}</span> / mỗi người
                             </h6>
                           </div>
                           <div className="package-content-wrap">
                             {/* <div className="package-meta text-center"></div> */}
                             <div className="package-content">
                               <h3 className="margin-top-12">
-                                <Link className="mt-12" to="tours/1">
-                                  Sunset view of beautiful lakeside resident
+                                <Link className="mt-12" to={`tours/${id}`}>
+                                 {name}
                                 </Link>
                               </h3>
                               <div className="review-area">
                                 <span className="review-text">
-                                  (25 reviews)
+                                  ({view_count} reviews)
                                 </span>
                                 <div
                                   className="rating-start"
@@ -303,9 +261,7 @@ const TourSearch = () => {
                                 </div>
                               </div>
                               <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit luctus nec ullam. Ut elit
-                                tellus, luctus nec ullam elit tellpus.
+                               {details}
                               </p>
                               <div className="btn-wrap">
                                 <a href="#" className="button-text width-6">
@@ -320,59 +276,11 @@ const TourSearch = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-lg-6 col-md-6">
-                        <div className="package-wrap">
-                          <figure className="feature-image">
-                            <Link to="tours/1">
-                              <img
-                                className="w-full"
-                                src="../../../../assets/images/img5.jpg"
-                                alt=""
-                              />
-                            </Link>
-                          </figure>
-                          <div className="package-price">
-                            <h6>
-                              <span>VND 2,900,000 </span> / mỗi người
-                            </h6>
-                          </div>
-                          <div className="package-content-wrap">
-                            {/* <div className="package-meta text-center"></div> */}
-                            <div className="package-content">
-                              <h3 className="margin-top-12">
-                                <Link className="mt-12" to="tours/1">
-                                  Sunset view of beautiful lakeside resident
-                                </Link>
-                              </h3>
-                              <div className="review-area">
-                                <span className="review-text">
-                                  (25 reviews)
-                                </span>
-                                <div
-                                  className="rating-start"
-                                  title="Rated 5 out of 5"
-                                >
-                                  <span className="w-3/5"></span>
-                                </div>
-                              </div>
-                              <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit luctus nec ullam. Ut elit
-                                tellus, luctus nec ullam elit tellpus.
-                              </p>
-                              <div className="btn-wrap">
-                                <a href="#" className="button-text width-6">
-                                  Đặt ngay<i className="fas fa-arrow-right"></i>
-                                </a>
-                                <a href="#" className="button-text width-6">
-                                  Thêm vào yêu thích
-                                  <i className="far fa-heart"></i>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+    </>
+    )
+  })
+  }
+
                     </div>
                   </div>
                 )}
@@ -438,24 +346,6 @@ const TourSearch = () => {
                   </div>
                   <div className="sidebar-item mb-4">
                     <h3>Khoảng giá</h3>
-                    {/* <div className="range-slider mt-0">
-                      <p className="text-start mb-2">Price Range</p>
-                      <div
-                        data-min="0"
-                        data-max="2000"
-                        data-unit="$"
-                        data-min-name="min_price"
-                        data-max-name="max_price"
-                        className="range-slider-ui ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                        aria-disabled="false"
-                      >
-                        <span className="min-value">0 $</span>
-                        <span className="max-value">20000 $</span>
-                        <div className="ui-slider-range ui-widget-header ui-corner-all full"></div>
-                      </div>
-                      <div className="clearfix"></div>
-                    </div> */}
-
                     <div>
                       <Range
                         step={100000}
@@ -508,67 +398,6 @@ const TourSearch = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="sidebar-item">
-                    <h3>Related Destinations</h3>
-                    <div className="sidebar-destination">
-                      <div className="row about-slider">
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-4">
-                          <div className="trend-item1">
-                            <div className="trend-image position-relative rounded">
-                              <img
-                                src="images/destination/destination17.jpg"
-                                alt="image"
-                              />
-                              <div className="trend-content d-flex align-items-center justify-content-between position-absolute bottom-0 p-4 w-100 z-index">
-                                <div className="trend-content-title">
-                                  <h5 className="mb-0">
-                                    <a
-                                      href="tour-single.html"
-                                      className="theme1"
-                                    >
-                                      Italy
-                                    </a>
-                                  </h5>
-                                  <h4 className="mb-0 white">Caspian Valley</h4>
-                                </div>
-                                <span className="white bg-theme p-1 px-2 rounded">
-                                  18 Tours
-                                </span>
-                              </div>
-                              <div className="color-overlay"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-4">
-                          <div className="trend-item1">
-                            <div className="trend-image position-relative rounded">
-                              <img
-                                src="images/destination/destination14.jpg"
-                                alt="image"
-                              />
-                              <div className="trend-content d-flex align-items-center justify-content-between position-absolute bottom-0 p-4 w-100 z-index">
-                                <div className="trend-content-title">
-                                  <h5 className="mb-0">
-                                    <a
-                                      href="tour-single.html"
-                                      className="theme1"
-                                    >
-                                      Tokyo
-                                    </a>
-                                  </h5>
-                                  <h4 className="mb-0 white">Japan</h4>
-                                </div>
-                                <span className="white bg-theme p-1 px-2 rounded">
-                                  21 Tours
-                                </span>
-                              </div>
-                              <div className="color-overlay"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>

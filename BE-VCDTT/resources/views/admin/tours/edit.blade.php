@@ -198,6 +198,9 @@
                                             <div class="form-label">Danh mục của tour</div>
                                             <select name="category" id="" class="form-select">
                                                 @foreach ($categories as $category)
+                                                    @if($category['id'] == $cate_id)
+                                                        <option value="{{ $category['id'] }}" selected>{{ $category['name'] }}
+                                                    @endif
                                                     <option value="{{ $category['id'] }}">{{ $category['name'] }}
                                                     </option>
                                                 @endforeach

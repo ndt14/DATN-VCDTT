@@ -1,0 +1,30 @@
+.ais-SearchBox-submit,
+.ais-SearchBox-reset{
+    display: none !important;
+}
+.ais-SearchBox-input{
+   width: 1000px !important;
+}
+.search-results{
+  width: 1000px !important;
+}
+.ais-Hits{
+  width: 1000px !important;
+}
+.image{
+  width: 300px !important;
+  height: 200px !important;
+}
+/* .row{
+  width: 2000px !important;
+} */
+
+/* CSS */
+/* .search-results {
+    display: none;
+  }
+  
+  .input-focused .search-results {
+    display: block;
+  } */
+  

@@ -3,7 +3,7 @@ import { Carousel } from "antd";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 
-import { TourPreview } from "../../../componenets";
+import { SearchBar, TourPreview } from "../../../componenets";
 import { useGetToursQuery } from "../../../api/tours";
 import { Tour } from "../../../interfaces/Tour";
 import { Link } from "react-router-dom";
@@ -107,20 +107,26 @@ const HomePage = () => {
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
-              <div className="input-group width-col-9 flex-grow-1">
-                <label> Tìm kiếm địa điểm * </label>
-                <input type="text" name="s" placeholder="Nhập địa điểm" />
+              <div className="input-group width-col-9  flex-grow-2">
+                {/* <label> Tìm kiếm địa điểm * </label> */}
+                <SearchBar/>
+                {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> */}
               </div>
-
-              <div className="input-group width-col-3">
+             
+              {/* <div className="input-group width-col-3">
+              <Link to={'/search'}>
                 <label className="screen-reader-text"> Tìm kiếm </label>
+                
                 <input
                   type="submit"
                   name="travel-search"
                   value="TÌM KIẾM"
-                  className="rounded "
+                  className="rounded w-input"
                 />
-              </div>
+               </Link>
+              </div> */}
+             
+              
             </div>
           </div>
         </div>

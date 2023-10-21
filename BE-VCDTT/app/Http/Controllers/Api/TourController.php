@@ -107,11 +107,11 @@ class TourController extends Controller
         $tour = Tour::create($request->all());
         if ($tour->id) {
 
-            if(!empty($imgArray)){
+            if (!empty($imgArray)) {
                 $images = [];
-                foreach(json_decode($imgArray, true) as $img){
-                    $data= [
-                        'url' => '/upload'.$img,
+                foreach (json_decode($imgArray, true) as $img) {
+                    $data = [
+                        'url' => '/upload' . $img,
                         'tour_id' => $tour->id
                     ];
                     $newImage = Image::create($data);
@@ -168,7 +168,7 @@ class TourController extends Controller
             ->get();
 
         $listCoupon = Coupon::select()->where('tour_id', '=', $id)
-        ->get();
+            ->get();
 
         if ($firstTourToCate->isNotEmpty()) {
             $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
@@ -187,9 +187,6 @@ class TourController extends Controller
                 ->limit(10)
                 ->get();
         }
-
-
-
 
         // get info tour by id
         $tour = Tour::select(
@@ -293,27 +290,30 @@ class TourController extends Controller
 
     public function tourManagementList(Request $request)
     {
-        $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour')->json()['data']['tours'];
+        $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour')['data']['tours'];
         return view('admin.tours.list', compact('items'));
     }
 
     public function tourManagementAdd(Request $request)
     {
-        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
+        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')['data']['categoriesParent'];
         return view('admin.tours.add', compact('categories'));
     }
 
 
     public function tourManagementEdit(Request $request)
     {
-        $tour = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)->json()['data']['tour'];
-        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')->json()['data']['categoriesParent'];
-        return view('admin.tours.edit', compact('tour', 'categories'));
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data'];
+        $tour = $data['tour'];
+        $categories = $data['categories'];
+        $cate_id = $data['tourToCategories'][0]['cate_id']; //đang chỉ giải quyết cho trường hợp tour có 1 cate, sau xử lý nhiều cate thì dùng foreach
+        return view('admin.tours.edit', compact('tour', 'categories', 'cate_id'));
     }
 
-    public function tourManagementDetail(Request $request) {
+    public function tourManagementDetail(Request $request)
+    {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/'.$request->id)->json()['data']['tour'];
+        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data']['tour'];
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
