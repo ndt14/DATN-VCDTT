@@ -103,6 +103,7 @@ class TourController extends Controller
     public function store(TourRequest $request)
     {
         $imgArray = $request->input('imgArray');
+        $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $tour = Tour::create($request->all());
         if ($tour->id) {
 
@@ -111,6 +112,17 @@ class TourController extends Controller
                 foreach(json_decode($imgArray, true) as $img){
                     $data= [
                         'url' => '/upload'.$img,
+                        'tour_id' => $tour->id
+                    ];
+                    $newImage = Image::create($data);
+                    $images[] = $newImage;
+                }
+            }
+            if (!empty($imgArray)) {
+                $images = [];
+                foreach (json_decode($imgArray, true) as $img) {
+                    $data = [
+                        'url' => '/upload' . $img,
                         'tour_id' => $tour->id
                     ];
                     $newImage = Image::create($data);

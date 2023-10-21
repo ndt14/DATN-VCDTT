@@ -226,6 +226,13 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Choose Category</label>
+                                        <select type="text" class="form-select" name="categories_data" placeholder="Select category" id="select-category" value="" multiple></select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
                                     <div class="form-label">Nội dung mô tả</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
                                         placeholder="Nhập nội dung mô tả">{{ old('details') ?? '' }}</textarea>
@@ -296,10 +303,16 @@
 @endsection
 @section('page_js')
 <script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
+<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
+$(document).ready(function() {
+    let categories_data = [];
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {
             let options = {
+                data: {
+                        categories_data: categories_data,
+                    },
                 beforeSubmit: function(formData, jqForm, options) {
                     $('#btnSubmitAdd').addClass('btn-loading');
                     $('#btnSubmitAdd').addClass("disabled");
@@ -327,10 +340,55 @@
             $(this).ajaxSubmit(options);
             return false;
         });
+    $.ajax({
+            url: "/api/category",
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                //gender category
+                let selectCatogories = $('#select-category');
+                $.each(response.data.categoriesParent, function(index, category) {
+                    let id = category.id
+                    id = +id
+                    let option = $('<option></option>').val(id).text(category.name);
+                    selectCatogories.append(option);
+                });
+
+                //add to select by tom-select lib
+                let el;
+                window.TomSelect && (new TomSelect(el = document.getElementById('select-category'), {
+                    copyClassesToDropdown: false,
+                    dropdownParent: 'body',
+                    controlInput: '<input>',
+                    render: {
+                        item: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                        option: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                    },
+                }));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
-    
+    $('#select-category').change(function() {
+        catogories_data = $(this).val();
+        console.log(catogories_data)
+    });
+});
+
     document.addEventListener("DOMContentLoaded", function() {
-        var imgArray = [];
+        let imgArray = [];
         new Dropzone("#dropzone-files", {
             paramName: "files", // The name that will be used to transfer the file
             maxFilesize: 100, // MB
