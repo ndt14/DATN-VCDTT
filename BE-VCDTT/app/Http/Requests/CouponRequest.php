@@ -25,19 +25,19 @@ class CouponRequest extends FormRequest
     public function rules(): array
 {
     return [
-        'name' => 'required',
-        'description' => 'required',
-        'start_date' => 'required',
-        'end_date' => 'required',
-        'percentage_price' => 'required',
-        'fixed_price' => 'required',
-        'status' => 'required',
-        'tour_id' => ['nullable', Rule::requiredIf(function () {
-            return empty($this->input('cate_id'));
-        })],
-        'cate_id' => ['nullable', Rule::requiredIf(function () {
-            return empty($this->input('tour_id'));
-        })],
+        // 'name' => 'required',
+        // 'code' => 'required',
+        // 'start_date' => 'required',
+        // 'expiration_date' => 'required',
+        // 'percentage_price' => 'required',
+        // 'fixed_price' => 'required',
+        // 'status' => 'required',
+        // 'tour_id' => ['nullable', Rule::requiredIf(function () {
+        //     return empty($this->input('cate_id'));
+        // })],
+        // 'cate_id' => ['nullable', Rule::requiredIf(function () {
+        //     return empty($this->input('tour_id'));
+        // })],
     ];
 }
 

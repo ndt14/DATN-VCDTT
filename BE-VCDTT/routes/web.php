@@ -5,6 +5,7 @@ use App\Http\Controllers\FileController;
 
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
@@ -46,6 +47,11 @@ Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list'
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
+Route::get('/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');
+Route::get('/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
+Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail');
 
 Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
 Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');

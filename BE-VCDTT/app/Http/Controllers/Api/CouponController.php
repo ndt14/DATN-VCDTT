@@ -11,6 +11,7 @@ use App\Http\Resources\CouponResource;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CouponController extends Controller
 {
@@ -22,9 +23,9 @@ class CouponController extends Controller
             return response()->json([
                 'data' => [
                     'coupons' =>  CouponResource::collection($listCounpon),
-                    'message' => 'OK',
-                    'status' => 200
-                ]
+                ],
+                'message' => 'OK',
+                'status' => 200
             ]);
         }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -36,18 +37,24 @@ class CouponController extends Controller
      */
     public function store(CouponRequest $request)
     {
-        $input = $request->all();
+        $coupon = $request->except('_token','type','price');
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
-        $new_coupon = Coupon::create($input);
+        $coupon['code'] = Str::upper($coupon['code']);
+        if($request->type != 1){
+            $coupon['fixed_price']= $request->price;
+        }else{
+            $coupon['percentage_price'] = $request->price;
+        }
+        $coupon = Coupon::create($coupon);
 
-        if($new_coupon->id) {
+        if($coupon->id) {
             return response()->json([
                 'data' => [
-                    'coupon' => new CouponResource($new_coupon),
-                    'message' => 'OK',
-                    'status' => 201
-                ]
+                    'coupon' => new CouponResource($coupon),
+                ],
+                'message' => 'Add success',
+                'status' => 200
             ]);
         }else {
             return response()->json(
@@ -71,9 +78,9 @@ class CouponController extends Controller
             return response()->json([
                 'data' => [
                     'coupon' => new CouponResource($coupon),
-                    'message' => 'OK',
-                    'status' => 200
-                ]
+                ],
+                'message' => 'OK',
+                'status' => 200
             ]);
         }else {
             return response()->json([
@@ -152,9 +159,9 @@ class CouponController extends Controller
                 return response()->json([
                     'data' => [
                         'coupon' => new CouponResource($coupon),
-                        'message' => "OK",
+                    ],
+                    'message' => "OK",
                         'status' => 200
-                    ]
                 ]);
             }else {
 

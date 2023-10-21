@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('code')->nullable();
             // $table->decimal('discount', 5, 2);
-            $table->string('start_date')->nullable();
+            $table->date('start_date')->nullable();
             $table->date('expiration_date')->nullable();
             $table->bigInteger('tour_id')->nullable();
             $table->bigInteger('cate_id')->nullable();
