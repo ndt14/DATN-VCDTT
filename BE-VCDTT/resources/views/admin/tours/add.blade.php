@@ -188,18 +188,6 @@
 
 
                                 <div class="row">
-                                    @if ($categories)
-                                        <div class="mb-3 col-4">
-                                            <div class="form-label">Danh mục của tour</div>
-                                            <select name="category" id="" class="form-select">
-                                                <option value="">Lựa chọn danh mục</option>
-                                                @foreach ($categories as $category)
-                                                    <option value="{{ $category['id'] }}">{{ $category['name'] }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    @endif
                                     <div class="mb-3 col-4">
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="sale_percentage" type="text" class="form-control"
