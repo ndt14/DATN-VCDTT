@@ -192,21 +192,6 @@
                                     </div>
                                 </div>
 
-                                @if ($categories)
-                                    <div class="row">
-                                        <div class="mb-3 col-4">
-                                            <div class="form-label">Danh mục của tour</div>
-                                            <select name="category" id="" class="form-select">
-                                                @foreach ($categories as $category)
-                                                    @if($category['id'] == $cate_id)
-                                                        <option value="{{ $category['id'] }}" selected>{{ $category['name'] }}
-                                                    @endif
-                                                    <option value="{{ $category['id'] }}">{{ $category['name'] }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
                                         <div class="mb-3 col-4">
                                             <div class="form-label">Phần trăm giảm giá</div>
                                             <input name="sale_percentage" type="text" class="form-control"
@@ -231,7 +216,12 @@
                                             </span>
                                         </div>
                                     </div>
-                                @endif
+                                <div class="mb-3">
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Choose Category</label>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <div class="form-label">Nội dung mô tả</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
@@ -272,14 +262,42 @@
                         </form>
                     </div>
                 </div>
+                <div class="row row-deck row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Files upload</h3>
+                                <form class="dropzone dz-clickable" id="dropzone-files" action="{{ route('file.store') }}" autocomplete="off" novalidate>
+                                    @csrf
+                                    <div class="fallback">
+                                        <input name="files[]" type="file"/>
+                                    </div>
+                                    <div class="dz-message">
+                                        <h3 class="dropzone-msg-title">Your text here</h3>
+                                        <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     @endsection
-    @section('page_js')
+@section('page_css')
+<link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
+@endsection
+@section('page_js')
+<script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
+<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
+
+$(document).ready(function() {
+        var categories_data = <?php echo htmlspecialchars(json_encode($cateIds)) ?>;
         if ($('#frmEdit').length) {
             $('#frmEdit').submit(function() {
-                let options = {
+                var options = {
                     beforeSubmit: function(formData, jqForm, options) {
                         $('#btnSubmitEdit').addClass('btn-loading');
                         $('#btnSubmitEdit').addClass("disabled");
@@ -307,6 +325,77 @@
                 $(this).ajaxSubmit(options);
                 return false;
             });
+
+            $.ajax({
+            url: "/api/category",
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                //gender category
+                var selectCatogories = $('#select-category');
+                $.each(response.data.categoriesParent, function(index, category) {
+                    var id = category.id
+                    id = +id
+                    if (categories_data.includes(id)) {
+                        var option = $('<option selected></option>').val(id).text(category.name);
+                    } else {
+                        var option = $('<option></option>').val(id).text(category.name);
+                    }
+                    selectCatogories.append(option);
+                });
+
+                //add to select by tom-select lib
+                var el;
+                window.TomSelect && (new TomSelect(el = document.getElementById('select-category'), {
+                    copyClassesToDropdown: false,
+                    dropdownParent: 'body',
+                    controlInput: '<input>',
+                    render: {
+                        item: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                        option: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                    },
+                }));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
+    $('#select-category').change(function() {
+        catogories_data = $(this).val();
+        console.log(catogories_data)
+    });
+});
+    document.addEventListener("DOMContentLoaded", function() {
+        var imgArray = [];
+        new Dropzone("#dropzone-files", {
+            paramName: "files", // The name that will be used to transfer the file
+            maxFilesize: 100, // MB
+            uploadMultiple: true,
+            accept: function(file, done) {
+                done();
+            },
+            success: function(file, response) {
+                if (response.status === 200) {
+                    imgArray.push(response.files); // Thêm giá trị files vào mảng
+                }
+                document.getElementById('imgArray').value = JSON.stringify(imgArray);
+                console.log(document.getElementById('imgArray').value);
+            },
+            error: function(file, response) {
+                console.error(response.message);
+            }
+        });
+    })
 </script>
     @endSection

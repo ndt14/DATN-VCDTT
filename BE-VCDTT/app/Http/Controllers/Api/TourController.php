@@ -243,7 +243,8 @@ class TourController extends Controller
 
     public function update(TourRequest $request, string $id)
     {
-
+        $imgArray = $request->input('imgArray');
+        $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $input = $request->all();
 
         $tour = Tour::find($id);
@@ -252,8 +253,30 @@ class TourController extends Controller
         }
 
         $tour->fill($input);
-
+        if (!empty($imgArray)) {
+            $images = [];
+            foreach (json_decode($imgArray, true) as $img) {
+                $data = [
+                    'url' => '/upload' . $img,
+                    'tour_id' => $tour->id
+                ];
+                $newImage = Image::create($data);
+                $images[] = $newImage;
+            }
+        }
+        if (!empty($categoriesArray)) {
+            $categories = [];
+            foreach ($categoriesArray as $cate) {
+                $data = [
+                    'cate_id' => $cate,
+                    'tour_id' => $tour->id
+                ];
+                $newCate = TourToCategory::create($data);
+                $categories[] = $newCate;
+            }
+        }
         if ($tour->save()) {
+            
             return response()->json([
                 'data' => [
                     'tour' => $tour
@@ -308,8 +331,12 @@ class TourController extends Controller
         $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data'];
         $tour = $data['tour'];
         $categories = $data['categories'];
-        $cate_id = $data['tourToCategories'][0]['cate_id']; //đang chỉ giải quyết cho trường hợp tour có 1 cate, sau xử lý nhiều cate thì dùng foreach
-        return view('admin.tours.edit', compact('tour', 'categories', 'cate_id'));
+        $tourToCate = $data['tourToCategories'];
+        $cateIds = [];
+        foreach ($tourToCate as $item) {
+            $cateIds[] = $item['cate_id'];
+        }
+        return view('admin.tours.edit', compact('tour', 'categories', 'cateIds'));
     }
 
     public function tourManagementDetail(Request $request)
