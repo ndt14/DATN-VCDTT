@@ -164,6 +164,7 @@ const PurchasingInformation = (props: Props) => {
         alert("Đặt tour thành công");
         const billID = response?.data?.data?.purchase_history.id;
         console.log(billID);
+        localStorage.setItem("billIdSuccess", JSON.stringify(billID));
         const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
         window.location.href = VnpayURL;
       })

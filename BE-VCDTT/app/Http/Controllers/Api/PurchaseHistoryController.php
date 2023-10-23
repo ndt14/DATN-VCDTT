@@ -40,12 +40,12 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $users = User::where('is_admin',1)->get();
+        $users = User::where('is_admin', 1)->get();
         Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
 
         if ($purchaseHistory->id) {
-            $coupon = UsedCoupon::create($request->only(['user_id','coupon_code']));
+            $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
             return response()->json([
                 'data' => [
                     'purchase_history' => new PurchaseHistoryResource($purchaseHistory),
@@ -65,7 +65,8 @@ class PurchaseHistoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id){
+    public function show(string $id)
+    {
         //
 
     }
@@ -127,7 +128,7 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            $purchaseHistory->notify(new SendMailToClient());
+            // $purchaseHistory->notify(new SendMailToClient());
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -194,22 +195,23 @@ class PurchaseHistoryController extends Controller
 
     //coupon
 
-    public function check_coupon(Request $request){
-        if($request->user_id!=null){
-            if($request->coupon_code!=null){
+    public function check_coupon(Request $request)
+    {
+        if ($request->user_id != null) {
+            if ($request->coupon_code != null) {
                 $code = Str::upper($request->coupon_code);
-                if(Coupon::select()->where('code',$code)->exists()){
-                if(UsedCoupon::select()->where('user_id',$request->user_id)->where('coupon_code',$code)->exists()){
-                    return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
-                }else{
-                    $coupon = Coupon::select()->where('code',$code)->first();
-                    return response()->json([
-                        'coupon' => new CouponResource($coupon),
-                        'message' => 'This coupon code is valid',
-                        'status' => 200
-                ]);
-                }
-                }else{
+                if (Coupon::select()->where('code', $code)->exists()) {
+                    if (UsedCoupon::select()->where('user_id', $request->user_id)->where('coupon_code', $code)->exists()) {
+                        return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
+                    } else {
+                        $coupon = Coupon::select()->where('code', $code)->first();
+                        return response()->json([
+                            'coupon' => new CouponResource($coupon),
+                            'message' => 'This coupon code is valid',
+                            'status' => 200
+                        ]);
+                    }
+                } else {
                     return response()->json(['message' => 'This coupon code is unvalid', 'status' => 500]);
                 }
             }
