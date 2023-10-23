@@ -183,8 +183,8 @@
                                 <option value="500">500</option>
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
-                                bản ghi</p>
+                            <!-- <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
+                                bản ghi</p> -->
                                 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
@@ -206,7 +206,7 @@
                                     </li>
 
                                 @endfor
-                                @if($data->currentPage()+3 != $data->lastPage())
+                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
                                 <li class="page-item">
                                         ...
                                 </li>
