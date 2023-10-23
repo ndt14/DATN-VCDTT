@@ -114,7 +114,8 @@ class PurchaseHistoryController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $input = $request->all();
+        $input = $request->except('update_admin');
+        $updateAdmin = $request->only('update_admin');
 
         $purchaseHistory = PurchaseHistory::find($id);
 
@@ -127,7 +128,11 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            $purchaseHistory->notify(new SendMailToClient());
+
+            if($updateAdmin){
+                $purchaseHistory->notify(new SendMailToClient());
+            }
+
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -189,8 +194,6 @@ class PurchaseHistoryController extends Controller
         $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
-
-
 
     //coupon
 

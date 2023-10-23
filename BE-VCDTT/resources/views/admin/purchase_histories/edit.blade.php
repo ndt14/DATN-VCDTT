@@ -5,23 +5,23 @@
             <div class="row g-2 align-items-center">
                 <div class="col-12 ">
                     <!-- @if (Session::has('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if (Session::has('fail'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif -->
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                                        {{ Session::get('success') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+    @endif
+                                    @if (Session::has('fail'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                                        {{ Session::get('fail') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+    @endif -->
                 </div>
                 <div class="col">
                     <!-- Page pre-title -->
-                        <!-- <div class="page-pretitle">
-                        Overview
-                    </div> -->
+                    <!-- <div class="page-pretitle">
+                                    Overview
+                                </div> -->
                     <h2 class="page-title">
                         Quản lý hóa đơn
                     </h2>
@@ -69,6 +69,7 @@
                         @csrf
                         @method('PUT')
                         <div class="card-body">
+                            <input type="hidden" name="update_admin" value="1">
                             <div class="row">
                                 <div class="mb-3 col-9">
                                     <label class="form-label">Tên người dùng</label>
