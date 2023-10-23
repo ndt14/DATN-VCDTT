@@ -186,7 +186,7 @@
                             <!-- <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
                                 bản ghi</p> -->
                                 
-                            <ul class="pagination m-0 ms-auto">
+                            <!-- {{-- <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -224,7 +224,7 @@
                                         </svg>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul> --}} -->
 
                         </div>
                     </div>
