@@ -85,6 +85,8 @@
                                         <th class="w-1">ID</th>
                                         <th>Name</th>
                                         <th>Code</th>
+                                        <th>Coupon type</th>
+                                        <th>Price modify</th>
                                         <th>Expiration date</th>
                                         <th>Created at</th>
                                         <th>Updated at</th>
@@ -102,6 +104,12 @@
                                                 </td>
                                                 <td>
                                                     {{ string_truncate($data->code, 70) }}
+                                                </td>
+                                                <td>
+                                                    {{ $data->percentage_price!=null?'Percentage':($data->fixed_price!=null?'Fixed':'Null') }}
+                                                </td>
+                                                <td>
+                                                    {{ $data->percentage_price??$data->fixed_price??'Null' }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($data->expiration_date) }}
