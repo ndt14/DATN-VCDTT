@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Tours management
+                        Ratings management for: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -23,27 +23,6 @@
                     @endif
                 </div> -->
                 <div class="col-auto ms-auto d-print-none">
-                    <div class="btn-list">
-                        <a href="{{ route('tour.add') }}" class="btn btn-primary d-none d-sm-inline-block">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            Add new
-                        </a>
-                        <a href="{{ url('/tour-add') }}" class="btn btn-primary d-sm-none btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -55,7 +34,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Tour</h3>
+                            <h3 class="card-title">Rating</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -78,7 +57,7 @@
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                            <input type="text" name="keyword" class="form-control"
+                                            <input type="text" name="keyword" value="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
@@ -93,43 +72,34 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Name</th>
-                                        <th>Location</th>
-                                        <th>Tourist count</th>
-                                        <th>View count</th>
+                                        <th>Content</th>
+                                        <th>User id</th>
+                                        <th>Answer</th>
                                         <th>Created at</th>
-                                        <th class="text-center">Active</th>
+                                        <th>Updated at</th>
                                         <th></th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($items)
-                                        @foreach ($items as $item)
+                                    @if ($data->ratings)
+                                        @foreach ($data->ratings as $data)
                                             <tr>
-                                                <td><span class="text-muted">{{ $item['id'] }}</span></td>
+                                                <td><span class="text-muted">{{ $data->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item['id']}});" title="Show Detail">{{ $item['name'] }}</a>
-                                                </td>
-                                                <td>
-                                                    {{ string_truncate($item['location'], 50) }}
-                                                </td>
-                                                <td class="text-wrap text-break">
-                                                    {{ $item['tourist_count'] }}
+                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $item['view_count'] }}
+                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_id }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ time_format($item['created_at']) }}
+                                                    {{ $data->admin_answer??'Null' }}
                                                 </td>
-                                                <td class="text-center">
-                                                    @if ($item['status'] == 1)
-                                                        <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
-                                                    @else
-                                                        <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
-                                                    @endif
+                                                <td>
+                                                    {{ time_format($data->created_at) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($data->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
                                                     <span class="dropdown">
@@ -137,12 +107,8 @@
                                                             data-bs-boundary="viewport"
                                                             data-bs-toggle="dropdown">Actions</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item"
-                                                                href=" {{ route('rating.list', ['id' => $item['id']]) }}">See rating</a>
-                                                            <a class="dropdown-item"
-                                                                href=" {{ route('tour.edit', ['id' => $item['id']]) }}">Edit</a>
-                                                            <a class="dropdown-item"
-                                                                href="javascript: removeItem({{ $item['id']}})">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('rating.edit', ['id' => $data->id]) }}">Answer</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Remove</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -211,16 +177,29 @@
     </div>
 @endSection
 @section('page_js')
-<script type="text/javascript">
-    let modalContainer;
-    $(document).ready(function() {
-        modalContainer = new bootstrap.Modal('#modalContainer', {
-            keyboard: true,
-            backdrop: 'static'
+    <script type="text/javascript">
+        let modalContainer;
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
         });
-    });
 
-    let viewDetail = function(id) {
+        let viewDetail = function(id) {
+        axios.get(`/rating/detail/${id}`)
+            .then(function(response) {
+                $('#modalContainer div.modal-content').html(response.data.html);
+                modalContainer.show();
+            })
+            .catch(function(error) {
+                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            })
+            .finally(function() {
+            });
+        };
+
+        let viewDetailT = function(id) {
         axios.get(`/tour/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -231,9 +210,22 @@
             })
             .finally(function() {
             });
-    };
+        };
+        let viewDetailU = function(id) {
+        axios.get(`/user/detail/${id}`)
+            .then(function(response) {
+                $('#modalContainer div.modal-content').html(response.data.html);
+                modalContainer.show();
+            })
+            .catch(function(error) {
+                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            })
+            .finally(function() {
+            });
+        };
 
-    let removeItem = function(id) {
+
+        let removeItem = function(id) {
         $.confirm({
             theme: theme,
             title: 'Confirm',
@@ -244,7 +236,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/tour-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/rating-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();
@@ -256,5 +248,5 @@
             }
         });
     };
-</script>
+    </script>
 @endSection
