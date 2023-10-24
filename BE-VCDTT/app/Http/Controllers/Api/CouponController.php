@@ -194,10 +194,16 @@ class CouponController extends Controller
         }
     }
 
-    public function couponManagementAdd() {
-        //$tours
-        //$categories
-
+    public function couponManagementAdd(CouponRequest $request) {
+        if ($request->isMethod('POST')){
+            $data = $request->except('_token');
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/coupon-store', $data);
+            if($response->status() == 200) {
+                return redirect()->route('coupon.list')->with('success', 'Thêm mới tour thành công');
+            } else {
+                return redirect()->route('coupon.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
         return view('admin.coupons.add');
     }
 

@@ -24,15 +24,13 @@ class TourRequest extends FormRequest
      */
     public function rules(): array
     {
-
-
         $rule = [];
         $currentAction = $this->route()->getActionMethod();
 
         switch ($this->method()):
             case 'POST':
                 switch ($currentAction):
-                    case 'tourManagementAddAction':
+                    case 'tourManagementAdd':
 
                         // xây dựng validate
 

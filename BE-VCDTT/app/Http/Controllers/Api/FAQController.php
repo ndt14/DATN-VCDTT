@@ -69,8 +69,8 @@ class FAQController extends Controller
                 'faq' => new FAQResource($faq)
 
             ],
-            'message' => 'OK', 
-            'status' => 200, 
+            'message' => 'OK',
+            'status' => 200,
         ]);
     }
 
@@ -117,7 +117,7 @@ class FAQController extends Controller
             } else {
                 return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
             }
-        
+
     }
 
     /**
@@ -128,7 +128,7 @@ class FAQController extends Controller
         //
 
         $faq = FAQ::find($id);
-       
+
         if($faq) {
             $deleteFaq = $faq->delete();
             if (!$deleteFaq) {
@@ -147,7 +147,6 @@ class FAQController extends Controller
 
         $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq');
         if($data->status() == 200) {
-
             $data = json_decode(json_encode($data->json()['data']['faqs']), false);
             return view('admin.faqs.list', compact('data'));
         }else{
@@ -156,7 +155,16 @@ class FAQController extends Controller
         }
     }
 
-    public function faqManagementAdd() {
+    public function faqManagementAdd(FAQRequest $request) {
+        $data = $request->except('_token');
+        if ($request->isMethod('POST')) {
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/faq-store', $data);
+            if ($response->status() == 200) {
+                return redirect()->route('faq.list')->with('success', 'Thêm mới faq thành công');
+            } else {
+                return redirect()->route('faq.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        };
         return view('admin.faqs.add');
     }
 

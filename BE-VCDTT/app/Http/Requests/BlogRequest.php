@@ -21,8 +21,71 @@ class BlogRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $rule = [];
+        $currentAction = $this->route()->getActionMethod();
+
+        switch ($this->method()):
+            case 'POST':
+                switch ($currentAction):
+                    case 'blogManagementAdd':
+
+                        // xây dựng validate
+
+                        $rule = [
+                            'title' => 'required',
+                            'author' => 'required',
+                            'short_desc' => 'required',
+                            'main_img' => 'required',
+                        ];
+
+                        break;
+                    // case '':
+
+                    //     // xây dựng validate
+
+                    //     $rule = [
+                    //         'name' => 'required',
+                    //         'duration' => 'required',
+                    //         'child_price' => 'required',
+                    //         'adult_price' => 'required',
+                    //         'sale_percentage' => 'required',
+                    //         'start_destination' => 'required',
+                    //         'end_destination' => 'required',
+                    //         'tourist_count' => 'required',
+                    //         'details' => 'required',
+                    //         'pathway' => 'required',
+                    //         'location' => 'required',
+                    //         'exact_location' => 'required',
+                    //         'main_img' => 'required',
+                    //         'status' => 'required',
+                    //         'view_count' => 'required',
+                    //     ];
+
+                    //     break;
+
+                endswitch;
+                break;
+        endswitch;
+        return $rule;
     }
+
+    public function messages()
+    {
+        return
+            [
+                'title.required' => 'Không được bỏ trống tiêu đề!',
+                'author.required' => 'Không được bỏ trống tác giả!',
+                'short_desc.required' => 'Không được bỏ trống miêu tả ngắn!',
+                'main_img.required' => 'Không được bỏ trống ảnh!',
+            ];
+    }
+
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     $response = new Response([
+    //         'errors' => $validator->errors()
+    //     ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     throw (new ValidationException($validator, $response));
+    // }
 }
+

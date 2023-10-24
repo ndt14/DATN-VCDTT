@@ -21,17 +21,43 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'phone_number' => 'required',
-            'date_of_birth' => 'required',
-            'address' => 'required',
-            'gender' => 'required',
-            'image' => 'required',
-            'status' => 'required'
-        ];
+        $rule = [];
+        $currentAction = $this->route()->getActionMethod();
+
+        switch ($this->method()):
+            case 'POST':
+                switch ($currentAction):
+                    case 'userManagementAdd':
+                        $rule = [
+                            'name' => 'required',
+                            'email' => 'required',
+                            'password' => 'required',
+                            'phone_number' => 'required',
+                            'date_of_birth' => 'required',
+                            'address' => 'required',
+                            'gender' => 'required',
+                            'image' => 'required',
+                            'status' => 'required'
+                        ];
+                        break;
+
+                    case 'userManagementEdit':
+                        $rule = [
+                            'name' => 'required',
+                            'email' => 'required',
+                            'password' => 'required',
+                            'phone_number' => 'required',
+                            'date_of_birth' => 'required',
+                            'address' => 'required',
+                            'gender' => 'required',
+                            'image' => 'required',
+                            'status' => 'required'
+                        ];
+                    break;
+                endswitch;
+                break;
+        endswitch;
+        return $rule;
     }
 
     public function messages()

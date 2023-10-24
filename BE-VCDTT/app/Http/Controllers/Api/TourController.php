@@ -276,7 +276,7 @@ class TourController extends Controller
             }
         }
         if ($tour->save()) {
-            
+
             return response()->json([
                 'data' => [
                     'tour' => $tour
@@ -319,9 +319,18 @@ class TourController extends Controller
         return view('admin.tours.list', compact('items'));
     }
 
-    public function tourManagementAdd(Request $request)
+    public function tourManagementAdd(TourRequest $request)
     {
         $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')['data']['categoriesParent'];
+        if ($request->isMethod('POST')){
+            $data = $request->except('_token');
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
+            if($response->status() == 200) {
+                return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
+            } else {
+                return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
         return view('admin.tours.add', compact('categories'));
     }
 
