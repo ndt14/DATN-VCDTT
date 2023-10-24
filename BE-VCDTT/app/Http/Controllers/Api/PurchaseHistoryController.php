@@ -41,8 +41,10 @@ class PurchaseHistoryController extends Controller
     public function store(Request $request)
     {
         $users = User::where('is_admin',1)->get();
-        Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
+
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
+
+        Notification::send($users, new PurchaseNotification($purchaseHistory));
 
         if ($purchaseHistory->id) {
             $coupon = UsedCoupon::create($request->only(['user_id','coupon_code']));
@@ -193,6 +195,14 @@ class PurchaseHistoryController extends Controller
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
+    }
+
+    public function purchaseHistoryMarkAsRead(){
+        $user = User::where('is_admin',1)->first();
+        foreach ($user->unreadNotifications as $notification) {
+            $notification->markAsRead();
+        }
+        return redirect()->back();
     }
 
     //coupon
