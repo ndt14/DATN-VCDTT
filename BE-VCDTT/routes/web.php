@@ -59,8 +59,9 @@ Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('use
 Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
 
 Route::get('/category', [CategoryController::class,'cateManagementList'])->name('category.list');
-Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add');
-Route::get('/category/edit/{id}', [CategoryController::class,'cateManagementEdit'])->name('category.edit');
+Route::get('/category/add', [CategoryController::class,'cateManagementAdd'])->name('category.add');
+Route::post('/category/store', [CategoryController::class,'cateManagementStore'])->name('category.store');
+Route::match(['GET','POST'],'/category/edit/{id}', [CategoryController::class,'cateManagementEidt'])->name('category.edit');
 
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
