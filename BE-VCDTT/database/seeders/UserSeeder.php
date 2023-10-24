@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
                 'gender' => $faker->numberBetween(1,3),
                 'image' => $faker->imageUrl(null, 640, 480),
                 'status' => 1,
-                'is_admin' => 2,
+                'is_admin' => $faker->numberBetween(1, 2),
             ]);
         }
     }
