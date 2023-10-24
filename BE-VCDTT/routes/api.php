@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\TourToCategoryController;
 
 /*
@@ -60,9 +61,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/coupon', [CouponController::class, 'index']);
     Route::post('/coupon-store', [CouponController::class, 'store']);
     Route::get('/coupon-show/{id}', [CouponController::class, 'show']);
-    Route::get('/coupon-search', [CouponController::class, 'search_coupon']);
     Route::put('/coupon-edit/{id}', [CouponController::class, 'update'])->name('api.coupon.edit');
     Route::delete('/coupon-destroy/{id}', [CouponController::class, 'destroy']);
+
+    // Rating
+    Route::get('/rating/{id}', [RatingController::class, 'index']);
+    Route::post('/rating-store', [RatingController::class, 'store']);
+    Route::get('/rating-show/{id}', [RatingController::class, 'show']);
+    Route::put('/rating-edit/{id}', [RatingController::class, 'update'])->name('api.rating.edit');
+    Route::delete('/rating-destroy/{id}', [RatingController::class, 'destroy']);
 
     //FAQ
     Route::get('/faq', [FAQController::class, 'index']);

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+
 class TourController extends Controller
 {
     /**
@@ -276,7 +277,7 @@ class TourController extends Controller
             }
         }
         if ($tour->save()) {
-            
+
             return response()->json([
                 'data' => [
                     'tour' => $tour
