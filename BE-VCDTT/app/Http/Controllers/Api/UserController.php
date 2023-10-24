@@ -52,9 +52,9 @@ class UserController extends Controller
     public function search_user(Request $request)
     {
         $user = $request->query('name');
-    
+
         $results = User::where('name','LIKE',"%$user%")->get();
-    
+
         if(count($results) > 0) {
             return response()->json([
                 'data' => [
@@ -86,7 +86,7 @@ class UserController extends Controller
                 'message' => 'OK',
                 'status' => 200
             ]);
-        
+
     }
 
     /**
@@ -96,16 +96,16 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $data = $request->except('_token', '_method');
-    
+
         if (!$user) {
             return response()->json(['message' => 'User not found', 'status' => 404]);
         }
-    
+
         if (empty($data['password'])) {
             $data['password'] = $user->password;
         }
         $user->update($data);
-    
+
         return response()->json([
             'data' => [
                 'user' => $user
@@ -122,7 +122,7 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-       
+
         if($user) {
             $deleteUser = $user->delete();
             if (!$deleteUser) {

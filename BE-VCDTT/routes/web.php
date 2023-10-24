@@ -69,6 +69,7 @@ Route::post('/file-upload', [FileController::class, 'store'])->name('file.store'
 Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list');
 Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit');
 Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
+Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
 
 // Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
 

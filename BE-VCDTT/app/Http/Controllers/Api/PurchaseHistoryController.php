@@ -40,9 +40,12 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $users = User::where('is_admin', 1)->get();
-        Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
+
+        $users = User::where('is_admin',1)->get();
+
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
+
+        Notification::send($users, new PurchaseNotification($purchaseHistory));
 
         if ($purchaseHistory->id) {
             $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
@@ -115,7 +118,8 @@ class PurchaseHistoryController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $input = $request->all();
+        $input = $request->except('update_admin');
+        $updateAdmin = $request->only('update_admin');
 
         $purchaseHistory = PurchaseHistory::find($id);
 
@@ -128,7 +132,11 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            // $purchaseHistory->notify(new SendMailToClient());
+
+            if($updateAdmin){
+                $purchaseHistory->notify(new SendMailToClient());
+            }
+          
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -191,7 +199,13 @@ class PurchaseHistoryController extends Controller
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-
+    public function purchaseHistoryMarkAsRead(){
+        $user = User::where('is_admin',1)->first();
+        foreach ($user->unreadNotifications as $notification) {
+            $notification->markAsRead();
+        }
+        return redirect()->back();
+    }
 
     //coupon
 
