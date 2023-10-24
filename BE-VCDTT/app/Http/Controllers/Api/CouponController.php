@@ -121,11 +121,8 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request, string $id)
     {
-        $coupon = Coupon::find($id);
-        if (!$coupon) {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
-        }
-        $input = $request->except('_token','type','price');
+        $input = $request->except('_token','type','price','_method');
+
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
         $input['code'] = Str::upper($input['code']);
@@ -136,9 +133,9 @@ class CouponController extends Controller
             $input['fixed_price'] = null;
             $input['percentage_price'] = $request->price;
         }
-        $coupon->fill($input);
-
-        if ($coupon->save()) {
+        $coupon = Coupon::find($id);
+        $coupon->update($input);
+        if ($coupon->id) {
             return response()->json([
                 'data' => [
                     'coupon' => new CouponResource($coupon)
