@@ -10,14 +10,15 @@ import {
   persistStore,
 } from "redux-persist";
 
-
-import storage from 'redux-persist/lib/storage';
-import TourApi, { tourReducer } from '../api/tours';
-import FaqApi, { faqReducer } from '../api/faqs';
+import storage from "redux-persist/lib/storage";
+import TourApi, { tourReducer } from "../api/tours";
+import FaqApi, { faqReducer } from "../api/faqs";
 import BlogApi, { blogReducer } from "../api/blogs";
 import BillApi, { billReducer } from "../api/bill";
 import AuthApi, { authReducer } from "../api/auth";
-
+import CouponApi, { couponReducer } from "../api/coupon";
+import CategoryApi, { categoryReducer } from "../api/category";
+import UserApi, { userReducer } from "../api/user";
 
 const persistConfig = {
   key: "root",
@@ -25,17 +26,27 @@ const persistConfig = {
   whitelist: ["cart"],
 };
 const rootReducer = combineReducers({
-
-    // [productApi.reducerPath]: productReducer,
-    // [authApi.reducerPath]: authApi.reducer,
-    [TourApi.reducerPath]: tourReducer,
-    [FaqApi.reducerPath]: faqReducer,
-     [BlogApi.reducerPath]: blogReducer,
-     [BillApi.reducerPath]: billReducer,
-     [AuthApi.reducerPath]: authReducer
-})
-const middleware = [TourApi.middleware, FaqApi.middleware,BlogApi.middleware,BillApi.middleware,AuthApi.middleware]
- 
+  // [productApi.reducerPath]: productReducer,
+  // [authApi.reducerPath]: authApi.reducer,
+  [TourApi.reducerPath]: tourReducer,
+  [FaqApi.reducerPath]: faqReducer,
+  [BlogApi.reducerPath]: blogReducer,
+  [BillApi.reducerPath]: billReducer,
+  [AuthApi.reducerPath]: authReducer,
+  [CouponApi.reducerPath]: couponReducer,
+  [CategoryApi.reducerPath]: categoryReducer,
+  [UserApi.reducerPath]: userReducer,
+});
+const middleware = [
+  TourApi.middleware,
+  FaqApi.middleware,
+  BlogApi.middleware,
+  BillApi.middleware,
+  AuthApi.middleware,
+  CouponApi.middleware,
+  CategoryApi.middleware,
+  UserApi.middleware,
+];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({

@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                @if (Session::has('success'))
+                <!-- @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif
+                @endif -->
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -57,20 +57,37 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form  class="card" action="{{ route('blog.edit.post') }}" method="POST">
+            <form id="frmEdit" class="card" action="{{ route('api.blog.edit', ['id' => $data['id']])}}" method="POST">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Edit {{$data['title']}}
+                </h2>
+            </div>
             @csrf
+            @method('PUT')
             <input type="hidden" name="id" value="{{$data['id']}}">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Title" value="{{$data['title']}}" >
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('title')
-                                {{ $message }}
-                            @enderror
-                        </span>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Title" value="{{$data['title']}}" >
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('title')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label class="form-label">Author</label>
+                            <input type="text" name="author" class="form-control" placeholder="" value="{{$data['author']}}">
+                            <span class="text-danger d-flex justify-content-start">
+                                @error('author')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                        </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 col-8">
                         <label class="form-label">Image</label>
                         <input type="text" name="main_img" class="form-control" placeholder="Image" value=" {{$data['main_img']}}">
                         <span class="text-danger d-flex justify-content-start">
@@ -79,15 +96,7 @@
                             @enderror
                         </span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Author</label>
-                        <input type="text" name="author" class="form-control" placeholder="" value="{{$data['author']}}">
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('author')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
+
                     <div class="mb-3">
                         <div class="form-label">Short description</div>
                         <input name="short_desc" type="text" class="form-control" value="{{$data['short_desc']}}">
@@ -99,18 +108,9 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Description</div>
-                        <input name="description" type="text" class="form-control" value=" {{$data['description']}}" >
+                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description">{{$data['description']}}</textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('description')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-label">View Count</div>
-                        <input name="view_count" type="text" class="form-control" value="{{$data['view_count']}}" disabled>
-                        <span class="text-danger d-flex justify-content-start">
-                            @error('view_count')
                                 {{ $message }}
                             @enderror
                         </span>
@@ -136,7 +136,7 @@
                     </div>
                     </div>
                     <div class="card-footer text-right">
-                        <button id="" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -145,37 +145,37 @@
 </div>
 @endsection
 @section('page_js')
-<!-- {{-- <script type="text/javascript">
-        if ($('#frmAdd').length) {
-            $('#frmAdd').submit(function() {
-                let options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitAdd').addClass('btn-loading');
-                        $('#btnSubmitAdd').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        if(response.status == 404){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.errors, delay = 5000, dismissible = true);
-                        }
-                        if(response.status == 200){
-                            $('#btnSubmitAdd').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.errors, delay = 6000, dismissible = true);
-                        }
-                    },
-                    error: function() {
-                        $('#btnSubmitAdd').removeClass('btn-loading');
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
+<script type="text/javascript">
+    if ($('#frmEdit').length) {
+        $('#frmEdit').submit(function() {
+            let options = {
+                beforeSubmit: function(formData, jqForm, options) {
+                    $('#btnSubmitEdit').addClass('btn-loading');
+                    $('#btnSubmitEdit').addClass("disabled");
+                },
+                success: function(response, statusText, xhr, $form) {
+                    $('#btnSubmitEdit').removeClass('btn-loading');
+                    if(response.status == 500){
+                        $('#btnSubmitEdit').removeClass("disabled");
+                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+                    }
+                    if(response.status == 200){
+                        $('#btnSubmitEdit').removeClass("disabled");
+                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+                    }
+                },
+                error: function() {
+                    $('#btnSubmitEdit').removeClass('btn-loading');
+                    $('#btnSubmitEdit').removeClass("disabled");
+                    bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+                },
+                dataType: 'json',
+                clearForm: false,
+                resetForm: false
+            };
+            $(this).ajaxSubmit(options);
+            return false;
+        });
     }
-</script> --}} -->
+</script>
 @endSection

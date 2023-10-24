@@ -21,8 +21,44 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $rule = [];
+        $currentAction = $this->route()->getActionMethod();
+
+        switch ($this->method()):
+            case 'POST':
+                switch ($currentAction):
+                    case 'cateManagementStore':
+
+                        // xây dựng validate
+
+                        $rule = [
+                            'name' => 'required|unique:categories',
+                        ];
+
+                        break;
+                    case 'cateManagementEidt':
+
+                        // xây dựng validate
+
+                        $rule = [
+                            'name' => 'required|unique:categories',
+                        ];
+
+                        break;
+
+                endswitch;
+                break;
+        endswitch;
+
+        return $rule;
+
+    }
+
+    public function messages()
+    {
         return [
-            //
+            'name.required' => 'Tên danh mục không được trống',
+            'name.unique' => 'Tên danh mục đang trùng'
         ];
     }
 }

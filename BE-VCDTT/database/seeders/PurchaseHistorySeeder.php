@@ -27,7 +27,8 @@ class PurchaseHistorySeeder extends Seeder
                 'address' => $faker->address(),
                 'phone_number' => $faker->phoneNumber(),
                 'gender' => $faker->numberBetween(1,3),
-                'honorific' => 'Ông' ,
+                'transaction_id' => $faker->randomNumber(8, true),
+
                 'suggestion' => $faker->sentence(20),
                 'tour_name' => $faker->sentence(10),
                 'tour_duration' => $faker->randomDigit(),
@@ -39,7 +40,7 @@ class PurchaseHistorySeeder extends Seeder
                 'tour_start_destination' => $faker->sentence(3),
                 'tour_end_destination' => $faker->sentence(3),
                 'tour_location' => $faker->sentence(),
-                'coupon_info' => $faker->sentence(),
+                'coupon_name' => $faker->sentence(),
                 'coupon_percentage' => $faker->randomNumber(2, true),
                 'refund_percentage' => $faker->randomNumber(2, true),
                 'coupon_fixed' => $faker->randomNumber(5, true),

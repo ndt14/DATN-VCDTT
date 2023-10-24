@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('root_name')->nullable();
+            $table->longText('root_name')->nullable();
             $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
+            $table->text('meta_description')->nullable();
             $table->string('meta_keyword')->nullable();
             $table->string('seo_tags')->nullable();
             $table->timestamps();

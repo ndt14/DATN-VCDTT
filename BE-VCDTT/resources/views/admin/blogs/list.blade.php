@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                        <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
+                                        <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -125,7 +125,7 @@
                                             @if($data['status'] == 1)
                                             <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Activated"></span>
                                             @else
-                                            <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                            <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unactivated"></span>
                                             @endif
                                         </td>
                                         <td class="text-end">
@@ -133,7 +133,7 @@
                                                 <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item" href="{{route('blog.edit', ['id'=>$data['id']])}}">Edit</a>
-                                                    <a class="dropdown-item" href="{{route('blog.delete', ['id'=>$data['id']])}}">Remove</a>
+                                                    <a class="dropdown-item" href="javascript: removeItem({{ $data['id']}})">Remove</a>
                                                 </div>
                                             </span> 
                                         </td>
@@ -215,7 +215,6 @@
 <script type="text/javascript">
     let modalContainer;
     $(document).ready(function() {
-        Fancybox.bind('[data-fancybox]');
         modalContainer = new bootstrap.Modal('#modalContainer', {
             keyboard: true,
             backdrop: 'static'
@@ -246,9 +245,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        let postData = new FormData();
-                        postData.append('id', id);
-                        axios.post(`/admin/cms/posts/remove`, postData).then(function(response) {
+                        axios.delete(`/api/blog-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();

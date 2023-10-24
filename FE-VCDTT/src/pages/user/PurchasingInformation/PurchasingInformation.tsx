@@ -1,7 +1,8 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
+import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -14,12 +15,16 @@ const PurchasingInformation = (props: Props) => {
     name: string;
     email: string;
     phone_number: string;
+    message: string;
+    honorific: string;
   }
   const formik = useFormik<FormValues>({
     initialValues: {
       name: "",
       email: "",
       phone_number: "",
+      message: "",
+      honorific: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên"),
@@ -27,6 +32,7 @@ const PurchasingInformation = (props: Props) => {
         .email("Sai định dạng email")
         .required("Email không được để trống"),
       phone_number: Yup.string().required("Nhập số điện thoại"),
+      honorific: Yup.string().required("Please select an option"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -42,6 +48,7 @@ const PurchasingInformation = (props: Props) => {
   //
   const navigate = useNavigate();
 
+  const [checkCoupon] = useCheckCouponMutation();
   const [addBill] = useAddBillMutation();
   const location = useLocation();
   const {
@@ -57,7 +64,6 @@ const PurchasingInformation = (props: Props) => {
     tourPrice,
     tourChildPrice,
   } = location.state;
-  console.log(tourName);
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -66,6 +72,8 @@ const PurchasingInformation = (props: Props) => {
   const userEmail = userData?.email;
   const phoneNumber = userData?.phone_number;
   const userAddress = userData?.address;
+  const userLogIn = localStorage.getItem("isLoggedIn");
+
   // Xử lý xác nhận thông tin form
   const [formData, setFormData] = useState({
     user_info: "",
@@ -82,12 +90,56 @@ const PurchasingInformation = (props: Props) => {
       [name]: value,
     }));
   };
+  // Coupon
+  const [percentage, setPercentage] = useState<number>(0);
+  const [couponName, setCouponName] = useState();
+  const [formCoupon, setFormCoupon] = useState({
+    user_id: userId ? userId : "",
+    coupon_code: "",
+  });
+
+  const finalPrice =
+    ((productNumber * price + productChildNumber * childPrice) *
+      (100 - percentage)) /
+    100;
+  // console.log(finalPrice);
+  const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(finalPrice);
+
+  const handleCouponChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormCoupon((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleCouponSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // console.log(formCoupon);
+    checkCoupon(formCoupon)
+      .then((response) => {
+        alert(response?.data?.message);
+        const discount = response?.data?.coupon.percentage_price;
+        const coupon_name = response?.data?.coupon.name;
+        console.log(coupon_name);
+        setPercentage(discount);
+        setCouponName(coupon_name);
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+  };
+  //
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const variables = {
-      name: userName,
+      name: formik.values.name,
       user_id: userId,
       tour_name: tourName,
       child_count: productChildNumber,
@@ -96,24 +148,24 @@ const PurchasingInformation = (props: Props) => {
       tour_location: tourLocation,
       tour_child_price: tourChildPrice,
       tour_adult_price: tourPrice,
-      email: userEmail,
-      phone_number: phoneNumber,
-      address: userAddress,
-
-      // Add other variables as needed
+      email: formik.values.email,
+      phone_number: formik.values.phone_number,
+      suggestion: formik.values.message,
+      gender: parseInt(formik.values.honorific),
+      coupon_name: couponName,
+      coupon_percentage: percentage,
+      tour_sale_percentage: 0,
     };
     console.log(variables);
+    console.log(couponName);
 
     addBill(variables)
       .then((response) => {
         alert("Đặt tour thành công");
-
-        const billID = response?.data.data.purchase_history.id;
+        const billID = response?.data?.data?.purchase_history.id;
         console.log(billID);
+        localStorage.setItem("billIdSuccess", JSON.stringify(billID));
         const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-        // window.open(
-        //   `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`
-        // );
         window.location.href = VnpayURL;
       })
       .catch((error) => {
@@ -123,6 +175,7 @@ const PurchasingInformation = (props: Props) => {
   };
 
   // console.log(onChange);
+
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -157,11 +210,24 @@ const PurchasingInformation = (props: Props) => {
                       <div className="col-sm-4">
                         <div className="form-group">
                           <label>Danh xưng</label>
-                          <select className="input-border">
+                          <select
+                            className="input-border"
+                            name="honorific"
+                            value={formik.values.honorific}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="">-- Lựa chọn --</option>
                             <option value="1">Ông</option>
                             <option value="2">Bà</option>
                             <option value="3">Khác</option>
                           </select>
+                          {formik.touched.honorific &&
+                            formik.errors.honorific && (
+                              <p className="text-danger">
+                                {formik.errors.honorific}
+                              </p>
+                            )}
                         </div>
                         {/* {selectedTitle === "" && <div className="validation-error">Please select a title.</div>} */}
                       </div>
@@ -183,7 +249,6 @@ const PurchasingInformation = (props: Props) => {
                             <p className="text-danger">{formik.errors.name}</p>
                           )}
                         </div>
-                        {/* {nameError && <div className="validation-error text-danger">{nameError}</div>} */}
                       </div>
 
                       <div className="col-sm-6">
@@ -240,6 +305,10 @@ const PurchasingInformation = (props: Props) => {
                             rows={6}
                             placeholder="Yêu cầu đặc biệt dành cho tour"
                             className="border"
+                            name="message"
+                            value={formik.values.message}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           ></textarea>
                         </div>
                       </div>
@@ -271,26 +340,22 @@ const PurchasingInformation = (props: Props) => {
                       </div>
 
                       <div className="col-sm-6">
-                        <p> {formattedTourPrice}</p>
-                        <p>{formattedTourChildPrice}</p>
+                        <p> {formattedTourChildPrice}</p>
+                        <p>{formattedTourPrice}</p>
                       </div>
-                      <div className="coupon-field">
-                        {/* <label>Have a Coupon? <a href="#">Click here to enter your code</a></label> */}
-                        <div className="form-group">
-                          <input
-                            type="text"
-                            name="coupon"
-                            placeholder="Nhập mã giảm giá"
-                            className="input-border"
-                          />
-                          <input
-                            type="submit"
-                            name="submit"
-                            value="Áp mã giảm giá"
-                            className="border"
-                          />
+                      {percentage !== 0 ? (
+                        <div className="col-sm-6">
+                          <p>
+                            {" "}
+                            Giá sau khi nhập coupon:{" "}
+                            <span className="fs-4 text-danger fw-bold">
+                              {formattedFinalPrice}
+                            </span>
+                          </p>
                         </div>
-                      </div>
+                      ) : (
+                        <div></div>
+                      )}
                     </div>
                     {/* Button trigger modal xác nhận thông tin */}
                     <button
@@ -405,6 +470,21 @@ const PurchasingInformation = (props: Props) => {
                                   disabled
                                 />
                               </div>
+                              {percentage !== 0 ? (
+                                <div className="form-group">
+                                  <label htmlFor="">
+                                    Giá tour sau khi nhập coupon
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="created_at"
+                                    value={formattedFinalPrice}
+                                    disabled
+                                  />
+                                </div>
+                              ) : (
+                                <div></div>
+                              )}
                               <div className="form-group">
                                 <label htmlFor="">Phương thức thanh toán</label>
                                 <div className="mr-3">
@@ -469,6 +549,39 @@ const PurchasingInformation = (props: Props) => {
                         <p>Trẻ em : {productChildNumber}</p>
                       </div>
                     </div>
+                  </div>
+                  <div className="coupon-field">
+                    <h4>Nhập coupon</h4>
+                    {userLogIn == "true" ? (
+                      <form onSubmit={handleCouponSubmit}>
+                        <div className="form-group row">
+                          <input
+                            type="text"
+                            name="coupon_code"
+                            placeholder="Nhập mã giảm giá"
+                            className="input-border col-8"
+                            value={formCoupon.coupon_code}
+                            onChange={handleCouponChange}
+                          />
+                          <input
+                            type="hidden"
+                            name="user_id"
+                            className="input-border"
+                            value={formCoupon.user_id}
+                          />
+                          <button className="btn-continue col-4" type="submit">
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <div>
+                        <p className="text-danger">
+                          Bạn hãy đăng nhập hoặc đăng ký tài khoản mới để có thể
+                          sử dụng coupon giảm giá
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </aside>
               </div>

@@ -29,3 +29,6 @@ img {
 .hide-autoplay-button .tns-nav-autoplay {
     display: none;
 }
+.w-input{
+    width: 200px !important;
+}

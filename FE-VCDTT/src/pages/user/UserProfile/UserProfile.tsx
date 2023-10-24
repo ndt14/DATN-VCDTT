@@ -1,242 +1,199 @@
 import React from "react";
 import "./UserProfile.css";
+import { Tabs } from "antd";
+import { useState, useEffect } from "react";
+import { useUpdateUserMutation, useGetUserByIdQuery } from "../../../api/user";
+import { User } from "../../../interfaces/User";
+import { Link } from "react-router-dom";
+import { log } from "console";
 
 const UserProfile = () => {
-  return (
-    <section className="container" style={{ marginBottom: "200px" }}>
-      <div style={{ height: "200px" }}></div>
-      <div className="row">
-        <div className="col-4">
-          <div className="border">
-            <div className="d-flex p-3">
-              <div>
-                <img
-                  style={{ width: "70px" }}
-                  src="../../../../assets/images/travel.png"
-                  alt=""
-                />
-              </div>
-              <div>
-                <h3>Vũ Hồng Thái</h3>
-                <p>hongthai96961996@gmail.com</p>
-              </div>
-            </div>
-            <hr />
-            {/* Left panel */}
-            <nav>
-              <ul className="nav row" id="myTab" role="tablist">
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link border-0 btn w-100"
-                    data-bs-toggle="tab"
-                    data-bs-target="#user-info"
-                    type="button"
-                    role="tab"
-                    aria-controls="profile"
-                    aria-selected="false"
-                  >
-                    Chỉnh sửa
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link border-0 btn w-100"
-                    id="-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#tour-ordered"
-                    type="button"
-                    role="tab"
-                    aria-controls="contact"
-                    aria-selected="false"
-                  >
-                    Tour đã đặt
-                  </button>
-                </li>
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+  const { data: userData } = useGetUserByIdQuery(userId || "");
 
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link border-0 btn w-100"
-                    data-bs-toggle="tab"
-                    data-bs-target="#tour-favorite"
-                    type="button"
-                    role="tab"
-                    aria-controls="profile"
-                    aria-selected="false"
-                  >
-                    Tour yêu thích
-                  </button>
-                </li>
-              </ul>
-            </nav>
-            {/* End left panel */}
+  const userName = userData?.data?.user.name;
+
+  const userEmail = userData?.data?.user.email;
+  const phoneNumber = userData?.data?.user.phone_number;
+  const userAddress = userData?.data?.user.address;
+
+  const { TabPane } = Tabs;
+  const [editUser] = useUpdateUserMutation();
+
+  const [formValues, setFormValues] = useState({
+    id: userId ? userId : "",
+    name: userName,
+    email: userEmail,
+    address: userAddress,
+    phone_number: phoneNumber,
+  });
+  useEffect(() => {
+    if (userData) {
+      const { name, email, phone_number, address } = userData.data.user;
+      setFormValues({
+        ...formValues,
+        name: name || "",
+        email: email || "",
+        address: address || "",
+        phone_number: phone_number || "",
+      });
+    }
+  }, [userData]);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formValues);
+    editUser(formValues)
+      .then((response) => {
+        alert(response?.data?.message);
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+  };
+  return (
+    <div>
+      <section className="inner-banner-wrap">
+        <div
+          className="inner-baner-container"
+          style={{
+            backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
+          }}
+        >
+          <div className="container">
+            <div className="inner-banner-content">
+              <h1 className="inner-title">Tìm kiếm tour</h1>
+            </div>
           </div>
         </div>
-        <div className="col-8">
-          {/*  */}
-          <div className="tab-content">
-            <div className="tab-pane border fade show active" id="user-info">
-              <ul className="nav nav-tabs" id="myTab" role="tablist">
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link active"
-                    id="home-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#home"
-                    type="button"
-                    role="tab"
-                    aria-controls="home"
-                    aria-selected="true"
-                  >
-                    Thông tin cá nhân
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link"
-                    id="profile-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#profile"
-                    type="button"
-                    role="tab"
-                    aria-controls="profile"
-                    aria-selected="false"
-                  >
-                    Chỉnh sửa thông tin
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link"
-                    id="contact-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#contact"
-                    type="button"
-                    role="tab"
-                    aria-controls="contact"
-                    aria-selected="false"
-                  >
-                    Chỉnh sửa mật khẩu
-                  </button>
-                </li>
-              </ul>
-              <div className="tab-content p-3">
-                <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active p-3"
-                    id="home"
-                    role="tabpanel"
-                    aria-labelledby="home-tab"
-                  >
-                    <form action="">
-                      <label className="my-2" htmlFor="">
-                        Họ và tên:
-                      </label>
-                      <br />
-                      <input
-                        type="text"
-                        className="bg-secondary text-white"
-                        disabled
-                        value={"Vũ Hồng Thái"}
-                      />{" "}
-                      <br />
-                      <label className="my-2" htmlFor="">
-                        Số điện thoại:
-                      </label>
-                      <br />
-                      <input type="text" disabled value={"0904604796"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Địa chỉ:
-                      </label>
-                      <br />
-                      <input
-                        type="text"
-                        disabled
-                        value={"Linh Đàm, Hà Nội"}
-                      />{" "}
-                      <br />
-                      <label className="my-2" htmlFor="">
-                        Ngày sinh:
-                      </label>
-                      <br />
-                      <input type="text" disabled value={"09/06/1996"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Giới tính:
-                      </label>
-                      <br />
-                      <input type="text" disabled value={"Nam"} /> <br />
-                    </form>
-                  </div>
-                  <div
-                    className="tab-pane fade p-3"
-                    id="profile"
-                    role="tabpanel"
-                    aria-labelledby="profile-tab"
-                  >
-                    <form action="">
-                      <label className="my-2" htmlFor="">
-                        Họ và tên:
-                      </label>
-                      <br />
-                      <input type="text" value={"Vũ Hồng Thái"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Số điện thoại:
-                      </label>
-                      <br />
-                      <input type="text" value={"0904604796"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Địa chỉ:
-                      </label>
-                      <br />
-                      <input type="text" value={"Linh Đàm, Hà Nội"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Ngày sinh:
-                      </label>
-                      <br />
-                      <input type="text" value={"09/06/1996"} /> <br />
-                      <label className="my-2" htmlFor="">
-                        Giới tính:
-                      </label>
-                      <br />
-                      <input type="text" value={"Nam"} /> <br />
-                      <button type="submit">Lưu thông tin</button>
-                    </form>
-                  </div>
-                  <div
-                    className="tab-pane fade p-3"
-                    id="contact"
-                    role="tabpanel"
-                    aria-labelledby="contact-tab"
-                  >
-                    <label className="my-2" htmlFor="">
-                      Mật khẩu cũ
-                    </label>
-                    <br />
-                    <input type="password" value={"12345678"} /> <br />
-                    <label className="my-2" htmlFor="">
-                      Mật khẩu mới
-                    </label>
-                    <br />
-                    <input type="password" value={"12345678"} /> <br />
-                    <label className="my-2" htmlFor="">
-                      Xác nhận mật khẩu mới
-                    </label>
-                    <br />
-                    <input type="password" value={"12345678"} /> <br />
-                    <button type="submit">Đổi mật khẩu</button>
-                  </div>
+        <div className="inner-shape"></div>
+      </section>
+      <section className="container" style={{ marginBottom: "200px" }}>
+        <div className="row">
+          <div className="col-4">
+            <div className="border">
+              <div className="d-flex p-3">
+                <div>
+                  <img
+                    style={{ width: "70px" }}
+                    src="../../../../assets/images/travel.png"
+                    alt=""
+                  />
+                </div>
+                <div>
+                  <h3>{userName} </h3>
+                  <p>{userEmail}</p>
                 </div>
               </div>
-            </div>
-            <div className="tab-pane border fade p-3" id="tour-ordered">
-              <h3>Tour đã đặt</h3>
-            </div>
-            <div className="tab-pane border fade p-3" id="tour-favorite">
-              <h3>Tour yêu thích</h3>
+              <hr />
+              {/* Left panel */}
+
+              <Link
+                to={"/user/profile"}
+                className="nav row "
+                id="myTab"
+                role="tablist"
+              >
+                <button className=" border-0 btn w-100" type="button">
+                  Hồ sơ
+                </button>
+              </Link>
+
+              <Link
+                to={"/user/tours"}
+                className="nav row "
+                id="myTab"
+                role="tablist"
+              >
+                <button className="border-0 btn w-100" type="button">
+                  Tour đã đặt
+                </button>
+              </Link>
+
+              <Link
+                to={"/user/profile"}
+                className="nav row "
+                id="myTab"
+                role="tablist"
+              >
+                <button className=" border-0 btn w-100" type="button">
+                  Tour yêu thích
+                </button>
+              </Link>
+
+              {/* End left panel */}
             </div>
           </div>
+          <div className="col-8">
+            {/*  */}
+            <Tabs
+              defaultActiveKey="1"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <TabPane tab="Thông tin của tôi" key="1" style={{ width: "50%" }}>
+                <p>Họ và tên: {userName}</p>
+                <p>Email: {userEmail}</p>
+              </TabPane>
+              <TabPane tab="Chỉnh sửa thông tin" key="2">
+                <form onSubmit={handleUpdate}>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Họ tên <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        className=""
+                        value={formValues.name}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Email <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="text"
+                        name="email"
+                        className=""
+                        value={formValues.email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Số điện thoại <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="text"
+                        name="phone_number"
+                        className=""
+                        value={formValues.phone_number}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <button type="submit">Submit</button>
+                </form>
+              </TabPane>
+            </Tabs>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

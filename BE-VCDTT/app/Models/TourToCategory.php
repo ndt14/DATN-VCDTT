@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class TourToCategory extends Model
 {
-    use HasFactory;
-
+    use HasFactory, Searchable;
     protected $table = 'tours_to_categories';
 
     protected $fillable = [
@@ -46,5 +46,4 @@ class TourToCategory extends Model
         ];
         return $data;
     }
-
 }

@@ -1,9 +1,18 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
+
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\UserController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,23 +35,48 @@ Route::get('/test', function(){
 });
 
 Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
-Route::match(['GET','POST'],'/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
-Route::match(['GET','POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
-Route::get('/tour/delete/{id}', [TourController::class, 'tourManagementDelete'])->name('tour.delete');
+Route::get('/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
+Route::get('/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
+Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail');
 
 Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list');
 Route::get('/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
-Route::post('/blog/add/new', [BlogController::class, 'blogManagementAddAction'])->name('blog.add.new');
 Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
-Route::post('/blog/edit/post', [BlogController::class, 'blogManagementEditAction'])->name('blog.edit.post');
 Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
-Route::get('/blog/delete/{id}', [BlogController::class, 'blogManagementDelete'])->name('blog.delete');
 
 Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
-Route::get('/faq/delete/{id}', [FAQController::class, 'faqManagementDelete'])->name('faq.delete');
 Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
-Route::post('/faq/add/new', [FAQController::class,'faqManagementAddAction'])->name('faq.add.new');
 Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
-Route::post('/faq/edit/post', [FAQController::class,'faqManagementEditAction'])->name('faq.edit.faq');
+Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');
+Route::get('/rating/add', [RatingController::class,'ratingManagementAdd'])->name('rating.add');
+Route::get('/rating/edit/{id}', [RatingController::class,'ratingManagementEdit'])->name('rating.edit');
+Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail');
+
+Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
+Route::get('/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');
+Route::get('/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
+Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail');
+
+Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
+Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');
+Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
+Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
+
+Route::get('/category', [CategoryController::class,'cateManagementList'])->name('category.list');
+Route::get('/category/add', [CategoryController::class,'cateManagementAdd'])->name('category.add');
+Route::post('/category/store', [CategoryController::class,'cateManagementStore'])->name('category.store');
+Route::match(['GET','POST'],'/category/edit/{id}', [CategoryController::class,'cateManagementEidt'])->name('category.edit');
+
+
+Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
+
+Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list');
+Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit');
+Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
+Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
+
+// Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
 
 require __DIR__.'/auth.php';

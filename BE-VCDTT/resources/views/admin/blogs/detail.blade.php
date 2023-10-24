@@ -33,9 +33,7 @@
                 <h3 class="card-title mt-4">Main image</h3>
                 <div class="row">
                     @if ($item['main_img'])
-                    <a data-fancybox data-src="{{ $item['main_img'] }}" href="javascript:void(0);" class="mx-auto col-6">
                         <img src="{{ $item['main_img'] }}" alt="Not found image" style="max-height: 350px">
-                    </a>
                     @endif
                 </div>
                 <h3 class="card-title mt-4">Short description</h3>
@@ -43,8 +41,8 @@
                     {{ $item['short_desc'] }}
                 </div>
                 <h3 class="card-title mt-4">Description</h3>
-                <div>
-                    {{ $item['description'] }}
+                <div class="markdown">
+                    {!! $item['description'] !!}
                 </div>
             </div>
             <div class="card-footer bg-transparent mt-auto">

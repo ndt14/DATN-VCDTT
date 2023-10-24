@@ -8,7 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
 use App\Http\Requests\TourRequest;
 use App\Http\Resources\CouponResource;
+use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CouponController extends Controller
 {
@@ -20,9 +23,9 @@ class CouponController extends Controller
             return response()->json([
                 'data' => [
                     'coupons' =>  CouponResource::collection($listCounpon),
-                    'message' => 'OK',
-                    'status' => 200
-                ]
+                ],
+                'message' => 'OK',
+                'status' => 200
             ]);
         }else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -34,18 +37,24 @@ class CouponController extends Controller
      */
     public function store(CouponRequest $request)
     {
-        $input = $request->all();
+        $coupon = $request->except('_token','type','price');
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
-        $new_coupon = Coupon::create($input);
+        $coupon['code'] = Str::upper($coupon['code']);
+        if($request->type != 1){
+            $coupon['fixed_price']= $request->price;
+        }else{
+            $coupon['percentage_price'] = $request->price;
+        }
+        $coupon = Coupon::create($coupon);
 
-        if($new_coupon->id) {
+        if($coupon->id) {
             return response()->json([
                 'data' => [
-                    'coupon' => new CouponResource($new_coupon),
-                    'message' => 'OK',
-                    'status' => 201
-                ]
+                    'coupon' => new CouponResource($coupon),
+                ],
+                'message' => 'Add success',
+                'status' => 200
             ]);
         }else {
             return response()->json(
@@ -69,9 +78,9 @@ class CouponController extends Controller
             return response()->json([
                 'data' => [
                     'coupon' => new CouponResource($coupon),
-                    'message' => 'OK',
-                    'status' => 200
-                ]
+                ],
+                'message' => 'OK',
+                'status' => 200
             ]);
         }else {
             return response()->json([
@@ -93,10 +102,10 @@ class CouponController extends Controller
             return response()->json(
                 [
                     'data' => [
-                        'coupons' => CouponResource::collection($result),
-                        'message' => 'OK',
-                        'status' => 200
-                    ]
+                        'coupons' => new CouponResource($result),
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
                 ]
             );
         }else {
@@ -112,21 +121,24 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request, string $id)
     {
-        //
+        $input = $request->except('_token','type','price','_method');
 
-        $input = $request->all();
-
-        $coupon = Coupon::find($id);
-        if (!$coupon) {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
+        // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
+        $input['code'] = Str::upper($input['code']);
+        if($request->type != 1){
+            $input['percentage_price'] = null;
+            $input['fixed_price'] = $request->price;
+        }else{
+            $input['fixed_price'] = null;
+            $input['percentage_price'] = $request->price;
         }
-
-        $coupon->fill($input);
-
-        if ($coupon->save()) {
+        $coupon = Coupon::find($id);
+        $coupon->update($input);
+        if ($coupon->id) {
             return response()->json([
                 'data' => [
-                    'coupon' => $coupon
+                    'coupon' => new CouponResource($coupon)
                 ],
                 'message' => 'OK',
                 'status' => 200,
@@ -144,15 +156,15 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         if($coupon) {
-          $delete_coupon =  $coupon->delete();
-            
+            $delete_coupon =  $coupon->delete();
+
             if($delete_coupon) {
                 return response()->json([
                     'data' => [
                         'coupon' => new CouponResource($coupon),
-                        'message' => "OK",
+                    ],
+                    'message' => "OK",
                         'status' => 200
-                    ]
                 ]);
             }else {
 
@@ -162,7 +174,7 @@ class CouponController extends Controller
                 ]);
             }
         }else {
-            
+
             return response()->json([
                 'message' => '404 Not found',
                 'status' => 404
@@ -170,4 +182,45 @@ class CouponController extends Controller
         }
 
     }
+
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
+    public function couponManagementList() {
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon');
+        if($data->status() == 200) {
+
+            $data = json_decode(json_encode($data->json()['data']['coupons']), false);
+            return view('admin.coupons.list', compact('data'));
+        }else{
+            $data = [];
+            return view('admin.coupons.list', compact('data'));
+        }
+    }
+
+    public function couponManagementAdd() {
+        //$tours
+        //$categories
+
+        return view('admin.coupons.add');
+    }
+
+    public function couponManagementEdit(Request $request) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['coupon']), false);
+            return view('admin.coupons.edit', compact('data'));
+        }
+    }
+
+    public function couponManagementDetail(Request $request) {
+        $data = $request->except('_token');
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
+        if($response->status() == 200) {
+            $item = json_decode(json_encode($response->json()['data']['coupon']), false);
+            $html = view('admin.coupons.detail', compact('item'))->render();
+            return response()->json(['html' => $html, 'status' => 200]);
+        }
+    }
+
 }
+

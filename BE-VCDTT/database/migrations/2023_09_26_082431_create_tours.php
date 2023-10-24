@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('start_destination')->nullable();
             $table->string('end_destination')->nullable();
             $table->integer('tourist_count')->nullable();
-            $table->string('details')->nullable();
-            $table->string('location')->nullable();
+            $table->longText('details')->nullable();
+            $table->text('location')->nullable();
             $table->string('exact_location')->nullable();
             $table->text('pathway')->nullable();
             $table->text('main_img')->nullable();
