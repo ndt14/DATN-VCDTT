@@ -13,7 +13,7 @@ class PaymentController extends Controller
     {
         $purchaseHistory = PurchaseHistory::find($request->id);
         $finalPrice = $purchaseHistory->tour_child_price * $purchaseHistory->child_count + $purchaseHistory->tour_adult_price * $purchaseHistory->adult_count;
-        $finalPrice = $finalPrice - $finalPrice / 100 * ($purchaseHistory->coupon_percentage??0 + $purchaseHistory->tour_sale_percentage ?? 0) - $purchaseHistory->coupon_fixed ?? 0;
+        $finalPrice = $finalPrice - $finalPrice / 100 * ($purchaseHistory->coupon_percentage??0 + $purchaseHistory->tour_sale_percentage ?? 0) - $purchaseHistory->coupon_percentage==null?($purchaseHistory->coupon_fixed ?? 0):0;
         // dd($finalPrice);
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "http://datn-vcdtt.test:5173/vnpay"; //vnpay_url : "https://localhost/vnpay_php/vnpay_return.php"

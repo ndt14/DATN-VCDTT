@@ -62,8 +62,8 @@
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="lang_code">
                                                 <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Active</option>
-                                                <option value="en">Unactive</option>
+                                                <option value="ja">Đang hoạt dộng</option>
+                                                <option value="en">Không hoạt động</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
