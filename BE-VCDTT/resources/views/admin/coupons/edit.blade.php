@@ -63,7 +63,7 @@
                     <input type="hidden" name="id" value="{{$data->id}}">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Tên/mô tả</label>
                             <input type="text" name="name" class="form-control" placeholder="Enter name" value="{{$data->name}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('name')
@@ -72,7 +72,7 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Code</label>
+                            <label class="form-label">Mã</label>
                             <input type="text" name="code" class="form-control" placeholder="Enter code" value="{{$data->code}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('code')
@@ -81,10 +81,10 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Percentage/Fixed</label>
+                            <label class="form-label">Giảm phần trăm/cố định</label>
                             <select class="form-select" name="type" id="">
-                                <option {{ $data->percentage_price!=null?'selected':'' }} value="1">Percentage</option>
-                                <option {{ $data->percentage_price==null?$data->fixed_price!=null?'selected':'':'' }} value="2">Fixed</option>
+                                <option {{ $data->percentage_price!=null?'selected':'' }} value="1">Phần trăm</option>
+                                <option {{ $data->percentage_price==null?$data->fixed_price!=null?'selected':'':'' }} value="2">Cố định</option>
                             </select>
                             <br>
                             <input type="text" name="price" class="form-control" placeholder="Enter number" value="{{ $data->percentage_price??$data->fixed_price }}">
@@ -95,7 +95,7 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Start active uses date</label>
+                            <label class="form-label">Ngày hoạt động</label>
                             <input type="date" name="start_date" class="form-control"
                                 placeholder="Enter Start active uses date"
                                 value="{{ $data->start_date }}">
@@ -106,7 +106,7 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Expiration date</label>
+                            <label class="form-label">Ngày hết hạne</label>
                             <input type="date" name="expiration_date" class="form-control"
                                 placeholder="Enter Expiration date"
                                 value="{{ $data->expiration_date }}">
@@ -117,19 +117,19 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <div class="form-label">Status</div>
+                            <div class="form-label">Trạng thái</div>
                             <div class="custom-controls-stacked">
                                 <label class="custom-control custom-radio custom-control-inline me-2">
                                     <input type="radio" class="custom-control-input"
                                         @if (old('status') == '1') checked @endif name="status"
                                         checked="" value="1">
-                                    <span class="custom-control-label">Active</span>
+                                    <span class="custom-control-label">Hoạt động</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input"
                                         @if (old('status') == '0') checked @endif name="status"
                                         value="0">
-                                    <span class="custom-control-label">Disable</span>
+                                    <span class="custom-control-label">Không hoạt động</span>
                                 </label>
 
                                 <span class="text-danger d-flex justify-content-start">
@@ -143,7 +143,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Gửi</button>
                     </div>
                 </form>
             </div>

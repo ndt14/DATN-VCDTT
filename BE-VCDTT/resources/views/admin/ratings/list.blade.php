@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Ratings management for: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
+                        Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -34,7 +34,15 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Rating</h3>
+                            <h3 class="card-title">Tổng đánh giá:
+                                @php
+                                $star = 0;
+                                $count = $data->ratings;
+                                foreach ($count as $c) {
+                                    $star += $c->star;
+                                }
+                                @endphp
+                                {{ $star }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -48,20 +56,20 @@
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Status</label>
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="lang_code">
-                                                <option value="">Select status...</option>
-                                                <option value="ja">Active</option>
-                                                <option value="en">Unactive</option>
+                                                <option value="">Chọn trạng thái</option>
+                                                <option value="ja">Đang hoạt động</option>
+                                                <option value="en">Không hoạt động</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Keyword</label>
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Gửi</button>
                                         </div>
                                     </form>
                                 </div>
@@ -72,11 +80,12 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Content</th>
-                                        <th>User id</th>
-                                        <th>Answer</th>
-                                        <th>Created at</th>
-                                        <th>Updated at</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Số sao đánh giá</th>
+                                        <th>Nội dung</th>
+                                        <th>Trả lời của công ty</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày sửa</th>
                                         <th></th>
 
                                     </tr>
@@ -87,10 +96,14 @@
                                             <tr>
                                                 <td><span class="text-muted">{{ $data->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
+                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
                                                 </td>
                                                 <td>
-                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_id }}</a>
+                                                    {{ $data->star }}
+                                                    <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                                </td>
+                                                <td>
+                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
                                                 </td>
                                                 <td>
                                                     {{ $data->admin_answer??'Null' }}
@@ -105,10 +118,10 @@
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Actions</button>
+                                                            data-bs-toggle="dropdown">Hành động</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="{{ route('rating.edit', ['id' => $data->id]) }}">Answer</a>
-                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('rating.edit', ['id' => $data->id]) }}">Trả lời đánh giá</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Xóa</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -117,7 +130,7 @@
                                     @else
                                         <tr>
                                             <td colspan="9">
-                                                <div>No data</div>
+                                                <div>Không có dữ liệu</div>
                                             </td>
                                         </tr>
                                     @endif

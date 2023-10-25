@@ -69,7 +69,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <label class="form-label">Title</label>
+                            <label class="form-label">Tiêu đề</label>
                             <input type="text" name="title" class="form-control" placeholder="Title" value="{{$data['title']}}" >
                             <span class="text-danger d-flex justify-content-start">
                                 @error('title')
@@ -78,7 +78,7 @@
                             </span>
                         </div>
                         <div class="mb-3 col-6">
-                            <label class="form-label">Author</label>
+                            <label class="form-label">Tác giả</label>
                             <input type="text" name="author" class="form-control" placeholder="" value="{{$data['author']}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('author')
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="mb-3 col-8">
-                        <label class="form-label">Image</label>
+                        <label class="form-label">Ảnh</label>
                         <input type="text" name="main_img" class="form-control" placeholder="Image" value=" {{$data['main_img']}}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('main_img')
@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <div class="form-label">Short description</div>
+                        <div class="form-label">Mô tả ngắn</div>
                         <input name="short_desc" type="text" class="form-control" value="{{$data['short_desc']}}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('short_desc')
@@ -107,7 +107,7 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <div class="form-label">Description</div>
+                        <div class="form-label">Mô tả</div>
                         <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description">{{$data['description']}}</textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('description')
@@ -116,15 +116,15 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <div class="form-label">Status</div>
+                        <div class="form-label">Trạng thái</div>
                         <div class="custom-controls-stacked">
                             <label class="custom-control custom-radio custom-control-inline me-2">
                                 <input type="radio" class="custom-control-input" name="status" checked="" value="1" >
-                                <span class="custom-control-label">Yes</span>
+                                <span class="custom-control-label">Có</span>
                             </label>
                             <label class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" class="custom-control-input" name="status" value="0" >
-                                <span class="custom-control-label">No</span>
+                                <span class="custom-control-label">Không</span>
                             </label>
 
                             <span class="text-danger d-flex justify-content-start">
@@ -136,7 +136,7 @@
                     </div>
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Gửi</button>
                     </div>
                 </form>
             </div>

@@ -63,7 +63,7 @@
                     <input type="hidden" name="id" value="{{$data->id}}">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Rating content</label>
+                            <label class="form-label">Nội dung đánh giá</label>
                             <span>{{$data->content}}</span>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('content')
@@ -72,7 +72,7 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Answer</label>
+                            <label class="form-label">Trả lời của công ty</label>
                             <textarea name="admin_answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$data->admin_answer}}</textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('admin_answer')
@@ -83,7 +83,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Gửi</button>
                     </div>
                 </form>
             </div>
