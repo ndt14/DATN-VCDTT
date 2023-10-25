@@ -44,11 +44,10 @@ class PurchaseHistoryController extends Controller
         $users = User::where('is_admin',1)->get();
 
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
-
+        $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
         Notification::send($users, new PurchaseNotification($purchaseHistory));
 
         if ($purchaseHistory->id) {
-            $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
             return response()->json([
                 'data' => [
                     'purchase_history' => new PurchaseHistoryResource($purchaseHistory),
@@ -136,7 +135,7 @@ class PurchaseHistoryController extends Controller
             if($updateAdmin){
                 $purchaseHistory->notify(new SendMailToClient());
             }
-          
+
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -216,17 +215,17 @@ class PurchaseHistoryController extends Controller
                 $code = Str::upper($request->coupon_code);
                 if (Coupon::select()->where('code', $code)->exists()) {
                     if (UsedCoupon::select()->where('user_id', $request->user_id)->where('coupon_code', $code)->exists()) {
-                        return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
+                        return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::select()->where('code', $code)->first();
                         return response()->json([
                             'coupon' => new CouponResource($coupon),
-                            'message' => 'This coupon code is valid',
+                            'message' => 'Mã giảm giá hợp lệ',
                             'status' => 200
                         ]);
                     }
                 } else {
-                    return response()->json(['message' => 'This coupon code is unvalid', 'status' => 500]);
+                    return response()->json(['message' => 'Không có mã giảm giá này', 'status' => 500]);
                 }
             }
         }

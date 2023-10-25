@@ -37,9 +37,9 @@ class CategoryController extends Controller
                 ],
                 'message' => 'OK',
                 'status' => 200
-            
+
             ]
-            
+
             );
 
     }
@@ -104,7 +104,7 @@ class CategoryController extends Controller
         // foreach($category as $parent){
         //     $parent->Child = $categories->getCategoriesChild($parent->id);
         // }
-       
+
         return response()->json(
             [
                 'data' => [
@@ -125,11 +125,11 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if ($category) {
            $cate_upd = $category->update($request->all());
-            
+
            if($cate_upd) {
             return response()->json(
                 ['message' => 'Cập nhật thành công', 'status' => 200]
-            
+
             );
            }else {
             return response()->json([
@@ -157,7 +157,7 @@ class CategoryController extends Controller
                 'status' => 500
             ]);
            }
-            
+
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -165,9 +165,7 @@ class CategoryController extends Controller
 
 
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
-    
-    # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
-    
+
     public function cateManagementList() {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category');
         if($response->status() == 200) {
@@ -181,12 +179,12 @@ class CategoryController extends Controller
                 }
             }
             $data = json_decode(json_encode($data),false);
-            return view('admin.categories.list', compact('data')); 
+            return view('admin.categories.list', compact('data'));
         }else {
             $data = [];
-            return view('admin.categories.list', compact('data')); 
+            return view('admin.categories.list', compact('data'));
         }
-        
+
     }
 
     public function cateManagementAdd() {
@@ -204,10 +202,9 @@ class CategoryController extends Controller
         }
     }
 
-    public function cateManagementEidt(Request $request, $id) {
+    public function cateManagementEdit(CategoryRequest $request, $id) {
 
         if($request->isMethod('POST')) {
-
             $data = $request->all();
             $response = Http::put("http://be-vcdtt.datn-vcdtt.test/api/category-edit/{$id}", $data);
             if($response->status() == 200) {
@@ -226,5 +223,5 @@ class CategoryController extends Controller
         }
     }
 
-    
+
 }

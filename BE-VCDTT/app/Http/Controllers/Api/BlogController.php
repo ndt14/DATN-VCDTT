@@ -55,7 +55,6 @@ class BlogController extends Controller
             'message' => 'OK',
             'status' => 200,
         ]);
-
     }
     /**
      * Store a newly created resource in storage.
@@ -64,7 +63,7 @@ class BlogController extends Controller
     {
         $blog = Blog::create($request->all());
 
-        if($blog->id) {
+        if ($blog->id) {
 
             return response()->json([
                 'data' => [
@@ -73,13 +72,12 @@ class BlogController extends Controller
                 'message' => 'Add success',
                 'status' => 200
             ]);
-        }else {
+        } else {
             return response()->json([
                 'message' => 'Validate error',
                 'status' => 500
             ]);
         }
-
     }
 
     /**
@@ -90,32 +88,32 @@ class BlogController extends Controller
         // mình chỉnh sửa lại của bạn để nó hoạt động theo yêu cầu chung
         try {
 
-        // get all data from table images
-        $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
-        // get info blog by id
-        $blog = Blog::select(
-            'id',
-            'title',
-            'author',
-            'short_desc',
-            'description',
-            'main_img',
-            'view_count',
-            'status',
-            'created_at',
-            'updated_at'
-        )->findOrFail($id);
+            // get all data from table images
+            $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
+            // get info blog by id
+            $blog = Blog::select(
+                'id',
+                'title',
+                'author',
+                'short_desc',
+                'description',
+                'main_img',
+                'view_count',
+                'status',
+                'created_at',
+                'updated_at'
+            )->findOrFail($id);
 
-        return response()->json(
-            [
-                'data' => [
-                    'blog' => new BlogResource($blog),
-                    'images' => new ImageResource($images),
+            return response()->json(
+                [
+                    'data' => [
+                        'blog' => new BlogResource($blog),
+                        'images' => new ImageResource($images),
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
                 ],
-                'message' => 'OK',
-                'status' => 200
-            ],
-        );
+            );
         } catch (Exception $e) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -151,14 +149,14 @@ class BlogController extends Controller
         $blog = Blog::find($id);
         if ($blog) {
             $delete_blog =  $blog->delete();
-        if($delete_blog) {
-            return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
-        }else {
-            return response()->json([
-                'message' => 'internal server error',
-                'status' => 500
-            ]);
-        }
+            if ($delete_blog) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 500]);
         }
@@ -168,24 +166,43 @@ class BlogController extends Controller
 
     public function blogManagementList(Request $request)
     {
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog')->json()['data']['blogs'];
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog')['data']['blogs'];
         return view('admin.blogs.list', compact('data'));
     }
 
-    public function blogManagementAdd()
+    public function blogManagementAdd(BlogRequest $request)
     {
-        return view('admin.blogs.add');
-    }
-
-    public function blogManagementEdit(Request $request)
-    {
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/'.$request->id)->json()['data']['blog'];
-        return view('admin.blogs.edit',compact('data'));
-    }
-
-    public function blogManagementDetail(Request $request) {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/'.$request->id)->json()['data']['blog'];
+        if ($request->isMethod('POST')) {
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/blog-store', $data);
+            if ($response->status() == 200) {
+                return redirect()->route('blog.list')->with('success', 'Thêm mới blog thành công');
+            } else {
+                return redirect()->route('blog.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        };
+        return view ('admin.blogs.add');
+    }
+
+    public function blogManagementEdit(BlogRequest $request, $id)
+    {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/blog-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('blog.list')->with('success', 'Cập nhật blog thành công');
+            } else {
+                return redirect()->route('blog.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
+        return view('admin.blogs.edit', compact('response'));
+    }
+
+    public function blogManagementDetail(Request $request)
+    {
+        $data = $request->except('_token');
+        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
         $html = view('admin.blogs.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }

@@ -4,7 +4,7 @@
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
-            <!-- <div class="col-12 ">
+            <div class="col-12 ">
                 @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
@@ -17,7 +17,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
-            </div> -->
+            </div>
             <div class="col">
                 <!-- Page pre-title -->
                 <!-- <div class="page-pretitle">
@@ -57,14 +57,14 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmEdit" class="card" action="{{ route('api.faq.edit', ['id' => $data->id])}}" method="POST">
+                <form id="frmEdit" class="card" action="{{ route('faq.edit', ['id' => $response->id])}}" method="POST">
                     @csrf
-                    @method('PUT')
-                    <input type="hidden" name="id" value="{{$data->id}}">
+
+                    <input type="hidden" name="id" value="{{$response->id}}">
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Question</label>
-                            <input type="text" name="question" class="form-control" placeholder="Enter question" value="{{$data->question}}">
+                            <input type="text" name="question" class="form-control" placeholder="Enter question" value="{{$response->question}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('question')
                                 {{ $message }}
@@ -73,7 +73,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Answer</label>
-                            <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$data->answer}}</textarea>
+                            <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$response->answer}}</textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('answer')
                                 {{ $message }}
@@ -92,7 +92,7 @@
 </div>
 @endsection
 @section('page_js')
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     if ($('#frmEdit').length) {
         $('#frmEdit').submit(function() {
             let options = {
@@ -124,5 +124,5 @@
             return false;
         });
     }
-</script>
+</script> --}}
 @endSection
