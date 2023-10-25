@@ -1,5 +1,5 @@
 export interface Bill {
-    id:number;
+    id?:number;
     user_id?: number;
     name?: string;
     email?:string;
@@ -16,9 +16,10 @@ export interface Bill {
     tour_location? : string
     coupon_info? : string
     coupon_percentage? :number;
+    
     refund_percentage? :number;
     coupon_fixed? :number;
-    tour_start_time? :number;
+    tour_start_time? :string;
     tour_end_time? :number;
     transaction_id?: number;
     payment_status?:number

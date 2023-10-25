@@ -2,6 +2,7 @@ import "./HomePage.css";
 import { Carousel } from "antd";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
+// import TextContainer from "./TextContainer";
 
 import { SearchBar, TourPreview } from "../../../componenets";
 import { useGetToursQuery } from "../../../api/tours";
@@ -13,6 +14,9 @@ import ReactPaginate from "react-paginate";
 import _ from "lodash";
 
 const HomePage = () => {
+  //
+
+  //
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { data } = useGetToursQuery();
   // console.log(data);
@@ -109,10 +113,10 @@ const HomePage = () => {
             <div className="trip-search-inner white-bg d-flex">
               <div className="input-group width-col-9  flex-grow-2">
                 {/* <label> Tìm kiếm địa điểm * </label> */}
-                <SearchBar/>
+                <SearchBar />
                 {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> */}
               </div>
-             
+
               {/* <div className="input-group width-col-3">
               <Link to={'/search'}>
                 <label className="screen-reader-text"> Tìm kiếm </label>
@@ -125,8 +129,6 @@ const HomePage = () => {
                 />
                </Link>
               </div> */}
-             
-              
             </div>
           </div>
         </div>
@@ -139,12 +141,6 @@ const HomePage = () => {
                     KHÁM PHÁ CÁC ĐỊA DANH NỔI TIẾNG
                   </h5>
                   <h2 className="">TOUR NỔI BẬT</h2>
-                  <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p>
                 </div>
               </div>
             </div>
@@ -176,11 +172,16 @@ const HomePage = () => {
                             <div className="package-content-wrap">
                               {/* <div className="package-meta text-center"></div> */}
                               <div className="package-content">
-                                <h3 className="margin-top-12">
-                                  <Link className="mt-12" to={`/tours/${id}`}>
-                                    {name}
-                                  </Link>
-                                </h3>
+                                <div className="text-container">
+                                  <h3 className="margin-top-12 text-content">
+                                    <Link
+                                      className="mt-12 "
+                                      to={`/tours/${id}`}
+                                    >
+                                      {name}
+                                    </Link>
+                                  </h3>
+                                </div>
                                 <div className="review-area">
                                   <span className="review-text">
                                     ({view_count} reviews)
@@ -192,12 +193,10 @@ const HomePage = () => {
                                     <span className="w-3/5"></span>
                                   </div>
                                 </div>
-                                <p>{details}</p>
+                                <div className="text-description">
+                                  <p className="text-content">{details}</p>
+                                </div>
                                 <div className="btn-wrap">
-                                  <a href="#" className="button-text width-6">
-                                    Đặt ngay
-                                    <i className="fas fa-arrow-right"></i>
-                                  </a>
                                   <a href="#" className="button-text width-6">
                                     Thêm vào yêu thích
                                     <i className="far fa-heart"></i>
@@ -225,12 +224,6 @@ const HomePage = () => {
                 <div className="col-lg-8 offset-lg-2">
                   <h5 className="dash-style">TOUR ĐỀ XUẤT & GIẢM GIÁ</h5>
                   <h2>TOUR GIẢM GIÁ</h2>
-                  <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p>
                 </div>
               </div>
             </div>
@@ -262,11 +255,13 @@ const HomePage = () => {
                             <div className="package-content-wrap">
                               {/* <div className="package-meta text-center"></div> */}
                               <div className="package-content">
-                                <h3 className="margin-top-12">
-                                  <Link className="mt-12" to={`/tours/${id}`}>
-                                    {name}
-                                  </Link>
-                                </h3>
+                                <div className="text-container">
+                                  <h3 className="margin-top-12 text-content">
+                                    <Link className="mt-12" to={`/tours/${id}`}>
+                                      {name}
+                                    </Link>
+                                  </h3>
+                                </div>
                                 <div className="review-area">
                                   <span className="review-text">
                                     ({view_count} reviews)
@@ -278,12 +273,11 @@ const HomePage = () => {
                                     <span className="w-3/5"></span>
                                   </div>
                                 </div>
-                                <p>{details}</p>
+                                <div className="text-description">
+                                  <p className="text-content">{details}</p>
+                                </div>
+
                                 <div className="btn-wrap">
-                                  <a href="#" className="button-text width-6">
-                                    Đặt ngay
-                                    <i className="fas fa-arrow-right"></i>
-                                  </a>
                                   <a href="#" className="button-text width-6">
                                     Thêm vào yêu thích
                                     <i className="far fa-heart"></i>
@@ -348,9 +342,16 @@ const HomePage = () => {
                             {/* <div className="package-meta text-center"></div> */}
                             <div className="package-content">
                               <h3 className="margin-top-12">
-                                <Link className="mt-12" to={`/tours/${id}`}>
-                                  {name}
-                                </Link>
+                                <div className="text-container">
+                                  <h3 className="margin-top-12 text-content">
+                                    <Link
+                                      className="mt-12 "
+                                      to={`/tours/${id}`}
+                                    >
+                                      {name}
+                                    </Link>
+                                  </h3>
+                                </div>
                               </h3>
                               <div className="review-area">
                                 <span className="review-text">
@@ -363,11 +364,10 @@ const HomePage = () => {
                                   <span className="w-3/5"></span>
                                 </div>
                               </div>
-                              <p>{details}</p>
+                              <div className="text-description">
+                                <p className="text-content">{details}</p>
+                              </div>
                               <div className="btn-wrap">
-                                <a href="#" className="button-text width-6">
-                                  Đặt ngay<i className="fas fa-arrow-right"></i>
-                                </a>
                                 <a href="#" className="button-text width-6">
                                   Thêm vào yêu thích
                                   <i className="far fa-heart"></i>
