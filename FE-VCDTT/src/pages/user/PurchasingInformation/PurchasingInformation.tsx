@@ -72,7 +72,7 @@ const PurchasingInformation = (props: Props) => {
   const userId = userData?.id;
   const userEmail = userData?.email;
   const phoneNumber = userData?.phone_number;
-  const userAddress = userData?.address;
+  // const userAddress = userData?.address;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
   // Xử lý xác nhận thông tin form
@@ -104,12 +104,6 @@ const PurchasingInformation = (props: Props) => {
     user_id: userId ? userId : "",
     coupon_code: "",
   });
-  console.log(productNumber);
-  console.log(productChildNumber);
-  console.log(price);
-  console.log(childPrice);
-  console.log(tourChildPrice);
-  console.log(tourPrice);
 
   useEffect(() => {
     let FPrice = childPrice + price;
@@ -196,10 +190,8 @@ const PurchasingInformation = (props: Props) => {
       tour_sale_percentage: 0,
     };
     console.log(variables);
-    console.log(couponName);
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
-
 
     addBill(variables)
       .then((response) => {

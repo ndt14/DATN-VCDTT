@@ -166,7 +166,7 @@ const HomePage = () => {
                             </figure>
                             <div className="package-price">
                               <h6>
-                                <span>VND {adult_price} </span> / mỗi người
+                                <span>{adult_price} đ </span> / người
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -249,7 +249,7 @@ const HomePage = () => {
                             </figure>
                             <div className="package-price">
                               <h6>
-                                <span>VND {adult_price} </span> / mỗi người
+                                <span>{adult_price} đ </span> / người
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -335,7 +335,7 @@ const HomePage = () => {
                           </figure>
                           <div className="package-price">
                             <h6>
-                              <span>VND {adult_price} </span> / mỗi người
+                              <span>{adult_price} đ </span> / người
                             </h6>
                           </div>
                           <div className="package-content-wrap">
