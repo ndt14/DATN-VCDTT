@@ -204,7 +204,7 @@ const TourDetail = () => {
                       >
                         {/* mô tả tour  */}
                         <div className="overview-content">
-                        {tourData?.data?.tour.details}
+                          {tourData?.data?.tour.details}
                         </div>
                       </div>
                       <div
@@ -214,9 +214,8 @@ const TourDetail = () => {
                         aria-labelledby="program-tab"
                       >
                         {/* lịch trình */}
-                        
+
                         {tourData?.data?.tour.pathway}
-                        
                       </div>
                       <div
                         className="tab-pane"

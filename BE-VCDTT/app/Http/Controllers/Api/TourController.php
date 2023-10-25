@@ -320,24 +320,45 @@ class TourController extends Controller
         return view('admin.tours.list', compact('items'));
     }
 
-    public function tourManagementAdd(Request $request)
+    public function tourManagementAdd(TourRequest $request)
     {
         $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')['data']['categoriesParent'];
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token');
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
+            if ($response->status() == 200) {
+                return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
+            } else {
+                return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
         return view('admin.tours.add', compact('categories'));
     }
 
 
-    public function tourManagementEdit(Request $request)
+    public function tourManagementEdit(TourRequest $request, $id)
     {
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data'];
-        $tour = $data['tour'];
-        $categories = $data['categories'];
-        $tourToCate = $data['tourToCategories'];
-        $cateIds = [];
-        foreach ($tourToCate as $item) {
-            $cateIds[] = $item['cate_id'];
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)['data'];
+        $categories = $response['categories'];
+        $tour = $tourObject = json_decode(json_encode($response['tour']), false);
+        $tourToCate = $response['tourToCategories'];
+        $cateIds = $tourToCate[0]['cate_id'];
+        // foreach ($tourToCate as $item) {
+
+        // }
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/' . $id, $data);
+
+            if ($response->status() == 200) {
+                $newTourToCate = TourToCategory::where('tour_id', $id)->update(['cate_id' => $data['category']]);
+                return redirect()->route('tour.list')->with('success', 'Cập nhật tour thành công');
+            } else {
+                return redirect()->route('tour.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
         }
-        return view('admin.tours.edit', compact('tour', 'categories', 'cateIds'));
+
+        return view('admin.tours.edit', compact('tour', 'categories','cateIds'));
     }
 
     public function tourManagementDetail(Request $request)

@@ -6,6 +6,7 @@ import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { log } from "console";
 
 type Props = {};
 
@@ -91,22 +92,75 @@ const PurchasingInformation = (props: Props) => {
     }));
   };
   // Coupon
-  const [percentage, setPercentage] = useState<number>(0);
-  const [couponName, setCouponName] = useState();
+  const [couponData, setCouponData] = useState({
+    percentage: 0,
+    fixed: 0,
+    finalPrice: 0,
+    couponName: "",
+  });
+  console.log(couponData);
+
   const [formCoupon, setFormCoupon] = useState({
     user_id: userId ? userId : "",
     coupon_code: "",
   });
+  console.log(productNumber);
+  console.log(productChildNumber);
+  console.log(price);
+  console.log(childPrice);
+  console.log(tourChildPrice);
+  console.log(tourPrice);
 
-  const finalPrice =
-    ((productNumber * price + productChildNumber * childPrice) *
-      (100 - percentage)) /
-    100;
-  // console.log(finalPrice);
+  useEffect(() => {
+    let FPrice = childPrice + price;
+    if (couponData.percentage > 0) {
+      FPrice = FPrice - (FPrice / 100) * couponData.percentage;
+      setCouponData((prevData) => ({
+        ...prevData,
+        finalPrice: FPrice,
+      }));
+    } else {
+      FPrice = FPrice - couponData.fixed;
+      setCouponData((prevData) => ({
+        ...prevData,
+        finalPrice: FPrice,
+      }));
+    }
+  }, [
+    productNumber,
+    price,
+    productChildNumber,
+    childPrice,
+    couponData.percentage,
+    couponData.fixed,
+  ]);
   const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(finalPrice);
+  }).format(couponData.finalPrice);
+  const handleCouponSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // console.log(formCoupon);
+    checkCoupon(formCoupon)
+      .then((response) => {
+        alert(response?.data?.message);
+        const discountPercent = response?.data?.coupon.percentage_price;
+        const discountFixed = response?.data?.coupon.fixed_price;
+        const coupon_name = response?.data?.coupon.name;
+        console.log(coupon_name);
+        setCouponData({
+          percentage: discountPercent,
+          fixed: discountFixed,
+          finalPrice: couponData.finalPrice,
+          couponName: coupon_name,
+        });
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+  };
+  // console.log(finalPrice);
 
   const handleCouponChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -116,23 +170,6 @@ const PurchasingInformation = (props: Props) => {
     }));
   };
 
-  const handleCouponSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    // console.log(formCoupon);
-    checkCoupon(formCoupon)
-      .then((response) => {
-        alert(response?.data?.message);
-        const discount = response?.data?.coupon.percentage_price;
-        const coupon_name = response?.data?.coupon.name;
-        console.log(coupon_name);
-        setPercentage(discount);
-        setCouponName(coupon_name);
-      })
-      .catch((error) => {
-        // Handle any errors here
-        console.error(error);
-      });
-  };
   //
 
   const handleSubmit = (e: FormEvent) => {
@@ -152,13 +189,17 @@ const PurchasingInformation = (props: Props) => {
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,
       gender: parseInt(formik.values.honorific),
-      coupon_name: couponName,
-      coupon_percentage: percentage,
+      coupon_name: couponData.couponName,
+      coupon_percentage:
+        couponData.percentage > 0 ? couponData.percentage : null,
+      coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
       tour_sale_percentage: 0,
     };
     console.log(variables);
     console.log(couponName);
     localStorage.setItem("tempUser", JSON.stringify(variables));
+    console.log(couponData.couponName);
+
 
     addBill(variables)
       .then((response) => {
@@ -344,7 +385,7 @@ const PurchasingInformation = (props: Props) => {
                         <p> {formattedTourChildPrice}</p>
                         <p>{formattedTourPrice}</p>
                       </div>
-                      {percentage !== 0 ? (
+                      {couponData.percentage !== 0 ? (
                         <div className="col-sm-6">
                           <p>
                             {" "}
@@ -355,7 +396,15 @@ const PurchasingInformation = (props: Props) => {
                           </p>
                         </div>
                       ) : (
-                        <div></div>
+                        <div className="col-sm-6">
+                          <p>
+                            {" "}
+                            Giá sau khi nhập coupon:{" "}
+                            <span className="fs-4 text-danger fw-bold">
+                              {formattedFinalPrice}
+                            </span>
+                          </p>
+                        </div>
                       )}
                     </div>
                     {/* Button trigger modal xác nhận thông tin */}
@@ -461,7 +510,6 @@ const PurchasingInformation = (props: Props) => {
                                   />
                                 </div>
                               </div>
-
                               <div className="form-group">
                                 <label htmlFor="">Giá tour</label>
                                 <input
@@ -471,7 +519,7 @@ const PurchasingInformation = (props: Props) => {
                                   disabled
                                 />
                               </div>
-                              {percentage !== 0 ? (
+                              {couponData.percentage > 0 && (
                                 <div className="form-group">
                                   <label htmlFor="">
                                     Giá tour sau khi nhập coupon
@@ -483,9 +531,21 @@ const PurchasingInformation = (props: Props) => {
                                     disabled
                                   />
                                 </div>
-                              ) : (
-                                <div></div>
-                              )}
+                              )}{" "}
+                              {couponData.percentage == 0 &&
+                                couponData.fixed > 0 && (
+                                  <div className="form-group">
+                                    <label htmlFor="">
+                                      Giá tour sau khi nhập coupon
+                                    </label>
+                                    <input
+                                      type="text"
+                                      name="created_at"
+                                      value={formattedFinalPrice}
+                                      disabled
+                                    />
+                                  </div>
+                                )}
                               <div className="form-group">
                                 <label htmlFor="">Phương thức thanh toán</label>
                                 <div className="mr-3">

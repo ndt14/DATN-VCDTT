@@ -36,7 +36,7 @@ class CategoryRequest extends FormRequest
                         ];
 
                         break;
-                    case 'cateManagementEidt':
+                    case 'cateManagementEdit':
 
                         // xây dựng validate
 
