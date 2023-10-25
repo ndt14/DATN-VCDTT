@@ -35,18 +35,18 @@ Route::get('/test', function(){
 });
 
 Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
-Route::get('/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
-Route::get('/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
+Route::match(['GET','POST'],'/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
+Route::match(['GET','POST'],'/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
 Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail');
 
 Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list');
-Route::get('/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
-Route::get('/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
+Route::match(['GET','POST'],'/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
+Route::match(['GET','POST'],'/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
 Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
 
 Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
-Route::get('/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
-Route::get('/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
+Route::match(['GET','POST'],'/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
+Route::match(['GET','POST'],'/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
 
 Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');
@@ -55,19 +55,19 @@ Route::get('/rating/edit/{id}', [RatingController::class,'ratingManagementEdit']
 Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail');
 
 Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
-Route::get('/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');
-Route::get('/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
+Route::match(['GET','POST'],'/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');
+Route::match(['GET','POST'],'/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
 Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail');
 
 Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
 Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');
-Route::get('/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
-Route::get('/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
+Route::match(['GET','POST'],'/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
+Route::match(['GET','POST'],'/user/edit/{id}', [UserController::class,'userManagementEdit'])->name('user.edit');
 
 Route::get('/category', [CategoryController::class,'cateManagementList'])->name('category.list');
 Route::get('/category/add', [CategoryController::class,'cateManagementAdd'])->name('category.add');
 Route::post('/category/store', [CategoryController::class,'cateManagementStore'])->name('category.store');
-Route::match(['GET','POST'],'/category/edit/{id}', [CategoryController::class,'cateManagementEidt'])->name('category.edit');
+Route::match(['GET','POST'],'/category/edit/{id}', [CategoryController::class,'cateManagementEdit'])->name('category.edit');
 
 
 Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');

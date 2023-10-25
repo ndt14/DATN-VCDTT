@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                <!-- @if (Session::has('success'))
+                @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif -->
+                @endif
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -57,20 +57,20 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form id="frmEdit" class="card" action="{{ route('api.blog.edit', ['id' => $data['id']])}}" method="POST">
+            <form id="frmEdit" class="card" action="{{ route('blog.edit', ['id' => $response['id']])}}" method="POST">
             <div class="card-header">
                 <h2 class="card-title">
-                    Edit {{$data['title']}}
+                    Edit {{$response['title']}}
                 </h2>
             </div>
             @csrf
-            @method('PUT')
-            <input type="hidden" name="id" value="{{$data['id']}}">
+
+            <input type="hidden" name="id" value="{{$response['id']}}">
                 <div class="card-body">
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label class="form-label">Tiêu đề</label>
-                            <input type="text" name="title" class="form-control" placeholder="Title" value="{{$data['title']}}" >
+                            <input type="text" name="title" class="form-control" placeholder="Title" value="{{$response['title']}}" >
                             <span class="text-danger d-flex justify-content-start">
                                 @error('title')
                                     {{ $message }}
@@ -79,7 +79,7 @@
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Tác giả</label>
-                            <input type="text" name="author" class="form-control" placeholder="" value="{{$data['author']}}">
+                            <input type="text" name="author" class="form-control" placeholder="" value="{{$response['author']}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('author')
                                     {{ $message }}
@@ -89,7 +89,7 @@
                     </div>
                     <div class="mb-3 col-8">
                         <label class="form-label">Ảnh</label>
-                        <input type="text" name="main_img" class="form-control" placeholder="Image" value=" {{$data['main_img']}}">
+                        <input type="text" name="main_img" class="form-control" placeholder="Image" value=" {{$response['main_img']}}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('main_img')
                                 {{ $message }}
@@ -99,7 +99,7 @@
 
                     <div class="mb-3">
                         <div class="form-label">Mô tả ngắn</div>
-                        <input name="short_desc" type="text" class="form-control" value="{{$data['short_desc']}}">
+                        <input name="short_desc" type="text" class="form-control" value="{{$response['short_desc']}}">
                         <span class="text-danger d-flex justify-content-start">
                             @error('short_desc')
                                 {{ $message }}
@@ -108,7 +108,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-label">Mô tả</div>
-                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description">{{$data['description']}}</textarea>
+                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description">{{$response['description']}}</textarea>
                         <span class="text-danger d-flex justify-content-start">
                             @error('description')
                                 {{ $message }}
@@ -146,36 +146,36 @@
 @endsection
 @section('page_js')
 <script type="text/javascript">
-    if ($('#frmEdit').length) {
-        $('#frmEdit').submit(function() {
-            let options = {
-                beforeSubmit: function(formData, jqForm, options) {
-                    $('#btnSubmitEdit').addClass('btn-loading');
-                    $('#btnSubmitEdit').addClass("disabled");
-                },
-                success: function(response, statusText, xhr, $form) {
-                    $('#btnSubmitEdit').removeClass('btn-loading');
-                    if(response.status == 500){
-                        $('#btnSubmitEdit').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                    }
-                    if(response.status == 200){
-                        $('#btnSubmitEdit').removeClass("disabled");
-                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-                    }
-                },
-                error: function() {
-                    $('#btnSubmitEdit').removeClass('btn-loading');
-                    $('#btnSubmitEdit').removeClass("disabled");
-                    bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                },
-                dataType: 'json',
-                clearForm: false,
-                resetForm: false
-            };
-            $(this).ajaxSubmit(options);
-            return false;
-        });
-    }
+//    if ($('#frmEdit').length) {
+//         $('#frmEdit').submit(function() {
+//             let options = {
+//                 beforeSubmit: function(formData, jqForm, options) {
+//                     $('#btnSubmitEdit').addClass('btn-loading');
+//                     $('#btnSubmitEdit').addClass("disabled");
+//                 },
+//                 success: function(response, statusText, xhr, $form) {
+//                     $('#btnSubmitEdit').removeClass('btn-loading');
+//                     if(response.status == 500){
+//                         $('#btnSubmitEdit').removeClass("disabled");
+//                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+//                     }
+//                     if(response.status == 200){
+//                         $('#btnSubmitEdit').removeClass("disabled");
+//                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+//                     }
+//                 },
+//                 error: function() {
+//                     $('#btnSubmitEdit').removeClass('btn-loading');
+//                     $('#btnSubmitEdit').removeClass("disabled");
+//                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+//                 },
+//                 dataType: 'json',
+//                 clearForm: false,
+//                 resetForm: false
+//             };
+//             $(this).ajaxSubmit(options);
+//             return false;
+//         });
+//     }
 </script>
 @endSection

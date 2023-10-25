@@ -52,7 +52,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmAdd" class="card" action="/api/coupon-store" method="POST">
+                <form id="frmAdd" class="card" action="{{ route('coupon.add') }}" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
@@ -146,36 +146,36 @@
 @endsection
 @section('page_js')
 <script type="text/javascript">
-    if ($('#frmAdd').length) {
-        $('#frmAdd').submit(function() {
-            let options = {
-                beforeSubmit: function(formData, jqForm, options) {
-                    $('#btnSubmitAdd').addClass('btn-loading');
-                    $('#btnSubmitAdd').addClass("disabled");
-                },
-                success: function(response, statusText, xhr, $form) {
-                    $('#btnSubmitAdd').removeClass('btn-loading');
-                    if (response.status == 404) {
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                    }
-                    if (response.status == 200) {
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-                    }
-                },
-                error: function() {
-                    $('#btnSubmitAdd').removeClass('btn-loading');
-                    $('#btnSubmitAdd').removeClass("disabled");
-                    bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                },
-                dataType: 'json',
-                clearForm: false,
-                resetForm: false
-            };
-            $(this).ajaxSubmit(options);
-            return false;
-        });
-    }
-</script>
+//     if ($('#frmAdd').length) {
+//         $('#frmAdd').submit(function() {
+//             let options = {
+//                 beforeSubmit: function(formData, jqForm, options) {
+//                     $('#btnSubmitAdd').addClass('btn-loading');
+//                     $('#btnSubmitAdd').addClass("disabled");
+//                 },
+//                 success: function(response, statusText, xhr, $form) {
+//                     $('#btnSubmitAdd').removeClass('btn-loading');
+//                     if (response.status == 404) {
+//                         $('#btnSubmitAdd').removeClass("disabled");
+//                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+//                     }
+//                     if (response.status == 200) {
+//                         $('#btnSubmitAdd').removeClass("disabled");
+//                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+//                     }
+//                 },
+//                 error: function() {
+//                     $('#btnSubmitAdd').removeClass('btn-loading');
+//                     $('#btnSubmitAdd').removeClass("disabled");
+//                     bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+//                 },
+//                 dataType: 'json',
+//                 clearForm: false,
+//                 resetForm: false
+//             };
+//             $(this).ajaxSubmit(options);
+//             return false;
+//         });
+//     }
+// </script>
 @endSection
