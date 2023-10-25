@@ -40,8 +40,7 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     {
         //Đây chỉ là link tạm thời để test chức năng. Sau này sẽ bảo ae fe sửa link để gửi trong mail cho khách
         //link dẫn đến trang đổi password
-        $url = 'datn-vcdtt.test:5173/reset-password/' . $this->token;
-
+        $url = 'http://datn-vcdtt.test:5173/reset-password/' . $this->token;
 
         return (new MailMessage)
             ->line('You are receiving this email because we received a password reset request for your account.')

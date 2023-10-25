@@ -34,12 +34,12 @@ class ResetPasswordController extends Controller
             }
 
             return response()->json([
-                'message' => 'We have e-mailed your password reset link!',
+                'message' => 'Chúng tôi đã gửi mail đặt lại mật khẩu. Vui lòng kiểm tra email của bạn!',
                 'status' => 200
             ]);
         } else {
             return response()->json([
-                'message' => 'We cant find a user with that e-mail address!',
+                'message' => 'Không tìm thấy email!',
                 'status' => 404
             ]);
         }
@@ -52,7 +52,7 @@ class ResetPasswordController extends Controller
             $passwordReset->delete();
 
             return response()->json([
-                'message' => 'This password reset token is invalid.',
+                'message' => 'Token không hợp lệ.',
                 'status' => 422
             ]);
         }
@@ -62,7 +62,7 @@ class ResetPasswordController extends Controller
 
         if ($updatePasswordUser) {
             return response()->json([
-                'message' => 'Your password has been changed!',
+                'message' => 'Đổi mật khẩu thành công',
                 'status' => 200
             ]);
         }
