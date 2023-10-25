@@ -158,6 +158,7 @@ const PurchasingInformation = (props: Props) => {
     };
     console.log(variables);
     console.log(couponName);
+    localStorage.setItem("tempUser", JSON.stringify(variables));
 
     addBill(variables)
       .then((response) => {
