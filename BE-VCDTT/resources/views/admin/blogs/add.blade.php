@@ -38,7 +38,7 @@
                                 <path d="M5 12l4 4"></path>
                                 <path d="M5 12l4 -4"></path>
                             </svg>
-                            Back
+                            Quay lại
                         </a>
                         <a href="{{ url('/blog') }}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
@@ -56,6 +56,7 @@
         </div>
     </div>
 
+
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
@@ -63,14 +64,13 @@
                     <form id="frmAdd" class="card" action="{{ route('blog.add') }}" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
-                                Add new blog
+                                Thêm blog mới
                             </h2>
-                        </div>
                         @csrf
                         <div class="card-body">
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label class="form-label">Title</label>
+                                    <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
                                         value="">
                                     <span class="text-danger d-flex justify-content-start">
@@ -80,7 +80,7 @@
                                     </span>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label class="form-label">Author</label>
+                                    <label class="form-label">Tác giả</label>
                                     <input type="text" name="author" class="form-control" placeholder="" value="">
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('author')
@@ -91,7 +91,7 @@
 
                             </div>
                             <div class="mb-3 col-8">
-                                <label class="form-label">Image</label>
+                                <label class="form-label">Ảnh</label>
                                 <input type="text" name="main_img" class="form-control" placeholder="Image"
                                     value="">
                                 <span class="text-danger d-flex justify-content-start">
@@ -101,7 +101,7 @@
                                 </span>
                             </div>
                             <div class="mb-3 col-10">
-                                <div class="form-label">Short description</div>
+                                <div class="form-label">Mô tả ngắn</div>
                                 <textarea name="short_desc" rows="5" type="text" class="form-control"></textarea>
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('short_desc')
@@ -110,7 +110,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <div class="form-label">Description</div>
+                                <div class="form-label">Mô tả</div>
                                 <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description"></textarea>
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('description')
@@ -119,7 +119,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <div class="form-label">Status</div>
+                                <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
                                         <input type="radio" class="custom-control-input" name="status" checked=""
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
+                            <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Gửi</button>
                         </div>
                     </form>
                 </div>

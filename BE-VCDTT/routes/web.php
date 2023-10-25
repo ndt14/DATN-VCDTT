@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\UserController;
 
 
@@ -47,6 +48,11 @@ Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list'
 Route::match(['GET','POST'],'/faq/add', [FAQController::class,'faqManagementAdd'])->name('faq.add');
 Route::match(['GET','POST'],'/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
+
+Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');
+Route::get('/rating/add', [RatingController::class,'ratingManagementAdd'])->name('rating.add');
+Route::get('/rating/edit/{id}', [RatingController::class,'ratingManagementEdit'])->name('rating.edit');
+Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail');
 
 Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
 Route::match(['GET','POST'],'/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');

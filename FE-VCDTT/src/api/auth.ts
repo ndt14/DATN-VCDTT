@@ -21,10 +21,24 @@ const AuthApi = createApi({
                 body: credentials,
             }),
         }),
+        resetPassword: builder.mutation<{ message: string }, { email: string }>({
+            query: (email) => ({
+                url: '/reset-password', // Update the URL accordingly
+                method: 'POST',
+                body: { email },
+            }),
+        }),
+        resetPasswordWithToken: builder.mutation<{ message: string }, { token: string, newPassword: string }>({
+            query: ({ token, newPassword }) => ({
+                url: `/reset-password/${token}`, // Use the correct URL based on your backend
+                method: 'PUT', // Use the correct HTTP method for resetting the password
+                body: { password: newPassword }, // Update the request body structure as needed
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation,useRegisterMutation } = AuthApi;
+export const { useLoginMutation,useRegisterMutation,useResetPasswordMutation,useResetPasswordWithTokenMutation} = AuthApi;
 
 export const authReducer = AuthApi.reducer;
 export default AuthApi;

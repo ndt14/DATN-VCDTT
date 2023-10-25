@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->smallInteger('star')->nullable();
             $table->bigInteger('user_id')->nullable();
+            $table->string('user_name')->nullable();
             $table->longText('content')->nullable();
             $table->longText('admin_answer')->nullable();
             $table->bigInteger('tour_id')->nullable();

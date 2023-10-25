@@ -24,6 +24,7 @@ class TourToCategory extends Model
             //tour
             'tour_id' => $tour->id,
             'name' => $tour->name,
+            'main_img' => $tour->main_img,
             'duration' => $tour->duration,
             'child_price' => $tour->child_price,
             'adult_price' => $tour->adult_price,

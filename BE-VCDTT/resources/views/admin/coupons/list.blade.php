@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Coupons management
+                        Quản lý mã giảm giá
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -32,7 +32,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
-                            Add new
+                            Thêm mới
                         </a>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">coupon</h3>
+                            <h3 class="card-title">Mã giảm giá</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -59,20 +59,20 @@
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Status</label>
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="lang_code">
-                                                <option value="">Select status...</option>
+                                                <option value="">Chọn trạng thái</option>
                                                 <option value="ja">Active</option>
                                                 <option value="en">Unactive</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Keyword</label>
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -83,11 +83,13 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Name</th>
-                                        <th>Code</th>
-                                        <th>Expiration date</th>
-                                        <th>Created at</th>
-                                        <th>Updated at</th>
+                                        <th>Tên/mô tả</th>
+                                        <th>Mã</th>
+                                        <th>Loại mã</th>
+                                        <th>Lượng giảm giá</th>
+                                        <th>Ngày hết hạn</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày sửa</th>
                                         <th></th>
 
                                     </tr>
@@ -104,6 +106,12 @@
                                                     {{ string_truncate($data->code, 70) }}
                                                 </td>
                                                 <td>
+                                                    {{ $data->percentage_price!=null?'Percentage':($data->fixed_price!=null?'Fixed':'Null') }}
+                                                </td>
+                                                <td>
+                                                    {{ $data->percentage_price??$data->fixed_price??'Null' }}
+                                                </td>
+                                                <td>
                                                     {{ time_format($data->expiration_date) }}
                                                 </td>
                                                 <td>
@@ -116,10 +124,10 @@
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Actions</button>
+                                                            data-bs-toggle="dropdown">Hành động</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="{{ route('coupon.edit', ['id' => $data->id]) }}">Edit</a>
-                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('coupon.edit', ['id' => $data->id]) }}">Sửa</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Xóa</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -128,7 +136,7 @@
                                     @else
                                         <tr>
                                             <td colspan="9">
-                                                <div>No data</div>
+                                                <div>Không có dữ liệu</div>
                                             </td>
                                         </tr>
                                     @endif

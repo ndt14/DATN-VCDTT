@@ -11,12 +11,13 @@ import "../User/css/Header.css";
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
 import { useGetCategoriesQuery } from "../../api/category.js";
 import { Category } from "../../interfaces/Category.js";
+import ForgotPasswordModal from "./Modal/ForgotPasswordModal.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
   const {data:dataCate} = useGetCategoriesQuery();
-  console.log(dataCate?.data.categoriesParent)
+  // console.log(dataCate?.data.categoriesParent)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +38,8 @@ const Header = () => {
   // const handleCloseSignUp = () => setShowSignUp(false);
   const handleShowSignIn = () => setShowSignIn(true);
   // const handleShowSignUp = () => setShowSignUp(true);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const storedStatus = localStorage.getItem("isLoggedIn");
     return storedStatus ? JSON.parse(storedStatus) : false;
@@ -65,6 +68,14 @@ const Header = () => {
     setIsButtonSignInClicked(false);
     setIsButtonSignUpClicked(true);
   };
+
+  const handleShowForgotPasswordModal = () => {
+    setShowSignIn(false);
+
+    setShowForgotPasswordModal(true);
+   
+  };
+  
 
   const handleSignIn = async () => {
     // event.preventDefault();
@@ -111,7 +122,7 @@ const Header = () => {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-    console.log(variables);
+    // console.log(variables);
     register(variables)
       .then((response) => {
         // Handle the response here
@@ -205,23 +216,6 @@ const Header = () => {
 
                     }
                     </ul>
-
-                      {/* <li>
-                        <a href="destination.html">Miền Bắc</a>
-                      </li>
-                      <li>
-                        <a href="tour-packages.html">Miền Trung</a>
-                      </li>
-                      <li>
-                        <a href="package-offer.html">Miền Nam</a>
-                      </li>
-                      <li>
-                        <a href="package-detail.html">Vùng núi</a>
-                      </li>
-                      <li>
-                        <a href="tour-cart.html">Vùng biển</a>
-                      </li>
-                    </ul> */}
                   </li>
                   <li className="menu-item-has-children">
                     <Link to="blogs">Bài viết</Link>
@@ -258,7 +252,7 @@ const Header = () => {
                                 <Link to="user/profile">Thông tin cá nhân</Link>
                               </li>
                               <li>
-                                <Link to="user/tour">Tour đã mua</Link>
+                                <Link to="user/tours">Tour đã mua</Link>
                               </li>
                               <li>
                                 <Link to="user/favorite">Tour yêu thích</Link>
@@ -283,6 +277,7 @@ const Header = () => {
                   >
                     ĐĂNG NHẬP/ĐĂNG KÝ
                   </button>
+
                   <Modal show={showSignIn} onHide={handleCloseSignIn}>
                     <Modal.Header closeButton></Modal.Header>
                     <Modal.Body>
@@ -355,9 +350,11 @@ const Header = () => {
                             <button className="border-0 bg-white text-info">
                               Chưa có tài khoản? Đăng ký
                             </button>
-                            <button className="border-0 bg-white text-info">
+                            <button className="border-0 bg-white text-info" onClick={handleShowForgotPasswordModal}>
                               Quên mật khẩu
                             </button>
+                         
+
                           </div>
                           <h4 className="text-center my-3 fw-bold">
                             HOẶC ĐĂNG NHẬP VỚI
@@ -508,6 +505,9 @@ const Header = () => {
                     </Modal.Body>
                     <Modal.Footer></Modal.Footer>
                   </Modal>
+                  {showForgotPasswordModal && (
+  <ForgotPasswordModal  show={showForgotPasswordModal} onClose={() => setShowForgotPasswordModal(false)} />
+)}
                 </div>
               )}
               <div></div>

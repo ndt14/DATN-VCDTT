@@ -102,10 +102,10 @@ class CouponController extends Controller
             return response()->json(
                 [
                     'data' => [
-                        'coupons' => CouponResource::collection($result),
-                        'message' => 'OK',
-                        'status' => 200
-                    ]
+                        'coupons' => new CouponResource($result),
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
                 ]
             );
         }else {
@@ -121,21 +121,24 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request, string $id)
     {
-        //
+        $input = $request->except('_token','type','price','_method');
 
-        $input = $request->all();
-
-        $coupon = Coupon::find($id);
-        if (!$coupon) {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
+        // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
+        $input['code'] = Str::upper($input['code']);
+        if($request->type != 1){
+            $input['percentage_price'] = null;
+            $input['fixed_price'] = $request->price;
+        }else{
+            $input['fixed_price'] = null;
+            $input['percentage_price'] = $request->price;
         }
-
-        $coupon->fill($input);
-
-        if ($coupon->save()) {
+        $coupon = Coupon::find($id);
+        $coupon->update($input);
+        if ($coupon->id) {
             return response()->json([
                 'data' => [
-                    'coupon' => $coupon
+                    'coupon' => new CouponResource($coupon)
                 ],
                 'message' => 'OK',
                 'status' => 200,

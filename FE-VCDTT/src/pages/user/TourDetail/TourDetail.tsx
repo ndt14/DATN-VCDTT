@@ -138,22 +138,6 @@ const TourDetail = () => {
                   <h2>{tourData?.data?.tour.name}</h2>
                   <figure className="feature-image">
                     <img src={tourData?.data?.tour.main_img} alt="" />
-                    {/* <div className="package-meta text-center">
-                                 <ul>
-                                    <li>
-                                       <i className="far fa-clock"></i>
-                                       6 days / 5 night
-                                    </li>
-                                    <li>
-                                       <i className="fas fa-user-friends"></i>
-                                       People: 4
-                                    </li>
-                                    <li>
-                                       <i className="fas fa-map-marked-alt"></i>
-                                       Norway
-                                    </li>
-                                 </ul>
-                              </div> */}
                   </figure>
 
                   <div className="tab-container">
@@ -218,39 +202,9 @@ const TourDetail = () => {
                         role="tabpanel"
                         aria-labelledby="overview-tab"
                       >
+                        {/* mô tả tour  */}
                         <div className="overview-content">
-                          <p>
-                            Occaecat pariatur! Quaerat ligula, ab, consequuntur
-                            orci mus ultricies praesent aute blandit beatae nisl
-                            aut, totam mauris rhoncus? Tellus netus fringilla
-                            className auctor dui. Dolores excepteur, doloribus,
-                            blanditiis aliquip nisl. Occaecat iusto? Provident
-                            sociis rerum. Amet, asperiores molestie varius eos!
-                            Libero, fermentum fermentum totam! Sunt praesentium,
-                            totam. Excepteur platea nisl. Convallis aliquam?
-                            Iaculis erat ipsa molestie, quod, vestibulum
-                            reiciendis, maxime nostra, integer unde officiis quo
-                            integer unde officiis quo.
-                          </p>
-                          <p>
-                            Occaecat pariatur! Quaerat ligula, ab, consequuntur
-                            orci mus ultricies praesent aute blandit beatae nisl
-                            aut, totam mauris rhoncus? Tellus netus fringilla
-                            className auctor dui. Dolores excepteur, doloribus,
-                            blanditiis aliquip nisl..
-                          </p>
-                          <ul>
-                            <li>- Travel cancellation insurance</li>
-                            <li>- Breakfast and dinner included</li>
-                            <li>- Health care included</li>
-                            <li>
-                              - Transfer to the airport and return to the agency
-                            </li>
-                            <li>
-                              - Lorem ipsum dolor sit amet, consectetur
-                              adipiscing
-                            </li>
-                          </ul>
+                          {tourData?.data?.tour.details}
                         </div>
                       </div>
                       <div
@@ -259,78 +213,9 @@ const TourDetail = () => {
                         role="tabpanel"
                         aria-labelledby="program-tab"
                       >
-                        <div className="itinerary-content">
-                          <h3>
-                            Program <span>( 4 days )</span>
-                          </h3>
-                          <p>
-                            Dolores maiores dicta dolore. Natoque placeat libero
-                            sunt sagittis debitis? Egestas non non qui quos,
-                            semper aperiam lacinia eum nam! Pede beatae. Soluta,
-                            convallis irure accusamus voluptatum ornare saepe
-                            cupidatat.
-                          </p>
-                        </div>
-                        <div className="itinerary-timeline-wrap">
-                          <ul>
-                            <li>
-                              <div className="timeline-content">
-                                <div className="day-count">
-                                  Day <span>1</span>
-                                </div>
-                                <h4>Ancient Rome Visit</h4>
-                                <p>
-                                  Nostra semper ultricies eu leo eros orci porta
-                                  provident, fugit? Pariatur interdum assumenda,
-                                  qui aliquip ipsa! Dictum natus potenti
-                                  pretium.
-                                </p>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="timeline-content">
-                                <div className="day-count">
-                                  Day <span>2</span>
-                                </div>
-                                <h4>Classic Rome Sightseeing</h4>
-                                <p>
-                                  Nostra semper ultricies eu leo eros orci porta
-                                  provident, fugit? Pariatur interdum assumenda,
-                                  qui aliquip ipsa! Dictum natus potenti
-                                  pretium.
-                                </p>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="timeline-content">
-                                <div className="day-count">
-                                  Day <span>3</span>
-                                </div>
-                                <h4>Vatican City Visit</h4>
-                                <p>
-                                  Nostra semper ultricies eu leo eros orci porta
-                                  provident, fugit? Pariatur interdum assumenda,
-                                  qui aliquip ipsa! Dictum natus potenti
-                                  pretium.
-                                </p>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="timeline-content">
-                                <div className="day-count">
-                                  Day <span>4</span>
-                                </div>
-                                <h4>Italian Food Tour</h4>
-                                <p>
-                                  Nostra semper ultricies eu leo eros orci porta
-                                  provident, fugit? Pariatur interdum assumenda,
-                                  qui aliquip ipsa! Dictum natus potenti
-                                  pretium.
-                                </p>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
+                        {/* lịch trình */}
+
+                        {tourData?.data?.tour.pathway}
                       </div>
                       <div
                         className="tab-pane"
