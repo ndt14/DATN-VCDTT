@@ -37,12 +37,14 @@
                             <h3 class="card-title">Tổng đánh giá:
                                 @php
                                 $star = 0;
+                                $t=0;
                                 $count = $data->ratings;
                                 foreach ($count as $c) {
                                     $star += $c->star;
+                                    $t++;
                                 }
                                 @endphp
-                                {{ $star }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                {{ $star/$t }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">

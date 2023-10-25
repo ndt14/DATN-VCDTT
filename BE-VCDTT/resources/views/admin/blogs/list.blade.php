@@ -5,7 +5,7 @@
         <div class="row g-2 align-items-center">
             <div class="col">
                 <h2 class="page-title">
-                    Blogs management
+                    Quản lý Blog
                 </h2>
             </div>
             <div class="col-12 ">
@@ -30,7 +30,7 @@
                             <line x1="12" y1="5" x2="12" y2="19" />
                             <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        Add new
+                        Thêm mới
                     </a>
                     <a href="{{ url('/blog-add')}}" class="btn btn-primary d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -65,19 +65,19 @@
                             <div class="ms-auto text-muted">
                                 <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                     <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingSelect">Status</label>
+                                        <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                         <select class="form-select" name="lang_code">
-                                            <option value="">Select status...</option>
-                                            <option value="ja">Active</option>
-                                            <option value="en">Unactive</option>
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="ja">Đang hoạt động</option>
+                                            <option value="en">Không hoạt động</option>
                                         </select>
                                     </div>
                                     <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingInput">Keyword</label>
+                                        <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                         <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-primary">Tìm</button>
                                     </div>
                                 </form>
                             </div>
