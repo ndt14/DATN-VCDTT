@@ -60,7 +60,7 @@ class ResetPasswordController extends Controller
         $updatePasswordUser = $user->update($request->only('password'));
         $passwordReset->delete();
 
-        if($updatePasswordUser){
+        if ($updatePasswordUser) {
             return response()->json([
                 'message' => 'Your password has been changed!',
                 'status' => 200

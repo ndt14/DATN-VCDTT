@@ -21,10 +21,17 @@ const AuthApi = createApi({
                 body: credentials,
             }),
         }),
+        resetPassword: builder.mutation<{ message: string }, { email: string }>({
+            query: (email) => ({
+                url: '/reset-password', // Update the URL accordingly
+                method: 'POST',
+                body: { email },
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation,useRegisterMutation } = AuthApi;
+export const { useLoginMutation,useRegisterMutation,useResetPasswordMutation} = AuthApi;
 
 export const authReducer = AuthApi.reducer;
 export default AuthApi;

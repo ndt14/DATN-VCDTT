@@ -13,6 +13,7 @@ import {
   TourDetail,
   PurchasingInformation,
   PrivacyPolicy,
+  Search,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
@@ -20,6 +21,7 @@ import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
 import UserTour from "../pages/user/UserTour/UserTour";
 import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
 import SearchBar from "../componenets/User/SearchBar";
+import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
 
 const PublicRoutes = () => {
   return (
@@ -48,15 +50,16 @@ const PublicRoutes = () => {
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
+        
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       <Route path="admin" element={<LayoutAdmin />}>
         <Route index element={<Dashboard />} />
       </Route>
-
+      <Route path="reset-password/:token" element={<ResetPasswordModal/>} />
       <Route path="*" element={<NotFoundPage />}></Route>
-      <Route path="/se" element={<SearchBar/>}></Route>
+      <Route path="/se" element={<Search/>}></Route>
     </Routes>
   );
 };
