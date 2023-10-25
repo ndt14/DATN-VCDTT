@@ -53,7 +53,7 @@ class TourRequest extends FormRequest
                         ];
 
                         break;
-                    case 'tourManagementUpdate':
+                    case 'tourManagementEdit':
 
                         // xây dựng validate
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class BlogRequest extends FormRequest
 {
@@ -39,29 +42,19 @@ class BlogRequest extends FormRequest
                         ];
 
                         break;
-                    // case '':
 
-                    //     // xây dựng validate
+                    case 'blogManagementEdit':
 
-                    //     $rule = [
-                    //         'name' => 'required',
-                    //         'duration' => 'required',
-                    //         'child_price' => 'required',
-                    //         'adult_price' => 'required',
-                    //         'sale_percentage' => 'required',
-                    //         'start_destination' => 'required',
-                    //         'end_destination' => 'required',
-                    //         'tourist_count' => 'required',
-                    //         'details' => 'required',
-                    //         'pathway' => 'required',
-                    //         'location' => 'required',
-                    //         'exact_location' => 'required',
-                    //         'main_img' => 'required',
-                    //         'status' => 'required',
-                    //         'view_count' => 'required',
-                    //     ];
+                        // xây dựng validate
 
-                    //     break;
+                        $rule = [
+                            'title' => 'required',
+                            'author' => 'required',
+                            'short_desc' => 'required',
+                            'main_img' => 'required',
+                        ];
+
+                        break;
 
                 endswitch;
                 break;

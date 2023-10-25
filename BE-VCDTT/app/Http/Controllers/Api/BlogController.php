@@ -166,7 +166,7 @@ class BlogController extends Controller
 
     public function blogManagementList(Request $request)
     {
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog')->json()['data']['blogs'];
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog')['data']['blogs'];
         return view('admin.blogs.list', compact('data'));
     }
 
@@ -184,16 +184,25 @@ class BlogController extends Controller
         return view ('admin.blogs.add');
     }
 
-    public function blogManagementEdit(Request $request)
+    public function blogManagementEdit(BlogRequest $request, $id)
     {
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)->json()['data']['blog'];
-        return view('admin.blogs.edit', compact('data'));
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/blog-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('blog.list')->with('success', 'Cập nhật blog thành công');
+            } else {
+                return redirect()->route('blog.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
+        return view('admin.blogs.edit', compact('response'));
     }
 
     public function blogManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)->json()['data']['blog'];
+        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
         $html = view('admin.blogs.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }

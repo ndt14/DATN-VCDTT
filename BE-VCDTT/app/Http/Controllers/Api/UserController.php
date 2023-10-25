@@ -148,13 +148,19 @@ class UserController extends Controller
         }
     }
 
-    public function userManagementEdit(Request $request)
+    public function userManagementEdit(UserRequest $request, $id)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user-show/' . $request->id);
-        if ($response->status() == 200) {
-            $data = json_decode(json_encode($response->json()['data']['user']), false);
-            return view('admin.users.edit', compact('data'));
+        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/user-show/' . $request->id)['data']['user']));
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/user-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('user.list')->with('success', 'Cập nhật user thành công');
+            } else {
+                return redirect()->route('user.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
         }
+        return view('admin.users.edit', compact('response'));
     }
 
     public function userManagementAdd(UserRequest $request)

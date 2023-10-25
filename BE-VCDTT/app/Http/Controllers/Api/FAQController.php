@@ -168,12 +168,18 @@ class FAQController extends Controller
         return view('admin.faqs.add');
     }
 
-    public function faqManagementEdit(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$request->id);
-        if($response->status() == 200) {
-            $data = json_decode(json_encode($response->json()['data']['faq']), false);
-            return view('admin.faqs.edit', compact('data'));
+    public function faqManagementEdit(FAQRequest $request, $id) {
+        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/' . $request->id)['data']['faq']));
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/faq-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('faq.list')->with('success', 'Cập nhật faq thành công');
+            } else {
+                return redirect()->route('faq.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
         }
+        return view('admin.faqs.edit', compact('response'));
     }
 
     public function faqManagementDetail(Request $request) {
