@@ -88,13 +88,13 @@
                             <thead>
                                 <tr>
                                     <th class="w-1">ID</th>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Short description</th>
-                                    <th>View count</th>
-                                    <th>Created at</th>
-                                    <th>Last update</th>
-                                    <th class="text-center">Active</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Tác giả</th>
+                                    <th>Mô tả ngắn</th>
+                                    <th>Số lượt xem</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày sửa</th>
+                                    <th class="text-center">Trạng thái</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -110,7 +110,7 @@
                                             {{$data['author']}}
                                         </td>
                                         <td>
-                                            {{string_truncate($data['short_desc'], 50)}}                     
+                                            {{string_truncate($data['short_desc'], 50)}}
                                         </td>
                                         <td>
                                             {{$data['view_count']}}
@@ -130,19 +130,19 @@
                                         </td>
                                         <td class="text-end">
                                             <span class="dropdown">
-                                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
+                                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Hành động</button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="{{route('blog.edit', ['id'=>$data['id']])}}">Edit</a>
-                                                    <a class="dropdown-item" href="javascript: removeItem({{ $data['id']}})">Remove</a>
+                                                    <a class="dropdown-item" href="{{route('blog.edit', ['id'=>$data['id']])}}">Sửa</a>
+                                                    <a class="dropdown-item" href="javascript: removeItem({{ $data['id']}})">Xóa</a>
                                                 </div>
-                                            </span> 
+                                            </span>
                                         </td>
                                     </tr>
                                     @endforeach
                                 @else
                                 <tr>
                                     <td colspan="9">
-                                        <div>No data</div>
+                                        <div>Không có dữ liệu</div>
                                     </td>
                                 </tr>
                                 @endif
@@ -208,7 +208,7 @@
         z-index: 79 !important;
     }
 
-    
+
 </style>
 @endSection
 @section('page_js')

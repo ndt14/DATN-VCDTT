@@ -215,17 +215,17 @@ class PurchaseHistoryController extends Controller
                 $code = Str::upper($request->coupon_code);
                 if (Coupon::select()->where('code', $code)->exists()) {
                     if (UsedCoupon::select()->where('user_id', $request->user_id)->where('coupon_code', $code)->exists()) {
-                        return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
+                        return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::select()->where('code', $code)->first();
                         return response()->json([
                             'coupon' => new CouponResource($coupon),
-                            'message' => 'This coupon code is valid',
+                            'message' => 'Mã giảm giá hợp lệ',
                             'status' => 200
                         ]);
                     }
                 } else {
-                    return response()->json(['message' => 'This coupon code is unvalid', 'status' => 500]);
+                    return response()->json(['message' => 'Không có mã giảm giá này', 'status' => 500]);
                 }
             }
         }
