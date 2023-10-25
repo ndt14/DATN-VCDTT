@@ -85,7 +85,7 @@ const BillSuccess = () => {
         <div className="inner-baner-container">
           <div className="container">
             <div className="inner-banner-content">
-              <h1 className="inner-title">Tình trạng thanh toán</h1>
+              <h1 className="inner-title">Thanh toán</h1>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@ const BillSuccess = () => {
           <div>
             <div className="mt-10" style={{ height: "200px" }}></div>
             <h2 className="text-danger">Thanh toán thất bại</h2>
-            <button className="rounded text-white">
+            <button className="rounded text-white bg-primary">
               <Link to={"/"}>Trở về trang chủ</Link>
             </button>
           </div>
