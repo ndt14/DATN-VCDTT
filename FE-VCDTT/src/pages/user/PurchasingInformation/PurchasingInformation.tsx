@@ -196,7 +196,10 @@ const PurchasingInformation = (props: Props) => {
       tour_sale_percentage: 0,
     };
     console.log(variables);
+    console.log(couponName);
+    localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
+
 
     addBill(variables)
       .then((response) => {
