@@ -38,10 +38,11 @@
                                 @php
                                 $star = 0;
                                 $count = $data->ratings;
+                                foreach ($count as $c) {
+                                    $star += $c->star;
+                                }
                                 @endphp
-                                @foreach ($count as $c)
-                                {{ $star += $c->star }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
-                                @endforeach
+                                {{ $star }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
