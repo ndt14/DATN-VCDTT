@@ -72,7 +72,7 @@ const PurchasingInformation = (props: Props) => {
   const userId = userData?.id;
   const userEmail = userData?.email;
   const phoneNumber = userData?.phone_number;
-  const userAddress = userData?.address;
+  // const userAddress = userData?.address;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
   // Xử lý xác nhận thông tin form
@@ -104,12 +104,6 @@ const PurchasingInformation = (props: Props) => {
     user_id: userId ? userId : "",
     coupon_code: "",
   });
-  console.log(productNumber);
-  console.log(productChildNumber);
-  console.log(price);
-  console.log(childPrice);
-  console.log(tourChildPrice);
-  console.log(tourPrice);
 
   useEffect(() => {
     let FPrice = childPrice + price;
@@ -196,10 +190,8 @@ const PurchasingInformation = (props: Props) => {
       tour_sale_percentage: 0,
     };
     console.log(variables);
-    console.log(couponName);
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
-
 
     addBill(variables)
       .then((response) => {
@@ -385,26 +377,17 @@ const PurchasingInformation = (props: Props) => {
                         <p> {formattedTourChildPrice}</p>
                         <p>{formattedTourPrice}</p>
                       </div>
-                      {couponData.percentage !== 0 ? (
+                      {userLogIn == "true" ? (
                         <div className="col-sm-6">
                           <p>
-                            {" "}
-                            Giá sau khi nhập coupon:{" "}
+                            Giá sau khi nhập coupon:
                             <span className="fs-4 text-danger fw-bold">
                               {formattedFinalPrice}
                             </span>
                           </p>
                         </div>
                       ) : (
-                        <div className="col-sm-6">
-                          <p>
-                            {" "}
-                            Giá sau khi nhập coupon:{" "}
-                            <span className="fs-4 text-danger fw-bold">
-                              {formattedFinalPrice}
-                            </span>
-                          </p>
-                        </div>
+                        <div className="col-sm-6"></div>
                       )}
                     </div>
                     {/* Button trigger modal xác nhận thông tin */}
@@ -519,33 +502,17 @@ const PurchasingInformation = (props: Props) => {
                                   disabled
                                 />
                               </div>
-                              {couponData.percentage > 0 && (
-                                <div className="form-group">
-                                  <label htmlFor="">
-                                    Giá tour sau khi nhập coupon
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="created_at"
-                                    value={formattedFinalPrice}
-                                    disabled
-                                  />
-                                </div>
-                              )}{" "}
-                              {couponData.percentage == 0 &&
-                                couponData.fixed > 0 && (
-                                  <div className="form-group">
-                                    <label htmlFor="">
-                                      Giá tour sau khi nhập coupon
-                                    </label>
-                                    <input
-                                      type="text"
-                                      name="created_at"
-                                      value={formattedFinalPrice}
-                                      disabled
-                                    />
-                                  </div>
-                                )}
+                              <div className="form-group">
+                                <label htmlFor="">
+                                  Giá tour sau khi nhập coupon
+                                </label>
+                                <input
+                                  type="text"
+                                  name="created_at"
+                                  value={formattedFinalPrice}
+                                  disabled
+                                />
+                              </div>
                               <div className="form-group">
                                 <label htmlFor="">Phương thức thanh toán</label>
                                 <div className="mr-3">
