@@ -44,7 +44,7 @@
                                     $t++;
                                 }
                                 @endphp
-                                {{ $star/$t }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
