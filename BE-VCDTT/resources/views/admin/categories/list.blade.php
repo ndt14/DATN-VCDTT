@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Categories management
+                        Quản lý danh mục
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -32,7 +32,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
-                            Add new
+                           Thêm mới
                         </a>
                         <a href="{{ route('category.add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -55,7 +55,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Category</h3>
+                            <h3 class="card-title">Danh mục</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -69,20 +69,19 @@
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Status</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Select status...</option>
-                                                <option value="ja">Active</option>
-                                                <option value="en">Unactive</option>
-                                            </select>
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                        <select class="form-select" name="lang_code">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="ja">Đang hoạt động</option>
+                                            <option value="en">Không hoạt động</option>
+                                        </select>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                            <input type="text" name="keyword" value="keyword" class="form-control"
-                                                placeholder="Keyword">
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                            <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -92,11 +91,11 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">Child count</th>
+                                        <th class="w-1">Số trẻ nhỏ</th>
                                         <th class="w-1">ID</th>
-                                        <th>Name</th>
-                                        <th>Create at</th>
-                                        <th>Last update</th>
+                                        <th>Tên</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày sửa</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -120,10 +119,10 @@
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Actions</button>
+                                                            data-bs-toggle="dropdown">Hành động</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="{{ route('category.edit', ['id' => $item->id]) }}">Edit</a>
-                                                            <a class="dropdown-item" href="javascript: removeItem({{ $item->id}})">Remove</a>
+                                                            <a class="dropdown-item" href="{{ route('category.edit', ['id' => $item->id]) }}">Sửa</a>
+                                                            <a class="dropdown-item" href="javascript: removeItem({{ $item->id}})">Xóa</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -152,10 +151,10 @@
                                                         <span class="dropdown">
                                                             <button class="btn dropdown-toggle align-text-top"
                                                                 data-bs-boundary="viewport"
-                                                                data-bs-toggle="dropdown">Actions</button>
+                                                                data-bs-toggle="dropdown">Hành động</button>
                                                             <div class="dropdown-menu dropdown-menu-end">
-                                                                <a class="dropdown-item" href="{{ route('category.edit', ['id' => $child->id]) }}">Edit</a>
-                                                                <a class="dropdown-item" href="javascript: removeItem({{ $child->id}})">Remove</a>
+                                                                <a class="dropdown-item" href="{{ route('category.edit', ['id' => $child->id]) }}">Sửa</a>
+                                                                <a class="dropdown-item" href="javascript: removeItem({{ $child->id}})">Xóa</a>
                                                             </div>
                                                         </span>
                                                     </td>
@@ -166,7 +165,7 @@
                                     @else
                                         <tr>
                                             <td colspan="9">
-                                                <div>No data</div>
+                                                <div>Không có dữ liệu</div>
                                             </td>
                                         </tr>
                                     @endif

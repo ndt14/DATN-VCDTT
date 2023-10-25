@@ -24,7 +24,7 @@
                     Overview
                 </div> -->
                 <h2 class="page-title">
-                    Faqs management
+                   Quản lý Faqs
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -40,7 +40,7 @@
                                 <path d="M5 12l4 4"></path>
                                 <path d="M5 12l4 -4"></path>
                             </svg>
-                            Back
+                            Quay lại
                         </a>
                         <a href="{{url('/faq')}}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -64,8 +64,8 @@
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Question</label>
-                            <input type="text" name="question" class="form-control" placeholder="Enter question" value="">
+                            <label class="form-label">Câu hỏi</label>
+                            <input type="text" name="question" class="form-control" placeholder="Nhập câu hỏi" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('question')
                                 {{ $message }}
@@ -73,8 +73,8 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Answer</label>
-                            <textarea name="answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10"></textarea>
+                            <label class="form-label">Câu trả lời</label>
+                            <textarea name="answer" class="form-control ckeditor"id="" cols="30" rows="10"></textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('answer')
                                 {{ $message }}
@@ -84,7 +84,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
                 </form>
             </div>

@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Tours management
+                       Quản lý Tours
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -32,7 +32,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
-                            Add new
+                            Thêm mới
                         </a>
                         <a href="{{ url('/tour-add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -69,20 +69,20 @@
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Status</label>
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="lang_code">
-                                                <option value="">Select status...</option>
-                                                <option value="ja">Active</option>
-                                                <option value="en">Unactive</option>
+                                                <option value="">Chọn trạng thái</option>
+                                                <option value="ja">Đang hoạt động</option>
+                                                <option value="en">Không hoạt động</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Keyword</label>
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -93,12 +93,12 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Name</th>
-                                        <th>Location</th>
-                                        <th>Tourist count</th>
-                                        <th>View count</th>
-                                        <th>Created at</th>
-                                        <th class="text-center">Active</th>
+                                        <th>Tên</th>
+                                        <th>Vị trí</th>
+                                        <th>Số hành khách</th>
+                                        <th>Lượt xem</th>
+                                        <th>Ngày tạo</th>
+                                        <th class="text-center">Hành động</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -138,11 +138,11 @@
                                                             data-bs-toggle="dropdown">Actions</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
                                                             <a class="dropdown-item"
-                                                                href=" {{ route('rating.list', ['id' => $item['id']]) }}">See rating</a>
+                                                                href=" {{ route('rating.list', ['id' => $item['id']]) }}">Xem đánh giá</a>
                                                             <a class="dropdown-item"
-                                                                href=" {{ route('tour.edit', ['id' => $item['id']]) }}">Edit</a>
+                                                                href=" {{ route('tour.edit', ['id' => $item['id']]) }}">Sửa</a>
                                                             <a class="dropdown-item"
-                                                                href="javascript: removeItem({{ $item['id']}})">Remove</a>
+                                                                href="javascript: removeItem({{ $item['id']}})">Xóa</a>
                                                         </div>
                                                     </span>
                                                 </td>
@@ -151,7 +151,7 @@
                                     @else
                                         <tr>
                                             <td colspan="9">
-                                                <div>No data</div>
+                                                <div>Không có dữ liệu</div>
                                             </td>
                                         </tr>
                                     @endif
