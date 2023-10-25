@@ -43,7 +43,18 @@ class PurchaseHistoryController extends Controller
 
         $users = User::where('is_admin',1)->get();
 
-        $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
+        $data = $request->except('coupon_code','_token');
+
+        if (!$data['transaction_id']) {
+            $data['payment_status'] = 0;
+            $data['purchase_status'] = 0;
+        } else {
+            $data['payment_status'] = 1;
+            $data['purchase_status'] = 1;
+        }
+
+        $purchaseHistory = PurchaseHistory::create($data);
+
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
         Notification::send($users, new PurchaseNotification($purchaseHistory));
 
@@ -72,8 +83,6 @@ class PurchaseHistoryController extends Controller
         //
 
     }
-
-
 
     public function showByUser(string $user_id) //show theo user_id
     {
@@ -122,8 +131,6 @@ class PurchaseHistoryController extends Controller
 
         $purchaseHistory = PurchaseHistory::find($id);
 
-        // $email = $user->email;
-
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -134,6 +141,14 @@ class PurchaseHistoryController extends Controller
 
             if($updateAdmin){
                 $purchaseHistory->notify(new SendMailToClient());
+            } else {
+                if (!$input['transaction_id']) {
+                    $input['payment_status'] = 0;
+                    $input['purchase_status'] = 0;
+                } else {
+                    $input['payment_status'] = 1;
+                    $input['purchase_status'] = 1;
+                }
             }
 
             return response()->json([
@@ -170,11 +185,6 @@ class PurchaseHistoryController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
-
-    // public function markAsRead(){
-    //     Auth::user()->unreadNotifications->markAsRead();
-    //     return redirect()->back();
-    // }
 
     //=======================================PurchaseHistoryAdmin Controller=======================================
 
