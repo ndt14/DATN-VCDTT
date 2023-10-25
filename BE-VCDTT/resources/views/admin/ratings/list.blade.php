@@ -34,7 +34,14 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Rating</h3>
+                            <h3 class="card-title">Overall rating:
+                                @php
+                                $star = 0;
+                                $count = $data->ratings;
+                                @endphp
+                                @foreach ($count as $c)
+                                {{ $star += $c->star }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                @endforeach
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -72,9 +79,10 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Content</th>
-                                        <th>User id</th>
-                                        <th>Answer</th>
+                                        <th>User name</th>
+                                        <th>Star gave</th>
+                                        <th>Rating content</th>
+                                        <th>Our answer</th>
                                         <th>Created at</th>
                                         <th>Updated at</th>
                                         <th></th>
@@ -87,10 +95,14 @@
                                             <tr>
                                                 <td><span class="text-muted">{{ $data->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
+                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
                                                 </td>
                                                 <td>
-                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_id }}</a>
+                                                    {{ $data->star }}
+                                                    <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                                </td>
+                                                <td>
+                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
                                                 </td>
                                                 <td>
                                                     {{ $data->admin_answer??'Null' }}

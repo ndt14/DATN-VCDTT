@@ -18,8 +18,9 @@ class RatingSeeder extends Seeder
         $faker = Factory::create();
         for ($i = 1; $i < 20; $i++) {
             DB::table('ratings')->insert([
-                'name' => $faker->name(),
+                'star' => $faker->numberBetween(1,5),
                 'user_id' => $faker->numberBetween(1, 20),
+                'user_name' => $faker->name(),
                 'content' => $faker->sentence(10),
                 'admin_answer' => $faker->sentence(10),
                 'tour_id' => $faker->numberBetween(1, 20),

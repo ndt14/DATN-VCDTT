@@ -44,11 +44,10 @@ class PurchaseHistoryController extends Controller
         $users = User::where('is_admin',1)->get();
 
         $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
-
+        $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
         Notification::send($users, new PurchaseNotification($purchaseHistory));
 
         if ($purchaseHistory->id) {
-            $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
             return response()->json([
                 'data' => [
                     'purchase_history' => new PurchaseHistoryResource($purchaseHistory),
@@ -136,7 +135,7 @@ class PurchaseHistoryController extends Controller
             if($updateAdmin){
                 $purchaseHistory->notify(new SendMailToClient());
             }
-          
+
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
