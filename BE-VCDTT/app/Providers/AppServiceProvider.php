@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         View::composer('admin.common.layout', function ($view) {
-            $users = User::where('is_admin',1)->first();
-            $view->with('users', $users);
+            $user = User::where('is_admin',1)->first();
+            $view->with('user', $user);
         });
     }
 }

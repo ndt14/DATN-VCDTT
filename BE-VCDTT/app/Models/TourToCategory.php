@@ -22,8 +22,9 @@ class TourToCategory extends Model
         $category = Category::find($this->cate_id);
         $data = [
             //tour
-            'tour_id' => $tour->id,
+            'tour_id' => $this->tour_id,
             'name' => $tour->name,
+            'main_img' => $tour->main_img,
             'duration' => $tour->duration,
             'child_price' => $tour->child_price,
             'adult_price' => $tour->adult_price,

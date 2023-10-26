@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                <!-- @if (Session::has('success'))
+                @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif -->
+                @endif
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -24,7 +24,7 @@
                     Overview
                 </div> -->
                 <h2 class="page-title">
-                    Tours management
+                    Quản lý tour
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -54,15 +54,12 @@
 </div>
         <div class="page-body">
             <div class="container-xl">
-
-
-
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form id="frmAdd" class="card" action="/api/tour-store" method="POST">
+                        <form id="frmAdd" class="card" action="{{ route('tour.add') }}" method="POST">
                             <div class="card-header">
                                 <h2 class="card-title">
-                                    Add new tour
+                                    Thêm tour
                                 </h2>
                             </div>
                             @csrf
@@ -70,7 +67,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Tên tour</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="Nhập tên cho tour" value="{{ old('name') ?? '' }}">
+                                        placeholder="Nhập tên cho tour">
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('name')
                                             {{ $message }}
@@ -79,9 +76,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-6">
-                                        <label class="form-label">Ảnh đạ diện</label>
+                                        <label class="form-label">Ảnh đại diện</label>
                                         <input type="text" name="main_img" class="form-control"
-                                            placeholder="Link ảnh đại diện" value="{{ old('main_img') ?? '' }}">
+                                            placeholder="Link ảnh đại diện" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('main_img')
                                                 {{ $message }}
@@ -92,7 +89,7 @@
                                         <label class="form-label">Khoảng thời gian</label>
                                         <input type="text" name="duration" class="form-control"
                                             placeholder="Nhập khoảng thời gian diễn ra tour"
-                                            value="{{ old('duration') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('duration')
                                                 {{ $message }}
@@ -104,7 +101,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá người lớn</div>
                                         <input name="adult_price" type="text" placeholder="Nhập giá người lớn"
-                                            class="form-control" value="{{ old('adult_price') ?? '' }}">
+                                            class="form-control" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('adult_price')
                                                 {{ $message }}
@@ -114,7 +111,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá trẻ nhỏ</div>
                                         <input name="child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
-                                            class="form-control" value="{{ old('child_price') ?? '' }}">
+                                            class="form-control" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('child_price')
                                                 {{ $message }}
@@ -127,7 +124,7 @@
                                         <div class="form-label">Điểm bắt đầu</div>
                                         <input name="start_destination" type="text"
                                             placeholder="Nhập điểm bắt đầu tour" class="form-control"
-                                            value="{{ old('start_destination') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('start_destination')
                                                 {{ $message }}
@@ -138,7 +135,7 @@
                                         <div class="form-label">Điểm kết thúc</div>
                                         <input name="end_destination" type="text"
                                             placeholder="Nhập điểm kết thúc tour" class="form-control"
-                                            value="{{ old('end_destination') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('end_destination')
                                                 {{ $message }}
@@ -151,7 +148,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Vị trí tour</div>
                                         <input name="location" type="text" class="form-control"
-                                            placeholder="Nhập vị trí của tour" value="{{ old('location') ?? '' }}">
+                                            placeholder="Nhập vị trí của tour" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('location')
                                                 {{ $message }}
@@ -162,7 +159,7 @@
                                         <div class="form-label">Vị trí chính xác tour</div>
                                         <input name="exact_location" type="text" class="form-control"
                                             placeholder="Nhập vị trí chính xác của tour"
-                                            value="{{ old('exact_location') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -176,12 +173,16 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
                                         <input name="pathway" type="text" class="form-control"
-                                            placeholder="Nhập lịch trình của tour" value="{{ old('pathway') ?? '' }}">
+                                            placeholder="Nhập lịch trình của tour" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                    </div>
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Choose Category</label>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category"  multiple></select>
                                     </div>
                                 </div>
 
@@ -192,7 +193,7 @@
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="sale_percentage" type="text" class="form-control"
                                             placeholder="Nhập phần trăm giảm giá"
-                                            value="{{ old('sale_percentage') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('sale_percentage')
                                                 {{ $message }}
@@ -204,7 +205,7 @@
                                         <div class="form-label">Số lượng hành khách</div>
                                         <input name="tourist_count" type="text" class="form-control"
                                             placeholder="Nhập số lượng hành khách"
-                                            value="{{ old('tourist_count') ?? '' }}">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tourist_count')
                                                 {{ $message }}
@@ -212,18 +213,10 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <div class="mb-3">
-                                    <div class="mb-3 col-6">
-                                        <label class="form-label">Choose Category</label>
-                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
-                                    </div>
-                                </div>
-
                                 <div class="mb-3">
                                     <div class="form-label">Nội dung mô tả</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
-                                        placeholder="Nhập nội dung mô tả">{{ old('details') ?? '' }}</textarea>
+                                        placeholder="Nhập nội dung mô tả"></textarea>
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('details')
                                             {{ $message }}
@@ -262,7 +255,7 @@
                     </div>
                 </div>
 
-                <div class="row row-deck row-cards">
+                <!-- <div class="row row-deck row-cards">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -276,13 +269,13 @@
                                         <h3 class="dropzone-msg-title">Your text here</h3>
                                         <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
                                     </div>
-                                    
+
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>
-                
+                </div> -->
+
             </div>
         </div>
 @endsection
@@ -296,38 +289,38 @@
 $(document).ready(function() {
     let categories_data = [];
     if ($('#frmAdd').length) {
-        $('#frmAdd').submit(function() {
-            let options = {
-                data: {
-                        categories_data: categories_data,
-                    },
-                beforeSubmit: function(formData, jqForm, options) {
-                    $('#btnSubmitAdd').addClass('btn-loading');
-                    $('#btnSubmitAdd').addClass("disabled");
-                },
-                success: function(response, statusText, xhr, $form) {
-                    $('#btnSubmitAdd').removeClass('btn-loading');
-                    if(response.status == 500){
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                    }
-                    if(response.status == 200){
-                        $('#btnSubmitAdd').removeClass("disabled");
-                        bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-                    }
-                },
-                error: function() {
-                    $('#btnSubmitAdd').removeClass('btn-loading');
-                    $('#btnSubmitAdd').removeClass("disabled");
-                    bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                },
-                dataType: 'json',
-                clearForm: false,
-                resetForm: false
-            };
-            $(this).ajaxSubmit(options);
-            return false;
-        });
+//         $('#frmAdd').submit(function() {
+//             let options = {
+//                 data: {
+//                         categories_data: categories_data,
+//                     },
+//                 beforeSubmit: function(formData, jqForm, options) {
+//                     $('#btnSubmitAdd').addClass('btn-loading');
+//                     $('#btnSubmitAdd').addClass("disabled");
+//                 },
+//                 success: function(response, statusText, xhr, $form) {
+//                     $('#btnSubmitAdd').removeClass('btn-loading');
+//                     if(response.status == 500){
+//                         $('#btnSubmitAdd').removeClass("disabled");
+//                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+//                     }
+//                     if(response.status == 200){
+//                         $('#btnSubmitAdd').removeClass("disabled");
+//                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+//                     }
+//                 },
+//                 error: function() {
+//                     $('#btnSubmitAdd').removeClass('btn-loading');
+//                     $('#btnSubmitAdd').removeClass("disabled");
+//                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+//                 },
+//                 dataType: 'json',
+//                 clearForm: false,
+//                 resetForm: false
+//             };
+//             $(this).ajaxSubmit(options);
+//             return false;
+//         });
     $.ajax({
             url: "/api/category",
             method: 'GET',
@@ -375,27 +368,27 @@ $(document).ready(function() {
     });
 });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        let imgArray = [];
-        new Dropzone("#dropzone-files", {
-            paramName: "files", // The name that will be used to transfer the file
-            maxFilesize: 100, // MB
-            uploadMultiple: true,
-            accept: function(file, done) {
-                done();
-            },
-            success: function(file, response) {
-                if (response.status === 200) {
-                    imgArray.push(response.files); // Thêm giá trị files vào mảng
-                }
-                document.getElementById('imgArray').value = JSON.stringify(imgArray);
-                console.log(document.getElementById('imgArray').value);
-            },
-            error: function(file, response) {
-                console.error(response.message);
-            }
-        });
-    })
+//     document.addEventListener("DOMContentLoaded", function() {
+//         let imgArray = [];
+//         new Dropzone("#dropzone-files", {
+//             paramName: "files", // The name that will be used to transfer the file
+//             maxFilesize: 100, // MB
+//             uploadMultiple: true,
+//             accept: function(file, done) {
+//                 done();
+//             },
+//             success: function(file, response) {
+//                 if (response.status === 200) {
+//                     imgArray.push(response.files); // Thêm giá trị files vào mảng
+//                 }
+//                 document.getElementById('imgArray').value = JSON.stringify(imgArray);
+//                 console.log(document.getElementById('imgArray').value);
+//             },
+//             error: function(file, response) {
+//                 console.error(response.message);
+//             }
+//         });
+//     })
 
 </script>
     @endSection

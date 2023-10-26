@@ -24,15 +24,13 @@ class TourRequest extends FormRequest
      */
     public function rules(): array
     {
-
-
         $rule = [];
         $currentAction = $this->route()->getActionMethod();
 
         switch ($this->method()):
             case 'POST':
                 switch ($currentAction):
-                    case 'tourManagementAddAction':
+                    case 'tourManagementAdd':
 
                         // xây dựng validate
 
@@ -51,11 +49,10 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
-                            'view_count' => 'required',
                         ];
 
                         break;
-                    case 'tourManagementUpdate':
+                    case 'tourManagementEdit':
 
                         // xây dựng validate
 
@@ -74,7 +71,6 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
-                            'view_count' => 'required',
                         ];
 
                         break;
@@ -102,7 +98,7 @@ class TourRequest extends FormRequest
                 'details.required' => 'Chi tiết tour không được để trống',
                 'pathway.required' => 'Lịch trình tour du lịch không được để trống',
                 'location.required' => 'Vị trí tour du lịch không được để trống',
-                'exact_location.required' => 'Ví trí chính xác tour du lịch không được để trống',
+                'exact_location.required' => 'Vị trí chính xác tour du lịch không được để trống',
                 'main_img.required' => 'Ảnh chính của tour không được để trống',
                 'status.required' => 'Trạng thái tour không được để trống',
                 'view_count.required' => 'Số lượt xem không được để trống',

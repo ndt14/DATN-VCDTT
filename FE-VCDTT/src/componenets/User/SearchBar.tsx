@@ -16,7 +16,7 @@ const searchClient = algoliasearch(
   "f2d72a41c3b3dd95d40c9d0ac7e56434"
 );
 
-const indexName = 'tours';
+const indexName = 'tours_to_categories';
 
 const SearchBar = (props: Props) => {
   const [inputValue, setInputValue] = useState('');

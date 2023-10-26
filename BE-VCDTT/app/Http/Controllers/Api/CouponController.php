@@ -102,10 +102,10 @@ class CouponController extends Controller
             return response()->json(
                 [
                     'data' => [
-                        'coupons' => CouponResource::collection($result),
-                        'message' => 'OK',
-                        'status' => 200
-                    ]
+                        'coupons' => new CouponResource($result),
+                    ],
+                    'message' => 'OK',
+                    'status' => 200
                 ]
             );
         }else {
@@ -121,21 +121,24 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request, string $id)
     {
-        //
+        $input = $request->except('_token','type','price','_method');
 
-        $input = $request->all();
-
-        $coupon = Coupon::find($id);
-        if (!$coupon) {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
+        // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
+        $input['code'] = Str::upper($input['code']);
+        if($request->type != 1){
+            $input['percentage_price'] = null;
+            $input['fixed_price'] = $request->price;
+        }else{
+            $input['fixed_price'] = null;
+            $input['percentage_price'] = $request->price;
         }
-
-        $coupon->fill($input);
-
-        if ($coupon->save()) {
+        $coupon = Coupon::find($id);
+        $coupon->update($input);
+        if ($coupon->id) {
             return response()->json([
                 'data' => [
-                    'coupon' => $coupon
+                    'coupon' => new CouponResource($coupon)
                 ],
                 'message' => 'OK',
                 'status' => 200,
@@ -194,20 +197,33 @@ class CouponController extends Controller
         }
     }
 
-    public function couponManagementAdd() {
-        //$tours
-        //$categories
-
+    public function couponManagementAdd(CouponRequest $request) {
+        if ($request->isMethod('POST')){
+            $data = $request->except('_token');
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/coupon-store', $data);
+            if($response->status() == 200) {
+                return redirect()->route('coupon.list')->with('success', 'Thêm mới mã giảm giá thành công');
+            } else {
+                return redirect()->route('coupon.add')->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
         return view('admin.coupons.add');
     }
 
-    public function couponManagementEdit(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
-        if($response->status() == 200) {
-            $data = json_decode(json_encode($response->json()['data']['coupon']), false);
-            return view('admin.coupons.edit', compact('data'));
+    public function couponManagementEdit(CouponRequest $request, $id) {
+        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $id)['data']['coupon']));
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/coupon-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('coupon.list')->with('success', 'Cập nhật mã giảm giá thành công');
+            } else {
+                return redirect()->route('coupon.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
         }
+        return view('admin.coupons.edit', compact('response'));
     }
+
 
     public function couponManagementDetail(Request $request) {
         $data = $request->except('_token');

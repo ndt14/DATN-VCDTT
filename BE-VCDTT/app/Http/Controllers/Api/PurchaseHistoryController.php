@@ -40,12 +40,25 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
+
         $users = User::where('is_admin', 1)->get();
-        Notification::send($users, new PurchaseNotification($request->transaction_id, $request->tour_name, $request->name));
-        $purchaseHistory = PurchaseHistory::create($request->except('coupon_code'));
+
+        $data = $request->except('coupon_code', '_token');
+
+        // if (!$data['transaction_id']) {
+        //     $data['payment_status'] = 0;
+        //     $data['purchase_status'] = 0;
+        // } else {
+        //     $data['payment_status'] = 1;
+        //     $data['purchase_status'] = 1;
+        // }
+
+        $purchaseHistory = PurchaseHistory::create($data);
+
+        $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
+        Notification::send($users, new PurchaseNotification($purchaseHistory));
 
         if ($purchaseHistory->id) {
-            $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
             return response()->json([
                 'data' => [
                     'purchase_history' => new PurchaseHistoryResource($purchaseHistory),
@@ -70,8 +83,6 @@ class PurchaseHistoryController extends Controller
         //
 
     }
-
-
 
     public function showByUser(string $user_id) //show theo user_id
     {
@@ -115,11 +126,10 @@ class PurchaseHistoryController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $input = $request->all();
+        $input = $request->except('update_admin');
+        $updateAdmin = $request->only('update_admin');
 
         $purchaseHistory = PurchaseHistory::find($id);
-
-        // $email = $user->email;
 
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -128,7 +138,19 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            // $purchaseHistory->notify(new SendMailToClient());
+
+            if ($updateAdmin) {
+                $purchaseHistory->notify(new SendMailToClient());
+            } else {
+                // if (!$input['transaction_id']) {
+                //     $input['payment_status'] = 0;
+                //     $input['purchase_status'] = 0;
+                // } else {
+                //     $input['payment_status'] = 1;
+                //     $input['purchase_status'] = 1;
+                // }
+            }
+
             return response()->json([
                 'data' => [
                     'purchase_history' => $purchaseHistory
@@ -164,11 +186,6 @@ class PurchaseHistoryController extends Controller
         }
     }
 
-    // public function markAsRead(){
-    //     Auth::user()->unreadNotifications->markAsRead();
-    //     return redirect()->back();
-    // }
-
     //=======================================PurchaseHistoryAdmin Controller=======================================
 
     public function purchaseHistoryManagementList(Request $request)
@@ -187,11 +204,18 @@ class PurchaseHistoryController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        $html = view('admin.purchase_histories.detail', compact('item'))->render();
+        $html = view('admin.purchase_histories.detail', compact('item'));
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-
+    public function purchaseHistoryMarkAsRead()
+    {
+        $user = User::where('is_admin', 1)->first();
+        foreach ($user->unreadNotifications as $notification) {
+            $notification->markAsRead();
+        }
+        return redirect()->back();
+    }
 
     //coupon
 
@@ -202,17 +226,17 @@ class PurchaseHistoryController extends Controller
                 $code = Str::upper($request->coupon_code);
                 if (Coupon::select()->where('code', $code)->exists()) {
                     if (UsedCoupon::select()->where('user_id', $request->user_id)->where('coupon_code', $code)->exists()) {
-                        return response()->json(['message' => 'This coupon code has been used', 'status' => 500]);
+                        return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::select()->where('code', $code)->first();
                         return response()->json([
                             'coupon' => new CouponResource($coupon),
-                            'message' => 'This coupon code is valid',
+                            'message' => 'Mã giảm giá hợp lệ',
                             'status' => 200
                         ]);
                     }
                 } else {
-                    return response()->json(['message' => 'This coupon code is unvalid', 'status' => 500]);
+                    return response()->json(['message' => 'Không có mã giảm giá này', 'status' => 500]);
                 }
             }
         }

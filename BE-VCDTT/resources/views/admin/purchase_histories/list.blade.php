@@ -163,10 +163,10 @@
                                                     <span class="dropdown">
                                                         <button class="btn dropdown-toggle align-text-top"
                                                             data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Actions</button>
+                                                            data-bs-toggle="dropdown">Hành động</button>
                                                         <div class="dropdown-menu dropdown-menu-end">
                                                             <a class="dropdown-item"
-                                                                href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Edit</a>
+                                                                href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
                                                             {{-- <a class="dropdown-item"
                                                                 href="javascript: removeItem({{ $item['id'] }})">Remove</a> --}}
                                                         </div>

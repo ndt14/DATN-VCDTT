@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                <!-- @if (Session::has('success'))
+                @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif -->
+                @endif
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -57,29 +57,29 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form id="frmAdd" class="card" action="/api/user-store" method="POST">
+            <form id="frmAdd" class="card" action="{{ route('user.add') }}" method="POST">
             <div class="card-header">
                 <h2 class="card-title">
-                    Add new user
+                    Thêm mới người dùng
                 </h2>
             </div>
             @csrf
                 <div class="card-body">
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Name" value="" >
+                            <label class="form-label">Tên</label>
+                            <input type="text" name="name" class="form-control" placeholder="Tên" value="" >
                             <span class="text-danger d-flex justify-content-start">
-                                @error('title')
+                                @error('name')
                                     {{ $message }}
                                 @enderror
                             </span>
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" placeholder="" value="">
+                            <input type="email" name="email" class="form-control" placeholder="Email" value="">
                             <span class="text-danger d-flex justify-content-start">
-                                @error('author')
+                                @error('email')
                                     {{ $message }}
                                 @enderror
                             </span>
@@ -88,17 +88,17 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Password" value="">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" value="">
                             <span class="text-danger d-flex justify-content-start">
-                                @error('main_img')
+                                @error('password')
                                     {{ $message }}
                                 @enderror
                             </span>
                         </div>
                         <div class="mb-3 col-6">
-                            <label class="form-label">Image</label>
-                            <input type="text" name="image" class="form-control" placeholder="Image" value="">
+                            <label class="form-label">Ảnh đại diện</label>
+                            <input type="text" name="image" class="form-control" placeholder="Ảnh" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('image')
                                     {{ $message }}
@@ -108,8 +108,8 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone_number" class="form-control" placeholder="Phone" value="">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" name="phone_number" class="form-control" placeholder="Sđt" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('phone_number')
                                     {{ $message }}
@@ -118,7 +118,7 @@
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Ngày sinh</label>
-                            <input type="date" name="date_of_birth" class="form-control" placeholder="Date of birth" value="">
+                            <input type="date" name="date_of_birth" class="form-control" placeholder="Ngày sinh" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('date_of_birth')
                                     {{ $message }}
@@ -128,8 +128,8 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <label class="form-label">Address</label>
-                            <input type="text" name="address" class="form-control" placeholder="address" value="">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" name="address" class="form-control" placeholder="Địa chỉ" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('address')
                                     {{ $message }}
@@ -137,7 +137,7 @@
                             </span>
                         </div>
                         <div class="mb-3 col-6">
-                            <label class="form-label">Gender</label>
+                            <label class="form-label">Giới tính</label>
                             <select name="gender" id="" class="form-control">
                                 <option value="">Chọn</option>
                                 <option value="1">Nam</option>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <div class="form-label">Status</div>
+                            <div class="form-label">Trạng thái</div>
                             <div class="custom-controls-stacked">
                                 <label class="custom-control custom-radio custom-control-inline me-2">
                                     <input type="radio" class="custom-control-input" name="status" checked="" value="1" >
@@ -162,31 +162,25 @@
                                     <input type="radio" class="custom-control-input" name="status" value="0" >
                                     <span class="custom-control-label">No</span>
                                 </label>
-    
+
                                 <span class="text-danger d-flex justify-content-start">
-                                @error('status')
-                                    {{ $message }}
-                                @enderror
                             </span>
                             </div>
                         </div>
 
                         <div class="mb-3 col-6">
-                            <div class="form-label">Is Admin</div>
+                            <div class="form-label">Admin ?</div>
                             <div class="custom-controls-stacked">
                                 <label class="custom-control custom-radio custom-control-inline me-2">
                                     <input type="radio" class="custom-control-input" name="is_admin" checked="" value="1" >
-                                    <span class="custom-control-label">Yes</span>
+                                    <span class="custom-control-label">Có</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" name="is_admin" value="2" >
-                                    <span class="custom-control-label">No</span>
+                                    <span class="custom-control-label">Không</span>
                                 </label>
-    
+
                                 <span class="text-danger d-flex justify-content-start">
-                                @error('status')
-                                    {{ $message }}
-                                @enderror
                             </span>
                             </div>
                         </div>
@@ -202,7 +196,7 @@
 </div>
 @endsection
 @section('page_js')
-<script type="text/javascript">
+{{-- <script type="text/javascript">
         if ($('#frmAdd').length) {
             $('#frmAdd').submit(function() {
                 let options = {
@@ -234,5 +228,5 @@
                 return false;
             });
     }
-</script>
+</script> --}}
 @endSection

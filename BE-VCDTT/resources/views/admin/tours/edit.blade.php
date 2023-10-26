@@ -5,7 +5,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
         <div class="col-12 ">
-                <!-- @if (Session::has('success'))
+                @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,7 @@
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                @endif -->
+                @endif
             </div>
             <div class="col">
                 <!-- Page pre-title -->
@@ -56,19 +56,19 @@
             <div class="container-xl">
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form id="frmEdit" class="card" action="{{ route('api.tour.edit', ['id' => $tour['id']])}}" method="POST">
+                        <form id="frmEdit" class="card" action="{{ route('tour.edit', ['id' => $tour->id])}}" method="POST">
                             <div class="card-header">
                                 <h2 class="card-title">
-                                    Edit {{ $tour['name'] }}
+                                    Chỉnh sửa {{ $tour->name  }}
                                 </h2>
                             </div>
                             @csrf
-                            @method('PUT')
+
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label">Tên tour</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="Nhập tên cho tour" value="{{ $tour['name'] }}">
+                                        placeholder="Nhập tên cho tour" value="{{ $tour->name }}">
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('name')
                                             {{ $message }}
@@ -79,7 +79,7 @@
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Ảnh đại diện</label>
                                         <input type="text" name="main_img" class="form-control"
-                                            placeholder="Link ảnh đại diện" value="{{ $tour['main_img'] }}">
+                                            placeholder="Link ảnh đại diện" value="{{ $tour->main_img  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('main_img')
                                                 {{ $message }}
@@ -90,7 +90,7 @@
                                         <label class="form-label">Khoảng thời gian</label>
                                         <input type="text" name="duration" class="form-control"
                                             placeholder="Nhập khoảng thời gian diễn ra tour"
-                                            value="{{ $tour['duration'] }}">
+                                            value="{{ $tour->duration  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('duration')
                                                 {{ $message }}
@@ -102,7 +102,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá người lớn</div>
                                         <input name="adult_price" type="text" placeholder="Nhập giá người lớn"
-                                            class="form-control" value="{{ $tour['adult_price'] }}">
+                                            class="form-control" value="{{ $tour->adult_price  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('adult_price')
                                                 {{ $message }}
@@ -112,7 +112,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá trẻ nhỏ</div>
                                         <input name="child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
-                                            class="form-control" value="{{ $tour['child_price'] }}">
+                                            class="form-control" value="{{ $tour->child_price  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('child_price')
                                                 {{ $message }}
@@ -125,7 +125,7 @@
                                         <div class="form-label">Điểm bắt đầu</div>
                                         <input name="start_destination" type="text"
                                             placeholder="Nhập điểm khởi hành tour" class="form-control"
-                                            value="{{ $tour['start_destination'] }}">
+                                            value="{{ $tour->start_destination  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('start_destination')
                                                 {{ $message }}
@@ -136,7 +136,7 @@
                                         <div class="form-label">Điểm kết thúc</div>
                                         <input name="end_destination" type="text"
                                             placeholder="Nhập điểm kết thúc tour" class="form-control"
-                                            value="{{ $tour['end_destination'] }}">
+                                            value="{{ $tour->end_destination  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('end_destination')
                                                 {{ $message }}
@@ -149,7 +149,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Vị trí tour</div>
                                         <input name="location" type="text" class="form-control"
-                                            placeholder="Nhập vị trí của tour" value="{{ $tour['location'] }}">
+                                            placeholder="Nhập vị trí của tour" value="{{ $tour->location  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('location')
                                                 {{ $message }}
@@ -160,7 +160,7 @@
                                         <div class="form-label">Vị trí chính xác tour</div>
                                         <input name="exact_location" type="text" class="form-control"
                                             placeholder="Nhập vị trí chính xác của tour"
-                                            value="{{ $tour['exact_location'] }}">
+                                            value="{{ $tour->exact_location  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -173,7 +173,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
                                         <input name="pathway" type="text" class="form-control"
-                                            placeholder="Nhập lịch trình của tour" value="{{ $tour['pathway'] }}">
+                                            placeholder="Nhập lịch trình của tour" value="{{ $tour->pathway  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -181,51 +181,39 @@
                                         </span>
                                     </div>
                                     <div class="mb-3 col-6">
-                                        <div class="form-label">Số lượt xem tour</div>
-                                        <input name="view_count" type="text" class="form-control"
-                                            placeholder="Nhập số lượt xem của tour" value="{{ $tour['view_count'] }}">
+                                        <label class="form-label">Choose Category</label>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-4">
+                                        <div class="form-label">Phần trăm giảm giá</div>
+                                        <input name="sale_percentage" type="text" class="form-control"
+                                            placeholder="Nhập phần trăm giảm giá của tour"
+                                            value="{{ $tour->sale_percentage  }}">
                                         <span class="text-danger d-flex justify-content-start">
-                                            @error('view_count')
+                                            @error('sale_percentage')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+
+                                    <div class="mb-3 col-4">
+                                        <div class="form-label">Số lượng hành khách</div>
+                                        <input name="tourist_count" type="text" class="form-control"
+                                            placeholder="Nhập tỉ lệ bán hàng của tour"
+                                            value="{{ $tour->tourist_count  }}">
+                                        <span class="text-danger d-flex justify-content-start">
+                                            @error('tourist_count')
                                                 {{ $message }}
                                             @enderror
                                         </span>
                                     </div>
                                 </div>
-
-                                        <div class="mb-3 col-4">
-                                            <div class="form-label">Phần trăm giảm giá</div>
-                                            <input name="sale_percentage" type="text" class="form-control"
-                                                placeholder="Nhập phần trăm giảm giá của tour"
-                                                value="{{ $tour['sale_percentage'] }}">
-                                            <span class="text-danger d-flex justify-content-start">
-                                                @error('sale_percentage')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
-                                        </div>
-
-                                        <div class="mb-3 col-4">
-                                            <div class="form-label">Số lượng hành khách</div>
-                                            <input name="tourist_count" type="text" class="form-control"
-                                                placeholder="Nhập tỉ lệ bán hàng của tour"
-                                                value="{{ $tour['tourist_count'] }}">
-                                            <span class="text-danger d-flex justify-content-start">
-                                                @error('tourist_count')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                <div class="mb-3">
-                                    <div class="mb-3 col-6">
-                                        <label class="form-label">Choose Category</label>
-                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
-                                    </div>
-                                </div>
                                 <div class="mb-3">
                                     <div class="form-label">Nội dung mô tả</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
-                                        placeholder="Nhập nội dung mô tả">{{ $tour['details'] }}</textarea>
+                                        placeholder="Nhập nội dung mô tả">{{ $tour->details  }}</textarea>
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('details')
                                             {{ $message }}
@@ -237,13 +225,13 @@
                                     <div class="custom-controls-stacked">
                                         <label class="custom-control custom-radio custom-control-inline me-2">
                                             <input type="radio" class="custom-control-input"
-                                                @if ($tour['status'] == '1') checked @endif name="status"
+                                                @if ($tour->status  == '1') checked @endif name="status"
                                                 checked="" value="1">
                                             <span class="custom-control-label">Kích hoạt</span>
                                         </label>
                                         <label class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" class="custom-control-input"
-                                                @if ($tour['status'] == '0') checked @endif name="status"
+                                                @if ($tour->status  == '0') checked @endif name="status"
                                                 value="0">
                                             <span class="custom-control-label">Vô hiệu hóa</span>
                                         </label>
@@ -262,7 +250,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row row-deck row-cards">
+                <!-- <div class="row row-deck row-cards">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -276,12 +264,12 @@
                                         <h3 class="dropzone-msg-title">Your text here</h3>
                                         <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
                                     </div>
-                                    
+
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     @endsection
@@ -296,35 +284,35 @@
 $(document).ready(function() {
         var categories_data = <?php echo htmlspecialchars(json_encode($cateIds)) ?>;
         if ($('#frmEdit').length) {
-            $('#frmEdit').submit(function() {
-                var options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitEdit').addClass('btn-loading');
-                        $('#btnSubmitEdit').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
-                        if(response.status == 404){
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-                        }
-                        if(response.status == 200){
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-                        }
-                    },
-                    error: function() {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
-                        $('#btnSubmitEdit').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
+//             $('#frmEdit').submit(function() {
+//                 var options = {
+//                     beforeSubmit: function(formData, jqForm, options) {
+//                         $('#btnSubmitEdit').addClass('btn-loading');
+//                         $('#btnSubmitEdit').addClass("disabled");
+//                     },
+//                     success: function(response, statusText, xhr, $form) {
+//                         $('#btnSubmitEdit').removeClass('btn-loading');
+//                         if(response.status == 404){
+//                             $('#btnSubmitEdit').removeClass("disabled");
+//                             bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
+//                         }
+//                         if(response.status == 200){
+//                             $('#btnSubmitEdit').removeClass("disabled");
+//                             bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
+//                         }
+//                     },
+//                     error: function() {
+//                         $('#btnSubmitEdit').removeClass('btn-loading');
+//                         $('#btnSubmitEdit').removeClass("disabled");
+//                         bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
+//                     },
+//                     dataType: 'json',
+//                     clearForm: false,
+//                     resetForm: false
+//                 };
+//                 $(this).ajaxSubmit(options);
+//                 return false;
+//             });
 
             $.ajax({
             url: "/api/category",
@@ -376,26 +364,26 @@ $(document).ready(function() {
         console.log(catogories_data)
     });
 });
-    document.addEventListener("DOMContentLoaded", function() {
-        var imgArray = [];
-        new Dropzone("#dropzone-files", {
-            paramName: "files", // The name that will be used to transfer the file
-            maxFilesize: 100, // MB
-            uploadMultiple: true,
-            accept: function(file, done) {
-                done();
-            },
-            success: function(file, response) {
-                if (response.status === 200) {
-                    imgArray.push(response.files); // Thêm giá trị files vào mảng
-                }
-                document.getElementById('imgArray').value = JSON.stringify(imgArray);
-                console.log(document.getElementById('imgArray').value);
-            },
-            error: function(file, response) {
-                console.error(response.message);
-            }
-        });
-    })
+//     document.addEventListener("DOMContentLoaded", function() {
+//         var imgArray = [];
+//         new Dropzone("#dropzone-files", {
+//             paramName: "files", // The name that will be used to transfer the file
+//             maxFilesize: 100, // MB
+//             uploadMultiple: true,
+//             accept: function(file, done) {
+//                 done();
+//             },
+//             success: function(file, response) {
+//                 if (response.status === 200) {
+//                     imgArray.push(response.files); // Thêm giá trị files vào mảng
+//                 }
+//                 document.getElementById('imgArray').value = JSON.stringify(imgArray);
+//                 console.log(document.getElementById('imgArray').value);
+//             },
+//             error: function(file, response) {
+//                 console.error(response.message);
+//             }
+//         });
+//     })
 </script>
-    @endSection
+@endSection
