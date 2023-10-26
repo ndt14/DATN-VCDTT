@@ -95,6 +95,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'update'])->name('api.purchase_histories.edit');
     Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
 
+    //WishList
+    Route::get('/wish-list/{id}', [WishlistController::class, 'index']);
+    Route::post('/wish-list-store', [WishListController::class, 'store']);
+    Route::get('/wish-list-show/{id}', [WishListController::class, 'show']);
+    Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
+
     //Auth
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
