@@ -3229,14 +3229,14 @@ input[type=submit]:focus {
 .package-wrap .package-price h6 {
   color: #ffffff;
   font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  line-height: 1.1;
+  /* font-family: "Open Sans", sans-serif; */
+  /* line-height: 1.1; */
   margin-bottom: 0;
   padding: 8px 16px;
 }
 
 .package-wrap .package-price h6 span {
-  font-family: "Raleway", sans-serif;
+  /* font-family: "Raleway", sans-serif; */
   font-size: 22px;
   font-weight: 700;
   line-height: 1.2;

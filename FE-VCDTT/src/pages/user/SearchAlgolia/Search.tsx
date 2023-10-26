@@ -36,7 +36,7 @@ export function Search() {
                 <RefinementList attribute="cate_name" showMore={true} limit={5}/>
               </Panel>
               <Panel header="Price">
-              <RangeInput attribute="child_price" precision={1}  />
+              <RangeInput attribute="child_price" precision={0} min={0} max={100000000}/>
             </Panel>
                 </div>
                 <div className="col-lg-8">
