@@ -332,13 +332,13 @@
                                     <label class="custom-control custom-radio custom-control-inline me-2">
                                         <input type="radio" class="custom-control-input"
                                             @if ($items['payment_status'] == '1') checked @endif name="payment_status"
-                                            value="1">
+                                            value="1" disabled>
                                         <span class="custom-control-label">Đã thanh toán</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" class="custom-control-input"
                                             @if ($items['payment_status'] == '0') checked @endif name="payment_status"
-                                            value="0">
+                                            value="0" disabled>
                                         <span class="custom-control-label">Chưa thanh toán</span>
                                     </label>
 
