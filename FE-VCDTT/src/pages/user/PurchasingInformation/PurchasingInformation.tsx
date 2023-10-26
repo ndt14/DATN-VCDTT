@@ -19,33 +19,11 @@ const PurchasingInformation = (props: Props) => {
     message: string;
     honorific: string;
   }
-  const formik = useFormik<FormValues>({
-    initialValues: {
-      name: "",
-      email: "",
-      phone_number: "",
-      message: "",
-      honorific: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên"),
-      email: Yup.string()
-        .email("Sai định dạng email")
-        .required("Email không được để trống"),
-      phone_number: Yup.string().required("Nhập số điện thoại"),
-      honorific: Yup.string().required("Please select an option"),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-    },
-    validateOnMount: true,
-  });
 
   useEffect(() => {
     formik.validateForm();
   }, []);
 
-  const isSubmitDisabled = Object.keys(formik.errors).length > 0;
   //
   const navigate = useNavigate();
 
@@ -91,6 +69,28 @@ const PurchasingInformation = (props: Props) => {
       [name]: value,
     }));
   };
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      name: userName ? userName : "",
+      email: userEmail ? userEmail : "",
+      phone_number: phoneNumber ? phoneNumber : "",
+      message: "",
+      honorific: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nhập tên"),
+      email: Yup.string()
+        .email("Sai định dạng email")
+        .required("Email không được để trống"),
+      phone_number: Yup.string().required("Nhập số điện thoại"),
+      honorific: Yup.string().required("Please select an option"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+    validateOnMount: true,
+  });
+  const isSubmitDisabled = Object.keys(formik.errors).length > 0;
   // Coupon
   const [couponData, setCouponData] = useState({
     percentage: 0,
@@ -274,7 +274,7 @@ const PurchasingInformation = (props: Props) => {
                             type="text"
                             id="name"
                             name="name"
-                            value={userName ? userName : formik.values.name}
+                            value={formik.values.name}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             className="input-border"
@@ -294,11 +294,7 @@ const PurchasingInformation = (props: Props) => {
                           <input
                             type="text"
                             name="phone_number"
-                            value={
-                              phoneNumber
-                                ? phoneNumber
-                                : formik.values.phone_number
-                            }
+                            value={formik.values.phone_number}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             className="input-border"
@@ -321,7 +317,7 @@ const PurchasingInformation = (props: Props) => {
                             type="email"
                             id="email"
                             name="email"
-                            value={userEmail ? userEmail : formik.values.email}
+                            value={formik.values.email}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             className="input-border"

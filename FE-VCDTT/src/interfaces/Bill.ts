@@ -23,4 +23,5 @@ export interface Bill {
     tour_end_time? :number;
     transaction_id?: number;
     payment_status?:number
+    purchase_status?:number
 }
