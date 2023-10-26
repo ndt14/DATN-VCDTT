@@ -66,6 +66,7 @@
                             <h2 class="card-title">
                                 Thêm blog mới
                             </h2>
+                        </div>
                         @csrf
                         <div class="card-body">
                             <div class="row">
