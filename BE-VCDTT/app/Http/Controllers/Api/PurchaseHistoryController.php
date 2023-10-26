@@ -41,9 +41,9 @@ class PurchaseHistoryController extends Controller
     public function store(Request $request)
     {
 
-        $users = User::where('is_admin',1)->get();
+        $users = User::where('is_admin', 1)->get();
 
-        $data = $request->except('coupon_code','_token');
+        $data = $request->except('coupon_code', '_token');
 
         // if (!$data['transaction_id']) {
         //     $data['payment_status'] = 0;
@@ -139,7 +139,7 @@ class PurchaseHistoryController extends Controller
 
         if ($purchaseHistory->save()) {
 
-            if($updateAdmin){
+            if ($updateAdmin) {
                 $purchaseHistory->notify(new SendMailToClient());
             } else {
                 // if (!$input['transaction_id']) {
@@ -208,8 +208,9 @@ class PurchaseHistoryController extends Controller
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAsRead(){
-        $user = User::where('is_admin',1)->first();
+    public function purchaseHistoryMarkAsRead()
+    {
+        $user = User::where('is_admin', 1)->first();
         foreach ($user->unreadNotifications as $notification) {
             $notification->markAsRead();
         }

@@ -131,7 +131,7 @@ const UserTour = () => {
                     <p>Ngày đi : {tour_start_time}</p>
                     <p>Mã giao dịch: {transaction_id}</p>
 
-                    {payment_status == 1 ? (
+                    {payment_status == 0 ? (
                       <div>
                         <p>
                           Trạng thái:{" "}

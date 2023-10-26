@@ -186,9 +186,12 @@ const UserProfile = () => {
                       />
                     </div>
                   </div>
-                  <button type="submit">Submit</button>
+                  <button type="submit" className="">Submit</button>
                 </form>
               </TabPane>
+              {/* <TabPane tab="Thay đổi mật khẩu" key="3">
+
+              </TabPane> */}
             </Tabs>
           </div>
         </div>
