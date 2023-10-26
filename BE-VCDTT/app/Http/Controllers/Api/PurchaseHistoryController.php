@@ -45,13 +45,13 @@ class PurchaseHistoryController extends Controller
 
         $data = $request->except('coupon_code','_token');
 
-        if (!$data['transaction_id']) {
-            $data['payment_status'] = 0;
-            $data['purchase_status'] = 0;
-        } else {
-            $data['payment_status'] = 1;
-            $data['purchase_status'] = 1;
-        }
+        // if (!$data['transaction_id']) {
+        //     $data['payment_status'] = 0;
+        //     $data['purchase_status'] = 0;
+        // } else {
+        //     $data['payment_status'] = 1;
+        //     $data['purchase_status'] = 1;
+        // }
 
         $purchaseHistory = PurchaseHistory::create($data);
 
@@ -142,13 +142,13 @@ class PurchaseHistoryController extends Controller
             if($updateAdmin){
                 $purchaseHistory->notify(new SendMailToClient());
             } else {
-                if (!$input['transaction_id']) {
-                    $input['payment_status'] = 0;
-                    $input['purchase_status'] = 0;
-                } else {
-                    $input['payment_status'] = 1;
-                    $input['purchase_status'] = 1;
-                }
+                // if (!$input['transaction_id']) {
+                //     $input['payment_status'] = 0;
+                //     $input['purchase_status'] = 0;
+                // } else {
+                //     $input['payment_status'] = 1;
+                //     $input['purchase_status'] = 1;
+                // }
             }
 
             return response()->json([
@@ -204,7 +204,7 @@ class PurchaseHistoryController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        $html = view('admin.purchase_histories.detail', compact('item'))->render();
+        $html = view('admin.purchase_histories.detail', compact('item'));
         return response()->json(['html' => $html, 'status' => 200]);
     }
 

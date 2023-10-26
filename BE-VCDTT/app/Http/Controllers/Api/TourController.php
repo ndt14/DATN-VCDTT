@@ -37,7 +37,7 @@ class TourController extends Controller
         if (!empty($keyword)) {
             $sql_where .= 'name LIKE %{$keyword}%';
         }
-        $sql_order = 'updated_at';
+        $sql_order = 'id';
         $limit = intval($request->limit) ? intval($request->limit) : '';
         $tours = Tour::select(
             'id',
@@ -59,7 +59,7 @@ class TourController extends Controller
             'created_at',
             'updated_at'
         )
-            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'DESC')->limit($limit)->get();
+            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
         return response()->json(
             [
                 'data' => [
@@ -323,6 +323,7 @@ class TourController extends Controller
     public function tourManagementAdd(TourRequest $request)
     {
         $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')['data']['categoriesParent'];
+        // dd($data);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token');
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
