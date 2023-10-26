@@ -342,10 +342,10 @@ class TourController extends Controller
         $categories = $response['categories'];
         $tour = $tourObject = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
-        $cateIds = $tourToCate[0]['cate_id'];
-        // foreach ($tourToCate as $item) {
-
-        // }
+        $cateIds = [];
+        foreach ($tourToCate as $item) {
+            $cateIds[] = $item['cate_id'];
+        }
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/' . $id, $data);
