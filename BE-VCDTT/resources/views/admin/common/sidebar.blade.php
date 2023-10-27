@@ -58,10 +58,10 @@
                 </a>
                 <!-- <a class="dropdown-item" href="{{route('tour.list')}}">
                     Selling management
-                  </a>
-                  <a class="dropdown-item" href="{{route('tour.list')}}">
-                    Ratings management
                   </a> -->
+                  <a class="dropdown-item" href="{{route('all.rating.list')}}">
+                    Quản lý tất đánh giá
+                  </a>
               </div>
             </div>
           </div>

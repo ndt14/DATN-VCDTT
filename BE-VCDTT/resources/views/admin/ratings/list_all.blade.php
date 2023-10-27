@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
+                        Quản lý đánh giá
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -34,17 +34,16 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Trung bình đánh giá:
+                            <h3 class="card-title">Tổng số đánh giá:
                                 @php
                                 $star = 0;
                                 $t=0;
-                                $count = $data->ratings;
+                                $count = $data;
                                 foreach ($count as $c) {
-                                    $star += $c->star;
                                     $t++;
                                 }
                                 @endphp
-                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> (Tổng số đánh giá: {{ $t }} )
+                                {{ $t }}
                             </h3>
                         </div>
                         <div class="card-body border-bottom py-3">
@@ -94,8 +93,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data->ratings)
-                                        @foreach ($data->ratings as $data)
+                                    @if ($data)
+                                        @foreach ($data as $data)
                                             <tr>
                                                 <td><span class="text-muted">{{ $data->id }}</span></td>
                                                 <td>
@@ -109,7 +108,7 @@
                                                 <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $data->admin_answer??'Null' }}
+                                                    {{ string_truncate($data->admin_answer??'Null',30) }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($data->created_at) }}
