@@ -24,7 +24,7 @@
                                 </div> -->
                     <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
-                    </h2>
+                    </h1>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
