@@ -97,7 +97,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
 
     //WishList
-    Route::get('/wish-list/{id}', [WishlistController::class, 'index']);
+    Route::get('/wish-list/{id}', [WishListController::class, 'index']);
     Route::post('/wish-list-store', [WishListController::class, 'store']);
     Route::get('/wish-list-show/{id}', [WishListController::class, 'show']);
     Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
