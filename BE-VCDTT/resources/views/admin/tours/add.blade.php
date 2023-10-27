@@ -60,7 +60,7 @@
                             <div class="card-header">
                                 <h2 class="card-title">
                                     Thêm tour
-                                </h2>
+                                </h1>
                             </div>
                             @csrf
                             <div class="card-body">
