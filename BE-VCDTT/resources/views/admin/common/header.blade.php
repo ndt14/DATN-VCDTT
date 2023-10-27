@@ -62,7 +62,7 @@
                                 @endif
                             @endforeach
                         </a>
-                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card border-0 shadow-lg rounded-4 ">
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">Thông báo</h3>
