@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WishListResource;
@@ -14,7 +14,7 @@ class WishListController extends Controller
      */
     public function index(Request $request)
     {
-        $listWishLists = WishList::where('user_id',$request->id)->orderBy('updated_at', 'desc')->get();
+        $listWishLists = WishList::where('user_id', $request->id)->orderBy('updated_at', 'desc')->get();
         return response()->json(
             [
                 'data' => [
@@ -32,7 +32,7 @@ class WishListController extends Controller
     public function store(Request $request)
     {
         $newWishList = WishList::create($request->all());
-        if($newWishList->id) {
+        if ($newWishList->id) {
             return response()->json(
                 [
                     'data' => [
@@ -42,13 +42,12 @@ class WishListController extends Controller
                     'status' => 200
                 ]
             );
-        }else {
+        } else {
             return response()->json([
                 'message' => 'Lỗi hệ thống',
                 'status' => 500
             ]);
         }
-
     }
 
     /**
@@ -77,7 +76,6 @@ class WishListController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
     }
 
     /**
@@ -89,13 +87,13 @@ class WishListController extends Controller
 
         $wishList = WishList::find($id);
 
-        if($wishList) {
+        if ($wishList) {
             $deleteWishList = $wishList->delete();
             if (!$deleteWishList) {
                 return response()->json(['message' => 'Lỗi hệ thống', 'status' => 500]);
             }
             return response()->json(['message' => 'Đã hủy thích', 'status' => 200]);
-        }else {
+        } else {
             return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
         }
     }
