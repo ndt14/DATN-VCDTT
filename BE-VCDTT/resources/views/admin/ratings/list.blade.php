@@ -4,7 +4,7 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h2 class="page-title">
+                    <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
                     </h2>
                 </div>
@@ -32,7 +32,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
                             <h3 class="card-title">Trung bình đánh giá:
                                 @php
