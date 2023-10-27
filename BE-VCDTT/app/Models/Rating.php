@@ -12,10 +12,11 @@ class Rating extends Model
     protected $table = 'ratings';
 
     protected $fillable = [
-        'name',
+        'user_name',
         'user_id',
         'content',
         'admin_answer',
-        'tour_id'
+        'tour_id',
+        'star'
     ];
 }
