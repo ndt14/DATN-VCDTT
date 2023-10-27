@@ -23,7 +23,7 @@
                 <!-- <div class="page-pretitle">
                     Overview
                 </div> -->
-                <h2 class="page-title">
+                <h1 class="text-primary mb-4" style="font-size: 36px;">
                    Quản lý Faqs
                 </h2>
             </div>
@@ -57,7 +57,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmEdit" class="card" action="{{ route('faq.edit', ['id' => $response->id])}}" method="POST">
+                <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " action="{{ route('faq.edit', ['id' => $response->id])}}" method="POST">
                     @csrf
 
                     <input type="hidden" name="id" value="{{$response->id}}">
