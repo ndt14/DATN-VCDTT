@@ -33,6 +33,20 @@ class RatingController extends Controller
         );
     }
 
+    public function indexAll()
+    {
+        $listRatings = Rating::orderBy('created_at', 'desc')->get();
+        return response()->json(
+            [
+                'data' => [
+                    'ratings' => new RatingResource($listRatings),
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]
+        );
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -125,6 +139,18 @@ class RatingController extends Controller
     }
 
      // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+
+    public function allRatingManagementList() {
+
+        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating');
+        if($data->status() == 200) {
+            $data = json_decode(json_encode($data->json()['data']['ratings']), false);
+            return view('admin.ratings.list_all', compact('data'));
+        }else{
+            $data = [];
+            return view('admin.ratings.list_all', compact('data'));
+        }
+    }
 
 
     public function ratingManagementList(Request $request) {

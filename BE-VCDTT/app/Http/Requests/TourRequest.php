@@ -49,7 +49,6 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
-                            'view_count' => 'required',
                         ];
 
                         break;
@@ -72,7 +71,6 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
-                            'view_count' => 'required',
                         ];
 
                         break;

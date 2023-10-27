@@ -8,7 +8,7 @@
                        Quản lý Tours
                     </h2>
                 </div>
-                <!-- <div class="col-12 ">
+                <div class="col-12 ">
                     @if (Session::has('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                             {{ Session::get('success') }}
@@ -21,7 +21,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-                </div> -->
+                </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <a href="{{ route('tour.add') }}" class="btn btn-primary d-none d-sm-inline-block">

@@ -34,7 +34,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Tổng đánh giá:
+                            <h3 class="card-title">Trung bình đánh giá:
                                 @php
                                 $star = 0;
                                 $t=0;
@@ -44,7 +44,8 @@
                                     $t++;
                                 }
                                 @endphp
-                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> (Tổng số đánh giá: {{ $t }} )
+                            </h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">

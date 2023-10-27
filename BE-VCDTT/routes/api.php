@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rating
     Route::get('/rating/{id}', [RatingController::class, 'index']);
+    Route::get('/rating', [RatingController::class, 'indexAll']);
     Route::post('/rating-store', [RatingController::class, 'store']);
     Route::get('/rating-show/{id}', [RatingController::class, 'show']);
     Route::put('/rating-edit/{id}', [RatingController::class, 'update'])->name('api.rating.edit');
@@ -94,6 +95,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/purchase-history-show-by-user/{user_id}', [PurchaseHistoryController::class, 'showByUser']); //show tất cả hóa đơn của người dùng
     Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'update'])->name('api.purchase_histories.edit');
     Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
+
+    //WishList
+    Route::get('/wish-list/{id}', [WishlistController::class, 'index']);
+    Route::post('/wish-list-store', [WishListController::class, 'store']);
+    Route::get('/wish-list-show/{id}', [WishListController::class, 'show']);
+    Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
 
     //Auth
     Route::post('/register', [RegisterController::class, 'register']);

@@ -57,7 +57,6 @@
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
                         <form id="frmAdd" class="card" action="{{ route('tour.add') }}" method="POST">
-                            @csrf
                             <div class="card-header">
                                 <h2 class="card-title">
                                     Thêm tour
@@ -68,7 +67,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Tên tour</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="Nhập tên cho tour" value="">
+                                        placeholder="Nhập tên cho tour">
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('name')
                                             {{ $message }}
@@ -79,7 +78,7 @@
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Ảnh đại diện</label>
                                         <input type="text" name="main_img" class="form-control"
-                                            placeholder="Link ảnh đại diện" value="">
+                                            placeholder="Link ảnh đại diện" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('main_img')
                                                 {{ $message }}
@@ -90,7 +89,7 @@
                                         <label class="form-label">Khoảng thời gian</label>
                                         <input type="text" name="duration" class="form-control"
                                             placeholder="Nhập khoảng thời gian diễn ra tour"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('duration')
                                                 {{ $message }}
@@ -102,7 +101,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá người lớn</div>
                                         <input name="adult_price" type="text" placeholder="Nhập giá người lớn"
-                                            class="form-control" value="">
+                                            class="form-control" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('adult_price')
                                                 {{ $message }}
@@ -112,7 +111,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá trẻ nhỏ</div>
                                         <input name="child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
-                                            class="form-control" value="">
+                                            class="form-control" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('child_price')
                                                 {{ $message }}
@@ -125,7 +124,7 @@
                                         <div class="form-label">Điểm bắt đầu</div>
                                         <input name="start_destination" type="text"
                                             placeholder="Nhập điểm bắt đầu tour" class="form-control"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('start_destination')
                                                 {{ $message }}
@@ -136,7 +135,7 @@
                                         <div class="form-label">Điểm kết thúc</div>
                                         <input name="end_destination" type="text"
                                             placeholder="Nhập điểm kết thúc tour" class="form-control"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('end_destination')
                                                 {{ $message }}
@@ -149,7 +148,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Vị trí tour</div>
                                         <input name="location" type="text" class="form-control"
-                                            placeholder="Nhập vị trí của tour" value="">
+                                            placeholder="Nhập vị trí của tour" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('location')
                                                 {{ $message }}
@@ -160,7 +159,7 @@
                                         <div class="form-label">Vị trí chính xác tour</div>
                                         <input name="exact_location" type="text" class="form-control"
                                             placeholder="Nhập vị trí chính xác của tour"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -174,7 +173,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
                                         <input name="pathway" type="text" class="form-control"
-                                            placeholder="Nhập lịch trình của tour" value="">
+                                            placeholder="Nhập lịch trình của tour" >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -183,7 +182,7 @@
                                     </div>
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Choose Category</label>
-                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category"  multiple></select>
                                     </div>
                                 </div>
 
@@ -194,7 +193,7 @@
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="sale_percentage" type="text" class="form-control"
                                             placeholder="Nhập phần trăm giảm giá"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('sale_percentage')
                                                 {{ $message }}
@@ -206,7 +205,7 @@
                                         <div class="form-label">Số lượng hành khách</div>
                                         <input name="tourist_count" type="text" class="form-control"
                                             placeholder="Nhập số lượng hành khách"
-                                            value="">
+                                            >
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tourist_count')
                                                 {{ $message }}

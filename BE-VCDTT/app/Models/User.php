@@ -50,4 +50,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function checkAdmin() {
+        if($this->is_admin == '1') {
+            return true;
+        }
+        return false;
+    }
 }
