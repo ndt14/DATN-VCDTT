@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rating
     Route::get('/rating/{id}', [RatingController::class, 'index']);
+    Route::get('/rating', [RatingController::class, 'indexAll']);
     Route::post('/rating-store', [RatingController::class, 'store']);
     Route::get('/rating-show/{id}', [RatingController::class, 'show']);
     Route::put('/rating-edit/{id}', [RatingController::class, 'update'])->name('api.rating.edit');
