@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\TourToCategoryController;
+use App\Http\Controllers\API\WishListController;
 
 /*
 |--------------------------------------------------------------------------
