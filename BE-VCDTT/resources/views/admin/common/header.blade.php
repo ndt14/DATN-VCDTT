@@ -84,8 +84,8 @@
                                                         @endif
                                                 </div>
                                                 <div class="col text-truncate ">
-                                                    <a onclick='@php $notification->markAsRead() @endphp' href="
-                                                    {{ route('purchase_histories.edit', ['id' => $notification->data['purchase_history_id']]) }}"
+                                                    <a onclick='@php $notification->markAsRead() @endphp'
+                                                        href="javascript: viewDetail({{ $notification->data['purchase_history_id'] }});"
                                                         class="text-body d-block">Mã giao dịch:
                                                         {{ $notification->data['transaction_id'] }}</a>
                                                     <div class="d-block text-secondary mt-n1">
@@ -138,3 +138,51 @@
         </div>
     </header>
 </div>
+@section('page_js')
+    <script type="text/javascript">
+        let modalContainer;
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
+        });
+
+        let viewDetail = function(id) {
+            axios.get(`/purchase-history/detail/${id}`)
+                .then(function(response) {
+                    $('#modalContainer div.modal-content').html(response.data.html);
+                    modalContainer.show();
+                })
+                .catch(function(error) {
+                    bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+                })
+                .finally(function() {});
+        };
+
+        let removeItem = function(id) {
+            $.confirm({
+                theme: theme,
+                title: 'Confirm',
+                content: 'Are you sure to remove?',
+                columnClass: 'col-md-3 col-sm-6',
+                buttons: {
+                    removeButton: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function() {
+                            axios.delete(`/api/purchase-history/${id}`).then(function(response) {
+                                bs5Utils.Snack.show('success', 'Success', delay = 5000,
+                                    dismissible = true);
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 2000);
+                            });
+                        }
+                    },
+                    close: function() {}
+                }
+            });
+        };
+    </script>
+@endSection

@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h1 class="modal-title fs-4" id="exampleModalFullscreenMdLabel">Faq Details</h1>
+    <h1 class="modal-title fs-4" id="exampleModalFullscreenMdLabel">Chi tiết Faq</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="card">
@@ -18,26 +18,26 @@
                         @endif
                     </div> --}}-->
                     <div class="col-md">
-                        <div class="form-label">Create at</div>
+                        <div class="form-label">Ngày tạo</div>
                         {{ time_format($item->created_at) }}
                     </div>
                     <div class="col-md">
-                        <div class="form-label">Last update</div>
+                        <div class="form-label">Ngày sửa</div>
                         {{ time_format($item->updated_at) }}
                     </div>
                 </div>
-                <h3 class="card-title mt-4">Question</h3>   
+                <h3 class="card-title mt-4">Câu hỏi</h3>   
                 <span class="">
                     {{ $item->question }}
                 </span>
-                <h3 class="card-title mt-4">Answer</h3>
+                <h3 class="card-title mt-4">Câu trả lời</h3>
                 <div class="markdown">
                     {!! $item->answer !!}
                 </div>
             </div>
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>

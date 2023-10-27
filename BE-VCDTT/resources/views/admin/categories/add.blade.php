@@ -10,7 +10,7 @@
                     Overview
                 </div> -->
                 <h2 class="page-title">
-                    Categories management
+                    Quản lý danh mục
                 </h2>
             </div>
             <div class="top-0" style="z-index: 100; position: fixed;">
@@ -40,7 +40,7 @@
                                 <path d="M5 12l4 4"></path>
                                 <path d="M5 12l4 -4"></path>
                             </svg>
-                            Back
+                            Quay lại
                         </a>
                         <a href="{{url('/category')}}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -64,8 +64,8 @@
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Enter question" value="">
+                            <label class="form-label">Tên danh mục</label>
+                            <input type="text" name="name" class="form-control" placeholder="Nhập tên danh mục" value="">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('name')
                                 {{ $message }}
@@ -73,10 +73,10 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Parent Category</label>
+                            <label class="form-label">Thuộc danh mục cha</label>
 
                             <select class="form-select" name="parent_id" {{ count($data) <= 0 ? 'disabled' : '' }}>
-                                <option value="">Choose</option>
+                                <option value="">Lựa chọn</option>
                                 @foreach($data as $item)
                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
@@ -85,7 +85,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Thêm mới</button>
                     </div>
                 </form>
             </div>

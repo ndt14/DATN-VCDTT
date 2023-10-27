@@ -24,7 +24,7 @@
                     Overview
                 </div> -->
                 <h2 class="page-title">
-                    Categories management
+                    Quản lý danh mục
                 </h2>
             </div>
             <!-- Page title actions -->
@@ -64,7 +64,7 @@
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Tên</label>
                             <input type="text" name="name" class="form-control" placeholder="Enter question" value="{{$data->name}}">
                             <span class="text-danger d-flex justify-content-start">
                                 @error('name')
@@ -73,7 +73,7 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Parent Category</label>
+                            <label class="form-label">Thuộc danh mục cha</label>
 
                             <select class="form-select" name="parent_id" {{ count($listCateParent) <= 0 ? 'disabled' : '' }}>
                                 <option value="">Chưa thuộc danh mục cha nào</option>
@@ -86,7 +86,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Submit</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Cập nhật</button>
                     </div>
                 </form>
             </div>
