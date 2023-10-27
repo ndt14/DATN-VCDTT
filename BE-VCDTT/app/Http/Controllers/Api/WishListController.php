@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TourResource;
 use App\Http\Resources\WishListResource;
+use App\Models\Tour;
 use App\Models\WishList;
 use Illuminate\Http\Request;
 
@@ -14,11 +16,12 @@ class WishListController extends Controller
      */
     public function index(Request $request)
     {
-        $listWishLists = WishList::where('user_id',$request->id)->orderBy('updated_at', 'desc')->get();
+        $listWish = WishList::select('user_id')->where('user_id',$request->id)->orderBy('updated_at', 'desc')->get();
+        $listTour = Tour::whereIn('id',$listWish)->get();
         return response()->json(
             [
                 'data' => [
-                    'wishLists' => new WishListResource($listWishLists)
+                    'tours' => new TourResource($listTour)
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -31,23 +34,23 @@ class WishListController extends Controller
      */
     public function store(Request $request)
     {
-        $newWishList = WishList::create($request->all());
-        if($newWishList->id) {
-            return response()->json(
-                [
-                    'data' => [
-                        'wishList' => new WishListResource($newWishList)
-                    ],
-                    'message' => 'Đã thích',
-                    'status' => 200
-                ]
-            );
-        }else {
-            return response()->json([
-                'message' => 'Lỗi hệ thống',
-                'status' => 500
-            ]);
-        }
+        // $newWishList = WishList::create($request->all());
+        // if($newWishList->id) {
+        //     return response()->json(
+        //         [
+        //             'data' => [
+        //                 'wishList' => new WishListResource($newWishList)
+        //             ],
+        //             'message' => 'Đã thích',
+        //             'status' => 200
+        //         ]
+        //     );
+        // }else {
+        //     return response()->json([
+        //         'message' => 'Lỗi hệ thống',
+        //         'status' => 500
+        //     ]);
+        // }
 
     }
 
@@ -56,20 +59,18 @@ class WishListController extends Controller
      */
     public function show(string $id)
     {
-        //
-        $wishList = WishList::find($id);
+        // $wishList = WishList::where('tour_id',$id);
+        // if (!$wishList) {
+        //     return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
+        // }
+        // return response()->json([
+        //     'data' => [
+        //         'wishList' => new WishListResource($wishList)
 
-        if (!$wishList) {
-            return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
-        }
-        return response()->json([
-            'data' => [
-                'wishList' => new WishListResource($wishList)
-
-            ],
-            'message' => 'OK',
-            'status' => 200,
-        ]);
+        //     ],
+        //     'message' => 'OK',
+        //     'status' => 200,
+        // ]);
     }
 
     /**
@@ -87,16 +88,42 @@ class WishListController extends Controller
     {
         //
 
-        $wishList = WishList::find($id);
+        // $wishList = WishList::find($id);
 
-        if($wishList) {
-            $deleteWishList = $wishList->delete();
-            if (!$deleteWishList) {
+        // if($wishList) {
+        //     $deleteWishList = $wishList->delete();
+        //     if (!$deleteWishList) {
+        //         return response()->json(['message' => 'Lỗi hệ thống', 'status' => 500]);
+        //     }
+        //     return response()->json(['message' => 'Đã hủy thích', 'status' => 200]);
+        // }else {
+        //     return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
+        // }
+    }
+
+    public function useWishList(Request $request)
+    {
+        $id = WishList::select('id')->where('tour_id', $request->tour_id)->where('user_id',$request->user_id)->get();
+                if ($id) {
+                    return response()->json([
+                    'data' => [
+                        'id' => $id,
+                    ],
+                    'message' => 'Đã thích',
+                    'status' => 200]);
+                } else {
+                    $wishList = WishList::find($id);
+                if($wishList) {
+                    $deleteWishList = $wishList->delete();
+                if (!$deleteWishList) {
                 return response()->json(['message' => 'Lỗi hệ thống', 'status' => 500]);
-            }
-            return response()->json(['message' => 'Đã hủy thích', 'status' => 200]);
-        }else {
-            return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
+                }
+                return response()->json(['message' => 'Đã hủy thích', 'status' => 200]);
+                }else {
+                return response()->json(['message' => '404 Không tìm thấy', 'status' => 404]);
+                }
+            return response()->json(['message' => 'Thích', 'status' => 200]);
         }
     }
 }
+

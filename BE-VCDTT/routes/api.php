@@ -99,9 +99,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //WishList
     Route::get('/wish-list/{id}', [WishListController::class, 'index']);
-    Route::post('/wish-list-store', [WishListController::class, 'store']);
-    Route::get('/wish-list-show/{id}', [WishListController::class, 'show']);
-    Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
+    // Route::post('/wish-list-store', [WishListController::class, 'store']);
+    // Route::get('/wish-list-check', [WishListController::class, 'show']);
+    Route::post('/use-wish-list', [PurchaseHistoryController::class, 'useWishList']);
+    // Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
 
     //Auth
     Route::post('/register', [RegisterController::class, 'register']);
@@ -115,3 +116,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
     Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
+
