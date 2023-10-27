@@ -125,35 +125,44 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($item['payment_status'] == 1)
-                                                        <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                        <span class="badge bg-green rounded-circle p-1 text-green-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M5 12l5 5l10 -10"></path>
+                                                            </svg>
+                                                        </span>
                                                     @else
-                                                        <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                        <span class="badge bg-danger rounded-circle p-1 text-danger-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M18 6l-12 12"></path>
+                                                            <path d="M6 6l12 12"></path>
+                                                            </svg>
+                                                        </span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
                                                     @switch($item['purchase_status'])
                                                         @case(0)
-                                                            <span>Chưa thanh toán</span>
+                                                            <span class="badge bg-red-lt">Chưa thanh toán</span>
                                                             @break
                                                         @case(1)
-                                                            <span>Đang đợi xác nhận</span>
+                                                            <span class="badge bg-orange-lt">Đang đợi xác nhận</span>
                                                             @break
                                                         @case(2)
-                                                            <span>Chưa tới ngày đi</span>
+                                                            <span class="badge bg-green-lt">Chưa tới ngày đi</span>
                                                             @break
                                                         @case(3)
-                                                            <span>Tour đang diễn ra</span>
+                                                            <span class="badge bg-green-lt">Tour đang diễn ra</span>
                                                             @break
                                                         @case(4)
-                                                            <span>Người dùng đã hủy</span>
+                                                            <span class="badge bg-muted-lt">Người dùng đã hủy</span>
                                                             @break
                                                         @case(5)
-                                                            <span>Admin đã hủy tour</span>
+                                                            <span class="badge bg-muted-lt">Admin đã hủy tour</span>
                                                             @break
                                                         @case(6)
-                                                            <span>Tự động hủy do quá hạn</span>
+                                                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
                                                             @break
                                                         @default
                                                             @break
