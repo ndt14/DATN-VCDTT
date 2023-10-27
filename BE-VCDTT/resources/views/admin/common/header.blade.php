@@ -1,12 +1,13 @@
-<div class="d-none d-sm-none d-lg-block">
-    <header class="navbar navbar-expand-md d-print-none">
+<div class="d-none d-sm-none d-lg-block  sticky-top shadow">
+    <header class="navbar navbar-expand-md d-print-none sticky-top" style="z-index: 99;">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
                 aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
                 <!-- <span class="navbar-toggler-icon"></span> -->
             </button>
-            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                <a href="/">
+            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 ms-5">
+                <a href="/" class="d-flex align-items-center text-primary text-decoration-none">
+                    <span class="fs-1 text-primary me-1">VCDTT</span><span class="fw-light fst-italic">quản trị</span>
                 </a>
             </h1>
             <div class="navbar-nav flex-row order-md-last">
