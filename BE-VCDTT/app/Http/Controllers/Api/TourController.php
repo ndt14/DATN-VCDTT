@@ -7,11 +7,13 @@ use App\Http\Requests\TourRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CouponResource;
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\RatingResource;
 use App\Http\Resources\TourResource;
 use App\Http\Resources\TourToCategoryResource;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Image;
+use App\Models\Rating;
 use App\Models\Tour;
 use App\Models\TourToCategory;
 use Exception;
@@ -173,6 +175,8 @@ class TourController extends Controller
         $listCoupon = Coupon::select()->where('tour_id', '=', $id)
             ->get();
 
+        $listRatings = Rating::where('tour_id', $id)->orderBy('id', 'desc')->get();
+
         if ($firstTourToCate->isNotEmpty()) {
             $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
 
@@ -228,7 +232,8 @@ class TourController extends Controller
                         'images' => new ImageResource($listImage),
                         'tourToCategories' => new TourToCategoryResource($listTourToCate),
                         'toursSameCate' => new TourResource($toursSameCate),
-                        'coupons' => new CouponResource($listCoupon)
+                        'coupons' => new CouponResource($listCoupon),
+                        'listRatings' => new RatingResource($listRatings)
                     ],
                     'message' => 'OK',
                     'status' => 200
@@ -359,7 +364,7 @@ class TourController extends Controller
             }
         }
 
-        return view('admin.tours.edit', compact('tour', 'categories','cateIds'));
+        return view('admin.tours.edit', compact('tour', 'categories', 'cateIds'));
     }
 
     public function tourManagementDetail(Request $request)
