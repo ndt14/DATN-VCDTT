@@ -24,7 +24,7 @@
                                 </div> -->
                     <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
-                    </h1>
+                    </h2>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
@@ -64,7 +64,7 @@
                         <div class="card-header">
                             <h2 class="card-title">
                                 Edit {{ $items['name'] }}
-                            </h1>
+                            </h2>
                         </div>
                         @csrf
                         @method('PUT')

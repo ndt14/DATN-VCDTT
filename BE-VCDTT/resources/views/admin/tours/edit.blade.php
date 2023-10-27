@@ -60,7 +60,7 @@
                             <div class="card-header">
                                 <h2 class="card-title">
                                     Chỉnh sửa {{ $tour->name  }}
-                                </h1>
+                                </h2>
                             </div>
                             @csrf
 

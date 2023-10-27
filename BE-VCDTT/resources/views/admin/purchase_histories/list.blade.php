@@ -6,7 +6,7 @@
                 <div class="col">
                     <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
-                    </h1>
+                    </h2>
                 </div>
                 <!-- <div class="col-12 ">
                             @if (Session::has('success'))
