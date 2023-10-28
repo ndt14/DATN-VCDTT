@@ -30,7 +30,7 @@ class WishListController extends Controller
 
     public function indexAll(Request $request)
     {
-        $listWish = WishList::select('user_id')->where('user_id', $request->id)->orderBy('updated_at', 'desc')->get();
+        $listWish = WishList::select('tour_id')->where('user_id', $request->id)->get();
         $listTour = Tour::whereIn('id', $listWish)->get();
         return response()->json(
             [
