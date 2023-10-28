@@ -6,6 +6,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
@@ -132,4 +133,5 @@ Route::middleware(['auth','check.admin'])->group(function() {
 
 // Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
 
+    Route::get('/dash-board',[DashboardController::class,'index'])->name('dashboard');
 require __DIR__.'/auth.php';
