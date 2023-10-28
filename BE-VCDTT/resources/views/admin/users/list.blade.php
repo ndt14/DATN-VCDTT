@@ -92,7 +92,6 @@
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Gender</th>
-                                    <th>Status</th>
                                     <th class="text-center">Active</th>
                                     <th></th>
                                 </tr>
