@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TourResource;
@@ -78,7 +78,6 @@ class WishListController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
     }
 
     /**
