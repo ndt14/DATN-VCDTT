@@ -374,6 +374,8 @@
                                     </option>
                                     <option @if ($items['purchase_status'] == 9) selected @endif value="9">Đã hoàn tiền
                                     </option>
+                                    <option @if ($items['purchase_status'] == 9) selected @endif value="10">Người dùng đã đánh giá
+                                    </option>
                                 </select>
                             </div>
 
