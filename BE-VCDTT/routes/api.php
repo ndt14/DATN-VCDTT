@@ -97,10 +97,12 @@ Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'up
 Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
 
 //WishList
-Route::get('/wish-list/{id}', [WishListController::class, 'index']); //lấy id người dùng
-Route::post('/wish-list-store', [WishListController::class, 'store']);
-Route::get('/wish-list-show/{id}', [WishListController::class, 'show']); // lấy id tour
-Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
+Route::get('/wish-list/{id}', [WishListController::class, 'indexAll']); //Hiện thị tour theo user id
+Route::post('/wish-list', [WishListController::class, 'index']); //check 1-1
+// Route::post('/wish-list-store', [WishListController::class, 'store']);
+// Route::get('/wish-list-check', [WishListController::class, 'show']);
+Route::post('/use-wish-list', [WishListController::class, 'useWishList']); // Bật tắt yêu thích
+// Route::delete('/wish-list-destroy/{id}', [WishListController::class, 'destroy']);
 
 //Auth
 Route::post('/register', [RegisterController::class, 'register']);
