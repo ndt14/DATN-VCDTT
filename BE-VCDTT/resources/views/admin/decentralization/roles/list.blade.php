@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Quản lý đánh giá
+                        Quản lý Roles
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -23,6 +23,27 @@
                     @endif
                 </div> -->
                 <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <a href="{{ route('role.add') }}" class="btn btn-primary d-none d-sm-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Thêm mới
+                        </a>
+                        <a href="{{ url('/role/add') }}" class="btn btn-primary d-sm-none btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,17 +55,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Tổng số đánh giá:
-                                @php
-                                $star = 0;
-                                $t=0;
-                                $count = $data;
-                                foreach ($count as $c) {
-                                    $t++;
-                                }
-                                @endphp
-                                {{ $t }}
-                            </h3>
+                            <h3 class="card-title">Role</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -67,11 +78,11 @@
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="keyword" class="form-control"
+                                            <input type="text" name="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Gửi</button>
+                                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -82,10 +93,8 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Tên người dùng</th>
-                                        <th>Số sao đánh giá</th>
-                                        <th>Nội dung</th>
-                                        <th>Trả lời của công ty</th>
+                                        <th>Tên vai trò</th>
+                                        <th>Mô tả</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày sửa</th>
                                         <th></th>
@@ -93,64 +102,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
-                                        @foreach ($data as $data)
-                                            <tr>
-                                                <td><span class="text-muted">{{ $data->id }}</span></td>
-                                                <td>
-                                                    {{-- @if (property_exists($object, 'user_name')) 
-                                                        <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
-                                                     @else
-                                                     <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail"></a> 
-                                                     @endif --}}
-
-                                                     @if (property_exists($data, 'user_name'))
-                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
-                                                    @else
-                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail"></a>
-                                                    @endif
-                                                        
-                                                    
-                                                    
-                                                </td>
-                                                <td>
-                                                    @if (property_exists($data, 'star'))
-                                                    {{ $data->star }}
-                                                    <i class="fa-solid fa-star" style="color: #fffa75;"></i>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
-                                                </td>
-                                                <td>
-                                                    {{ string_truncate($data->admin_answer??'Null',30) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($data->created_at) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($data->updated_at) }}
-                                                </td>
-                                                <td class="text-end">
-                                                    <span class="dropdown">
-                                                        <button class="btn dropdown-toggle align-text-top"
-                                                            data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Hành động</button>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="{{ route('rating.edit', ['id' => $data->id]) }}">Trả lời đánh giá</a>
-                                                            <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Xóa</a>
-                                                        </div>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
-                                    @endif
+                                   
                                 </tbody>
                             </table>
                         </div>
@@ -217,7 +169,7 @@
         });
 
         let viewDetail = function(id) {
-        axios.get(`/rating/detail/${id}`)
+        axios.get(`/faq/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
@@ -228,32 +180,6 @@
             .finally(function() {
             });
         };
-
-        let viewDetailT = function(id) {
-        axios.get(`/tour/detail/${id}`)
-            .then(function(response) {
-                $('#modalContainer div.modal-content').html(response.data.html);
-                modalContainer.show();
-            })
-            .catch(function(error) {
-                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-            })
-            .finally(function() {
-            });
-        };
-        let viewDetailU = function(id) {
-        axios.get(`/user/detail/${id}`)
-            .then(function(response) {
-                $('#modalContainer div.modal-content').html(response.data.html);
-                modalContainer.show();
-            })
-            .catch(function(error) {
-                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-            })
-            .finally(function() {
-            });
-        };
-
 
         let removeItem = function(id) {
         $.confirm({
@@ -266,7 +192,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/rating-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/faq-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();
