@@ -86,6 +86,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user-search', [UserController::class, 'search_user']);
     Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('api.user.edit');
     Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
+    Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
 
     //PurchaseHistory
     Route::get('/purchase-history', [PurchaseHistoryController::class, 'index']);
