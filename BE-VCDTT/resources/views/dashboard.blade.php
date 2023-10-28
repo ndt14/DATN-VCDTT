@@ -3,7 +3,7 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-deck row-cards">
-            <div class="col-sm-12 col-md-8 offset-md-2 mt-2 row">
+            <div class="col-sm-12 col-md-8 offset-md-2 mt-4 row">
                 <div class="col"><span>Tổng tiền</span>
                     <div class="card border-0 shadow-lg rounded-4 p-4">
                         sdasda
@@ -15,7 +15,7 @@
                 </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-8 offset-md-2 mt-2 row">
+            <div class="col-sm-12 col-md-8 offset-md-2 mt-4 row">
                 <div class="col"><span>Tổng tiền</span>
                     <div class="card border-0 shadow-lg rounded-4 p-4">
                         sdasda
@@ -27,7 +27,7 @@
                 </div>
                 </div>
             </div>
-            <div class="row col-sm-12 col-md-8 offset-md-2 mt-2"><span>Chart</span>
+            <div class="row col-sm-12 col-md-8 offset-md-2 mt-4"><span>Chart</span>
                 <div id="chart" class="card border-0 shadow-lg rounded-4" style="min-height: 365px;"></div>
             </div>
         </div>
