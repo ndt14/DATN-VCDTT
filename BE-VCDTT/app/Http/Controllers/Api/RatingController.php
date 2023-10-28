@@ -55,6 +55,7 @@ class RatingController extends Controller
     {
         $check = PurchaseHistory::where('tour_id',$request->tour_id)->where('user_id',$request->user_id)->orderBy('id','desc')->first();
         if($check->purchase_status == 5){
+            if($request->star){
             $newRating = Rating::create($request->all());
             if($newRating->id) {
             $purchaseHistory = PurchaseHistory::find($check->id);
@@ -76,13 +77,30 @@ class RatingController extends Controller
                 'status' => 500
             ]);
         }
+    }else{
+        return response()->json(
+            [
+                'data' => [
+                    'purchase_status' => $check->purchase_status
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]
+        );
+    }
         }else if($check->purchase_status == 10){
             return response()->json([
-                'message' => 'Bạn đã đánh giá tour này, vui lòng chỉ sửa đánh giá hoặc đi lại tour',
+                'message' => 'Bạn đã đánh giá tour này, vui lòng đi lại tour',
                 'status' => 500
             ]);
         }else {
-            return response()->json(['message' => 'Bạn chưa đi tour này', 'status' => 404]);
+            return response()->json([
+                'data' => [
+                    'purchase_status' => $check->purchase_status
+                ],
+                'message' => 'Bạn chưa đi tour này',
+                'status' => 404
+            ]);
         }
     }
 
