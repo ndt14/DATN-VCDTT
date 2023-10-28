@@ -202,23 +202,7 @@
 @endSection
 @section('page_css')
 <style>
-    .modal-content{
-        z-index: 80 !important;
-    }
-    .modal{
-        z-index: 80 !important;
-    }
-    .modal-dialog-scrollable{
-        z-index: 81 !important;
-    }
-    .modal-backdrop{z-index: 78 !important;
 
-    }
-    .modal-blur {
-        z-index: 79 !important;
-    }
-
-    
 </style>
 @endSection
 @section('page_js')
