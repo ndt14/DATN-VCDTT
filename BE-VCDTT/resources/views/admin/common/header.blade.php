@@ -1,12 +1,13 @@
-<div class="d-none d-sm-none d-lg-block">
-    <header class="navbar navbar-expand-md d-print-none">
+<div class="d-none d-sm-none d-lg-block  sticky-top shadow">
+    <header class="navbar navbar-expand-md d-print-none sticky-top" style="z-index: 99;">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
                 aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
                 <!-- <span class="navbar-toggler-icon"></span> -->
             </button>
-            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                <a href="/">
+            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 ms-5">
+                <a href="/" class="d-flex align-items-center text-primary text-decoration-none">
+                    <span class="fs-1 text-primary me-1">VCDTT</span><span class="fw-light fst-italic">quản trị</span>
                 </a>
             </h1>
             <div class="navbar-nav flex-row order-md-last">
@@ -17,7 +18,7 @@
                 </div>
                 <div class="d-none d-md-flex">
 
-                    <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" data-bs-toggle="tooltip"
+                    <a href="?theme=dark" class="nav-link px-0 hide-theme-dark text-purple" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" aria-label="Enable dark mode"
                         data-bs-original-title="Enable dark mode">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -28,7 +29,7 @@
                             </path>
                         </svg>
                     </a>
-                    <a href="?theme=light" class="nav-link px-0 hide-theme-light" data-bs-toggle="tooltip"
+                    <a href="?theme=light" class="nav-link px-0 hide-theme-light text-yellow" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" aria-label="Enable light mode"
                         data-bs-original-title="Enable light mode">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -61,7 +62,7 @@
                                 @endif
                             @endforeach
                         </a>
-                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card border-0 shadow-lg rounded-4 ">
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">Thông báo</h3>

@@ -26,11 +26,10 @@
 <body class="layout-fluid">
     <script src="{{ asset('admin/assets/js/demo-theme.min.js') }}"></script>
     <div class="page">
+        @include('admin.common.header')
         @include('admin.common.sidebar')
         <div class="page-wrapper">
-            @include('admin.common.header')
             @yield('content')
-            @include('admin.common.footer')
         </div>
     </div>
     @include('admin.common.javascript')

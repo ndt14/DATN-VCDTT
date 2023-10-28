@@ -19,6 +19,7 @@ import AuthApi, { authReducer } from "../api/auth";
 import CouponApi, { couponReducer } from "../api/coupon";
 import CategoryApi, { categoryReducer } from "../api/category";
 import UserApi, { userReducer } from "../api/user";
+import RatingApi, { ratingReducer } from "../api/rating";
 
 const persistConfig = {
   key: "root",
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   [CouponApi.reducerPath]: couponReducer,
   [CategoryApi.reducerPath]: categoryReducer,
   [UserApi.reducerPath]: userReducer,
+  [RatingApi.reducerPath]: ratingReducer,
 });
 const middleware = [
   TourApi.middleware,
@@ -46,6 +48,7 @@ const middleware = [
   CouponApi.middleware,
   CategoryApi.middleware,
   UserApi.middleware,
+  RatingApi.middleware,
 ];
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

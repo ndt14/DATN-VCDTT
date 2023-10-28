@@ -12,11 +12,12 @@ import { loginSchema, registrationSchema } from "../../schemas/auth.js";
 import { useGetCategoriesQuery } from "../../api/category.js";
 import { Category } from "../../interfaces/Category.js";
 import ForgotPasswordModal from "./Modal/ForgotPasswordModal.js";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
-  const {data:dataCate} = useGetCategoriesQuery();
+  const { data: dataCate } = useGetCategoriesQuery();
   // console.log(dataCate?.data.categoriesParent)
 
   const [email, setEmail] = useState("");
@@ -73,10 +74,9 @@ const Header = () => {
     setShowSignIn(false);
 
     setShowForgotPasswordModal(true);
-   
   };
-  
 
+  const navigate = useNavigate();
   const handleSignIn = async () => {
     // event.preventDefault();
     try {
@@ -93,6 +93,7 @@ const Header = () => {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("accessToken", data.token);
         alert("Đăng nhập thành công!");
+        navigate("/");
       } else {
         // Invalid credentials or other login error
         alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
@@ -108,6 +109,7 @@ const Header = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
+    navigate("/");
   };
   const handleRegister = async () => {
     // event.preventDefault();
@@ -205,16 +207,16 @@ const Header = () => {
                   <li className="menu-item-has-children">
                     <a href="#">Danh mục</a>
                     <ul>
-                    {dataCate?.data.categoriesParent.map(({id,name}:Category)=>{
-                      return(
-                        <li key={id}>
-                          <Link to={`/search/${id}`}>{name}</Link>
-                        {/* <a href="destination.html"></a> */}
-                      </li>
-                      )
-                    })
-
-                    }
+                      {dataCate?.data.categoriesParent.map(
+                        ({ id, name }: Category) => {
+                          return (
+                            <li key={id}>
+                              <Link to={`/search/${id}`}>{name}</Link>
+                              {/* <a href="destination.html"></a> */}
+                            </li>
+                          );
+                        }
+                      )}
                     </ul>
                   </li>
                   <li className="menu-item-has-children">
@@ -350,11 +352,12 @@ const Header = () => {
                             <button className="border-0 bg-white text-info">
                               Chưa có tài khoản? Đăng ký
                             </button>
-                            <button className="border-0 bg-white text-info" onClick={handleShowForgotPasswordModal}>
+                            <button
+                              className="border-0 bg-white text-info"
+                              onClick={handleShowForgotPasswordModal}
+                            >
                               Quên mật khẩu
                             </button>
-                         
-
                           </div>
                           <h4 className="text-center my-3 fw-bold">
                             HOẶC ĐĂNG NHẬP VỚI
@@ -506,8 +509,11 @@ const Header = () => {
                     <Modal.Footer></Modal.Footer>
                   </Modal>
                   {showForgotPasswordModal && (
-  <ForgotPasswordModal  show={showForgotPasswordModal} onClose={() => setShowForgotPasswordModal(false)} />
-)}
+                    <ForgotPasswordModal
+                      show={showForgotPasswordModal}
+                      onClose={() => setShowForgotPasswordModal(false)}
+                    />
+                  )}
                 </div>
               )}
               <div></div>

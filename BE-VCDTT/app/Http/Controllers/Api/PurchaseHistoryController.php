@@ -87,7 +87,7 @@ class PurchaseHistoryController extends Controller
     public function showByUser(string $user_id) //show theo user_id
     {
         //
-        $purchaseHistory = PurchaseHistory::where('user_id', $user_id)->get();
+        $purchaseHistory = PurchaseHistory::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
 
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);

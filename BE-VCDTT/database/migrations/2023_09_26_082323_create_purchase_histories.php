@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('transaction_id')->nullable(); //mã giao dịch
 
             // $table->string('user_name')->nullable();
+            $table->bigInteger('tour_id')->nullable();
             $table->text('tour_name')->nullable();
             $table->string('tour_duration')->nullable();
             $table->bigInteger('tour_child_price')->nullable();

@@ -4,9 +4,9 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h2 class="page-title">
+                    <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
-                    </h2>
+                    </h1>
                 </div>
                 <!-- <div class="col-12 ">
                             @if (Session::has('success'))
@@ -53,7 +53,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
                             <h3 class="card-title">Hóa đơn</h3>
                         </div>
@@ -125,52 +125,68 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($item['payment_status'] == 1)
-                                                        <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                        <span class="badge bg-green rounded-circle p-1 text-green-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M5 12l5 5l10 -10"></path>
+                                                            </svg>
+                                                        </span>
                                                     @else
-                                                        <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                        <span class="badge bg-danger rounded-circle p-1 text-danger-fg">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M18 6l-12 12"></path>
+                                                            <path d="M6 6l12 12"></path>
+                                                            </svg>
+                                                        </span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
                                                     @switch($item['purchase_status'])
                                                         @case(0)
-                                                            <span>Chưa thanh toán</span>
+                                                            <span class="badge bg-red-lt">Chưa thanh toán</span>
                                                             @break
                                                         @case(1)
-                                                            <span>Đang đợi xác nhận</span>
+                                                            <span class="badge bg-orange-lt">Đang đợi xác nhận</span>
                                                             @break
                                                         @case(2)
-                                                            <span>Chưa tới ngày đi</span>
+                                                            <span class="badge bg-green-lt">Chưa tới ngày đi</span>
                                                             @break
                                                         @case(3)
-                                                            <span>Tour đang diễn ra</span>
+                                                            <span class="badge bg-green-lt">Tour đang diễn ra</span>
                                                             @break
                                                         @case(4)
-                                                            <span>Người dùng đã hủy</span>
+                                                            <span class="badge bg-muted-lt">Người dùng đã hủy</span>
                                                             @break
                                                         @case(5)
-                                                            <span>Admin đã hủy tour</span>
+                                                            <span class="badge bg-muted-lt">Admin đã hủy tour</span>
                                                             @break
                                                         @case(6)
-                                                            <span>Tự động hủy do quá hạn</span>
+                                                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
                                                             @break
                                                         @default
                                                             @break
                                                     @endswitch
                                                 </td>
                                                 <td class="text-end">
-                                                    <span class="dropdown">
-                                                        <button class="btn dropdown-toggle align-text-top"
-                                                            data-bs-boundary="viewport"
-                                                            data-bs-toggle="dropdown">Hành động</button>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item"
-                                                                href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
-                                                            {{-- <a class="dropdown-item"
-                                                                href="javascript: removeItem({{ $item['id'] }})">Remove</a> --}}
-                                                        </div>
-                                                    </span>
+                                                    <a class="btn btn-icon btn-outline-green" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                        <path d="M16 5l3 3"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item['id'] }})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M4 7l16 0"></path>
+                                                        <path d="M10 11l0 6"></path>
+                                                        <path d="M14 11l0 6"></path>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                        </svg>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
