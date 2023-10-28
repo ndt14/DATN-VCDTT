@@ -10,9 +10,8 @@ use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +83,9 @@ Route::middleware(['auth','check.admin'])->group(function() {
         Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
         Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
 
+        Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
+        Route::match(['GET','POST'],'/role/add',[RoleController::class,'roleManagementAdd'])->name('role.add');
+        Route::match(['GET','POST'],'/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
 
 });
 

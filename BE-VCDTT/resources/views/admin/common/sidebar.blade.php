@@ -153,7 +153,31 @@
             </span>
           </a>
         </li>
-
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="fa-solid fa-users"></i>
+            </span>
+            <span class="nav-link-title">
+             Phân quyền
+            </span>
+          </a>
+          <div class="dropdown-menu">
+            <div class="dropdown-menu-columns">
+              <div class="dropdown-menu-column">
+                <a class="dropdown-item" href="{{route('role.list')}}">
+                  Vai trò
+                </a>
+                <!-- <a class="dropdown-item" href="{{route('tour.list')}}">
+                    Selling management
+                  </a> -->
+                  <a class="dropdown-item" href="{{route('all.rating.list')}}">
+                    Cấp quyền sử dụng
+                  </a>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>

@@ -175,11 +175,14 @@
                                     <input type="radio" class="custom-control-input" name="is_admin" checked="" value="1" >
                                     <span class="custom-control-label">Có</span>
                                 </label>
-                                <label class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" name="is_admin" value="2" >
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input" name="is_admin" checked="" value="2" >
                                     <span class="custom-control-label">Không</span>
                                 </label>
-
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input" name="is_admin" checked="" value="3" >
+                                    <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
+                                </label>
                                 <span class="text-danger d-flex justify-content-start">
                             </span>
                             </div>
