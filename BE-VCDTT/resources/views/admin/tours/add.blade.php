@@ -23,7 +23,7 @@
                 <!-- <div class="page-pretitle">
                     Overview
                 </div> -->
-                <h2 class="page-title">
+                <h1 class="text-primary mb-4" style="font-size: 36px;">
                     Quản lý tour
                 </h2>
             </div>
@@ -56,7 +56,7 @@
             <div class="container-xl">
                 <div class="row row-deck row-cards">
                     <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form id="frmAdd" class="card" action="{{ route('tour.add') }}" method="POST">
+                        <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('tour.add') }}" method="POST">
                             <div class="card-header">
                                 <h2 class="card-title">
                                     Thêm tour

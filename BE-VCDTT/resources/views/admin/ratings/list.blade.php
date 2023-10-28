@@ -1,14 +1,14 @@
 @extends('admin.common.layout')
 @section('content')
-<div class="page-header d-print-none">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <h2 class="page-title">
-                    Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
-                </h2>
-            </div>
-            <!-- <div class="col-12 ">
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h1 class="text-primary mb-4" style="font-size: 36px;">
+                        Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
+                    </h1>
+                </div>
+                <!-- <div class="col-12 ">
                     @if (Session::has('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                             {{ Session::get('success') }}
@@ -26,30 +26,29 @@
             </div>
         </div>
     </div>
-</div>
-<!-- Page body -->
-<div class="page-body">
-    <div class="container-xl">
-        <div class="row row-deck row-cards">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Trung bình đánh giá:
-                            @php
-                            $star = 0;
-                            $t=0;
-                            $count = $data->ratings;
-                            foreach ($count as $c) {
-                            $star += $c->star;
-                            $t++;
-                            }
-                            @endphp
-                            {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> (Tổng số đánh giá: {{ $t }})
-                        </h3>
-                    </div>
-                    <div class="card-body border-bottom py-3">
-                        <div class="d-flex">
-                            <!--<div class="text-muted">
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg rounded-4 ">
+                        <div class="card-header">
+                            <h3 class="card-title">Trung bình đánh giá:
+                                @php
+                                $star = 0;
+                                $t=0;
+                                $count = $data->ratings;
+                                foreach ($count as $c) {
+                                    $star += $c->star;
+                                    $t++;
+                                }
+                                @endphp
+                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> (Tổng số đánh giá: {{ $t }} )
+                            </h3>
+                        </div>
+                        <div class="card-body border-bottom py-3">
+                            <div class="d-flex">
+                                <!--<div class="text-muted">
                                     Show
                                     <div class="mx-2 d-inline-block">
                                         <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
@@ -89,64 +88,75 @@
                                     <th>Ngày tạo</th>
                                     <th>Ngày sửa</th>
                                     <th></th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($data->ratings)
-                                @foreach ($data->ratings as $data)
-                                <tr>
-                                    <td><span class="text-muted">{{ $data->id }}</span></td>
-                                    <td>
-                                        <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
-                                    </td>
-                                    <td>
-                                        {{ $data->star }}
-                                        <i class="fa-solid fa-star" style="color: #fffa75;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
-                                    </td>
-                                    <td>
-                                        {{ $data->admin_answer??'Null' }}
-                                    </td>
-                                    <td>
-                                        {{ time_format($data->created_at) }}
-                                    </td>
-                                    <td>
-                                        {{ time_format($data->updated_at) }}
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="dropdown">
-                                            <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Hành động</button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="{{ route('rating.edit', ['id' => $data->id]) }}">Trả lời đánh giá</a>
-                                                <a class="dropdown-item" href="javascript: removeItem({{ $data->id}})">Xóa</a>
-                                            </div>
-                                        </span>
-                                    </td>
-                                </tr>
-                                @endforeach
-                                @else
-                                <tr>
-                                    <td colspan="9">
-                                        <div>Không có dữ liệu</div>
-                                    </td>
-                                </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer d-flex align-items-center">
-                        <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="250">250</option>
-                            <option value="500">500</option>
-                        </select>
-
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($data->ratings)
+                                        @foreach ($data->ratings as $data)
+                                            <tr>
+                                                <td><span class="text-muted">{{ $data->id }}</span></td>
+                                                <td>
+                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
+                                                </td>
+                                                <td>
+                                                    {{ $data->star }}
+                                                    <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                                </td>
+                                                <td>
+                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
+                                                </td>
+                                                <td>
+                                                    {{ $data->admin_answer??'Null' }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($data->created_at) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($data->updated_at) }}
+                                                </td>
+                                                <td class="text-end">
+                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('rating.edit', ['id' => $data->id]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M8 9h8"></path>
+                                                        <path d="M8 13h6"></path>
+                                                        <path d="M12.01 18.594l-4.01 2.406v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"></path>
+                                                        <path d="M16 19h6"></path>
+                                                        <path d="M19 16v6"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M4 7l16 0"></path>
+                                                        <path d="M10 11l0 6"></path>
+                                                        <path d="M14 11l0 6"></path>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                        </svg>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer d-flex align-items-center">
+                            <select id="rpp" class="form-select me-2" style="max-width: 75px;">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                            </select>
                         <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
                             bản ghi</p>
                         <ul class="pagination m-0 ms-auto">

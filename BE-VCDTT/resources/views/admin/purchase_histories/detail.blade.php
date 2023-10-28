@@ -4,7 +4,7 @@
 </div>
 <div class="row row-deck row-cards">
     <div class="col-sm-12 col-md-12 px-6">
-        <div class="card-body">
+        <div class="card border-0 shadow-lg rounded-4 -body">
             <div class="row">
                 <div class="mb-3 col-9">
                     <label class="form-label">Tên người dùng</label>

@@ -14,7 +14,7 @@
         <img src="{{asset('/images/logo-vcdtt-removebg.png')}}" style="width: auto; height: 6.25rem;">
       </a>
     </div>
-    <div class="card card-md">
+    <div class="card border-0 shadow-lg rounded-4  card-md">
       <div class="card-body">
         <h2 class="h2 text-center mb-4">Đăng nhập</h2>
 
