@@ -32,7 +32,7 @@
             </span>
           </a>
         </li>
-        <li class="nav-item py-lg-2 accordion-item" style="border: none;">
+        <li class="nav-item py-lg-2 accordion-item active bg-info-lt rounded-end-4" style="border: none;">
           <a class="accordion-header accordion-button nav-link text-primary"  href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-1" role="button" aria-expanded="true">
           <span class="d-md-none d-lg-inline-block text-back me-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-2" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
