@@ -11,9 +11,8 @@ use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +63,7 @@ Route::middleware(['auth','check.admin'])->group(function() {
 
         Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
         Route::get('/coupon/add', [CouponController::class,'couponManagementAdd'])->name('coupon.add');
-        Route::get('/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
+        Route::match(['GET','POST'],'/coupon/edit/{id}', [CouponController::class,'couponManagementEdit'])->name('coupon.edit');
         Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail');
 
         Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
@@ -84,7 +83,10 @@ Route::middleware(['auth','check.admin'])->group(function() {
         Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit');
         Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
         Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
-        // Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
+
+        Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
+        Route::match(['GET','POST'],'/role/add',[RoleController::class,'roleManagementAdd'])->name('role.add');
+        Route::match(['GET','POST'],'/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
 
 });
 

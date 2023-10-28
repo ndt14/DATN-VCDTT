@@ -4,7 +4,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
             <div class="col">
-                <h2 class="page-title">
+                <h1 class="text-primary mb-4" style="font-size: 36px;">
                     Quản lý Blog
                 </h2>
             </div>
@@ -49,7 +49,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-12">
-                <div class="card">
+                <div class="card border-0 shadow-lg rounded-4 ">
                     <div class="card-header">
                         <h3 class="card-title">Blog</h3>
                     </div>
@@ -129,13 +129,24 @@
                                             @endif
                                         </td>
                                         <td class="text-end">
-                                            <span class="dropdown">
-                                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Hành động</button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="{{route('blog.edit', ['id'=>$data['id']])}}">Sửa</a>
-                                                    <a class="dropdown-item" href="javascript: removeItem({{ $data['id']}})">Xóa</a>
-                                                </div>
-                                            </span>
+                                            <a class="btn btn-icon btn-outline-green" href="{{route('blog.edit', ['id'=>$data['id']])}}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                <path d="M16 5l3 3"></path>
+                                                </svg>
+                                            </a>
+                                            <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data['id']}})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M4 7l16 0"></path>
+                                                <path d="M10 11l0 6"></path>
+                                                <path d="M14 11l0 6"></path>
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                </svg>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -185,29 +196,13 @@
 </div>
 <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true" >
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-        <div class="modal-content">
+        <div class="modal-content" >
         </div>
     </div>
 </div>
 @endSection
 @section('page_css')
 <style>
-    .modal-content{
-        z-index: 80 !important;
-    }
-    .modal{
-        z-index: 80 !important;
-    }
-    .modal-dialog-scrollable{
-        z-index: 81 !important;
-    }
-    .modal-backdrop{z-index: 78 !important;
-
-    }
-    .modal-blur {
-        z-index: 79 !important;
-    }
-
 
 </style>
 @endSection

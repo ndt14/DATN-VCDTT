@@ -96,38 +96,17 @@ const UserProfile = () => {
               <hr />
               {/* Left panel */}
 
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
-                  Hồ sơ
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/tours"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className="border-0 btn w-100" type="button">
+              <nav className="nav flex-column">
+                <Link className="nav-link" to={"/user/profile"}>
+                  Thông tin cá nhân
+                </Link>
+                <Link className="nav-link active" to={"/user/tours"}>
                   Tour đã đặt
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
+                </Link>
+                <Link className="nav-link" to={"/user/favorite"}>
                   Tour yêu thích
-                </button>
-              </Link>
+                </Link>
+              </nav>
 
               {/* End left panel */}
             </div>
@@ -144,49 +123,69 @@ const UserProfile = () => {
               </TabPane>
               <TabPane tab="Chỉnh sửa thông tin" key="2">
                 <form onSubmit={handleUpdate}>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label className="d-inline-flex">
-                        Họ tên <div className=" ml-1 text-danger">*</div>
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        className=""
-                        value={formValues.name}
-                        onChange={handleInputChange}
-                      />
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Họ tên <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          className=""
+                          value={formValues.name}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Email <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          className=""
+                          value={formValues.email}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Số điện thoại{" "}
+                          <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="phone_number"
+                          className=""
+                          value={formValues.phone_number}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Địa chỉ <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="address"
+                          className=""
+                          value={formValues.address}
+                          onChange={handleInputChange}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label className="d-inline-flex">
-                        Email <div className=" ml-1 text-danger">*</div>
-                      </label>
-                      <input
-                        type="text"
-                        name="email"
-                        className=""
-                        value={formValues.email}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label className="d-inline-flex">
-                        Số điện thoại <div className=" ml-1 text-danger">*</div>
-                      </label>
-                      <input
-                        type="text"
-                        name="phone_number"
-                        className=""
-                        value={formValues.phone_number}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <button type="submit" className="">Submit</button>
+
+                  <button type="submit" className="">
+                    Chỉnh sửa
+                  </button>
                 </form>
               </TabPane>
               {/* <TabPane tab="Thay đổi mật khẩu" key="3">

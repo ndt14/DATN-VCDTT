@@ -9,25 +9,30 @@ import moment from "moment";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 import { Tour } from "../../../interfaces/Tour";
+import { Rating } from "../../../interfaces/Rating";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { useAddRatingMutation } from "../../../api/rating";
+import { useGetUserByIdQuery } from "../../../api/user";
 
-// const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-// Initialize with null or a default date if needed
 
 const TourDetail = () => {
-  //validate
-
-  //
-
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
+  const [addRating] = useAddRatingMutation();
+  const user = JSON.parse(localStorage.getItem("user"))|| "";
+  console.log(user);
+  
+  const userId = user?.id;
+  // const { data: userData } = useGetUserByIdQuery(userId || "");
 
+  const userName = user.name;
   const location = useLocation();
   const onChange: DatePickerProps["onChange"] = (date, dateString) => {
     setDateTour(dateString);
     setIsDateSelected(true);
     // localStorage.setItem("dateTour", dateString);
   };
-
   const settings = {
     lazyload: false,
     nav: false,
@@ -40,10 +45,13 @@ const TourDetail = () => {
   //
   const { id } = useParams<{ id: string }>();
   const { data: tourData } = useGetTourByIdQuery(id || "");
+  console.log(tourData);
+  
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
   const tourChildPrice = tourData?.data?.tour.child_price;
+  const starNumber = tourData?.data.listRatings.star;
   // console.log(tourChildPrice);
 
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
@@ -83,7 +91,7 @@ const TourDetail = () => {
   }, [tourPrice]);
 
   const tourSameCategory = tourData?.data?.toursSameCate;
-  console.log(tourSameCategory);
+  // console.log(tourSameCategory);
 
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -114,6 +122,85 @@ const TourDetail = () => {
     currency: "VND",
   }).format(price + childPrice);
 
+  const renderStarRating = (rating: number): JSX.Element[] => {
+    const starIcons: JSX.Element[] = [];
+    for (let i = 1; i <= 5; i++) {
+      // Check if the current star should be yellow (active) or gray (inactive)
+      const starClassName = i <= rating ? 'star-icon yellow' : 'star-icon gray';
+      starIcons.push(<FontAwesomeIcon icon={faStar} className={starClassName} key={i} />);
+      
+    }
+    return starIcons;
+  };
+
+
+
+  const [selectedStar, setSelectedStar] = useState(1);
+  const [ratingData, setRatingData] = useState({
+    star: selectedStar,
+    user_id: userId,
+    user_name: userName,
+    content: '',
+    tour_id: id, // Assuming 'id' is the tour ID
+  });
+  const handleStarClick = (star) => {
+    // Check if the clicked star is the currently selected star
+    if (star === selectedStar) {
+      // If it is, deselect the star by setting it to 0
+      setSelectedStar(0);
+    } else {
+      // If it's a different star, select it
+      setSelectedStar(star);
+    }
+  };
+  const handleStarRatingChange = (selectedStar:number) => {
+    setRatingData({ ...ratingData, star: selectedStar });
+  };
+  
+
+  const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRatingData({ ...ratingData, user_name: event.target.value });
+  };
+
+  const handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRatingData({ ...ratingData, content: event.target.value });
+  };
+
+  const handleSubmitRating = async () => {
+    if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
+      try {
+        const response = await addRating(ratingData);
+        // Handle success, e.g., show a success message or update UI
+        console.log('Rating added successfully', response);
+      } catch (error) {
+        // Handle error, e.g., show an error message
+        console.error('Error adding rating', error);
+      }
+    } else {
+      // Handle incomplete rating data, e.g., show an error message
+      console.error('Please fill in all rating details');
+    }
+  };
+  const renderStarRatingClick = (): JSX.Element[] => {
+    const starIcons: JSX.Element[] = [];
+    for (let i = 1; i <= 5; i++) {
+      // Check if the current star should be yellow (active) or gray (inactive)
+      const starClassName = i <= selectedStar ? 'star-icon yellow' : 'star-icon gray';
+      starIcons.push(
+        <span
+          key={i}
+          className={starClassName}
+          onClick={() => handleStarClick(i)}
+        >
+          <FontAwesomeIcon icon={faStar} />
+        </span>
+      );
+    }
+    return starIcons;
+  };
+
+  const isLoggedIn = user != "";
+  
   return (
     <>
       <Loader />
@@ -223,7 +310,7 @@ const TourDetail = () => {
                         role="tabpanel"
                         aria-labelledby="review-tab"
                       >
-                        <div className="summary-review">
+                        {/* <div className="summary-review">
                           <div className="review-score">
                             <span>4.9</span>
                           </div>
@@ -239,171 +326,94 @@ const TourDetail = () => {
                               cupiditate, vestibulum.
                             </p>
                           </div>
-                        </div>
+                        </div> */}
                         {/* <!-- review comment html --> */}
                         <div className="comment-area">
-                          <h3 className="comment-title">3 Reviews</h3>
+                          <h3 className="comment-title">Có {tourData?.data.listRatings.length} đánh giá</h3>
                           <div className="comment-area-inner">
-                            <ol>
-                              <li>
-                                <figure className="comment-thumb">
-                                  <img
-                                    src="../../../../assets/images/img20.jpg"
-                                    alt=""
-                                  />
-                                </figure>
-                                <div className="comment-content">
-                                  <div className="comment-header">
-                                    <h5 className="author-name">Tom Sawyer</h5>
-                                    <span className="post-on">
-                                      Jana 10 2020
-                                    </span>
-                                    <div className="rating-wrap">
-                                      <div
-                                        className="rating-start"
-                                        title="Rated 5 out of 5"
-                                      >
-                                        <span className="w-90"></span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p>
-                                    Officia amet posuere voluptates, mollit
-                                    montes eaque accusamus laboriosam quisque
-                                    cupidatat dolor pariatur, pariatur auctor.
-                                  </p>
-                                  <a href="#" className="reply">
-                                    <i className="fas fa-reply"></i>Reply
-                                  </a>
-                                </div>
-                              </li>
-                              <li>
-                                <ol>
-                                  <li>
-                                    <figure className="comment-thumb">
-                                      <img
-                                        src="../../../../assets/images/img21.jpg"
-                                        alt=""
-                                      />
-                                    </figure>
-                                    <div className="comment-content">
-                                      <div className="comment-header">
-                                        <h5 className="author-name">
-                                          John Doe
-                                        </h5>
-                                        <span className="post-on">
-                                          Jana 10 2020
-                                        </span>
-                                        <div className="rating-wrap">
-                                          <div
-                                            className="rating-start"
-                                            title="Rated 5 out of 5"
-                                          >
-                                            <span className="w-90"></span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <p>
-                                        Officia amet posuere voluptates, mollit
-                                        montes eaque accusamus laboriosam
-                                        quisque cupidatat dolor pariatur,
-                                        pariatur auctor.
-                                      </p>
-                                      <a href="#" className="reply">
-                                        <i className="fas fa-reply"></i>Reply
-                                      </a>
-                                    </div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                            <ol>
-                              <li>
-                                <figure className="comment-thumb">
-                                  <img
-                                    src="../../../../assets/images/img22.jpg"
-                                    alt=""
-                                  />
-                                </figure>
-                                <div className="comment-content">
-                                  <div className="comment-header">
-                                    <h5 className="author-name">Jaan Smith</h5>
-                                    <span className="post-on">
-                                      Jana 10 2020
-                                    </span>
-                                    <div className="rating-wrap">
-                                      <div
-                                        className="rating-start"
-                                        title="Rated 5 out of 5"
-                                      >
-                                        <span></span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p>
-                                    Officia amet posuere voluptates, mollit
-                                    montes eaque accusamus laboriosam quisque
-                                    cupidatat dolor pariatur, pariatur auctor.
-                                  </p>
-                                  <a href="#" className="reply">
-                                    <i className="fas fa-reply"></i>Reply
-                                  </a>
-                                </div>
-                              </li>
-                            </ol>
+                          {
+  tourData?.data.listRatings.map(({ id, user_name, content, admin_answer, star, created_at }: Rating) => {
+    // Chuyển đổi giá trị "start" thành số nguyên
+    const starRating = parseInt(star);
+
+    return (
+      <>
+        <ol key={id}>
+          <li>
+            <div className="comment-content">
+              <div className="comment-header">
+                <h5 className="author-name">{user_name}</h5>
+                <span className="post-on">{created_at}</span>
+                <div className="rating-wrap">
+                  <div className="" title={`Rated ${starRating} sao trên 5 sao tối đa`}>
+                    <span className="w-90">
+                      {renderStarRating(starRating)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <p>{content}</p>
+            </div>
+          </li>
+          {admin_answer && ( // Check if admin has responded
+            <li>
+              <ol>
+                <li>
+                  <div className="comment-content">
+                    <div className="comment-header">
+                      <h5 className="author-name">Admin</h5>
+                    </div>
+                    <p>{admin_answer}</p>
+                  </div>
+                </li>
+              </ol>
+            </li>
+          )}
+        </ol>
+      </>
+    );
+  })
+}
+
+                          
                           </div>
                           <div className="comment-form-wrap">
-                            <h3 className="comment-title">Leave a Review</h3>
-                            <form className="comment-form">
-                              <div className="full-width rate-wrap">
-                                <label>Your rating</label>
-                                <div className="procduct-rate">
-                                  <span></span>
-                                </div>
-                              </div>
-                              <p>
-                                <input
-                                  type="text"
-                                  name="name"
-                                  placeholder="Name"
-                                />
-                              </p>
-                              <p>
-                                <input
-                                  type="text"
-                                  name="name"
-                                  placeholder="Last name"
-                                />
-                              </p>
-                              <p>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  placeholder="Email"
-                                />
-                              </p>
-                              <p>
-                                <input
-                                  type="text"
-                                  name="subject"
-                                  placeholder="Subject"
-                                />
-                              </p>
-                              <p>
-                                <textarea
-                                  rows={6}
-                                  placeholder="Your review"
-                                ></textarea>
-                              </p>
-                              <p>
-                                <input
-                                  type="submit"
-                                  name="submit"
-                                  value="Submit"
-                                />
-                              </p>
-                            </form>
-                          </div>
+        <h3 className="comment-title">Đánh giá của bạn</h3>
+        {isLoggedIn ? (
+            <form className="comment-form">
+              <div className="full-width rate-wrap">
+                <label>Chọn sao</label>
+                <div className="procduct-rate">
+                  <span>{renderStarRatingClick()}</span>
+                </div>
+              </div>
+              <p>
+                <input
+                  type="text"
+                  name="user_name"
+                  placeholder="Tên của bạn"
+                  value={ratingData.user_name}
+                  onChange={handleUserNameChange}
+                />
+              </p>
+              <p>
+                <textarea
+                  rows={6}
+                  placeholder="Đánh giá"
+                  value={ratingData.content}
+                  onChange={handleContentChange}
+                ></textarea>
+              </p>
+              <p>
+                <button type="button" onClick={handleSubmitRating}>
+                  Gửi đánh giá
+                </button>
+              </p>
+            </form>
+          ) : (
+            <p style={{ color: "red" }}>Vui lòng đăng nhập để đánh giá.</p>
+          )}
+      </div>
                         </div>
                       </div>
                       <div

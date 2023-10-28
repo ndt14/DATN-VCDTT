@@ -87,7 +87,7 @@ class PurchaseHistoryController extends Controller
     public function showByUser(string $user_id) //show theo user_id
     {
         //
-        $purchaseHistory = PurchaseHistory::where('user_id', $user_id)->get();
+        $purchaseHistory = PurchaseHistory::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
 
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -204,7 +204,7 @@ class PurchaseHistoryController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        $html = view('admin.purchase_histories.detail', compact('item'));
+        $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RatingRequest;
 use App\Http\Resources\RatingResource;
 use App\Http\Resources\TourResource;
+use App\Models\PurchaseHistory;
 use App\Models\Rating;
 use App\Models\Tour;
 use Illuminate\Http\Request;
@@ -52,24 +53,55 @@ class RatingController extends Controller
      */
     public function store(RatingRequest $request)
     {
-        $newRating = Rating::create($request->all());
-        if($newRating->id) {
+        $check = PurchaseHistory::where('tour_id',$request->tour_id)->where('user_id',$request->user_id)->orderBy('id','desc')->first();
+        if($check->purchase_status == 5){
+            if($request->star){
+            $newRating = Rating::create($request->all());
+            if($newRating->id) {
+            $purchaseHistory = PurchaseHistory::find($check->id);
+            $input['purchase_status'] = 10; // Đã đi xong -> đã đánh giá
+            $purchaseHistory->fill($input);
+            $purchaseHistory->save();
             return response()->json(
                 [
                     'data' => [
                         'rating' => new RatingResource($newRating)
                     ],
-                    'message' => 'Add success',
+                    'message' => 'Đánh giá thành công',
                     'status' => 200
                 ]
             );
-        }else {
+        }else{
             return response()->json([
-                'message' => 'internal server error',
+                'message' => 'Lỗi hệ thống',
                 'status' => 500
             ]);
         }
-
+    }else{
+        return response()->json(
+            [
+                'data' => [
+                    'purchase_status' => $check->purchase_status
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]
+        );
+    }
+        }else if($check->purchase_status == 10){
+            return response()->json([
+                'message' => 'Bạn đã đánh giá tour này, vui lòng đi lại tour',
+                'status' => 500
+            ]);
+        }else {
+            return response()->json([
+                'data' => [
+                    'purchase_status' => $check->purchase_status
+                ],
+                'message' => 'Bạn chưa đi tour này',
+                'status' => 404
+            ]);
+        }
     }
 
     /**

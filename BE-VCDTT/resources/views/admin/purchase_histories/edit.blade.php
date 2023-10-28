@@ -22,9 +22,9 @@
                     <!-- <div class="page-pretitle">
                                     Overview
                                 </div> -->
-                    <h2 class="page-title">
+                    <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
-                    </h2>
+                    </h1>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
@@ -59,7 +59,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmEdit" class="card"
+                    <form id="frmEdit" class="card border-0 shadow-lg rounded-4 "
                         action="{{ route('api.purchase_histories.edit', ['id' => $items['id']]) }}" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
@@ -354,26 +354,27 @@
                                 <div class="form-label">Trạng thái mua hàng</div>
                                 <select name="purchase_status" class="form-select" aria-label="Default select example">
                                     <option>-----Trạng thái-----</option>
-                                    <option @if ($items['purchase_status'] == 0) selected @endif value="0">Chưa thanh
-                                        toán
+                                    <option @if ($items['purchase_status'] == 0) selected @endif value="0">Người dùng chưa thanh toán
                                     </option>
-                                    <option @if ($items['purchase_status'] == 1) selected @endif value="1">Đang đợi xác
-                                        nhận
+                                    <option @if ($items['purchase_status'] == 1) selected @endif value="1">Đang đợi Admin xác nhận
                                     </option>
-                                    <option @if ($items['purchase_status'] == 2) selected @endif value="2">Chưa tới ngày
-                                        đi
+                                    <option @if ($items['purchase_status'] == 2) selected @endif value="2">Admin đã xác nhận, chờ người dùng ngày đi tour
                                     </option>
-                                    <option @if ($items['purchase_status'] == 3) selected @endif value="3">Tour đang
-                                        diễn ra
+                                    <option @if ($items['purchase_status'] == 3) selected @endif value="3">Còn một ngày tới ngày đi tour
                                     </option>
-                                    <option @if ($items['purchase_status'] == 4) selected @endif value="4">Người dùng đã
-                                        hủy
+                                    <option @if ($items['purchase_status'] == 4) selected @endif value="4">Tour đang diễn ra
                                     </option>
-                                    <option @if ($items['purchase_status'] == 5) selected @endif value="5">Admin đã hủy
-                                        tour
+                                    <option @if ($items['purchase_status'] == 5) selected @endif value="5">Tour đã kết thúc
                                     </option>
-                                    <option @if ($items['purchase_status'] == 6) selected @endif value="6">Tự động hủy
-                                        do quá hạn
+                                    <option @if ($items['purchase_status'] == 6) selected @endif value="6">Admin đã hủy tour
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 8) selected @endif value="8">Tự  động đơn đặt  hủy do quá hạn than toán
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 9) selected @endif value="9">Đã hoàn tiền
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 10) selected @endif value="10">Người dùng đã đánh giá
                                     </option>
                                 </select>
                             </div>

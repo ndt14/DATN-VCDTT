@@ -22,9 +22,9 @@
                     <!-- <div class="page-pretitle">
                                 Overview
                             </div> -->
-                    <h2 class="page-title">
+                    <h1 class="text-primary mb-4" style="font-size: 36px;">
                         Blogs management
-                    </h2>
+                    </h1>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
@@ -61,7 +61,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card" action="{{ route('blog.add') }}" method="POST">
+                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('blog.add') }}" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Thêm blog mới
