@@ -22,8 +22,7 @@
                         </div>
                     @endif
                 </div> -->
-                <div class="col-auto ms-auto d-print-none">
-                </div>
+            <div class="col-auto ms-auto d-print-none">
             </div>
         </div>
     </div>
@@ -56,41 +55,39 @@
                                     </div>
                                     entries
                                 </div>-->
-                                <div class="ms-auto text-muted">
-                                    <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
-                                                <option value="en">Không hoạt động</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="keyword" class="form-control"
-                                                placeholder="Keyword">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Gửi</button>
-                                        </div>
-                                    </form>
-                                </div>
+                            <div class="ms-auto text-muted">
+                                <form method="get" action="" class="row gy-2 gx-3 align-items-center">
+                                    <div class="col-auto">
+                                        <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                        <select class="form-select" name="lang_code">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="ja">Đang hoạt động</option>
+                                            <option value="en">Không hoạt động</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                        <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">Gửi</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="table table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
-                                <thead>
-                                    <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>Tên người dùng</th>
-                                        <th>Số sao đánh giá</th>
-                                        <th>Nội dung</th>
-                                        <th>Trả lời của công ty</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
-                                        <th></th>
-
+                    </div>
+                    <div class="table table-responsive">
+                        <table class="table card-table table-vcenter text-nowrap datatable">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">ID</th>
+                                    <th>Tên người dùng</th>
+                                    <th>Số sao đánh giá</th>
+                                    <th>Nội dung</th>
+                                    <th>Trả lời của công ty</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày sửa</th>
+                                    <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,60 +157,55 @@
                                 <option value="250">250</option>
                                 <option value="500">500</option>
                             </select>
+                        <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
+                            bản ghi</p>
+                        <ul class="pagination m-0 ms-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M15 6l-6 6l6 6"></path>
+                                    </svg>prev</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M9 6l6 6l-6 6"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
-                                bản ghi</p>
-                            <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>prev</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-            </div>
+</div>
+<div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
         </div>
     </div>
+</div>
 @endSection
 @section('page_js')
-    <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
+<script type="text/javascript">
+    let modalContainer;
+    $(document).ready(function() {
+        modalContainer = new bootstrap.Modal('#modalContainer', {
+            keyboard: true,
+            backdrop: 'static'
         });
+    });
 
-        let viewDetail = function(id) {
+    let viewDetail = function(id) {
         axios.get(`/rating/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -222,11 +214,10 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {
-            });
-        };
+            .finally(function() {});
+    };
 
-        let viewDetailT = function(id) {
+    let viewDetailT = function(id) {
         axios.get(`/tour/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -235,10 +226,9 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {
-            });
-        };
-        let viewDetailU = function(id) {
+            .finally(function() {});
+    };
+    let viewDetailU = function(id) {
         axios.get(`/user/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -247,12 +237,11 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {
-            });
-        };
+            .finally(function() {});
+    };
 
 
-        let removeItem = function(id) {
+    let removeItem = function(id) {
         $.confirm({
             theme: theme,
             title: 'Confirm',
@@ -275,5 +264,5 @@
             }
         });
     };
-    </script>
+</script>
 @endSection

@@ -210,7 +210,7 @@ class CouponController extends Controller
         return view('admin.coupons.add');
     }
 
-    public function couponManagementEdit(CouponRequest $request, $id) {
+    public function couponManagementEdit(Request $request, $id) {
         $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $id)['data']['coupon']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');

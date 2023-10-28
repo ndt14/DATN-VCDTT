@@ -29,5 +29,30 @@ table thead tr{
     border: none;
     border-color: white;
 }
-
+.star-icon.yellow {
+    color: yellow !important;
+  }
+  .star-icon.gray {
+    color: gray !important;
+  }
+  /* Style for the star icons */
+.star-icon {
+    font-size: 20px; /* Adjust the size as needed */
+    color: #ccc; /* Color of inactive stars */
+  
+    /* Add additional styles like margin, padding, etc., to adjust the spacing between stars */
+  }
+  
+  .star-active {
+    color: #fdd835; /* Color of active stars (yellow) */
+    cursor: pointer; /* Change cursor to a pointer on hover for interaction */
+  }
+  
+  /* Add any other styles you need for your rating component */
+  
+  /* Optional: Add hover effect for star icons */
+  .star-icon:hover {
+    color: #fdd835; /* Change color when hovering over the stars */
+  }
+  
 

@@ -28,8 +28,8 @@ class PurchaseHistorySeeder extends Seeder
                 'phone_number' => $faker->phoneNumber(),
                 'gender' => $faker->numberBetween(1,3),
                 'transaction_id' => $faker->randomNumber(8, true),
-
                 'suggestion' => $faker->sentence(20),
+                'tour_id' => $faker->numberBetween(1, 20),
                 'tour_name' => $faker->sentence(10),
                 'tour_duration' => $faker->randomDigit(),
                 'tour_child_price' => $faker->randomNumber(6, true),

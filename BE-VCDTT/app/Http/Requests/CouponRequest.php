@@ -39,7 +39,6 @@ class CouponRequest extends FormRequest
                             'expiration_date' => 'required',
                             'percentage_price' => 'required',
                             'fixed_price' => 'required',
-                            'status' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
                             //     return empty($this->input('cate_id'));
                             // })],
@@ -57,7 +56,6 @@ class CouponRequest extends FormRequest
                             'expiration_date' => 'required',
                             'percentage_price' => 'required',
                             'fixed_price' => 'required',
-                            'status' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
                             //     return empty($this->input('cate_id'));
                             // })],
@@ -81,7 +79,6 @@ class CouponRequest extends FormRequest
             'end_date.required' => 'Ngày kết thúc coupon không được trống',
             'percentage_price.required' => 'Phần trăm giảm giá không được trống',
             'fixed_price.required' => 'Giá giảm cố định không được trống',
-            'status.required' => 'Trạng thái của coupon không được trống',
             'tour_id.required' => 'Tour áp dụng coupon hoặc danh mục áp dụng coupon không được trống',
             'cate_id.required' => 'Tour áp dụng coupon hoặc danh mục áp dụng coupon không được trống',
         ];
