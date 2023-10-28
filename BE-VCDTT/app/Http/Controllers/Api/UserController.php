@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
@@ -132,6 +134,28 @@ class UserController extends Controller
         }
     }
 
+    public function changePassword(Request $request, string $id)
+    {
+        $user = User::where('id', $id)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy người dùng', 'status' => 404]);
+        } else {
+
+            if (!Hash::check($request->old_password, $user->password)) {
+                return response()->json(['message' => 'Sai mật khẩu cũ', 'status' => 404]);
+            }
+
+            User::whereId($user->id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+
+            return response()->json([
+                'message' => 'Đổi mật khẩu thành công!',
+                'status' => 200
+            ]);
+        }
+    }
 
     // ## ============================================ NHÓM HÀM CHO CRUD USER TRONG BLADE ADMIN ==================================
 

@@ -204,7 +204,7 @@ class PurchaseHistoryController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        $html = view('admin.purchase_histories.detail', compact('item'));
+        $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
 

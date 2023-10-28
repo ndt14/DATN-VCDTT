@@ -87,6 +87,7 @@ Route::get('/user-show/{id}', [UserController::class, 'show']);
 Route::get('/user-search', [UserController::class, 'search_user']);
 Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('api.user.edit');
 Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
+Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
 
 //PurchaseHistory
 Route::get('/purchase-history', [PurchaseHistoryController::class, 'index']);
@@ -116,3 +117,4 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
+
