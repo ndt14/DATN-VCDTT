@@ -18,7 +18,7 @@
                 </div>
                 <div class="d-none d-md-flex">
 
-                    <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" data-bs-toggle="tooltip"
+                    <a href="?theme=dark" class="nav-link px-0 hide-theme-dark text-purple" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" aria-label="Enable dark mode"
                         data-bs-original-title="Enable dark mode">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -29,7 +29,7 @@
                             </path>
                         </svg>
                     </a>
-                    <a href="?theme=light" class="nav-link px-0 hide-theme-light" data-bs-toggle="tooltip"
+                    <a href="?theme=light" class="nav-link px-0 hide-theme-light text-yellow" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" aria-label="Enable light mode"
                         data-bs-original-title="Enable light mode">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
