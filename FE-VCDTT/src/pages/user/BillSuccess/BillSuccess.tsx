@@ -86,6 +86,7 @@ const BillSuccess = () => {
           <div className="container">
             <div className="inner-banner-content">
               <h1 className="inner-title">Thanh toán</h1>
+              <h1 className="inner-title">Tình trạng thanh toán</h1>
             </div>
           </div>
         </div>
