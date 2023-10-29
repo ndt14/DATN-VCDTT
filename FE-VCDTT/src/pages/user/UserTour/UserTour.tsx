@@ -175,25 +175,27 @@ const UserTour = () => {
                 let tourStatus;
                 if (purchase_status === 0) {
                   tourStatus = "Cần thanh toán";
-                } else if (payment_status === 1) {
+                } else if (purchase_status === 1) {
                   tourStatus = "Đang đợi Admin xác nhận";
-                } else if (payment_status === 2) {
+                } else if (purchase_status === 2) {
                   tourStatus = "Admin đã xác nhận, chờ tới ngày đi tour";
-                } else if (payment_status === 3) {
+                } else if (purchase_status === 3) {
                   tourStatus = "Còn 1 ngày tới ngày đi tour";
-                } else if (payment_status === 4) {
+                } else if (purchase_status === 4) {
                   tourStatus = "Tour đang diễn ra";
-                } else if (payment_status === 5) {
+                } else if (purchase_status === 5) {
                   tourStatus = "Tour đã kết thúc";
-                } else if (payment_status === 6) {
+                } else if (purchase_status === 6) {
                   tourStatus = "Admin đã hủy";
-                } else if (payment_status === 7) {
+                } else if (purchase_status === 7) {
                   tourStatus = "Bạn đã hủy";
-                } else if (payment_status === 8) {
+                } else if (purchase_status === 8) {
                   tourStatus = "Đơn tự động hủy do quá hạn thanh toán";
-                } else if (payment_status === 9) {
+                } else if (purchase_status === 9) {
                   tourStatus = "Đã hoàn tiền do hủy tour";
-                }
+                } else if (purchase_status === 10) {
+                tourStatus = "Đã Đánh giá tour";
+              }
 
                 const finalPrice =
                   coupon_percentage == 0 || null
