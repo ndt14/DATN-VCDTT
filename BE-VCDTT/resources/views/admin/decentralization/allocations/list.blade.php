@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Quản lý Roles
+                        Quản lý cấp quyền
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -24,16 +24,7 @@
                 </div> -->
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('role.add') }}" class="btn btn-primary d-none d-sm-inline-block">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            Thêm mới
-                        </a>
+                       
                         <a href="{{ url('/role/add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -55,7 +46,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Role</h3>
+                            <h3 class="card-title">Cấp quyền</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -68,11 +59,10 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                       
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
-                                                placeholder="tên vai trò">
+                                                placeholder="tên người dùng">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -86,8 +76,9 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Tên vai trò</th>
-                                        <th>Mô tả</th>
+                                        <th>Tên</th>
+                                        <th>Email</th>
+                                        <th>Nhóm vai trò</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày sửa</th>
                                         <th></th>

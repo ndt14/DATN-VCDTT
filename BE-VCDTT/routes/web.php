@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AllocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 
@@ -86,6 +87,8 @@ Route::middleware(['auth','check.admin'])->group(function() {
         Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
         Route::match(['GET','POST'],'/role/add',[RoleController::class,'roleManagementAdd'])->name('role.add');
         Route::match(['GET','POST'],'/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+
+        Route::get('/allocation', [AllocationController::class,'allocationManagementList'])->name('allocation.list');
 
 });
 

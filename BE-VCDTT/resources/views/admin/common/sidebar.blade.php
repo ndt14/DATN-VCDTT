@@ -162,7 +162,7 @@
             <span class="nav-link-icon d-md-none d-lg-inline-block">
               <i class="fa-solid fa-users"></i>
             </span>
-            <span class="nav-link-title">
+            <span class="fw-bold ms-1 fs-3">
              Phân quyền
             </span>
           </a>
@@ -175,7 +175,7 @@
                 <!-- <a class="dropdown-item" href="{{route('tour.list')}}">
                     Selling management
                   </a> -->
-                  <a class="dropdown-item" href="{{route('all.rating.list')}}">
+                  <a class="dropdown-item" href="{{route('allocation.list')}}">
                     Cấp quyền sử dụng
                   </a>
               </div>
