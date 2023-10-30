@@ -105,9 +105,13 @@ class TourController extends Controller
 
     public function store(TourRequest $request)
     {
+        $categoriesArray = [];
         $imgArray = $request->input('imgArray');
         $categoriesArray = $request->input('categories_data'); // ở đây thêm category
-        $tour = Tour::create($request->all());
+        $tour = new Tour();
+        $tour->setCategoriesArray($categoriesArray);
+        $tour->fill($request->all());
+        $tour->save();
         if ($tour->id) {
 
             if (!empty($imgArray)) {
@@ -249,6 +253,7 @@ class TourController extends Controller
 
     public function update(TourRequest $request, string $id)
     {
+        $categoriesArray = [];
         $imgArray = $request->input('imgArray');
         $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $input = $request->all();
@@ -257,7 +262,7 @@ class TourController extends Controller
         if (!$tour) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
-
+        $tour->setCategoriesArray($categoriesArray);
         $tour->fill($input);
         if (!empty($imgArray)) {
             $images = [];
@@ -272,6 +277,7 @@ class TourController extends Controller
         }
         if (!empty($categoriesArray)) {
             $categories = [];
+            TourToCategory::where('tour_id', $tour->id)->delete();
             foreach ($categoriesArray as $cate) {
                 $data = [
                     'cate_id' => $cate,
@@ -285,7 +291,8 @@ class TourController extends Controller
 
             return response()->json([
                 'data' => [
-                    'tour' => $tour
+                    'tour' => $tour,
+                    'tourCategories' => !empty($categories) ? $categories : 'No category added',
                 ],
                 'message' => 'Edit tour success',
                 'status' => 200,
@@ -357,7 +364,6 @@ class TourController extends Controller
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/' . $id, $data);
 
             if ($response->status() == 200) {
-                $newTourToCate = TourToCategory::where('tour_id', $id)->update(['cate_id' => $data['category']]);
                 return redirect()->route('tour.list')->with('success', 'Cập nhật tour thành công');
             } else {
                 return redirect()->route('tour.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
