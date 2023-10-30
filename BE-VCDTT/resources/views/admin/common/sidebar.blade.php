@@ -157,29 +157,35 @@
             </span>
           </a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
-            <span class="nav-link-icon d-md-none d-lg-inline-block">
-              <i class="fa-solid fa-users"></i>
-            </span>
-            <span class="nav-link-title">
-             Phân quyền
-            </span>
+        <li class="nav-item py-lg-2 accordion-item rounded-end-4" style="border: none;">
+          <a class="accordion-header accordion-button nav-link collapsed"  href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-2" role="button" aria-expanded="false">
+          <span class="d-md-none d-lg-inline-block text-back me-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-cog" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
+              <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5"></path>
+              <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+              <path d="M19.001 15.5v1.5"></path>
+              <path d="M19.001 21v1.5"></path>
+              <path d="M22.032 17.25l-1.299 .75"></path>
+              <path d="M17.27 20l-1.3 .75"></path>
+              <path d="M15.97 17.25l1.3 .75"></path>
+              <path d="M20.733 20l1.3 .75"></path>
+            </svg>
+          </span>
+          <span class="fw-bold ms-1 fs-3">
+            Phân quyền
+          </span>
           </a>
-          <div class="dropdown-menu">
-            <div class="dropdown-menu-columns">
-              <div class="dropdown-menu-column">
-                <a class="dropdown-item" href="{{route('role.list')}}">
-                  Vai trò
-                </a>
-                <!-- <a class="dropdown-item" href="{{route('tour.list')}}">
-                    Selling management
-                  </a> -->
-                  <a class="dropdown-item" href="{{route('all.rating.list')}}">
-                    Cấp quyền sử dụng
-                  </a>
+          <div id="nav-link-2" class="accordion-collapse collapse" data-bs-parent="#nav-parent">
+              <div class="accordion-body pt-0 ps-5 ms-1">
+              <a class="nav-link" href="{{route('role.list')}}">
+                Vai trò
+              </a>
+              <a class="nav-link" href="{{route('all.rating.list')}}" target="_blank" rel="noopener">
+                Cấp quyền sử dụng
+              </a>
               </div>
-            </div>
           </div>
         </li>
       </ul>
