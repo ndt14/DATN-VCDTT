@@ -117,4 +117,3 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
-
