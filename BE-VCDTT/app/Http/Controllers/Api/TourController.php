@@ -313,6 +313,7 @@ class TourController extends Controller
         if ($tour) {
             $delete_tour = $tour->delete();
             if ($delete_tour) {
+                TourToCategory::where('tour_id', $tour->id)->delete();
                 // soft delete
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
