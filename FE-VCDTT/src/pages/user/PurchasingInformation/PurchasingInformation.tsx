@@ -18,6 +18,7 @@ const PurchasingInformation = (props: Props) => {
     phone_number: string;
     message: string;
     honorific: string;
+    address: string;
   }
 
   useEffect(() => {
@@ -42,6 +43,7 @@ const PurchasingInformation = (props: Props) => {
     tourLocation,
     tourPrice,
     tourChildPrice,
+    tourId,
   } = location.state;
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -50,7 +52,7 @@ const PurchasingInformation = (props: Props) => {
   const userId = userData?.id;
   const userEmail = userData?.email;
   const phoneNumber = userData?.phone_number;
-  // const userAddress = userData?.address;
+  const userAddress = userData?.address;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
   // Xử lý xác nhận thông tin form
@@ -76,6 +78,7 @@ const PurchasingInformation = (props: Props) => {
       phone_number: phoneNumber ? phoneNumber : "",
       message: "",
       honorific: "",
+      address: userAddress ? userAddress : "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên"),
@@ -97,6 +100,7 @@ const PurchasingInformation = (props: Props) => {
     fixed: 0,
     finalPrice: 0,
     couponName: "",
+    couponCode: "",
   });
   console.log(couponData);
 
@@ -134,19 +138,20 @@ const PurchasingInformation = (props: Props) => {
   }).format(couponData.finalPrice);
   const handleCouponSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // console.log(formCoupon);
+    console.log(formCoupon);
     checkCoupon(formCoupon)
       .then((response) => {
         alert(response?.data?.message);
         const discountPercent = response?.data?.coupon.percentage_price;
         const discountFixed = response?.data?.coupon.fixed_price;
         const coupon_name = response?.data?.coupon.name;
-        console.log(coupon_name);
+        // console.log(coupon_name);
         setCouponData({
-          percentage: discountPercent,
-          fixed: discountFixed,
+          percentage: discountPercent ? discountPercent : null,
+          fixed: discountFixed ? discountFixed : null,
           finalPrice: couponData.finalPrice,
           couponName: coupon_name,
+          couponCode: formCoupon.coupon_code,
         });
       })
       .catch((error) => {
@@ -173,6 +178,7 @@ const PurchasingInformation = (props: Props) => {
       name: formik.values.name,
       user_id: userId,
       tour_name: tourName,
+      tour_id: tourId,
       child_count: productChildNumber,
       adult_count: productNumber,
       tour_start_time: formattedDate,
@@ -184,10 +190,14 @@ const PurchasingInformation = (props: Props) => {
       suggestion: formik.values.message,
       gender: parseInt(formik.values.honorific),
       coupon_name: couponData.couponName,
+      coupon_code: couponData.couponCode,
       coupon_percentage:
         couponData.percentage > 0 ? couponData.percentage : null,
       coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
       tour_sale_percentage: 0,
+      address: formik.values.address,
+      purchase_status: 0,
+      payment_status: 0,
     };
     console.log(variables);
     localStorage.setItem("tempUser", JSON.stringify(variables));
@@ -198,9 +208,9 @@ const PurchasingInformation = (props: Props) => {
         alert("Đặt tour thành công");
         const billID = response?.data?.data?.purchase_history.id;
         console.log(billID);
-        localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-        window.location.href = VnpayURL;
+        // localStorage.setItem("billIdSuccess", JSON.stringify(billID));
+        // const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        // window.location.href = VnpayURL;
       })
       .catch((error) => {
         // Handle any errors here
@@ -330,6 +340,24 @@ const PurchasingInformation = (props: Props) => {
                       </div>
                       <div className="col-sm-12">
                         <div className="form-group">
+                          <label className="d-inline-flex">Địa chỉ</label>
+                          <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="input-border"
+                          />
+                          {formik.touched.email && formik.errors.email && (
+                            <p className="text-danger">{formik.errors.email}</p>
+                          )}
+                        </div>
+                        {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
+                      </div>
+                      <div className="col-sm-12">
+                        <div className="form-group">
                           <label>Yêu cầu đặc biệt </label>
                           <textarea
                             rows={6}
@@ -376,7 +404,7 @@ const PurchasingInformation = (props: Props) => {
                       {userLogIn == "true" ? (
                         <div className="col-sm-6">
                           <p>
-                            Giá sau khi nhập coupon:
+                            Giá sau khi nhập coupon:{" "}
                             <span className="fs-4 text-danger fw-bold">
                               {formattedFinalPrice}
                             </span>
@@ -429,9 +457,7 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="text"
                                     name="name"
-                                    value={
-                                      userName ? userName : formik.values.name
-                                    }
+                                    value={formik.values.name}
                                     disabled
                                   />{" "}
                                 </div>
@@ -440,11 +466,7 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="text"
                                     name="phone_number"
-                                    value={
-                                      phoneNumber
-                                        ? phoneNumber
-                                        : formik.values.phone_number
-                                    }
+                                    value={formik.values.phone_number}
                                     disabled
                                   />{" "}
                                 </div>
@@ -453,11 +475,7 @@ const PurchasingInformation = (props: Props) => {
                                   <input
                                     type="email"
                                     name="email"
-                                    value={
-                                      userEmail
-                                        ? userEmail
-                                        : formik.values.email
-                                    }
+                                    value={formik.values.email}
                                     disabled
                                   />
                                 </div>
@@ -498,17 +516,22 @@ const PurchasingInformation = (props: Props) => {
                                   disabled
                                 />
                               </div>
-                              <div className="form-group">
-                                <label htmlFor="">
-                                  Giá tour sau khi nhập coupon
-                                </label>
-                                <input
-                                  type="text"
-                                  name="created_at"
-                                  value={formattedFinalPrice}
-                                  disabled
-                                />
-                              </div>
+                              {formattedResultPrice == formattedFinalPrice ? (
+                                <div></div>
+                              ) : (
+                                <div className="form-group">
+                                  <label htmlFor="">
+                                    Giá tour sau khi nhập coupon
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="created_at"
+                                    value={formattedFinalPrice}
+                                    disabled
+                                  />
+                                </div>
+                              )}
+
                               <div className="form-group">
                                 <label htmlFor="">Phương thức thanh toán</label>
                                 <div className="mr-3">
