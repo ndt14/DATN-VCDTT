@@ -59,14 +59,14 @@ const BillSuccess = () => {
           const updatedBillData: Bill = {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
-            payment_status: 2,
+            payment_status: 1,
           };
           await updateBill(updatedBillData);
         } else {
           const updatedBillData: Bill = {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
-            payment_status: 1,
+            payment_status: 0,
           };
           await updateBill(updatedBillData);
         }

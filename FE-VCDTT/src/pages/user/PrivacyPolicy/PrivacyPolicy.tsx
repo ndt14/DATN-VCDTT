@@ -1,11 +1,9 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const PrivacyPolicy = (props: Props) => {
-  return (
-    <div>PrivacyPolicy</div>
-  )
-}
+  return <div style={{ height: "200px" }}>PrivacyPolicy</div>;
+};
 
-export default PrivacyPolicy
+export default PrivacyPolicy;

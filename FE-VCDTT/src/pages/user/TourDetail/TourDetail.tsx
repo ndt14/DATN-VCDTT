@@ -10,27 +10,25 @@ import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useAddRatingMutation } from "../../../api/rating";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
-
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
   const [addRating] = useAddRatingMutation();
-  const user = JSON.parse(localStorage.getItem("user"))|| "";
+  const user = JSON.parse(localStorage.getItem("user")) || "";
   // console.log(user);
-  
+
   const userId = user?.id;
   const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
-  const purchase_history =TourHistoryData?.data?.purchase_history;
-
+  const purchase_history = TourHistoryData?.data?.purchase_history;
 
   console.log(purchase_history);
-  
+
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
   const userName = user.name;
@@ -51,9 +49,11 @@ const TourDetail = () => {
 
   //
   const { id } = useParams<{ id: string }>();
+
   const { data: tourData } = useGetTourByIdQuery(id || "");
   console.log(tourData);
-  
+
+  const tourId = id;
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
@@ -73,7 +73,6 @@ const TourDetail = () => {
   const disabledDate = (current: moment.Moment | null) => {
     return current && current < moment().startOf("day");
   };
-
 
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
 
@@ -131,69 +130,71 @@ const TourDetail = () => {
     const starIcons: JSX.Element[] = [];
     for (let i = 1; i <= 5; i++) {
       // Check if the current star should be yellow (active) or gray (inactive)
-      const starClassName = i <= rating ? 'star-icon yellow' : 'star-icon gray';
-      starIcons.push(<FontAwesomeIcon icon={faStar} className={starClassName} key={i} />);
-      
+      const starClassName = i <= rating ? "star-icon yellow" : "star-icon gray";
+      starIcons.push(
+        <FontAwesomeIcon icon={faStar} className={starClassName} key={i} />
+      );
     }
     return starIcons;
   };
 
   const [selectedStar, setSelectedStar] = useState(5);
   console.log(selectedStar);
-  
+
   const [ratingData, setRatingData] = useState({
     star: selectedStar,
     user_id: userId,
     user_name: userName,
-    content: '',
+    content: "",
     tour_id: id, // Assuming 'id' is the tour ID
   });
   // const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
-  const handleStarRatingChange = (star:number) => {
-    setSelectedStar(star)
+  const handleStarRatingChange = (star: number) => {
+    setSelectedStar(star);
     setRatingData({ ...ratingData, star });
   };
-  
 
   const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRatingData({ ...ratingData, user_name: event.target.value });
   };
 
-  const handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setRatingData({ ...ratingData, content: event.target.value });
   };
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleSubmitRating = async () => {
     if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
       try {
         const response = await addRating(ratingData);
         // Handle success, e.g., show a success message or update UI
-        console.log('Đánh giá thành công', response);
+        console.log("Đánh giá thành công", response);
         alert("đánh giá thành công");
-        navigate("/")
+        navigate("/");
       } catch (error) {
         // Handle error, e.g., show an error message
-        console.error('Đánh giá thất bại', error);
+        console.error("Đánh giá thất bại", error);
       }
     } else {
       // Handle incomplete rating data, e.g., show an error message
-      console.error('Please fill in all rating details');
+      console.error("Please fill in all rating details");
     }
   };
- 
+
   const isLoggedIn = user != "";
-  
 
   const iframeRef = useRef(null);
 
   useEffect(() => {
     if (iframeRef.current) {
-      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(exact_location)}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+        exact_location
+      )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
       iframeRef.current.src = iframeSrc;
     }
   }, [exact_location]);
 
-  
   return (
     <>
       <Loader />
@@ -322,98 +323,127 @@ const navigate = useNavigate()
                         </div> */}
                         {/* <!-- review comment html --> */}
                         <div className="comment-area">
-                          <h3 className="comment-title">Có {tourData?.data.listRatings.length} đánh giá</h3>
+                          <h3 className="comment-title">
+                            Có {tourData?.data.listRatings.length} đánh giá
+                          </h3>
                           <div className="comment-area-inner">
-                          {
-  tourData?.data.listRatings.map(({ id, user_name, content, admin_answer, star, created_at }: Rating) => {
-    // Chuyển đổi giá trị "start" thành số nguyên
-    const starRating = parseInt(star);
+                            {tourData?.data.listRatings.map(
+                              ({
+                                id,
+                                user_name,
+                                content,
+                                admin_answer,
+                                star,
+                                created_at,
+                              }: Rating) => {
+                                // Chuyển đổi giá trị "start" thành số nguyên
+                                const starRating = parseInt(star);
 
-    return (
-      <>
-        <ol key={id}>
-          <li>
-            <div className="comment-content">
-              <div className="comment-header">
-                <h5 className="author-name">{user_name}</h5>
-                <span className="post-on">{created_at}</span>
-                <div className="rating-wrap">
-                  <div className="" title={`Rated ${starRating} sao trên 5 sao tối đa`}>
-                    <span className="w-90">
-                      {renderStarRating(starRating)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <p>{content}</p>
-            </div>
-          </li>
-          {admin_answer && ( // Check if admin has responded
-            <li>
-              <ol>
-                <li>
-                  <div className="comment-content">
-                    <div className="comment-header">
-                      <h5 className="author-name">Admin</h5>
-                    </div>
-                    <p>{admin_answer}</p>
-                  </div>
-                </li>
-              </ol>
-            </li>
-          )}
-        </ol>
-      </>
-    );
-  })
-}
-
-                          
+                                return (
+                                  <>
+                                    <ol key={id}>
+                                      <li>
+                                        <div className="comment-content">
+                                          <div className="comment-header">
+                                            <h5 className="author-name">
+                                              {user_name}
+                                            </h5>
+                                            <span className="post-on">
+                                              {created_at}
+                                            </span>
+                                            <div className="rating-wrap">
+                                              <div
+                                                className=""
+                                                title={`Rated ${starRating} sao trên 5 sao tối đa`}
+                                              >
+                                                <span className="w-90">
+                                                  {renderStarRating(starRating)}
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <p>{content}</p>
+                                        </div>
+                                      </li>
+                                      {admin_answer && ( // Check if admin has responded
+                                        <li>
+                                          <ol>
+                                            <li>
+                                              <div className="comment-content">
+                                                <div className="comment-header">
+                                                  <h5 className="author-name">
+                                                    Admin
+                                                  </h5>
+                                                </div>
+                                                <p>{admin_answer}</p>
+                                              </div>
+                                            </li>
+                                          </ol>
+                                        </li>
+                                      )}
+                                    </ol>
+                                  </>
+                                );
+                              }
+                            )}
                           </div>
                           <div className="comment-form-wrap">
-        <h3 className="comment-title">Đánh giá của bạn</h3>
-       {isLoggedIn ? (
-  purchase_history && purchase_history.length > 0 && purchase_history[0].purchase_status === 5 ? (
-    <form className="comment-form">
-      <div className="full-width rate-wrap">
-        <label>Chọn sao</label>
-        <div className="">
-          <span>
-            <Rate onChange={handleStarRatingChange} value={selectedStar} />
-          </span>
-        </div>
-      </div>
-      <p>
-        <input
-          type="text"
-          name="user_name"
-          placeholder="Tên của bạn"
-          value={ratingData.user_name}
-          onChange={handleUserNameChange}
-        />
-      </p>
-      <p>
-        <textarea
-          rows={6}
-          placeholder="Đánh giá"
-          value={ratingData.content}
-          onChange={handleContentChange}
-        ></textarea>
-      </p>
-      <p>
-        <button className="btn-continue" type="button" onClick={handleSubmitRating}>
-          Gửi đánh giá
-        </button>
-      </p>
-    </form>
-  ) : (
-    <p style={{ color: "red" }}>Bạn chỉ có thể đánh giá sau khi hoàn thành tour.</p>
-  )
-) : (
-  <p style={{ color: "red" }}>Vui lòng đăng nhập và đi tour để đánh giá.</p>
-)}
-
-      </div>
+                            <h3 className="comment-title">Đánh giá của bạn</h3>
+                            {isLoggedIn ? (
+                              purchase_history &&
+                              purchase_history.length > 0 &&
+                              purchase_history[0].purchase_status === 5 ? (
+                                <form className="comment-form">
+                                  <div className="full-width rate-wrap">
+                                    <label>Chọn sao</label>
+                                    <div className="">
+                                      <span>
+                                        <Rate
+                                          onChange={handleStarRatingChange}
+                                          value={selectedStar}
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <p>
+                                    <input
+                                      type="text"
+                                      name="user_name"
+                                      placeholder="Tên của bạn"
+                                      value={ratingData.user_name}
+                                      onChange={handleUserNameChange}
+                                    />
+                                  </p>
+                                  <p>
+                                    <textarea
+                                      rows={6}
+                                      placeholder="Đánh giá"
+                                      value={ratingData.content}
+                                      onChange={handleContentChange}
+                                    ></textarea>
+                                  </p>
+                                  <p>
+                                    <button
+                                      className="btn-continue"
+                                      type="button"
+                                      onClick={handleSubmitRating}
+                                    >
+                                      Gửi đánh giá
+                                    </button>
+                                  </p>
+                                </form>
+                              ) : (
+                                <p style={{ color: "red" }}>
+                                  Bạn chỉ có thể đánh giá sau khi hoàn thành
+                                  tour.
+                                </p>
+                              )
+                            ) : (
+                              <p style={{ color: "red" }}>
+                                Vui lòng đăng nhập và đi tour để đánh giá.
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div
@@ -423,14 +453,14 @@ const navigate = useNavigate()
                         aria-labelledby="map-tab"
                       >
                         <div className="map-area">
-                        <iframe
-      ref={iframeRef}
-      width="600"
-      height="450"
-      style={{ border: 0 }}
-      loading="lazy"
-      referrerPolicy="no-referrer-when-downgrade"
-    ></iframe>
+                          <iframe
+                            ref={iframeRef}
+                            width="600"
+                            height="450"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
                         </div>
                       </div>
                     </div>
@@ -529,6 +559,7 @@ const navigate = useNavigate()
                                   tourLocation,
                                   tourPrice,
                                   tourChildPrice,
+                                  tourId,
                                 }}
                               >
                                 <input
