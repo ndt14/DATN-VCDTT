@@ -28,12 +28,20 @@ const UserApi = createApi({
                 body: user
             }),
             invalidatesTags: ['User']
+        }),
+        updatePassword: builder.mutation<User, User>({
+            query: (user) => ({
+                url: `/change-password/${user.id}`,
+                method: "PUT",
+                body: user
+            }),
+            invalidatesTags: ['User']
         })
     })
 });
 
 export const {
-    useGetUserByIdQuery,useUpdateUserMutation
+    useGetUserByIdQuery,useUpdateUserMutation, useUpdatePasswordMutation
     
  } = UserApi;
 export const userReducer = UserApi.reducer;
