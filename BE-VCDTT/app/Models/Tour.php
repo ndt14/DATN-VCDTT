@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Laravel\Scout\Searchable;
+use Laravel\Scout\Searchable;
 
 class Tour extends Model
 {
     use HasFactory;
-    // use Searchable;
+    use Searchable;
 
     protected $table = 'tours';
 
@@ -30,22 +30,38 @@ class Tour extends Model
         'status',
         'view_count'
     ];
-    // public function toSearchableArray()
-    // {
-    //     $array = $this->toArray();
+    protected $categoriesArray;
 
-    //     // Xác định các trường dữ liệu bạn muốn chỉ mục
-    //     $customData = [
-    //         'name' => $this->name,
-    //         'duration' => $this->duration,
-    //         'child_price' => $this->child_price,
-    //         'adult_price' => $this->adult_price,
-    //         // Thêm các trường dữ liệu khác mà bạn muốn tìm kiếm
-    //     ];
+    public function setCategoriesArray(array $categoriesArray)
+    {
+        $this->categoriesArray = $categoriesArray;
+    }
 
-    //     // Kết hợp các trường dữ liệu mà bạn muốn chỉ mục
-    //     $array = array_merge($array, $customData);
-
-    //     return $array;
-    // }
+    public function toSearchableArray()
+    {
+        $tour = Tour::find($this->id);
+        $data = [
+            //tour
+            'tour_id' => $tour->id,
+            'name' => $tour->name,
+            'main_img' => $tour->main_img,
+            'duration' => $tour->duration,
+            'child_price' => $tour->child_price,
+            'adult_price' => $tour->adult_price,
+            'sale_percentage' => $tour->sale_percentage,
+            'start_destination' => $tour->start_destination,
+            'end_destination' => $tour->end_destination,
+            'tourist_count' => $tour->tourist_count,
+            'details' => $tour->details,
+            'location' => $tour->location,
+            'exact_location' => $tour->exact_location,
+            'pathway' => $tour->pathway,
+            'view_count' => $tour->view_count,
+            'created_at' => time_format($tour->created_at),
+            'updated_at' => time_format($tour->updated_at),
+            //category
+            'cate_id' => $this->categoriesArray,
+        ];
+        return $data;
+    }
 }
