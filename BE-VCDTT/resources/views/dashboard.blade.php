@@ -2,33 +2,40 @@
 @section('content')
 <div class="page-body">
     <div class="container-xl">
-        <div class="row row-deck row-cards">
-            <div class="col-sm-12 col-md-8 offset-md-2 mt-4 row">
-                <div class="col"><span>Tổng tiền</span>
-                    <div class="card border-0 shadow-lg rounded-4 p-4">
-                        sdasda
+        <div class="row">
+            <div class="row col-12">
+                <div class="col">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                        <h3>Tổng tiền đã thu được ngày hôm nay</h3>
+                        {{ money_format($data['today']) }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                        <h3>Tổng số tour đã bán ngày hôm nay</h3>
+                        {{ $data['PPCount'] }}
+                    </div>
+                </div>
+            </div>
+            <div class="row col-12 mt-4">
+                <div class="col">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                        <h3>Tổng số đơn chờ duyệt</h3>
+                        {{ $data['UVCount'] }}
                 </div>
                 </div>
-                <div class="col"><span>Tổng tiền</span>
-                    <div class="card border-0 shadow-lg rounded-4 p-4">
-                        sdasda
+                <div class="col">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                        <h3>Tổng số user</h3>
+                        {{ $data['userCount'] }}
                 </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-8 offset-md-2 mt-4 row">
-                <div class="col"><span>Tổng tiền</span>
-                    <div class="card border-0 shadow-lg rounded-4 p-4">
-                        sdasda
+            <div class="col-12 mt-4">
+                <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                    <h3>Chart</h3>
+                    <div id="chart"  style="min-height: 365px;"></div>
                 </div>
-                </div>
-                <div class="col"><span>Tổng tiền</span>
-                    <div class="card border-0 shadow-lg rounded-4 p-4">
-                        sdasda
-                </div>
-                </div>
-            </div>
-            <div class="row col-sm-12 col-md-8 offset-md-2 mt-4"><span>Chart</span>
-                <div id="chart" class="card border-0 shadow-lg rounded-4" style="min-height: 365px;"></div>
             </div>
         </div>
     </div>
@@ -37,6 +44,8 @@
 @section('page_js')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
+    var jsonData = @json($data);
+    // console.log(jsonData);
     var options = {
           series: [{
           name: 'Net Profit',

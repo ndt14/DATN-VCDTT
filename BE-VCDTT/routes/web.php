@@ -137,6 +137,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
     Route::match(['GET', 'POST'], '/role/add', [RoleController::class, 'roleManagementAdd'])->name('role.add');
     Route::match(['GET', 'POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+    Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarn'])->name('dashboard');
 });
 
 
