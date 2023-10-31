@@ -2,7 +2,7 @@
     <h1 class="modal-title fs-4" id="exampleModalFullscreenMdLabel">Chi tiết hóa đơn</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<div class="row row-deck row-cards">
+<div class="modal-body row row-deck row-cards">
     <div class="col-sm-12 col-md-12 px-6">
         <div class="card-body">
             <div class="row">
