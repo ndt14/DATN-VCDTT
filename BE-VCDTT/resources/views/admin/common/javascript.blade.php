@@ -16,7 +16,7 @@
 <script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world.js') }}" defer></script>
 <script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
 <script src="{{ asset('admin/assets/libs/fslightbox/index.js') }}" defer></script>
-<script src="{{ asset('admin/assets/libs/jquery-confirm/jquery-confirm.min.js')}}"></script>
+<script src="{{ asset('admin/assets/libs/jquery-confirm/jquery-confirm.min.js') }}"></script>
 <!-- JS -->
 <script type="text/javascript">
     Bs5Utils.defaults.toasts.position = 'top-center';
@@ -25,13 +25,13 @@
     const bs5Utils = new Bs5Utils();
     axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     let updateUrlParameter = function(key, value, uri) {
-        if(!uri){
+        if (!uri) {
             uri = window.location.href;
         }
         value = encodeURIComponent(value);
         // remove the hash part before operating on the uri
         let i = uri.indexOf('#');
-        let hash = i === -1 ? ''  : uri.substr(i);
+        let hash = i === -1 ? '' : uri.substr(i);
         uri = i === -1 ? uri : uri.substr(0, i);
 
         let re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
@@ -51,10 +51,10 @@
         return uri + hash;
     };
     let theme = localStorage.getItem('tablerTheme') ? localStorage.getItem('tablerTheme') : 'light';
-    $(document).ready(function () {
-    $('body').attr('data-bs-theme', theme);
-        if($('#rpp').length){
-            $('#rpp').change(function(){
+    $(document).ready(function() {
+        $('body').attr('data-bs-theme', theme);
+        if ($('#rpp').length) {
+            $('#rpp').change(function() {
                 let objectClicked = $(this);
                 let rppValue = objectClicked.val();
                 let currentUrl = document.location.href;
@@ -63,4 +63,15 @@
             });
         }
     });
+    let viewPurchaseHistoryDetail = function(id) {
+        axios.get(`/purchase-history/detail/${id}`)
+            .then(function(response) {
+                $('#modalContainer div.modal-content').html(response.data.html);
+                modalContainer.show();
+            })
+            .catch(function(error) {
+                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            })
+            .finally(function() {});
+    };
 </script>

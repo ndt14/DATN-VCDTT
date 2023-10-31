@@ -2,7 +2,7 @@ import React from "react";
 import "./UserProfile.css";
 import { Tabs } from "antd";
 import { useState, useEffect } from "react";
-import { useUpdateUserMutation, useGetUserByIdQuery } from "../../../api/user";
+import { useUpdateUserMutation, useGetUserByIdQuery, useUpdatePasswordMutation } from "../../../api/user";
 import { User } from "../../../interfaces/User";
 import { Link } from "react-router-dom";
 import { log } from "console";
@@ -20,6 +20,7 @@ const UserProfile = () => {
 
   const { TabPane } = Tabs;
   const [editUser] = useUpdateUserMutation();
+  const [updatePassword] = useUpdatePasswordMutation();
 
   const [formValues, setFormValues] = useState({
     id: userId ? userId : "",
@@ -59,6 +60,51 @@ const UserProfile = () => {
         console.error(error);
       });
   };
+
+  const [passwordFormValues, setPasswordFormValues] = useState({
+    old_password: "",
+    new_password: "",
+    confirmNewPassword: "",
+});
+const handlePasswordInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = event.target;
+  setPasswordFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+  }));
+};
+const handlePasswordChange = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  
+  // Kiểm tra xác nhận mật khẩu mới trùng khớp
+  if (passwordFormValues.new_password !== passwordFormValues.confirmNewPassword) {
+      alert("Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp.");
+      return;
+  }
+  
+  const updatedPassword = {
+      id: userId || "",
+      old_password: passwordFormValues.old_password,
+      new_password: passwordFormValues.new_password,
+  };
+
+  updatePassword(updatedPassword)
+      .then((response) => {
+          alert(response?.data?.message);
+          console.log(response);
+          
+          // Xóa các trường mật khẩu sau khi thay đổi thành công
+          setPasswordFormValues({
+              old_password: "",
+              new_password: "",
+              confirmNewPassword: "",
+          });
+      })
+      .catch((error) => {
+          console.error(error);
+      });
+};
+
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -188,9 +234,44 @@ const UserProfile = () => {
                   </button>
                 </form>
               </TabPane>
-              {/* <TabPane tab="Thay đổi mật khẩu" key="3">
-
-              </TabPane> */}
+              <TabPane tab="Thay đổi mật khẩu" key="3">
+              <form onSubmit={handlePasswordChange}>
+        <div className="form-group">
+            <label className="d-inline-flex">
+                Mật khẩu cũ <div className=" ml-1 text-danger">*</div>
+            </label>
+            <input
+                type="password"
+                name="old_password"
+                value={passwordFormValues.oldPassword}
+                onChange={handlePasswordInputChange}
+            />
+        </div>
+        <div className="form-group">
+            <label className="d-inline-flex">
+                Mật khẩu mới <div className=" ml-1 text-danger">*</div>
+            </label>
+            <input
+                type="password"
+                name="new_password"
+                value={passwordFormValues.newPassword}
+                onChange={handlePasswordInputChange}
+            />
+        </div>
+        <div className="form-group">
+            <label className="d-inline-flex">
+                Xác nhận mật khẩu mới <div className=" ml-1 text-danger">*</div>
+            </label>
+            <input
+                type="password"
+                name="confirmNewPassword"
+                value={passwordFormValues.confirmNewPassword}
+                onChange={handlePasswordInputChange}
+            />
+        </div>
+        <button type="submit" className="btn-continue">Đổi mật khẩu</button>
+    </form>
+              </TabPane>
             </Tabs>
           </div>
         </div>

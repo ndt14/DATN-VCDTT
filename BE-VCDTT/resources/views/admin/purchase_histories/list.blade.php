@@ -108,7 +108,7 @@
                                             <tr>
                                                 <td><span class="text-muted">{{ $item['id'] }}</span></td>
                                                 <td>
-                                                    <a href="javascript: viewDetail({{ $item['id'] }});"
+                                                    <a href="javascript: viewPurchaseHistoryDetail({{ $item['id'] }});"
                                                         title="Show Detail">{{ $item['name'] }}</a>
                                                 </td>
                                                 <td class="text-wrap text-break">
@@ -261,19 +261,6 @@
                 backdrop: 'static'
             });
         });
-
-        let viewDetail = function(id) {
-            axios.get(`/purchase-history/detail/${id}`)
-                .then(function(response) {
-                    $('#modalContainer div.modal-content').html(response.data.html);
-                    modalContainer.show();
-                })
-                .catch(function(error) {
-                    bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-                })
-                .finally(function() {});
-        };
-
         let removeItem = function(id) {
             $.confirm({
                 theme: theme,

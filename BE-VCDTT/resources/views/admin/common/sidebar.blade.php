@@ -15,7 +15,7 @@
 
 
         <li class="nav-item py-lg-2">
-          <a class="nav-link" href="http://datn-vcdtt.test">
+          <a class="nav-link" href="{{ route('dashboard') }}">
             <span class="me-1 d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -179,7 +179,6 @@
                     Cấp quyền sử dụng
                   </a>
               </div>
-            </div>
           </div>
         </li>
       </ul>
