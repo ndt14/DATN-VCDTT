@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Models\Allocation;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +89,7 @@ Route::middleware(['auth','check.admin'])->group(function() {
         // Route::match(['GET','POST'],'/role/add',[RoleController::class,'roleManagementAdd'])->name('role.add');
         // Route::match(['GET','POST'],'/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
 
-        Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
+Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
 Route::match(['GET','POST'],'/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
 Route::match(['GET','POST'],'/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
 Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail');
@@ -103,7 +104,8 @@ Route::match(['GET','POST'],'/faq/add', [FAQController::class,'faqManagementAdd'
 Route::match(['GET','POST'],'/faq/edit/{id}', [FAQController::class,'faqManagementEdit'])->name('faq.edit');
 Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
 
-Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');
+// Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');// route của đạt sửa lại đang sai. Sao list lại có id
+Route::get('/rating', [RatingController::class, 'ratingManagementList'])->name('rating.list');// Mình sửa lại
 Route::get('/rating/add', [RatingController::class,'ratingManagementAdd'])->name('rating.add');
 Route::get('/rating/edit/{id}', [RatingController::class,'ratingManagementEdit'])->name('rating.edit');
 Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail');
@@ -133,9 +135,17 @@ Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 
 
 Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class,'markAsRead'])->name('mark-as-read');
 
-        Route::get('/allocation', [AllocationController::class,'allocationManagementList'])->name('allocation.list');
 
+Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
+Route::match(['GET', 'POST'], '/role/add', [RoleController::class, 'roleManagementAdd'])->name('role.add');
+Route::match(['GET','POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+Route::get('/allocation', [AllocationController::class,'allocationManagementList'])->name('allocation.list');
+Route::match(['GET','POST'], '/allocation/add', [AllocationController::class, 'allocationManagementAdd'])->name('allocation.add');
+Route::match(['GET','POST'], '/allocation/edit/{user_id}', [AllocationController::class, 'allocationManagementEdit'])->name('allocation.edit');
+Route::get('/allocation/delete', [AllocationController::class, 'delete_one_user_role'])->name('allocation.delete.one');
 });
+
+
 
 
 

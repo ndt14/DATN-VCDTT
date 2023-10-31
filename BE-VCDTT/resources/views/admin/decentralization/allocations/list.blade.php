@@ -24,8 +24,17 @@
                 </div> -->
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                       
-                        <a href="{{ url('/role/add') }}" class="btn btn-primary d-sm-none btn-icon">
+                        <a href="{{ route('allocation.add') }}" class="btn btn-primary d-none d-sm-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Cấp mới
+                        </a>
+                        <a href="{{ url('/allocation/add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -86,7 +95,63 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
+                                   @if (!empty($data))
+                                    @foreach ($data as $data)
+                                        <tr>
+                                            <td><span class="text-muted">{{ $data->id }}</span></td>
+                                            <td>
+                                            <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->name, 70) }}</a>
+                                            </td>
+                                            <td>
+                                                {{ string_truncate($data->email, 70) }}
+                                            </td>
+                                            <td>
+                                                @foreach($data->roles as $role)
+                                                <span class="text-white bg-success nameRole" style="position: relative;border-radius: 1px;padding: 13px 10px;" data-bs-toggle="tooltip" title="Click vào x để xóa vai trò này"><i class="fa-solid fa-x" style="
+                                                    position: absolute;
+                                                    top: 0;
+                                                    right: 0;
+                                                    padding: 0px 3px;
+                                                    border: 1px solid red;
+                                                    color: red;" data-id="{{$role->id.'-'.$data->id}}"></i> {{$role->name}}</span>
+                                                @endforeach
+                                                
+                                            </td>
+                                            <td>
+                                                {{ time_format($data->created_at) }}
+                                            </td>
+                                            <td>
+                                                {{ time_format($data->updated_at) }}
+                                            </td>
+                                            <td class="text-end">
+                                                <a class="btn btn-icon btn-outline-green" href="{{ route('allocation.edit', ['user_id' => $data->id]) }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                    <path d="M16 5l3 3"></path>
+                                                    </svg>
+                                                </a>
+                                                <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M4 7l16 0"></path>
+                                                    <path d="M10 11l0 6"></path>
+                                                    <path d="M14 11l0 6"></path>
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                    </svg>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="9">
+                                            <div>Không có dữ liệu</div>
+                                        </td>
+                                    </tr>
+                                @endif
                                 </tbody>
                             </table>
                         </div>
@@ -176,7 +241,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/faq-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/allocation-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();
@@ -188,5 +253,30 @@
             }
         });
     };
+    </script>
+
+    <script>
+        var nameRoles = document.querySelectorAll(".nameRole i");
+        nameRoles.forEach(item => {
+            item.addEventListener("click", () => {
+            var strId = item.dataset.id;
+            var arrayId = strId.split("-");
+            var data = {};
+            data.idRole = arrayId[0];
+            data.idUser = arrayId[1];
+            
+            $.ajax({
+                        type: "GET",
+                        url: "{{ route('allocation.delete.one') }}",
+                        data: data,
+                        success: function(res) {
+                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2000);
+                        }
+                    });
+            });
+        });
     </script>
 @endSection

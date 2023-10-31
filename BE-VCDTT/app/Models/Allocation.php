@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 
-class Role extends Model
+class Allocation extends Model
 {
     use HasFactory, HasRoles;
-    protected $table = 'roles';
-    protected $fillable = ['id','name','guard_name'];
+
 }

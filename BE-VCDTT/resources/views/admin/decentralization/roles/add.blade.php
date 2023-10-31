@@ -57,7 +57,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-            <form id="frmAdd" class="card" action="" method="POST">
+            <form id="frmAdd" class="card" action="{{route('role.add')}}" method="POST">
             <div class="card-header">
                 <h2 class="card-title">
                     Vai trò - Quyền
@@ -77,7 +77,8 @@
                         </div>
                         <div class="mb-3 col-12">
                             <label class="form-label">Mô tả</label>
-                            <input type="text" name="guard_name" class="form-control" placeholder="Không bắt buộc" value="" >
+                            <input type="text" name="desc_role" class="form-control" placeholder="Không bắt buộc" value="" >
+                            <input type="hidden" name="guard_name" value="web">
                         </div>
                        
                     </div>
@@ -108,10 +109,10 @@
                                     <tbody>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý tour</td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="access tour"></td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền thêm mới tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="add tour"></td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền sửa tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="edit tour"></td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền xóa tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="delete tour"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="4"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền thêm mới tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="1"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền sửa tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="2"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền xóa tour" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="3"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8" >|-- Thêm mới tour</td>
@@ -126,9 +127,9 @@
                                         </tr>
                                          <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý đánh giá tour</td>
-                                            <td colspan="3"><input class="form-check-input m-0 align-middle" name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục đánh giá" type="checkbox" aria-label="Select all invoices" value="access review"></td>
-                                            <td><input class="form-check-input m-0 align-middle" name="permission[]" data-bs-toggle="tooltip" title="Quyền xóa đánh giá" type="checkbox" aria-label="Select all invoices" value="delete review"></td>
-                                            <td><input class="form-check-input m-0 align-middle" name="permission[]" type="checkbox" data-bs-toggle="tooltip" title="Quyền trả lời đánh giá" aria-label="Select all invoices" value="reply review"></td>
+                                            <td colspan="3"><input class="form-check-input m-0 align-middle" name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục đánh giá" type="checkbox" aria-label="Select all invoices" value="30"></td>
+                                            <td><input class="form-check-input m-0 align-middle" name="permission[]" data-bs-toggle="tooltip" title="Quyền xóa đánh giá" type="checkbox" aria-label="Select all invoices" value="29"></td>
+                                            <td><input class="form-check-input m-0 align-middle" name="permission[]" type="checkbox" data-bs-toggle="tooltip" title="Quyền trả lời đánh giá" aria-label="Select all invoices" value="28"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Trả lời đánh giá</td>
@@ -138,10 +139,10 @@
                                         </tr>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý bài viết</td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục bài viết" type="checkbox" aria-label="Select all invoices" value="access post"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm bài viết" type="checkbox" aria-label="Select all invoices" value="add post"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền sửa bài viết" type="checkbox" aria-label="Select all invoices" value="edit post"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền xóa bài viết" type="checkbox" aria-label="Select all invoices" value="delete post"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục bài viết" type="checkbox" aria-label="Select all invoices" value="27"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm bài viết" type="checkbox" aria-label="Select all invoices" value="24"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền sửa bài viết" type="checkbox" aria-label="Select all invoices" value="25"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền xóa bài viết" type="checkbox" aria-label="Select all invoices" value="26"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Thêm mới bài viết</td>
@@ -156,10 +157,10 @@
 
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý faq</td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục faq" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"  value="access faq"></td>
-                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền thêm mới faq" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="add faq"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle"  data-bs-toggle="tooltip" title="Quyền sửa faq" type="checkbox" aria-label="Select all invoices" value="edit faq"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox"  data-bs-toggle="tooltip" title="Quyền xóa faq" aria-label="Select all invoices" value="delete faq"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền truy cập mục faq" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"  value="23"></td>
+                                            <td><input name="permission[]" data-bs-toggle="tooltip" title="Quyền thêm mới faq" class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices" value="20"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle"  data-bs-toggle="tooltip" title="Quyền sửa faq" type="checkbox" aria-label="Select all invoices" value="21"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox"  data-bs-toggle="tooltip" title="Quyền xóa faq" aria-label="Select all invoices" value="22"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Thêm mới faq</td>
@@ -173,10 +174,10 @@
                                         </tr>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý danh mục</td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle"  data-bs-toggle="tooltip" title="Quyền truy cập mục danh mục" type="checkbox" aria-label="Select all invoices" value="access category"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm danh mục" type="checkbox" aria-label="Select all invoices" value="add category"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa danh mục" aria-label="Select all invoices" value="edit category"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa danh mục" aria-label="Select all invoices" value="delete category"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle"  data-bs-toggle="tooltip" title="Quyền truy cập mục danh mục" type="checkbox" aria-label="Select all invoices" value="11"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm danh mục" type="checkbox" aria-label="Select all invoices" value="8"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa danh mục" aria-label="Select all invoices" value="9"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa danh mục" aria-label="Select all invoices" value="10"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Thêm mới danh mục</td>
@@ -189,9 +190,9 @@
                                         </tr>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý hóa đơn</td>
-                                            <td colspan="2"><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục hóa đơn" type="checkbox" aria-label="Select all invoices" value="access bill"></td> 
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa hóa đơn" aria-label="Select all invoices" value="edit bill"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa hóa đơn" aria-label="Select all invoices" value="delete bill"></td>
+                                            <td colspan="2"><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục hóa đơn" type="checkbox" aria-label="Select all invoices" value="7"></td> 
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa hóa đơn" aria-label="Select all invoices" value="5"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa hóa đơn" aria-label="Select all invoices" value="6"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Chỉnh sửa hóa đơn</td>
@@ -201,10 +202,10 @@
                                         </tr>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý mã giảm giá</td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục mã giảm giá" type="checkbox" aria-label="Select all invoices" value="access discount"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm mã giảm giá" type="checkbox" aria-label="Select all invoices" value="add discount"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa mã giảm giá" aria-label="Select all invoices" value="edit discount"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa mã giảm giá" aria-label="Select all invoices" value="delete discount"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục mã giảm giá" type="checkbox" aria-label="Select all invoices" value="15"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm mã giảm giá" type="checkbox" aria-label="Select all invoices" value="12"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa mã giảm giá" aria-label="Select all invoices" value="13"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa mã giảm giá" aria-label="Select all invoices" value="14"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Thêm mới mã giảm giá</td>
@@ -218,10 +219,10 @@
                                         </tr>
                                         <tr style="border-bottom: 1px solid #0D6EFD;">
                                             <td class="text-black" style="font-weight: 500;">Quản lý tài khoản</td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục tài khoản" type="checkbox" aria-label="Select all invoices" value="access account"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm tài khoản" type="checkbox" aria-label="Select all invoices" value="add discount"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa tài khoản" aria-label="Select all invoices" value="edit discount"></td>
-                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa tài khoản" aria-label="Select all invoices" value="delete discount"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền truy cập mục tài khoản" type="checkbox" aria-label="Select all invoices" value="19"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" data-bs-toggle="tooltip" title="Quyền thêm tài khoản" type="checkbox" aria-label="Select all invoices" value="16"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền sửa tài khoản" aria-label="Select all invoices" value="17"></td>
+                                            <td><input name="permission[]" class="form-check-input m-0 align-middle" type="checkbox" data-bs-toggle="tooltip" title="Quyền xóa tài khoản" aria-label="Select all invoices" value="18"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">|-- Thêm mới tài khoản</td>
@@ -236,8 +237,12 @@
                                     </tbody>
                                   </table>
                                 </div>
-                                
                               </div>
+                              <span class="text-danger d-flex justify-content-start">
+                                @error('permission')
+                                    {{ $message }}
+                                @enderror
+                            </span>
                         </div>
                     </div>
                     

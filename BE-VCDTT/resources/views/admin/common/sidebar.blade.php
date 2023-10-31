@@ -53,7 +53,7 @@
               <a class="nav-link" href="{{route('tour.list')}}">
                 Nội dung
               </a>
-              <a class="nav-link" href="{{route('all.rating.list')}}" target="_blank" rel="noopener">
+              <a class="nav-link" href="{{route('rating.list')}}" target="_blank" rel="noopener">
                 Quản lý tất đánh giá
               </a>
               </div>

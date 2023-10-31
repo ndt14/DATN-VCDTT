@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\AllocationController;
 use App\Http\Controllers\Api\TourToCategoryController;
 use App\Http\Controllers\Api\WishListController;
 
@@ -118,3 +120,5 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
 
+Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.delete');
+Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy'])->name('allocation.delete');

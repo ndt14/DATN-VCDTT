@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleRequest extends FormRequest
+class AllocationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,24 +21,23 @@ class RoleRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $rule = [];
         $currentAction = $this->route()->getActionMethod();
 
         switch ($this->method()):
             case 'POST':
                 switch ($currentAction):
-                    case 'roleManagementAdd':
+                    case 'allocationManagementAdd':
                         $rule =  [
-                            'name' => 'required|unique:roles',
-                            'permission' => 'required'
+                            'user' => 'required',
+                            'role' => 'required'
                         ];
                         break;
 
-                    case 'roleManagementEdit':
+                    case 'allocationManagementEdit':
                         $rule =  [
-                            'name' => 'required',
-                            'permission' => 'required'
+                            'user' => 'required',
+                            'role' => 'required'
                         ];
                         
                         break;
@@ -46,15 +45,13 @@ class RoleRequest extends FormRequest
                 break;
         endswitch;
         return $rule;
-        
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Không được bỏ trống tên vai trò',
-            'name.unique' => 'Tên vai trò này đã tồn tại',
-            'permission.required' => 'Hãy lựa chọn quyền ứng với vai trò'
+            'user.required' => 'Vui lòng chọn user muốn cấp quyền',
+            'role.required' => 'Vui lòng chọn vai trò cho user' 
         ];
     }
 }
