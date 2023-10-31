@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useGetBillByIdQuery, useUpdateBillMutation } from "../../../api/bill";
 import { useState, useEffect } from "react";
 import { Bill } from "../../../interfaces/Bill";
 import { MouseEventHandler } from "react";
+import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const BillSuccess = () => {
   const url = new URL(window.location.href);
@@ -79,6 +82,53 @@ const BillSuccess = () => {
   }, []);
 
   const navigate = useNavigate();
+  const [isPrinting, setIsPrinting] = useState(false);
+
+
+
+  const handlePrintPDF = () => {
+    setIsPrinting(true);
+
+    // // Wait for the next render cycle to ensure the HTML is updated
+    // setTimeout(async () => {
+    //   try {
+    //     const pdfElement = document.getElementById('your-element-id'); // Replace 'your-element-id' with the ID of the element containing the content you want to convert to PDF
+    //     const canvas = await html2canvas(pdfElement);
+    //     const pdf = new jsPDF();
+    //     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    //     pdf.save('payment_receipt.pdf');
+    //   } catch (error) {
+    //     console.error('Error generating PDF:', error);
+    //   } finally {
+    //     setIsPrinting(true);
+    //   }
+    // });
+  };
+  const apiData = {
+    paymentStatus: "Thanh toán thành công",
+    userName: userName,
+    userEmail: userEmail,
+    phoneNumber: phoneNumber,
+    transactionId: transactionId,
+    imageSrc: "../../../../assets/images/VCDTT_logo-removebg-preview.png",
+    tourName: billData?.data.purchase_history.tour_name,
+    adultCount: billData?.data.purchase_history.adult_count,
+    tourAdultPrice: billData?.data.purchase_history.tour_adult_price,
+    totalAdultPrice: totalAdultPrice,
+    childCount: billData?.data.purchase_history.child_count,
+    tourChildPrice: billData?.data.purchase_history.tour_child_price,
+    totalChildPrice: totalChildPrice,
+    totalPrice: totalPrice,
+    couponPercentage: billData?.data.purchase_history.coupon_percentage,
+    couponFixed: billData?.data.purchase_history.coupon_fixed,
+    formattedFinalPrice: formattedFinalPrice,
+    titles:"Thông tin mua hàng",
+    fullName: "Ho và tên:",
+    email: "Email:",
+    phone:"Số điện thoại:"
+  };
+
+
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -93,6 +143,9 @@ const BillSuccess = () => {
         <div className="inner-shape"></div>
       </section>
       <div className="container">
+
+    
+
         {transactionStatus === "00" ? (
           <div>
             <h2 className="text-success">Thanh toán thành công</h2>
@@ -184,9 +237,17 @@ const BillSuccess = () => {
                 </div>
               </div>
             </div>
-            <button className="button">
+            <button className="button ">
               <Link to={"/"}>Trở về trang chủ</Link>
             </button>
+            <button className="button" onClick={handlePrintPDF}>
+          In đơn hàng của bạn
+          </button>
+        {isPrinting && (
+          <div id="your-element-id">
+            <PDFDocument data={apiData} />
+          </div>
+        )}
             {/* <button onClick={handleSubmit}>Cập nhật</button> */}
           </div>
         ) : (
