@@ -40,6 +40,26 @@ class Tour extends Model
     public function toSearchableArray()
     {
         $tour = Tour::find($this->id);
+        $categories = new Category();
+        $categoriesParent = Category::whereIn('id', $this->categoriesArray)->get();
+        foreach($categoriesParent as $parent){
+            $parent->child = $categories->getCategoriesChild($parent->id)->toArray();
+        }
+        $array = $categoriesParent->toArray();
+        
+        $newArray = [];
+        foreach ($array as $item) {
+            $newChild = [];
+            foreach ($item['child'] as $child) {
+                $newChild[] = [
+                    'id' => $child['id'],
+                    'name' => $child['name']
+                ];
+            }
+            $newArray[$item['name']] = [
+                'child' => $newChild
+            ];
+        }
         $data = [
             //tour
             'tour_id' => $tour->id,
@@ -60,7 +80,7 @@ class Tour extends Model
             'created_at' => time_format($tour->created_at),
             'updated_at' => time_format($tour->updated_at),
             //category
-            'cate_id' => $this->categoriesArray,
+            'cate_id' => $newArray,
         ];
         return $data;
     }
