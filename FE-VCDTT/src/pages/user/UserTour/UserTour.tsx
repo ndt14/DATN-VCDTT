@@ -174,7 +174,7 @@ const UserTour = () => {
                 };
                 let tourStatus;
                 if (purchase_status === 0) {
-                  tourStatus = "Cần thanh toán";
+                  tourStatus = "Chờ thanh toán";
                 } else if (purchase_status === 1) {
                   tourStatus = "Đang đợi Admin xác nhận";
                 } else if (purchase_status === 2) {

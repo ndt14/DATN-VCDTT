@@ -20,6 +20,10 @@ const UserApi = createApi({
             query: (id) => `/user-show/${id}`,
             providesTags: ['User']
         }),
+        getTourFavoriteById: builder.query<User, number | string>({
+            query: (id) => `/wish-list/${id}`,
+            providesTags: ['User']
+        }),
         
         updateUser: builder.mutation<User, User>({
             query: (user) => ({
@@ -41,7 +45,7 @@ const UserApi = createApi({
 });
 
 export const {
-    useGetUserByIdQuery,useUpdateUserMutation, useUpdatePasswordMutation
+    useGetUserByIdQuery,useUpdateUserMutation, useUpdatePasswordMutation, useGetTourFavoriteByIdQuery
     
  } = UserApi;
 export const userReducer = UserApi.reducer;
