@@ -335,8 +335,6 @@ class TourController extends Controller
 
     public function tourManagementAdd(TourRequest $request)
     {
-        $categories = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category')['data']['categoriesParent'];
-        // dd($data);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token');
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
@@ -346,14 +344,13 @@ class TourController extends Controller
                 return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
             }
         }
-        return view('admin.tours.add', compact('categories'));
+        return view('admin.tours.add');
     }
 
 
     public function tourManagementEdit(TourRequest $request, $id)
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)['data'];
-        $categories = $response['categories'];
         $tour = $tourObject = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
         $cateIds = [];
@@ -371,7 +368,7 @@ class TourController extends Controller
             }
         }
 
-        return view('admin.tours.edit', compact('tour', 'categories', 'cateIds'));
+        return view('admin.tours.edit', compact('tour', 'cateIds'));
     }
 
     public function tourManagementDetail(Request $request)
