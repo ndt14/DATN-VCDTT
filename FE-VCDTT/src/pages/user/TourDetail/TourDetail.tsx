@@ -53,7 +53,9 @@ const TourDetail = () => {
   const { data: tourData } = useGetTourByIdQuery(id || "");
   console.log(tourData);
 
-  const tourId = id;
+  const tourId = parseInt(id);
+  console.log(typeof(tourId));
+  
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
@@ -132,6 +134,7 @@ const TourDetail = () => {
       // Check if the current star should be yellow (active) or gray (inactive)
       const starClassName = i <= rating ? "star-icon yellow" : "star-icon gray";
       starIcons.push(
+        
         <FontAwesomeIcon icon={faStar} className={starClassName} key={i} />
       );
     }
@@ -181,6 +184,21 @@ const TourDetail = () => {
       console.error("Please fill in all rating details");
     }
   };
+
+  // Calculate the average rating from the list of ratings
+const calculateAverageRating = () => {
+  let totalRating = 0;
+  if (tourData?.data?.listRatings) {
+    tourData.data.listRatings.forEach((rating) => {
+      totalRating += parseInt(rating.star);
+    });
+    return totalRating / tourData.data.listRatings.length;
+  }
+  return 0; // Default to 0 if there are no ratings
+};
+
+const averageRating = calculateAverageRating();
+
 
   const isLoggedIn = user != "";
 
@@ -475,10 +493,14 @@ const TourDetail = () => {
                       <span> {formattedTourPrice} </span>
                     </h5>
                     <div className="start-wrap">
-                      <div className="rating-start" title="Rated 5 out of 5">
-                        <span className="w-60"></span>
-                      </div>
-                    </div>
+  <div className="" title={`Rated ${averageRating} out of 5`}>
+
+    <span className="w-90">
+    <Rate allowHalf disabled value={averageRating} />
+      </span>
+  </div>
+</div>
+
                   </div>
                   <div className="widget-bg booking-form-wrap">
                     <h4 className="bg-title">Thông tin đặt tour</h4>
@@ -560,6 +582,7 @@ const TourDetail = () => {
                                   tourPrice,
                                   tourChildPrice,
                                   tourId,
+                                  exact_location
                                 }}
                               >
                                 <input

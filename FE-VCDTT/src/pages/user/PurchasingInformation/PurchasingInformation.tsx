@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect, FormEvent } from "react";
+import React, { useState, ChangeEvent, useEffect, FormEvent, useRef } from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
@@ -44,6 +44,7 @@ const PurchasingInformation = (props: Props) => {
     tourPrice,
     tourChildPrice,
     tourId,
+    exact_location
   } = location.state;
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -208,9 +209,9 @@ const PurchasingInformation = (props: Props) => {
         alert("Đặt tour thành công");
         const billID = response?.data?.data?.purchase_history.id;
         console.log(billID);
-        // localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-        // const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-        // window.location.href = VnpayURL;
+        localStorage.setItem("billIdSuccess", JSON.stringify(billID));
+        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        window.location.href = VnpayURL;
       })
       .catch((error) => {
         // Handle any errors here
@@ -228,6 +229,18 @@ const PurchasingInformation = (props: Props) => {
     style: "currency",
     currency: "VND",
   }).format(childPrice);
+
+  const iframeRef = useRef(null);
+
+  useEffect(() => {
+    if (iframeRef.current) {
+      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+        exact_location
+      )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+      iframeRef.current.src = iframeSrc;
+    }
+  }, [exact_location]);
+
   return (
     <>
       <main id="content" className="site-main">
@@ -374,13 +387,13 @@ const PurchasingInformation = (props: Props) => {
 
                     <h3>Thông tin địa điểm</h3>
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.0877378831387!2d105.77566300940596!3d21.069157686311605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134552c4daa2e41%3A0xc52e6ea7f463d8a0!2zNDk1IMSQLiBD4buVIE5odeG6vywgQ-G7lSBOaHXhur8sIFThu6sgTGnDqm0sIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1695805354232!5m2!1svi!2s"
-                      width="600"
-                      height="450"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
+                            ref={iframeRef}
+                            width="600"
+                            height="450"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
@@ -552,6 +565,7 @@ const PurchasingInformation = (props: Props) => {
                               <button type="submit" className="btn btn-primary">
                                 Xác nhận thanh toán
                               </button>
+                              
                             </form>
                           </div>
                           <div className="modal-footer">

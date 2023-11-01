@@ -30,21 +30,21 @@ table thead tr{
     border-color: white;
 }
 .star-icon.yellow {
-    color: yellow !important;
+    color: #FADB14 !important;
   }
   .star-icon.gray {
-    color: gray !important;
+    color: #F8F8F8 !important;
   }
   /* Style for the star icons */
 .star-icon {
     font-size: 20px; /* Adjust the size as needed */
-    color: #ccc; /* Color of inactive stars */
+    color: #F8F8F8; /* Color of inactive stars */
   
     /* Add additional styles like margin, padding, etc., to adjust the spacing between stars */
   }
   
   .star-active {
-    color: #fdd835; /* Color of active stars (yellow) */
+    color: #FADB14; /* Color of active stars (yellow) */
     cursor: pointer; /* Change cursor to a pointer on hover for interaction */
   }
   
@@ -52,7 +52,7 @@ table thead tr{
   
   /* Optional: Add hover effect for star icons */
   .star-icon:hover {
-    color: #fdd835; /* Change color when hovering over the stars */
+    color: #FADB14; /* Change color when hovering over the stars */
   }
   
 
