@@ -225,6 +225,13 @@ class PermissionSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+            30 => [
+                'id' => 31,
+                'name' => 'admin',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
             
         ];
 

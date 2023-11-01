@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -59,6 +60,17 @@ class RoleController extends Controller
           if($role) {
             $role = Role::find($id);
             $role->syncPermissions($data['permission']);
+            $user = DB::table('model_has_roles')->where('role_id', $id)->select('model_id')->get()->pluck('model_id')->toArray();
+           
+            if(!empty($user)) {
+
+              foreach($user as $user_id) {
+
+                $user_item = User::find($user_id);
+                $user_item->syncPermissions($data['permission']);
+              }
+            }
+            
             $role->save();
             return redirect()->route('role.edit',['id' => $id])->with('success', 'Cập nhật vai trò thành công');
           }

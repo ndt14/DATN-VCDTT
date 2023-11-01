@@ -119,10 +119,18 @@
                         aria-label="Open user menu" aria-expanded="false">
                         <span class="avatar avatar-sm"
                             style="background-image: url({{ asset('images/admin.jpg') }});"></span>
+                        @if(auth()->user()->is_admin == 1)
                         <div class="d-none d-xl-block ps-2">
                             <div>Nhóm VCDTT</div>
                             <div class="mt-1 small text-secondary">6 anh em</div>
                         </div>
+                        @else
+                        <div class="d-none d-xl-block ps-2 pl-1">
+                            <div>{{auth()->user()->name}}</div>
+                        </div>
+                        
+                        @endif
+
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <a href="#" class="dropdown-item">Status</a>
