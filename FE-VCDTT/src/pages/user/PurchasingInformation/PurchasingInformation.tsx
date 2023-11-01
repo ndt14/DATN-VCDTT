@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, useEffect, FormEvent, useRef } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  useEffect,
+  FormEvent,
+  useRef,
+} from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
@@ -7,8 +13,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { log } from "console";
+import { Link } from "react-router-dom";
 
-type Props = {};
+// type Props = {};
 
 const PurchasingInformation = (props: Props) => {
   //validate
@@ -20,6 +27,15 @@ const PurchasingInformation = (props: Props) => {
     honorific: string;
     address: string;
   }
+
+  //
+  const [isChecked, setIsChecked] = useState(false);
+  console.log(isChecked);
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(e.target.checked);
+  };
+  //
 
   useEffect(() => {
     formik.validateForm();
@@ -44,7 +60,7 @@ const PurchasingInformation = (props: Props) => {
     tourPrice,
     tourChildPrice,
     tourId,
-    exact_location
+    exact_location,
   } = location.state;
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -229,6 +245,10 @@ const PurchasingInformation = (props: Props) => {
     style: "currency",
     currency: "VND",
   }).format(childPrice);
+  const formattedFixedPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(couponData.fixed);
 
   const iframeRef = useRef(null);
 
@@ -387,13 +407,13 @@ const PurchasingInformation = (props: Props) => {
 
                     <h3>Thông tin địa điểm</h3>
                     <iframe
-                            ref={iframeRef}
-                            width="600"
-                            height="450"
-                            style={{ border: 0 }}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          ></iframe>
+                      ref={iframeRef}
+                      width="600"
+                      height="450"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
@@ -408,13 +428,34 @@ const PurchasingInformation = (props: Props) => {
                       <div className="col-sm-6">
                         <p>Trẻ em({productChildNumber}x)</p>
                         <p>Người lớn({productNumber}x)</p>
+                        {formattedFinalPrice !== formattedResultPrice ? (
+                          <p>Coupon giảm giá: </p>
+                        ) : (
+                          <span></span>
+                        )}
                       </div>
 
                       <div className="col-sm-6">
                         <p> {formattedTourChildPrice}</p>
                         <p>{formattedTourPrice}</p>
+                        {formattedFinalPrice !== formattedResultPrice ? (
+                          <div>
+                            {couponData.percentage != null ? (
+                              <div>
+                                <p>Giảm {couponData.percentage}%</p>
+                              </div>
+                            ) : (
+                              <p>Giảm giá: {formattedFixedPrice}</p>
+                            )}
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+                        <div></div>
                       </div>
-                      {userLogIn == "true" ? (
+
+                      {userLogIn == "true" &&
+                      formattedFinalPrice !== formattedResultPrice ? (
                         <div className="col-sm-6">
                           <p>
                             Giá sau khi nhập coupon:{" "}
@@ -428,15 +469,33 @@ const PurchasingInformation = (props: Props) => {
                       )}
                     </div>
                     {/* Button trigger modal xác nhận thông tin */}
-                    <button
-                      type="button"
-                      data-toggle="modal"
-                      data-target="#confirmTourForm"
-                      className="btn-continue"
-                      disabled={isSubmitDisabled}
-                    >
-                      Tiếp tục
-                    </button>
+                    {isSubmitDisabled ? (
+                      <div>
+                        <button
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#confirmTourForm"
+                          className="btn-continue"
+                          disabled
+                        >
+                          Tiếp tục
+                        </button>
+                        <p className="text-danger mt-2">
+                          Hãy nhập đủ thông tin để tiếp tục
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <button
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#confirmTourForm"
+                          className="btn-continue"
+                        >
+                          Tiếp tục
+                        </button>
+                      </div>
+                    )}
                   </form>
                   {/* Modal xác nhận thông tin */}
                   <div className="">
@@ -562,14 +621,39 @@ const PurchasingInformation = (props: Props) => {
                                 />
                                 Ngân hàng
                               </div>
-                              <button type="submit" className="btn btn-primary">
-                                Xác nhận thanh toán
-                              </button>
-                              
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                              />
+                              <span className="ml-2">
+                                Tôi đồng ý với{" "}
+                                <Link to={"/privacy_policy"}>Chính sách</Link>{" "}
+                                của trang
+                              </span>
+                              <br />
+                              <br />
+                              {!isChecked ? (
+                                <button
+                                  type="submit"
+                                  disabled
+                                  className="btn btn-primary"
+                                >
+                                  Xác nhận thanh toán
+                                </button>
+                              ) : (
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary"
+                                >
+                                  Xác nhận thanh toán
+                                </button>
+                              )}
                             </form>
                           </div>
                           <div className="modal-footer">
                             <button
+                              disabled={isChecked == false}
                               type="button"
                               className="btn btn-secondary"
                               data-dismiss="modal"
