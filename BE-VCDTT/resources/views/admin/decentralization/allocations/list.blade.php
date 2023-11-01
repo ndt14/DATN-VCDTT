@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Quản lý Roles
+                        Quản lý cấp quyền
                     </h2>
                 </div>
                 <!-- <div class="col-12 ">
@@ -24,7 +24,7 @@
                 </div> -->
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('role.add') }}" class="btn btn-primary d-none d-sm-inline-block">
+                        <a href="{{ route('allocation.add') }}" class="btn btn-primary d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -32,9 +32,9 @@
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
-                            Thêm mới
+                            Cấp mới
                         </a>
-                        <a href="{{ url('/role/add') }}" class="btn btn-primary d-sm-none btn-icon">
+                        <a href="{{ url('/allocation/add') }}" class="btn btn-primary d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -55,7 +55,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Role</h3>
+                            <h3 class="card-title">Cấp quyền</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -68,11 +68,10 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                       
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
-                                                placeholder="tên vai trò">
+                                                placeholder="tên người dùng">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -86,8 +85,9 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Tên vai trò</th>
-                                        <th>Mô tả</th>
+                                        <th>Tên</th>
+                                        <th>Email</th>
+                                        <th>Nhóm vai trò</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày sửa</th>
                                         <th></th>
@@ -95,7 +95,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (!empty($data))
+                                   @if (!empty($data))
                                     @foreach ($data as $data)
                                         <tr>
                                             <td><span class="text-muted">{{ $data->id }}</span></td>
@@ -103,7 +103,19 @@
                                             <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->name, 70) }}</a>
                                             </td>
                                             <td>
-                                                {{ string_truncate($data->desc_role, 70) }}
+                                                {{ string_truncate($data->email, 70) }}
+                                            </td>
+                                            <td>
+                                                @foreach($data->roles as $role)
+                                                <span class="text-white bg-success nameRole" style="position: relative;border-radius: 1px;padding: 13px 10px;" data-bs-toggle="tooltip" title="Click vào x để xóa vai trò này"><i class="fa-solid fa-x" style="
+                                                    position: absolute;
+                                                    top: 0;
+                                                    right: 0;
+                                                    padding: 0px 3px;
+                                                    border: 1px solid red;
+                                                    color: red;" data-id="{{$role->id.'-'.$data->id}}"></i> {{$role->name}}</span>
+                                                @endforeach
+                                                
                                             </td>
                                             <td>
                                                 {{ time_format($data->created_at) }}
@@ -112,7 +124,7 @@
                                                 {{ time_format($data->updated_at) }}
                                             </td>
                                             <td class="text-end">
-                                                <a class="btn btn-icon btn-outline-green" href="{{ route('role.edit', ['id' => $data->id]) }}">
+                                                <a class="btn btn-icon btn-outline-green" href="{{ route('allocation.edit', ['user_id' => $data->id]) }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
@@ -229,7 +241,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/role-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/allocation-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();
@@ -241,5 +253,30 @@
             }
         });
     };
+    </script>
+
+    <script>
+        var nameRoles = document.querySelectorAll(".nameRole i");
+        nameRoles.forEach(item => {
+            item.addEventListener("click", () => {
+            var strId = item.dataset.id;
+            var arrayId = strId.split("-");
+            var data = {};
+            data.idRole = arrayId[0];
+            data.idUser = arrayId[1];
+            
+            $.ajax({
+                        type: "GET",
+                        url: "{{ route('allocation.delete.one') }}",
+                        data: data,
+                        success: function(res) {
+                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2000);
+                        }
+                    });
+            });
+        });
     </script>
 @endSection

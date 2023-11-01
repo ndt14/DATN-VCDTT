@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AllocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 
@@ -13,6 +14,7 @@ use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Models\Allocation;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +138,11 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
     Route::match(['GET', 'POST'], '/role/add', [RoleController::class, 'roleManagementAdd'])->name('role.add');
-    Route::match(['GET', 'POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+    Route::match(['GET','POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+    Route::get('/allocation', [AllocationController::class,'allocationManagementList'])->name('allocation.list');
+    Route::match(['GET','POST'], '/allocation/add', [AllocationController::class, 'allocationManagementAdd'])->name('allocation.add');
+    Route::match(['GET','POST'], '/allocation/edit/{user_id}', [AllocationController::class, 'allocationManagementEdit'])->name('allocation.edit');
+    Route::get('/allocation/delete', [AllocationController::class, 'delete_one_user_role'])->name('allocation.delete.one');
     Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarn'])->name('dashboard');
 });
 

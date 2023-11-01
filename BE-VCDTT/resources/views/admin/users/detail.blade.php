@@ -102,9 +102,13 @@
                                 <input type="radio" class="custom-control-input" @if($item['is_admin'] == 1) checked @endif name="is_admin" checked="" value="1" >
                                 <span class="custom-control-label">Yes</span>
                             </label>
-                            <label class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" name="is_admin" @if($item['is_admin'] == 2) checked @endif value="2" >
+                            <label class="custom-control custom-radio custom-control-inline me-2">
+                                <input type="radio" class="custom-control-input" @if($item['is_admin'] == 2) checked @endif name="is_admin" checked="" value="2" >
                                 <span class="custom-control-label">No</span>
+                            </label>
+                            <label class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input" name="is_admin" @if($item['is_admin'] == 3) checked @endif value="3" >
+                                <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
                             </label>
 
                             <span class="text-danger d-flex justify-content-start">
