@@ -421,7 +421,7 @@ const Header = () => {
                             <br />
                             <input
                               className="w-100 my-2"
-                              type="number"
+                              type="text"
                               min={0}
                               placeholder="Số điện thoại"
                               name="phone_number"
