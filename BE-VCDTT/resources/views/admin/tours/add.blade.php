@@ -55,8 +55,8 @@
         <div class="page-body">
             <div class="container-xl">
                 <div class="row row-deck row-cards">
-                    <div class="col-sm-12 col-md-8 offset-md-2">
-                        <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('tour.add') }}" method="POST">
+                    <div class="col-sm-12 col-md-8 offset-md-2" id="myDropzone" >
+                        <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('tour.add') }}" method="POST" enctype="multipart/form-data">
                             <div class="card-header">
                                 <h2 class="card-title">
                                     Thêm tour
@@ -213,6 +213,16 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="multi-file_insert_attach btn btn-outline-muted"><span>Đính kèm ảnh</span></label>
+                                        <div class="list_attach">
+                                            <ul class="multi-file_attach_view">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <div class="form-label">Nội dung mô tả</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
@@ -255,72 +265,16 @@
                     </div>
                 </div>
 
-                <!-- <div class="row row-deck row-cards">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title">Files upload</h3>
-                                <form class="dropzone dz-clickable" id="dropzone-files" action="{{ route('file.store') }}" autocomplete="off" novalidate>
-                                    @csrf
-                                    <div class="fallback">
-                                        <input name="files[]" type="file"/>
-                                    </div>
-                                    <div class="dz-message">
-                                        <h3 class="dropzone-msg-title">Your text here</h3>
-                                        <span class="dropzone-msg-desc">Select or Drop files here to upload</span>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
             </div>
         </div>
 @endsection
-@section('page_css')
-<link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
-@endsection
 @section('page_js')
-<script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
 <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
 $(document).ready(function() {
     let categories_data = [];
     if ($('#frmAdd').length) {
-//         $('#frmAdd').submit(function() {
-//             let options = {
-//                 data: {
-//                         categories_data: categories_data,
-//                     },
-//                 beforeSubmit: function(formData, jqForm, options) {
-//                     $('#btnSubmitAdd').addClass('btn-loading');
-//                     $('#btnSubmitAdd').addClass("disabled");
-//                 },
-//                 success: function(response, statusText, xhr, $form) {
-//                     $('#btnSubmitAdd').removeClass('btn-loading');
-//                     if(response.status == 500){
-//                         $('#btnSubmitAdd').removeClass("disabled");
-//                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-//                     }
-//                     if(response.status == 200){
-//                         $('#btnSubmitAdd').removeClass("disabled");
-//                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-//                     }
-//                 },
-//                 error: function() {
-//                     $('#btnSubmitAdd').removeClass('btn-loading');
-//                     $('#btnSubmitAdd').removeClass("disabled");
-//                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-//                 },
-//                 dataType: 'json',
-//                 clearForm: false,
-//                 resetForm: false
-//             };
-//             $(this).ajaxSubmit(options);
-//             return false;
-//         });
+33
     $.ajax({
             url: "/api/category",
             method: 'GET',
@@ -367,28 +321,186 @@ $(document).ready(function() {
         console.log(catogories_data)
     });
 });
-
-//     document.addEventListener("DOMContentLoaded", function() {
-//         let imgArray = [];
-//         new Dropzone("#dropzone-files", {
-//             paramName: "files", // The name that will be used to transfer the file
-//             maxFilesize: 100, // MB
-//             uploadMultiple: true,
-//             accept: function(file, done) {
-//                 done();
-//             },
-//             success: function(file, response) {
-//                 if (response.status === 200) {
-//                     imgArray.push(response.files); // Thêm giá trị files vào mảng
-//                 }
-//                 document.getElementById('imgArray').value = JSON.stringify(imgArray);
-//                 console.log(document.getElementById('imgArray').value);
-//             },
-//             error: function(file, response) {
-//                 console.error(response.message);
-//             }
-//         });
-//     })
-
 </script>
-    @endSection
+<script type="text/javascript">
+        $('.multi-file_insert_attach').click(function() {
+            if ($('.list_attach').hasClass('show-btn') === false) {
+                $('.list_attach').addClass('show-btn');
+            }
+            var _lastimg = jQuery('.multi-file_attach_view li').last().find('input[type="file"]').val();
+
+            if (_lastimg != '') {
+                var d = new Date();
+                var _time = d.getTime();
+                var _html = '<li id="li_files_' + _time + '" class="li_file_hide">';
+                _html += '<div class="img-wrap">';
+                _html += '<span class="close" onclick="DelImg(this)">×</span>';
+                _html += ' <div class="img-wrap-box"></div>';
+                _html += '</div>';
+                _html += '<div class="' + _time + '">';
+                _html += '<input type="file" class="hidden" name="files[]" multiple onchange="uploadImg(this)" id="files_' + _time + '"   />';
+                _html += '</div>';
+                _html += '</li>';
+                jQuery('.multi-file_attach_view').append(_html);
+                jQuery('.multi-file_attach_view li').last().find('input[type="file"]').click();
+            } else {
+                if (_lastimg == '') {
+                    jQuery('.multi-file_attach_view li').last().find('input[type="file"]').click();
+                } else {
+                    if ($('.list_attach').hasClass('show-btn') === true) {
+                        $('.list_attach').removeClass('show-btn');
+                    }
+                }
+            }
+        });
+
+        function uploadImg(el) {
+            var file_data = $(el).prop('files')[0];
+            var type = file_data.type;
+            var fileToLoad = file_data;
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(fileLoadedEvent) {
+                var srcData = fileLoadedEvent.target.result;
+
+                var newImage = document.createElement('img');
+                newImage.src = srcData;
+                var _li = $(el).closest('li');
+                if (_li.hasClass('li_file_hide')) {
+                    _li.removeClass('li_file_hide');
+                }
+                _li.find('.img-wrap-box').append(newImage.outerHTML);
+
+
+            }
+            fileReader.readAsDataURL(fileToLoad);
+
+        }
+
+        function DelImg(el) {
+            jQuery(el).closest('li').remove();
+
+        }
+    </script>
+@endSection
+@section('page_css')
+<style>
+        .list_attach {
+            display: block;
+            margin-top: 30px;
+        }
+        
+        ul.multi-file_attach_view {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul.multi-file_attach_view li {
+            float: left;
+            width: 80px;
+            margin: 0 20px 20px 0 !important;
+            padding: 0!important;
+            border: 0!important;
+            overflow: inherit;
+            clear: none;
+        }
+        
+        ul.multi-file_attach_view .img-wrap {
+            position: relative;
+        }
+        
+        ul.multi-file_attach_view .img-wrap .close {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            background: #000;
+            color: #fff!important;
+            border-radius: 50%;
+            z-index: 2;
+            display: block;
+            width: 20px;
+            height: 20px;
+            font-size: 16px;
+            text-align: center;
+            line-height: 18px;
+            cursor: pointer!important;
+            opacity: 1!important;
+            text-shadow: none;
+        }
+        
+        ul.multi-file_attach_view li.li_file_hide {
+            opacity: 0;
+            visibility: visible;
+            width: 0!important;
+            height: 0!important;
+            overflow: hidden;
+            margin: 0!important;
+        }
+        
+        ul.multi-file_attach_view .img-wrap-box {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%;
+            height: auto;
+            background-position: 50% 50%;
+            background-size: cover;
+        }
+        
+        .img-wrap-box img {
+            right: 0;
+            width: 100%!important;
+            height: 100%!important;
+            bottom: 0;
+            left: 0;
+            top: 0;
+            position: absolute;
+            object-position: 50% 50%;
+            object-fit: cover;
+            transition: all .5s linear;
+            -moz-transition: all .5s linear;
+            -webkit-transition: all .5s linear;
+            -ms-transition: all .5s linear;
+        }
+        
+        .list_attach span.multi-file_insert_attach {
+            width: 80px;
+            height: 80px;
+            text-align: center;
+            display: inline-block;
+            border: 2px dashed #ccc;
+            line-height: 76px;
+            font-size: 25px;
+            color: #ccc;
+            display: none;
+            cursor: pointer;
+        }
+        
+        ul.multi-file_attach_view {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul.multi-file_attach_view .img-wrap {
+            position: relative;
+        }
+        
+        .list_attach.show-btn span.multi-file_insert_attach {
+            display: block;
+            margin: 0 0 20px!important;
+        }
+        
+        i.multi-file-plus {
+            font-style: normal;
+            font-weight: 900;
+            font-size: 35px;
+            line-height: 1;
+        }
+        
+        ul.multi-file_attach_view li input {
+            display: none;
+        }
+</style>
+@endsection
