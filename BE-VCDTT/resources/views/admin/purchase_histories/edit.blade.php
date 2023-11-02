@@ -370,7 +370,7 @@
                                     </option>
                                     <option @if ($items['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
                                     </option>
-                                    <option @if ($items['purchase_status'] == 8) selected @endif value="8">Tự  động đơn đặt  hủy do quá hạn than toán
+                                    <option @if ($items['purchase_status'] == 8) selected @endif value="8">Tự động đơn đặt hủy do quá hạn thanh toán
                                     </option>
                                     <option @if ($items['purchase_status'] == 9) selected @endif value="9">Đã hoàn tiền
                                     </option>
