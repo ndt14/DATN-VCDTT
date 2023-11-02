@@ -41,8 +41,8 @@ class AllocationController extends Controller
             }
             }
         }
-        $list_roles = Role::all();
-        $list_users = User::select('id','email')->get();
+        $list_roles = Role::where('name', '!=', 'Admin')->get();
+        $list_users = User::where('is_admin','!=', 1)->select('id','email')->get();
         return view('admin.decentralization.allocations.add', compact('list_roles','list_users'));
     }
 
@@ -53,11 +53,23 @@ class AllocationController extends Controller
             $user = User::find($user_id);
             $data = $request->all();
             $roles = $data['role'];
-            $user->syncRoles($roles);
+            if(!empty($roles)) {
+                $permissions = [];
+                foreach($roles as $item) {
+                    $permission = DB::table('role_has_permissions')->where('role_id', $item)->select('permission_id')->get()->pluck('permission_id')
+                    ->toArray();
+                    $permissions[] = $permission;
+                }
+            if(!empty($permissions)) {
+                $permissions = array_unique(call_user_func_array('array_merge', $permissions));
+                $user->syncPermissions($permissions);
+                $user->syncRoles($roles);
+            }
+            }
             return redirect()->route('allocation.edit', ['user_id' => $user_id])->with('success', 'Cấp vai trò lại cho user có email "'.$user->email.'" thành công');
         }
-        $list_roles = Role::all();
-        $list_users = User::select('id','email')->get();
+        $list_roles = Role::where('name', '!=', 'Admin')->get();
+        $list_users = User::where('is_admin','!=', 1)->select('id','email')->get();
         $roles_user = DB::table('model_has_roles')->where('model_id', $user_id)->select('role_id')->get()->pluck('role_id')->toArray();
         return view('admin.decentralization.allocations.edit', compact('list_roles','list_users', 'user_id', 'roles_user'));
     }

@@ -1,6 +1,8 @@
 @extends('admin.common.layout')
 @section('content')
-
+@section('select2_css')
+<link rel="stylesheet" href="{{asset('css/plugins/select2/select2.min.css')}}"> 
+@endSection
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
@@ -111,5 +113,9 @@
     </div>
 </div>
 @endsection
-@section('page_js')
+@section('select2_js')
+<script src="{{asset('js/plugins/select2/select2.min.js')}}"></script>
+<script type="text/javascript">
+    $('select').select2();
+  </script>  
 @endSection

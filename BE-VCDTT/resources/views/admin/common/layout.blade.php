@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{{asset('css/plugins/select2/select2.min.css')}}">
     <title>@yield('meta_title')</title>
 
     @yield('meta_tags')
@@ -21,7 +20,7 @@
         }
     </style>
     @yield('page_css')
-
+    @yield('select2_css')
 </head>
 
 <body class="layout-fluid">
@@ -35,9 +34,6 @@
     </div>
     @include('admin.common.javascript')
     @yield('page_js')
+    @yield('select2_js')
 </body>
-<script src="{{asset('js/plugins/select2/select2.min.js')}}"></script>
-<script type="text/javascript">
-    $('select').select2();
-  </script>  
 </html>

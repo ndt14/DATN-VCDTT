@@ -107,13 +107,15 @@
                                             </td>
                                             <td>
                                                 @foreach($data->roles as $role)
-                                                <span class="text-white bg-success nameRole" style="position: relative;border-radius: 1px;padding: 13px 10px;" data-bs-toggle="tooltip" title="Click vào x để xóa vai trò này"><i class="fa-solid fa-x" style="
+                                                
+                                                <span class="text-white bg-success nameRole" style="position: relative;border-radius: 1px;padding: 13px 10px;" @if(!($role->name == 'Admin')) data-bs-toggle="tooltip" title="Click vào x để xóa vai trò này" @endif>@if(!($role->name == 'Admin'))<i class="fa-solid fa-x" style="
                                                     position: absolute;
                                                     top: 0;
                                                     right: 0;
                                                     padding: 0px 3px;
                                                     border: 1px solid red;
-                                                    color: red;" data-id="{{$role->id.'-'.$data->id}}"></i> {{$role->name}}</span>
+                                                    color: red;" data-id="{{$role->id.'-'.$data->id}}"></i>@endif {{$role->name}}</span>
+                                                
                                                 @endforeach
                                                 
                                             </td>
@@ -123,7 +125,9 @@
                                             <td>
                                                 {{ time_format($data->updated_at) }}
                                             </td>
+                                           
                                             <td class="text-end">
+                                                @if(!($role->name == 'Admin'))
                                                 <a class="btn btn-icon btn-outline-green" href="{{ route('allocation.edit', ['user_id' => $data->id]) }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -142,7 +146,9 @@
                                                     <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
                                                     </svg>
                                                 </a>
+                                                @endif
                                             </td>
+                                            
                                         </tr>
                                     @endforeach
                                 @else

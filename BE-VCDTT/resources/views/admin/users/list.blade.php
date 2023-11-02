@@ -22,6 +22,7 @@
                 </div>
                 @endif
             </div>
+            @if(auth()->user()->can('add account') || auth()->user()->is_admin == 1)
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <a href="{{ route('user.add')}}" class="btn btn-primary d-none d-sm-inline-block">
@@ -30,7 +31,7 @@
                             <line x1="12" y1="5" x2="12" y2="19" />
                             <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
-                        Add new
+                        Thêm mới
                     </a>
                     <a href="{{ route('user.add')}}" class="btn btn-primary d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -41,6 +42,7 @@
                     </a>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
@@ -127,6 +129,7 @@
                                             @endif
                                         </td>
                                         <td class="text-end">
+                                            @if(auth()->user()->can('edit account') || auth()->user()->is_admin == 1)
                                             <a class="btn btn-icon btn-outline-green" href="{{route('user.edit', ['id'=>$data->id])}}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -135,6 +138,8 @@
                                                 <path d="M16 5l3 3"></path>
                                                 </svg>
                                             </a>
+                                            @endif
+                                            @if(auth()->user()->can('delete account') || auth()->user()->is_admin == 1)
                                             <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -145,6 +150,7 @@
                                                 <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
                                                 </svg>
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach

@@ -32,6 +32,7 @@
             </span>
           </a>
         </li>
+        @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'access review', 'reply review', 'delete review']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2 accordion-item active bg-info-lt rounded-end-4" style="border: none;">
           <a class="accordion-header accordion-button nav-link text-primary" href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-1" role="button" aria-expanded="true">
             <span class="d-md-none d-lg-inline-block text-back me-1">
@@ -50,15 +51,21 @@
           </a>
           <div id="nav-link-1" class="accordion-collapse collapse show" data-bs-parent="#nav-parent">
             <div class="accordion-body pt-0 ps-5 ms-1">
+              @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'reply review']) || auth()->user()->is_admin == 1)
               <a class="nav-link" href="{{route('tour.list')}}">
                 Nội dung
               </a>
+              @endif
+              @if(auth()->user()->hasAnyDirectPermission(['access review', 'reply review', 'delete review']) || auth()->user()->is_admin == 1)
               <a class="nav-link" href="{{route('all.rating.list')}}" target="_blank" rel="noopener">
                 Quản lý tất đánh giá
               </a>
+              @endif
             </div>
           </div>
         </li>
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access post', 'add post', 'edit post', 'delete post']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('blog.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -74,7 +81,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access faq', 'add faq', 'edit faq', 'delete faq']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('faq.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -90,7 +98,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access bill', 'edit bill', 'delete bill']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('purchase_histories.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -108,6 +117,8 @@
             </span>
           </a>
         </li>
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access category','add category','edit category', 'delete category']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('category.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -123,7 +134,9 @@
             </span>
           </a>
         </li>
+        @endif
 
+        @if(auth()->user()->hasAnyDirectPermission(['access discount', 'add discount', 'edit discount', 'delete discount']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('coupon.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -140,7 +153,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access account', 'add account', 'edit account', 'delete account']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('user.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -157,6 +171,8 @@
             </span>
           </a>
         </li>
+        @endif
+        @if(auth()->user()->is_admin == 1)
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -181,6 +197,7 @@
               </div>
             </div>
         </li>
+        @endif
       </ul>
     </div>
   </div>
