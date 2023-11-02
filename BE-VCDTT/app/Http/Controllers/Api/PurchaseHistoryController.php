@@ -140,7 +140,7 @@ class PurchaseHistoryController extends Controller
         if ($purchaseHistory->save()) {
 
             if ($updateAdmin) {
-                $purchaseHistory->notify(new SendMailToClient());
+                $purchaseHistory->notify(new SendMailToClient($purchaseHistory->purchase_status));
             } else {
                 // if (!$input['transaction_id']) {
                 //     $input['payment_status'] = 0;
