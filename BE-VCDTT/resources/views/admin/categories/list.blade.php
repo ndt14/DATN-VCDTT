@@ -197,13 +197,13 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
+                            @php
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
                             </select>
 
                             <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>{{ $data->total() }}</span>

@@ -187,11 +187,14 @@ class CouponController extends Controller
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function couponManagementList() {
+    public function couponManagementList(Request $request) {
         $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon');
         if($data->status() == 200) {
             $data = json_decode(json_encode($data->json()['data']['coupons']), false);
-            $perPage = 5; // Số mục trên mỗi trang
+            $perPage= 5;// Số mục trên mỗi trang
+            if($request->limit){
+                $perPage = $request->limit;
+            }
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
