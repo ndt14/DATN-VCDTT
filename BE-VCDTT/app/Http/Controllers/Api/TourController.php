@@ -337,6 +337,7 @@ class TourController extends Controller
     {
         if ($request->isMethod('POST')) {
             $data = $request->except('_token');
+            dd($data);
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
