@@ -24,7 +24,8 @@ class DashboardController extends Controller
         //views how many?
         //passengers how many?
         //sold how many?
-        $purchaseHistory = PurchaseHistory::where('purchase_status',5)->orWhere('purchase_status',10)->get();
+        $data = [];
+        $purchaseHistory = PurchaseHistory::whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
 
         $total=[];
         foreach($purchaseHistory as $purchaseHistory){
@@ -47,15 +48,31 @@ class DashboardController extends Controller
         //
         $unVerifyCount = Count(PurchaseHistory::where('purchase_status',2)->get());
         //
-        $paidPurchaseCount = Count(PurchaseHistory::where('payment_status',2)->get());
-
+        $paidPurchase = PurchaseHistory::where('payment_status',2)->get();
+        $data['PPCToday']=0;
+        $data['PPCWeek']=0;
+        $data['PPCMonth']=0;
+        $data['PPCYear']=0;
+        foreach ($paidPurchase as $PP){
+        if(date("d-m-Y",strtotime($PP->created_at)) == date("d-m-Y",strtotime(now()))){
+            $data['PPCToday']++;
+        }
+        if(date("W-Y",strtotime($PP->created_at)) == date("W-Y",strtotime(now()))){
+            $data['PPCWeek']++;
+        }
+        if(date("m-Y",strtotime($PP->created_at)) == date("m-Y",strtotime(now()))){
+            $data['PPCMonth']++;
+        }
+        if(date("Y",strtotime($PP->created_at)) == date("Y",strtotime(now()))){
+            $data['PPCYear']++;
+        }
+    }
         //chart
 
 
         //
         $data = [];
         $data['today'] = $all;
-        $data['PPCount'] = $paidPurchaseCount;
         $data['UVCount'] = $unVerifyCount;
         $data['userCount'] = $userCount;
         return view('dashboard',compact('data'));
