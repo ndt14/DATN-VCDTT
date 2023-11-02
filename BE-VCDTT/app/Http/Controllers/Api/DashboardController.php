@@ -36,17 +36,26 @@ class DashboardController extends Controller
         }
 
         //
-        $all=0;
+        $data['today']=0; $data['week']=0; $data['month']=0; $data['year']=0;
         foreach ($total as $d) {
         if($d['time'] == date("d-m-Y",strtotime(now()))){
-        $all += $d['price'];
+            $data['today']+= $d['price'];
+        }
+        if( date("W-Y",strtotime($d['time'])) == date("W-Y",strtotime(now()))){
+            $data['week'] += $d['price'];
+        }
+        if( date("m-Y",strtotime($d['time'])) == date("m-Y",strtotime(now()))){
+            $data['month'] += $d['price'];
+        }
+        if( date("Y",strtotime($d['time'])) == date("Y",strtotime(now()))){
+            $data['year'] += $d['price'];
         }
         }
 
         //
         $userCount = Count(User::where('is_admin',2)->get());
         //
-        $unVerifyCount = Count(PurchaseHistory::where('purchase_status',2)->get());
+        $data['UVCount'] = Count(PurchaseHistory::where('purchase_status',2)->get());
         //
         $paidPurchase = PurchaseHistory::where('payment_status',2)->get();
         $data['PPCToday']=0;
@@ -71,10 +80,8 @@ class DashboardController extends Controller
 
 
         //
-        $data = [];
-        $data['today'] = $all;
-        $data['UVCount'] = $unVerifyCount;
         $data['userCount'] = $userCount;
+        $data = json_decode(json_encode($data));
         return view('dashboard',compact('data'));
     }
     public function totalEarning(Request $request){
