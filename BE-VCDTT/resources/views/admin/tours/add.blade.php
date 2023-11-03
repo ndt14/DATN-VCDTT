@@ -287,6 +287,12 @@ $(document).ready(function() {
                     id = +id
                     let option = $('<option></option>').val(id).text(category.name);
                     selectCatogories.append(option);
+                    $.each(category.child, function(index, childCategory) {
+                        let chlidId = childCategory.id;
+                        chlidId = +chlidId;
+                        let option = $('<option></option>').val(chlidId).text('('+category.name+')' + ' - '+ childCategory.name);
+                        selectCatogories.append(option);
+                    });
                 });
 
                 //add to select by tom-select lib

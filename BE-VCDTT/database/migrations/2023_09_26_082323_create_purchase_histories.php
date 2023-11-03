@@ -45,6 +45,7 @@ return new class extends Migration
             $table->string('tour_end_time')->nullable();
             $table->tinyInteger('payment_status')->default(1);
             $table->tinyInteger('purchase_status')->default(1);
+            $table->tinyInteger('purchase_method')->nullable();
             $table->timestamps();
         });
     }

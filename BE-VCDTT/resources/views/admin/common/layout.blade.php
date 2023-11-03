@@ -20,7 +20,7 @@
         }
     </style>
     @yield('page_css')
-
+    @yield('select2_css')
 </head>
 
 <body class="layout-fluid">
@@ -34,6 +34,6 @@
     </div>
     @include('admin.common.javascript')
     @yield('page_js')
+    @yield('select2_js')
 </body>
-
 </html>

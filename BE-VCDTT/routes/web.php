@@ -1,17 +1,21 @@
 <?php
 
+use App\Http\Controllers\Api\AllocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Middleware\checkIsAdmin;
+use App\Models\Allocation;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,8 +39,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/test', function () {
         return view('admin.common.layout');
     });
-    Route::get('/home', function () {
-        return redirect()->route('tour.list');
+    Route::get('/dashboard', function () {
+        return redirect()->route('dashboard');
     });
 
     // Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
@@ -87,55 +91,66 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     // Route::match(['GET','POST'],'/role/add',[RoleController::class,'roleManagementAdd'])->name('role.add');
     // Route::match(['GET','POST'],'/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
 
-    Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list');
-    Route::match(['GET', 'POST'], '/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add');
-    Route::match(['GET', 'POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit');
-    Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail');
+    Route::get('/tour', [TourController::class, 'tourManagementList'])->name('tour.list')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review']);
+    Route::match(['GET', 'POST'], '/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add')->middleware(['permission:admin|add tour']);
+    Route::match(['GET', 'POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit')->middleware(['permission:admin|edit tour']);
+    Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review']);
 
-    Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list');
-    Route::match(['GET', 'POST'], '/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add');
-    Route::match(['GET', 'POST'], '/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit');
-    Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail');
 
-    Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list');
-    Route::match(['GET', 'POST'], '/faq/add', [FAQController::class, 'faqManagementAdd'])->name('faq.add');
-    Route::match(['GET', 'POST'], '/faq/edit/{id}', [FAQController::class, 'faqManagementEdit'])->name('faq.edit');
-    Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail');
 
-    Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list');
-    Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list');
-    Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add');
-    Route::get('/rating/edit/{id}', [RatingController::class, 'ratingManagementEdit'])->name('rating.edit');
-    Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail');
 
-    Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list');
-    Route::match(['GET', 'POST'], '/coupon/add', [CouponController::class, 'couponManagementAdd'])->name('coupon.add');
-    Route::match(['GET', 'POST'], '/coupon/edit/{id}', [CouponController::class, 'couponManagementEdit'])->name('coupon.edit');
-    Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail');
+    Route::get('/blog', [BlogController::class, 'blogManagementList'])->name('blog.list')->middleware(['permission:admin|access post|add post|edit post|delete post']);
+    Route::match(['GET', 'POST'], '/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add')->middleware(['permission:admin|add post']);
+    Route::match(['GET', 'POST'], '/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit')->middleware(['permission:admin|edit post']);
+    Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail')->middleware(['permission:admin|access post|add post|edit post|delete post']);
 
-    Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list');
-    Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail');
-    Route::match(['GET', 'POST'], '/user/add', [UserController::class, 'userManagementAdd'])->name('user.add');
-    Route::match(['GET', 'POST'], '/user/edit/{id}', [UserController::class, 'userManagementEdit'])->name('user.edit');
+    
+    Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
+    Route::match(['GET', 'POST'], '/faq/add', [FAQController::class, 'faqManagementAdd'])->name('faq.add')->middleware(['permission:admin|add faq']);
+    Route::match(['GET', 'POST'], '/faq/edit/{id}', [FAQController::class, 'faqManagementEdit'])->name('faq.edit')->middleware(['permission:admin|edit faq']);
+    Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
 
-    Route::get('/category', [CategoryController::class, 'cateManagementList'])->name('category.list');
-    Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add');
-    Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store');
-    Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit');
+    Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
+    Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
+    Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);
+    Route::get('/rating/edit/{id}', [RatingController::class, 'ratingManagementEdit'])->name('rating.edit')->middleware(['permission:admin|reply review']);
+    Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail')->middleware(['permission:admin|access review|reply review|delete review']);
+
+    Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list')->middleware(['permission:admin|access discount|add discount|edit discount|delete discount']);
+    Route::match(['GET', 'POST'], '/coupon/add', [CouponController::class, 'couponManagementAdd'])->name('coupon.add')->middleware(['permission:admin|add discount']);
+    Route::match(['GET', 'POST'], '/coupon/edit/{id}', [CouponController::class, 'couponManagementEdit'])->name('coupon.edit')->middleware(['permission:admin|edit discount']);
+    Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail')->middleware(['permission:admin|access discount|add discount|edit discount|delete discount']);
+
+    Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list')->middleware(['permission:admin|access account|add account|edit account|delete account']);
+    Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail')->middleware(['permission:admin|access account|add account|edit account|delete account']);
+    Route::match(['GET', 'POST'], '/user/add', [UserController::class, 'userManagementAdd'])->name('user.add')->middleware(['permission:admin|add account']);
+    Route::match(['GET', 'POST'], '/user/edit/{id}', [UserController::class, 'userManagementEdit'])->name('user.edit')->middleware(['permission:admin|edit account']);
+
+    Route::get('/category', [CategoryController::class, 'cateManagementList'])->name('category.list')->middleware(['permission:admin|access category|add category|edit category|delete category']);
+    Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add')->middleware(['permission:admin|add category']);
+    Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store')->middleware(['permission:admin|add category']);
+    Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit')->middleware(['permission:admin|edit category']);
 
 
     Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 
-    Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list');
-    Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit');
-    Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail');
+    Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list')->middleware(['permission:admin|access bill|edit bill|delete bill']);
+    Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit')->middleware(['permission:admin|edit bill']);
+    Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail')->middleware(['permission:admin|access bill|edit bill|delete bill']);
     Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
 
     Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class, 'markAsRead'])->name('mark-as-read');
 
+    Route::middleware('isAdmin')->group(function(){
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
     Route::match(['GET', 'POST'], '/role/add', [RoleController::class, 'roleManagementAdd'])->name('role.add');
-    Route::match(['GET', 'POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+    Route::match(['GET','POST'], '/role/edit/{id}', [RoleController::class, 'roleManagementEdit'])->name('role.edit');
+    Route::get('/allocation', [AllocationController::class,'allocationManagementList'])->name('allocation.list');
+    Route::match(['GET','POST'], '/allocation/add', [AllocationController::class, 'allocationManagementAdd'])->name('allocation.add');
+    Route::match(['GET','POST'], '/allocation/edit/{user_id}', [AllocationController::class, 'allocationManagementEdit'])->name('allocation.edit');
+    Route::get('/allocation/delete', [AllocationController::class, 'delete_one_user_role'])->name('allocation.delete.one');
+    });
+    Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarn'])->name('dashboard');
 });
 
 

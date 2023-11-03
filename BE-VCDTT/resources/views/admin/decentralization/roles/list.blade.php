@@ -68,18 +68,11 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
-                                                <option value="en">Không hoạt động</option>
-                                            </select>
-                                        </div>
+                                       
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="tên vai trò">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -102,7 +95,53 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
+                                    @if (!empty($data))
+                                    @foreach ($data as $data)
+                                        <tr>
+                                            <td><span class="text-muted">{{ $data->id }}</span></td>
+                                            <td>
+                                            <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->name, 70) }}</a>
+                                            </td>
+                                            <td>
+                                                {{ string_truncate($data->desc_role, 70) }}
+                                            </td>
+                                            <td>
+                                                {{ time_format($data->created_at) }}
+                                            </td>
+                                            <td>
+                                                {{ time_format($data->updated_at) }}
+                                            </td>
+                                            @if(!($data->name == 'Admin'))
+                                            <td class="text-end">
+                                                <a class="btn btn-icon btn-outline-green" href="{{ route('role.edit', ['id' => $data->id]) }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                    <path d="M16 5l3 3"></path>
+                                                    </svg>
+                                                </a>
+                                                <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M4 7l16 0"></path>
+                                                    <path d="M10 11l0 6"></path>
+                                                    <path d="M14 11l0 6"></path>
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                    </svg>
+                                                </a>
+                                            </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="9">
+                                            <div>Không có dữ liệu</div>
+                                        </td>
+                                    </tr>
+                                @endif
                                 </tbody>
                             </table>
                         </div>
@@ -192,7 +231,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/faq-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/role-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();

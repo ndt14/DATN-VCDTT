@@ -5,17 +5,17 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <h1 class="text-primary navbar-brand">
-            <a href="http://datn-vcdtt.test:5173/" class="d-flex align-items-center text-primary text-decoration-none">
-                <span class="fs-1 text-primary">Home page</span>
-            </a>
-        </h1>
+      <a href="http://datn-vcdtt.test:5173/" class="d-flex align-items-center text-primary text-decoration-none">
+        <span class="fs-1 text-primary">Home page</span>
+      </a>
+    </h1>
     <div class="collapse navbar-collapse" id="sidebar-menu">
       <ul class="navbar-nav pt-lg-5 accordion" id="nav-parent">
 
 
 
         <li class="nav-item py-lg-2">
-          <a class="nav-link" href="http://datn-vcdtt.test">
+          <a class="nav-link" href="{{ route('dashboard') }}">
             <span class="me-1 d-md-none d-lg-inline-block">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -32,10 +32,11 @@
             </span>
           </a>
         </li>
+        @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'access review', 'reply review', 'delete review']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2 accordion-item active bg-info-lt rounded-end-4" style="border: none;">
-          <a class="accordion-header accordion-button nav-link text-primary"  href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-1" role="button" aria-expanded="true">
-          <span class="d-md-none d-lg-inline-block text-back me-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-2" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <a class="accordion-header accordion-button nav-link text-primary" href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-1" role="button" aria-expanded="true">
+            <span class="d-md-none d-lg-inline-block text-back me-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-2" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                 <path d="M12 18.5l-3 -1.5l-6 3v-13l6 -3l6 3l6 -3v7.5"></path>
                 <path d="M9 4v13"></path>
@@ -43,22 +44,28 @@
                 <path d="M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879z"></path>
                 <path d="M19 18v.01"></path>
               </svg>
-          </span>
-          <span class="fw-bold ms-1 fs-3">
-            Tour
-          </span>
+            </span>
+            <span class="fw-bold ms-1 fs-3">
+              Tour
+            </span>
           </a>
           <div id="nav-link-1" class="accordion-collapse collapse show" data-bs-parent="#nav-parent">
-              <div class="accordion-body pt-0 ps-5 ms-1">
+            <div class="accordion-body pt-0 ps-5 ms-1">
+              @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'reply review']) || auth()->user()->is_admin == 1)
               <a class="nav-link" href="{{route('tour.list')}}">
                 Nội dung
               </a>
+              @endif
+              @if(auth()->user()->hasAnyDirectPermission(['access review', 'reply review', 'delete review']) || auth()->user()->is_admin == 1)
               <a class="nav-link" href="{{route('all.rating.list')}}" target="_blank" rel="noopener">
                 Quản lý tất đánh giá
               </a>
-              </div>
+              @endif
+            </div>
           </div>
         </li>
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access post', 'add post', 'edit post', 'delete post']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('blog.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -74,7 +81,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access faq', 'add faq', 'edit faq', 'delete faq']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('faq.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -90,7 +98,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access bill', 'edit bill', 'delete bill']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('purchase_histories.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -108,6 +117,8 @@
             </span>
           </a>
         </li>
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access category','add category','edit category', 'delete category']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('category.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -123,7 +134,9 @@
             </span>
           </a>
         </li>
+        @endif
 
+        @if(auth()->user()->hasAnyDirectPermission(['access discount', 'add discount', 'edit discount', 'delete discount']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('coupon.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -140,7 +153,8 @@
             </span>
           </a>
         </li>
-
+        @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access account', 'add account', 'edit account', 'delete account']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2">
           <a class="nav-link" href="{{route('user.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -157,37 +171,33 @@
             </span>
           </a>
         </li>
-        <li class="nav-item py-lg-2 accordion-item rounded-end-4" style="border: none;">
-          <a class="accordion-header accordion-button nav-link collapsed"  href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-2" role="button" aria-expanded="false">
-          <span class="d-md-none d-lg-inline-block text-back me-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-cog" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-              <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5"></path>
-              <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
-              <path d="M19.001 15.5v1.5"></path>
-              <path d="M19.001 21v1.5"></path>
-              <path d="M22.032 17.25l-1.299 .75"></path>
-              <path d="M17.27 20l-1.3 .75"></path>
-              <path d="M15.97 17.25l1.3 .75"></path>
-              <path d="M20.733 20l1.3 .75"></path>
-            </svg>
-          </span>
-          <span class="fw-bold ms-1 fs-3">
-            Phân quyền
-          </span>
+        @endif
+        @if(auth()->user()->is_admin == 1)
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="fa-solid fa-users"></i>
+            </span>
+            <span class="fw-bold ms-1 fs-3">
+              Phân quyền
+            </span>
           </a>
-          <div id="nav-link-2" class="accordion-collapse collapse" data-bs-parent="#nav-parent">
-              <div class="accordion-body pt-0 ps-5 ms-1">
-              <a class="nav-link" href="{{route('role.list')}}">
-                Vai trò
-              </a>
-              <a class="nav-link" href="{{route('all.rating.list')}}" target="_blank" rel="noopener">
-                Cấp quyền sử dụng
-              </a>
+          <div class="dropdown-menu">
+            <div class="dropdown-menu-columns">
+              <div class="dropdown-menu-column">
+                <a class="dropdown-item" href="{{route('role.list')}}">
+                  Vai trò
+                </a>
+                <!-- <a class="dropdown-item" href="{{route('tour.list')}}">
+                    Selling management
+                  </a> -->
+                <a class="dropdown-item" href="{{route('allocation.list')}}">
+                  Cấp quyền sử dụng
+                </a>
               </div>
-          </div>
+            </div>
         </li>
+        @endif
       </ul>
     </div>
   </div>

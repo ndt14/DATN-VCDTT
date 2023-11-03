@@ -18,12 +18,9 @@ class checkIsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         
-        if(isset(Auth::user()->id)) {
-            if(Auth::user()->checkAdmin()) {
-                return $next($request);
-            }
-            abort(403);
+        if(Auth::check() && Auth::user()->is_admin == 1) {
+            return $next($request);
         }
-        return $next($request);
+        return abort(403);
     }
 }

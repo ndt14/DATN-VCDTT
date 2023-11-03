@@ -62,7 +62,8 @@
                                 @endif
                             @endforeach
                         </a>
-                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card border-0 shadow-lg rounded-4 ">
+                        <div
+                            class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card border-0 shadow-lg rounded-4 ">
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">Thông báo</h3>
@@ -86,7 +87,7 @@
                                                 </div>
                                                 <div class="col text-truncate ">
                                                     <a onclick='@php $notification->markAsRead() @endphp'
-                                                        href="javascript: viewDetail({{ $notification->data['purchase_history_id'] }});"
+                                                        href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                         class="text-body d-block">Mã giao dịch:
                                                         {{ $notification->data['transaction_id'] }}</a>
                                                     <div class="d-block text-secondary mt-n1">
@@ -94,8 +95,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a
-                                                        href="{{ route('purchase_histories.mark_as_read') }}">Đánh
+                                                    <a href="{{ route('purchase_histories.mark_as_read') }}">Đánh
                                                         dấu là đã đọc</a>
                                                 </div>
                                             </div>
@@ -119,10 +119,18 @@
                         aria-label="Open user menu" aria-expanded="false">
                         <span class="avatar avatar-sm"
                             style="background-image: url({{ asset('images/admin.jpg') }});"></span>
+                        @if(auth()->user()->is_admin == 1)
                         <div class="d-none d-xl-block ps-2">
                             <div>Nhóm VCDTT</div>
                             <div class="mt-1 small text-secondary">6 anh em</div>
                         </div>
+                        @else
+                        <div class="d-none d-xl-block ps-2 pl-1">
+                            <div>{{auth()->user()->name}}</div>
+                        </div>
+                        
+                        @endif
+
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <a href="#" class="dropdown-item">Status</a>
@@ -133,8 +141,9 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <a href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();" class="dropdown-item">Logout</a>
+                                onclick="event.preventDefault();
+                                        this.closest('form').submit();"
+                                class="dropdown-item">Logout</a>
                         </form>
                     </div>
                 </div>
@@ -144,51 +153,3 @@
         </div>
     </header>
 </div>
-@section('page_js')
-    <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
-        });
-
-        let viewDetail = function(id) {
-            axios.get(`/purchase-history/detail/${id}`)
-                .then(function(response) {
-                    $('#modalContainer div.modal-content').html(response.data.html);
-                    modalContainer.show();
-                })
-                .catch(function(error) {
-                    bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-                })
-                .finally(function() {});
-        };
-
-        let removeItem = function(id) {
-            $.confirm({
-                theme: theme,
-                title: 'Confirm',
-                content: 'Are you sure to remove?',
-                columnClass: 'col-md-3 col-sm-6',
-                buttons: {
-                    removeButton: {
-                        text: 'Yes',
-                        btnClass: 'btn-danger',
-                        action: function() {
-                            axios.delete(`/api/purchase-history/${id}`).then(function(response) {
-                                bs5Utils.Snack.show('success', 'Success', delay = 5000,
-                                    dismissible = true);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 2000);
-                            });
-                        }
-                    },
-                    close: function() {}
-                }
-            });
-        };
-    </script>
-@endSection

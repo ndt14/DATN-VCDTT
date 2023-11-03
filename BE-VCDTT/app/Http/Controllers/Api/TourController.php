@@ -322,6 +322,9 @@ class TourController extends Controller
         if ($request->isMethod('POST')) {
             
             $data = $request->except('_token'); 
+
+            $data = $request->except('_token');
+
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
             if ($response->status() == 200) {
                 $tour_id = $response['data']['tour']['id'];
