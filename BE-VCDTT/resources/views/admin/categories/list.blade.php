@@ -110,7 +110,7 @@
                                                 <td>
                                                 {{ string_truncate($item->name, 70) }}
                                                 </td>
-                                                
+
                                             <td>
                                                 {{ time_format($item->created_at) }}
                                             </td>
@@ -197,19 +197,19 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
+                            @php
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
                             </select>
 
-                            <!-- <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
-                                bản ghi</p> -->
-                                
-                            <!-- {{-- <ul class="pagination m-0 ms-auto">
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
+                                bản ghi</p>
+
+                            <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -247,7 +247,7 @@
                                         </svg>
                                     </a>
                                 </li>
-                            </ul> --}} -->
+                            </ul>
 
                         </div>
                     </div>

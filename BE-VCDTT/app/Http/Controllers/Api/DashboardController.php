@@ -25,7 +25,7 @@ class DashboardController extends Controller
         //passengers how many?
         //sold how many?
         $data = [];
-        $purchaseHistory = PurchaseHistory::where('purchase_status',5)->orWhere('purchase_status',10)->get();
+        $purchaseHistory = PurchaseHistory::whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
 
         $total=[];
         foreach($purchaseHistory as $purchaseHistory){
@@ -57,17 +57,17 @@ class DashboardController extends Controller
         //
         $data['UVCount'] = Count(PurchaseHistory::where('purchase_status',2)->get());
         //
-        $paidPurchaseCount = PurchaseHistory::where('payment_status',2)->get();
+        $paidPurchase = PurchaseHistory::where('payment_status',2)->get();
         $data['PPCToday']=0;
         $data['PPCWeek']=0;
         $data['PPCMonth']=0;
         $data['PPCYear']=0;
-        foreach ($paidPurchaseCount as $PP){
+        foreach ($paidPurchase as $PP){
         if(date("d-m-Y",strtotime($PP->created_at)) == date("d-m-Y",strtotime(now()))){
             $data['PPCToday']++;
         }
         if(date("W-Y",strtotime($PP->created_at)) == date("W-Y",strtotime(now()))){
-            $data['PPCMonth']++;
+            $data['PPCWeek']++;
         }
         if(date("m-Y",strtotime($PP->created_at)) == date("m-Y",strtotime(now()))){
             $data['PPCMonth']++;
@@ -80,8 +80,6 @@ class DashboardController extends Controller
 
 
         //
-
-        $data['PPCount'] = $paidPurchaseCount;
         $data['userCount'] = $userCount;
         $data = json_decode(json_encode($data));
         return view('dashboard',compact('data'));

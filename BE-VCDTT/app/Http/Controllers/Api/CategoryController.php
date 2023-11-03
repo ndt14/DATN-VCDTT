@@ -166,7 +166,7 @@ class CategoryController extends Controller
 
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
 
-    public function cateManagementList() {
+    public function cateManagementList(Request $request) {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category');
         if($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
@@ -179,11 +179,17 @@ class CategoryController extends Controller
                 }
             }
             $data = json_decode(json_encode($data),false);
-            return view('admin.categories.list', compact('data'));
+
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
         }else {
             $data = [];
-            return view('admin.categories.list', compact('data'));
         }
+        return view('admin.categories.list', compact('data'));
 
     }
 

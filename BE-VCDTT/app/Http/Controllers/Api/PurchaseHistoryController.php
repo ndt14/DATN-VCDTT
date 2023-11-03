@@ -15,6 +15,8 @@ use App\Http\Resources\PurchaseHistoryResource;
 use App\Models\Coupon;
 use App\Models\UsedCoupon;
 use App\Notifications\SendMailToClient;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 
@@ -190,8 +192,20 @@ class PurchaseHistoryController extends Controller
 
     public function purchaseHistoryManagementList(Request $request)
     {
-        $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history')->json()['data']['purchase_history'];
-        return view('admin.purchase_histories.list', compact('items'));
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history');
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
+
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        }else{
+            $data = [];
+        }
+        return view('admin.purchase_histories.list', compact('data'));
     }
 
     public function purchaseHistoryManagementEdit(Request $request)

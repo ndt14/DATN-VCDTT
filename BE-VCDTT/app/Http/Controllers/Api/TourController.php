@@ -18,6 +18,8 @@ use App\Models\Tour;
 use App\Models\TourToCategory;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -313,8 +315,20 @@ class TourController extends Controller
 
     public function tourManagementList(Request $request)
     {
-        $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour')['data']['tours'];
-        return view('admin.tours.list', compact('items'));
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour');
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['tours']), false);
+
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        }else{
+            $data = [];
+        }
+        return view('admin.tours.list', compact('data'));
     }
 
     public function tourManagementAdd(TourRequest $request)
