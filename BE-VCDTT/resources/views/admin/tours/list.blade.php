@@ -105,27 +105,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($items)
-                                        @foreach ($items as $item)
+                                    @if ($data)
+                                        @foreach ($data as $item)
                                             <tr>
-                                                <td><span class="text-muted">{{ $item['id'] }}</span></td>
+                                                <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item['id']}});" title="Show Detail">{{ $item['name'] }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ $item->name }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item['location'], 50) }}
+                                                    {{ string_truncate($item->location, 50) }}
                                                 </td>
                                                 <td class="text-wrap text-break">
-                                                    {{ $item['tourist_count'] }}
+                                                    {{ $item->tourist_count }}
                                                 </td>
                                                 <td>
-                                                    {{ $item['view_count'] }}
+                                                    {{ $item->view_count }}
                                                 </td>
                                                 <td>
-                                                    {{ time_format($item['created_at']) }}
+                                                    {{ time_format($item->created_at) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item['status'] == 1)
+                                                    @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Activated"></span>
                                                     @else
@@ -135,7 +135,7 @@
                                                 </td>
                                                 <td class="text-end">
                                                     @if(auth()->user()->can('reply review') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-yellow" href="{{ route('rating.list', ['id' => $item['id']]) }}">
+                                                    <a class="btn btn-icon btn-outline-yellow" href="{{ route('rating.list', ['id' => $item->id]) }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star-half-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M12 1a.993 .993 0 0 1 .823 .443l.067 .116l2.852 5.781l6.38 .925c.741 .108 1.08 .94 .703 1.526l-.07 .095l-.078 .086l-4.624 4.499l1.09 6.355a1.001 1.001 0 0 1 -1.249 1.135l-.101 -.035l-.101 -.046l-5.693 -3l-5.706 3c-.105 .055 -.212 .09 -.32 .106l-.106 .01a1.003 1.003 0 0 1 -1.038 -1.06l.013 -.11l1.09 -6.355l-4.623 -4.5a1.001 1.001 0 0 1 .328 -1.647l.113 -.036l.114 -.023l6.379 -.925l2.853 -5.78a.968 .968 0 0 1 .904 -.56zm0 3.274v12.476a1 1 0 0 1 .239 .029l.115 .036l.112 .05l4.363 2.299l-.836 -4.873a1 1 0 0 1 .136 -.696l.07 -.099l.082 -.09l3.546 -3.453l-4.891 -.708a1 1 0 0 1 -.62 -.344l-.073 -.097l-.06 -.106l-2.183 -4.424z" stroke-width="0" fill="currentColor"></path>
@@ -143,7 +143,7 @@
                                                     </a>
                                                     @endif
                                                     @if(auth()->user()->can('edit tour') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('tour.edit', ['id' => $item['id']]) }}">
+                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('tour.edit', ['id' => $item->id]) }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
@@ -153,7 +153,7 @@
                                                     </a>
                                                     @endif
                                                     @if(auth()->user()->can('delete tour') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item['id']}})">
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M4 7l16 0"></path>
@@ -178,20 +178,21 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
+                            @php
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
+
                             <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -199,13 +200,26 @@
                                             <path d="M15 6l-6 6l6 6"></path>
                                         </svg>prev</a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                </li>
+                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
+
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                    </li>
+
+                                @endfor
+                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
                                 <li class="page-item">
-                                    <a class="page-link" href="#">
+                                        ...
+                                </li>
+                                @endif
+                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                </li>
+                                <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
