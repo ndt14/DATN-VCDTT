@@ -202,11 +202,10 @@ class PurchaseHistoryController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-            return view('admin.purchase_histories.list', compact('data'));
         }else{
             $data = [];
-            return view('admin.purchase_histories.list', compact('data'));
         }
+        return view('admin.purchase_histories.list', compact('data'));
     }
 
     public function purchaseHistoryManagementEdit(Request $request)
