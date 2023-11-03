@@ -170,7 +170,7 @@ class BlogController extends Controller
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog');
         if($response->status() == 200) {
-            $data = json_decode(json_encode($data = $response->json()['data']['blogs']), false);
+            $data = json_decode(json_encode($response->json()['data']['blogs']), false);
             $perPage = $request->limit??5;// Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);

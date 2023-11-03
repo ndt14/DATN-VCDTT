@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FAQRequest;
 use App\Http\Resources\FAQResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -143,11 +145,16 @@ class FAQController extends Controller
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function faqManagementList() {
-
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq');
-        if($data->status() == 200) {
-            $data = json_decode(json_encode($data->json()['data']['faqs']), false);
+    public function faqManagementList(Request $request) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq');
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['faqs']), false);
+            $perPage = $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
             return view('admin.faqs.list', compact('data'));
         }else{
             $data = [];
