@@ -43,6 +43,7 @@ class PurchaseHistory extends Model
         'tour_start_time',
         'tour_end_time',
         'payment_status',
+        'purchase_method',
         'purchase_status',
     ];
 }

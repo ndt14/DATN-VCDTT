@@ -77,12 +77,10 @@
                                                     @if ($notification)
                                                         @if ($notification->read_at == null)
                                                             <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top"
-                                                                data-bs-title="Unactivated"></span>
+                                                                data-bs-placement="top" data-bs-title="Chưa đọc"></span>
                                                         @else
                                                             <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top"
-                                                                data-bs-title="Activated"></span>
+                                                                data-bs-placement="top" data-bs-title="Đã đọc"></span>
                                                         @endif
                                                 </div>
                                                 <div class="col text-truncate ">
@@ -91,12 +89,26 @@
                                                         class="text-body d-block">Mã giao dịch:
                                                         {{ $notification->data['transaction_id'] }}</a>
                                                     <div class="d-block text-secondary mt-n1">
-                                                        {{ string_truncate($notification->data['data'], 75) }}
+                                                        {{ string_truncate($notification->data['data'], 75) }} <br>
+                                                        Phương thức thanh toán: @if ($notification->data['purchase_method'] == 1)
+                                                            VN Pay
+                                                        @else
+                                                            Chuyển khoản trực tiếp
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a href="{{ route('purchase_histories.mark_as_read') }}">Đánh
-                                                        dấu là đã đọc</a>
+                                                    <a data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Đánh dấu là đã đọc" href="{{ route('purchase_histories.mark_as_read') }}"><svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            class="icon icon-tabler icon-tabler-checks" width="30"
+                                                            height="24" viewBox="0 0 24 24" stroke-width="5"
+                                                            stroke="paleGreen" fill="none"
+                                                            stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                            </path>
+                                                            <path d="M7 12l5 5l10 -10"></path>
+                                                            <path d="M2 12l5 5m5 -5l5 -5"></path>
+                                                        </svg></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,16 +131,15 @@
                         aria-label="Open user menu" aria-expanded="false">
                         <span class="avatar avatar-sm"
                             style="background-image: url({{ asset('images/admin.jpg') }});"></span>
-                        @if(auth()->user()->is_admin == 1)
-                        <div class="d-none d-xl-block ps-2">
-                            <div>Nhóm VCDTT</div>
-                            <div class="mt-1 small text-secondary">6 anh em</div>
-                        </div>
+                        @if (auth()->user()->is_admin == 1)
+                            <div class="d-none d-xl-block ps-2">
+                                <div>Nhóm VCDTT</div>
+                                <div class="mt-1 small text-secondary">6 anh em</div>
+                            </div>
                         @else
-                        <div class="d-none d-xl-block ps-2 pl-1">
-                            <div>{{auth()->user()->name}}</div>
-                        </div>
-                        
+                            <div class="d-none d-xl-block ps-2 pl-1">
+                                <div>{{ auth()->user()->name }}</div>
+                            </div>
                         @endif
 
                     </a>
