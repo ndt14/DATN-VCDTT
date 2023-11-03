@@ -180,16 +180,12 @@ class CategoryController extends Controller
             }
             $data = json_decode(json_encode($data),false);
 
-            $perPage= 5;// Số mục trên mỗi trang
-            if($request->limit){
-                $perPage = $request->limit;
-            }
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url());
-
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
 
             return view('admin.categories.list', compact('data'));
         }else {

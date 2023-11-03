@@ -191,15 +191,13 @@ class CouponController extends Controller
         $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon');
         if($data->status() == 200) {
             $data = json_decode(json_encode($data->json()['data']['coupons']), false);
-            $perPage= 5;// Số mục trên mỗi trang
-            if($request->limit){
-                $perPage = $request->limit;
-            }
+
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url());
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
 
             return view('admin.coupons.list', compact('data'));
         }else{
