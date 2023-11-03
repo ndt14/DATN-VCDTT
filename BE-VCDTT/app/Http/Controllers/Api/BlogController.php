@@ -177,12 +177,10 @@ class BlogController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-
-            return view('admin.blogs.list', compact('data'));
         }else {
             $data = [];
-            return view('admin.blogs.list', compact('data'));
         }
+        return view('admin.blogs.list', compact('data'));
     }
 
     public function blogManagementAdd(BlogRequest $request)
