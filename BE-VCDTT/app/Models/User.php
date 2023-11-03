@@ -34,7 +34,7 @@ class User extends Authenticatable
         'is_admin',
         'status',
     ];
-
+    protected $dates = ['deleted_at'];
     /**
      * The attributes that should be hidden for serialization.
      *

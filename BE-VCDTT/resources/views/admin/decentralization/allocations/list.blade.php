@@ -224,7 +224,7 @@
         });
 
         let viewDetail = function(id) {
-        axios.get(`/faq/detail/${id}`)
+        axios.get(`/allocation/edit/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
