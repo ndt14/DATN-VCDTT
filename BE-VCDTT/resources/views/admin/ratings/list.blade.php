@@ -92,31 +92,31 @@
                                 </thead>
                                 <tbody>
                                     @if ($data->ratings)
-                                        @foreach ($data->ratings as $data)
+                                        @foreach ($data->ratings as $item)
                                             <tr>
-                                                <td><span class="text-muted">{{ $data->id }}</span></td>
+                                                <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                    <a href="javascript: viewDetailU({{$data->id}});" title="Show Detail">{{ $data->user_name }}</a>
+                                                    <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $data->star }}
+                                                    {{ $item->star }}
                                                     <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                                                 </td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->content, 70) }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $data->admin_answer??'Null' }}
+                                                    {{ $item->admin_answer??'Null' }}
                                                 </td>
                                                 <td>
-                                                    {{ time_format($data->created_at) }}
+                                                    {{ time_format($item->created_at) }}
                                                 </td>
                                                 <td>
-                                                    {{ time_format($data->updated_at) }}
+                                                    {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
                                                     @if(auth()->user()->can('reply review') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('rating.edit', ['id' => $data->id]) }}">
+                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('rating.edit', ['id' => $item->id]) }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M8 9h8"></path>
@@ -128,7 +128,7 @@
                                                     </a>
                                                     @endif
                                                     @if(auth()->user()->can('delete review') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M4 7l16 0"></path>
@@ -153,38 +153,57 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
+                            @php
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->ratings->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
                             </select>
-                        <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
-                            bản ghi</p>
-                        <ul class="pagination m-0 ms-auto">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M15 6l-6 6l6 6"></path>
-                                    </svg>prev</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M9 6l6 6l-6 6"></path>
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
+
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->ratings->currentPage() }}</span> trên <span>{{ $data->ratings->lastPage() }}</span> của <span>{{ $data->ratings->total() }}</span>
+                                bản ghi</p>
+
+                            <ul class="pagination m-0 ms-auto">
+                                <li class="page-item {{ $data->ratings->currentPage() != 1 ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->ratings->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M15 6l-6 6l6 6"></path>
+                                        </svg>prev</a>
+                                </li>
+                                <li class="page-item {{ $data->ratings->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->ratings->url(1) }}">1</a>
+                                </li>
+                                @for ($page = max(2, $data->ratings->currentPage()-2); $page <= $data->ratings->currentPage()+2 && $page <= $data->ratings->lastPage()-1; $page++)
+
+                                    <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->ratings->url($page) }}">{{ $page }}</a>
+                                    </li>
+
+                                @endfor
+                                @if($data->ratings->currentPage()+3 != $data->ratings->lastPage() && $data->ratings->lastPage() >3)
+                                <li class="page-item">
+                                        ...
+                                </li>
+                                @endif
+                                <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->ratings->url($data->ratings->lastPage()) }}">{{ $data->ratings->lastPage() }}</a>
+                                </li>
+                                <li class="page-item {{ $data->ratings->currentPage() != $data->ratings->lastPage() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->ratings->nextPageUrl()}}">Next
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M9 6l6 6l-6 6"></path>
+                                        </svg>
+                                    </a>
+                                </li>
+                            </ul>
 
                     </div>
                 </div>

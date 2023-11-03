@@ -10,6 +10,8 @@ use App\Models\PurchaseHistory;
 use App\Models\Rating;
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class RatingController extends Controller
@@ -172,30 +174,41 @@ class RatingController extends Controller
 
      // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function allRatingManagementList() {
+    public function allRatingManagementList(Request $request) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating');
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['ratings']), false);
 
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating');
-        if($data->status() == 200) {
-            $data = json_decode(json_encode($data->json()['data']['ratings']), false);
-            return view('admin.ratings.list_all', compact('data'));
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+
         }else{
             $data = [];
-            return view('admin.ratings.list_all', compact('data'));
         }
+        return view('admin.ratings.list_all', compact('data'));
     }
 
 
     public function ratingManagementList(Request $request) {
 
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/'.$request->id);
-        if($data->status() == 200) {
-
-            $data = json_decode(json_encode($data->json()['data']), false);
-            return view('admin.ratings.list', compact('data'));
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/'.$request->id);
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']), false);
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data->ratings);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data->ratings = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->ratings->setPath(request()->url())->appends(['limit' => $perPage]);
         }else{
             $data = [];
-            return view('admin.ratings.list', compact('data'));
+
         }
+        return view('admin.ratings.list', compact('data'));
     }
 
     public function ratingManagementAdd() {
