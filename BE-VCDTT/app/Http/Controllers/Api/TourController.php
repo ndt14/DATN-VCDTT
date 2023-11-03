@@ -96,7 +96,6 @@ class TourController extends Controller
                     'categories' => CategoryResource::collection($listCate),
                     'images' => ImageResource::collection($listImage),
                     'coupons' => CouponResource::collection($listCoupon),
-
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -108,25 +107,12 @@ class TourController extends Controller
     public function store(TourRequest $request)
     {
         $categoriesArray = [];
-        $imgArray = $request->input('imgArray');
         $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $tour = new Tour();
         $tour->setCategoriesArray($categoriesArray);
         $tour->fill($request->all());
         $tour->save();
         if ($tour->id) {
-
-            if (!empty($imgArray)) {
-                $images = [];
-                foreach (json_decode($imgArray, true) as $img) {
-                    $data = [
-                        'url' => '/upload' . $img,
-                        'tour_id' => $tour->id
-                    ];
-                    $newImage = Image::create($data);
-                    $images[] = $newImage;
-                }
-            }
             if (!empty($categoriesArray)) {
                 $categories = [];
                 foreach ($categoriesArray as $cate) {
@@ -141,9 +127,7 @@ class TourController extends Controller
             return response()->json([
                 'data' => [
                     'tour' => new TourResource($tour),
-                    'tourImages' => !empty($images) ? $images : 'No image added',
                     'tourCategories' => !empty($categories) ? $categories : 'No category added',
-
                 ],
                 'message' => 'Add success',
                 'status' => 200
@@ -350,9 +334,39 @@ class TourController extends Controller
     public function tourManagementAdd(TourRequest $request)
     {
         if ($request->isMethod('POST')) {
+            
+            $data = $request->except('_token'); 
+
             $data = $request->except('_token');
+
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
             if ($response->status() == 200) {
+                $tour_id = $response['data']['tour']['id'];
+                if ($request->hasFile('files')) {
+                    $images = [];
+                    $fileNames = [];
+                    $files = $request->file('files');
+                    foreach ($files as $file) {   
+                        $type = $file->extension();                             
+                        $fileName = time() . '_' . uniqid(). '.' . $type;
+                        $file->move(public_path('uploads'), $fileName);
+                        $fileNames[] = [
+                            'name' => time() . '_' . uniqid(),
+                            'type' => $type,
+                            'full_name'=> $fileName,
+                        ];
+                    }
+                    foreach ($fileNames as $img) {
+                        $data = [
+                            'name' => $img['name'],
+                            'type' => $img['type'],
+                            'url' => '/uploads/' . $img['full_name'],
+                            'tour_id' => $tour_id
+                        ];
+                        $newImage = Image::create($data);
+                        $images[] = $newImage;
+                    }
+                }
                 return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
             } else {
                 return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');

@@ -41,25 +41,6 @@ class Tour extends Model
     {
         $tour = Tour::find($this->id);
         $categories = new Category();
-        $categoriesParent = Category::whereIn('id', $this->categoriesArray)->get();
-        foreach($categoriesParent as $parent){
-            $parent->child = $categories->getCategoriesChild($parent->id)->toArray();
-        }
-        $array = $categoriesParent->toArray();
-        
-        $newArray = [];
-        foreach ($array as $item) {
-            $newChild = [];
-            foreach ($item['child'] as $child) {
-                $newChild[] = [
-                    'id' => $child['id'],
-                    'name' => $child['name']
-                ];
-            }
-            $newArray[$item['name']] = [
-                'child' => $newChild
-            ];
-        }
         $data = [
             //tour
             'tour_id' => $tour->id,
@@ -79,9 +60,32 @@ class Tour extends Model
             'view_count' => $tour->view_count,
             'created_at' => time_format($tour->created_at),
             'updated_at' => time_format($tour->updated_at),
-            //category
-            'cate_id' => $newArray,
         ];
+        $data['category']['lvl0'] = [];
+        $data['category']['lvl1'] = [];
+        foreach($this->categoriesArray as $cate){
+            if(Category::where('id', $cate)->where('parent_id', null)->exists()){
+                $categoriesParent = Category::where('id', $cate)->first();
+                $categoriesParent->child = $categories->getCategoriesChild($cate);
+                $data['category']['lvl0'][] = $categoriesParent->name;
+                foreach ($categoriesParent->child as $child) {
+                    $data['category']['lvl1'][] = $categoriesParent->name.' > '. $child->name;
+                }
+                $data['parent_category'][] = $categoriesParent->name;
+            }
+            else{
+                $categoriesChild = Category::where('id', $cate)->first();
+                $parentList = Category::where('id', $categoriesChild->parent_id)->get();
+                foreach($parentList as $parent){
+                    if(!in_array( $parent->name.' > '. $categoriesChild->name,$data['category']['lvl1'])){
+                        $data['category']['lvl1'][] = $parent->name.' > '. $categoriesChild->name;
+                    }
+                    if(!in_array( $parent->name,$data['category']['lvl0'])){
+                        $data['category']['lvl0'][] = $parent->name;
+                    }
+                }
+            }
+        }
         return $data;
     }
 }
