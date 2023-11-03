@@ -58,7 +58,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3>
+                            <h3 class="card-title">Faq</h3> <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">

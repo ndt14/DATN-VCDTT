@@ -8,6 +8,7 @@ use App\Models\Allocation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 class AllocationController extends Controller
@@ -125,6 +126,17 @@ class AllocationController extends Controller
         return response()->json(['message' => '404 Not found', 'status' => 404]);
     }
 
+    }
+
+
+    public function allocationManagementDetail(Request $request) {
+        $data = $request->except('_token');
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/'.$request->id);
+        if($response->status() == 200) {
+            $item = json_decode(json_encode($response->json()['data']['rating']), false);
+            $html = view('admin.ratings.detail', compact('item'))->render();
+            return response()->json(['html' => $html, 'status' => 200]);
+        }
     }
 
     // hiện tại đã hoàn thành đến bước cấp quyền và insert dữ liệu vào đủ các bảng

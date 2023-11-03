@@ -168,6 +168,7 @@
                             </div>
                         </div>
 
+                        @if(auth()->user()->is_admin ==1)
                         <div class="mb-3 col-6">
                             <div class="form-label">Admin ?</div>
                             <div class="custom-controls-stacked">
@@ -187,6 +188,23 @@
                             </span>
                             </div>
                         </div>
+                        @else
+                        <div class="mb-3 col-6">
+                            <div class="form-label">Admin ?</div>
+                            <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input" name="is_admin" checked="" value="2" >
+                                    <span class="custom-control-label">Không</span>
+                                </label>
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input" name="is_admin" checked="" value="3" >
+                                    <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
+                                </label>
+                                <span class="text-danger d-flex justify-content-start">
+                            </span>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     </div>
                     <div class="card-footer text-right">
