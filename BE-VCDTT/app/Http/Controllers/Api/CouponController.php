@@ -198,6 +198,7 @@ class CouponController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
+
             return view('admin.coupons.list', compact('data'));
         }else{
             $data = [];
