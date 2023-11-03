@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -15,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 class UserController extends Controller
 {
     use HasRoles;
-    
+
     public function index()
     {
         //
@@ -162,17 +164,22 @@ class UserController extends Controller
 
     // ## ============================================ NHÓM HÀM CHO CRUD USER TRONG BLADE ADMIN ==================================
 
-    public function userManagementList()
+    public function userManagementList(Request $request)
     {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user');
+        if($response->status() == 200) {
+            $data = json_decode(json_encode($response->json()['data']['users']), false);
 
-        $data = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user');
-        if ($data->status() == 200) {
-            $data = json_decode(json_encode($data->json()['data']['users']), false);
-            return view('admin.users.list', compact('data'));
-        } else {
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        }else{
             $data = [];
-            return view('admin.users.list', compact('data'));
         }
+        return view('admin.users.list', compact('data'));
     }
 
     public function userManagementEdit(UserRequest $request, $id)
