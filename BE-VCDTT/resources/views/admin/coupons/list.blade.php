@@ -168,7 +168,7 @@
                                 @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>{{ $data->total() }}</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
 
                             <ul class="pagination m-0 ms-auto">
