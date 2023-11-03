@@ -1,8 +1,8 @@
 .ais-SearchBox-submit,
 .ais-SearchBox-reset{
-    display: none !important;
+    /* display: none !important; */
 }
-.ais-SearchBox-input{
+/* .ais-SearchBox-input{
    width: 1000px !important;
 }
 .search-results{
@@ -14,7 +14,7 @@
 .image{
   width: 300px !important;
   height: 200px !important;
-}
+} */
 /* .row{
   width: 2000px !important;
 } */

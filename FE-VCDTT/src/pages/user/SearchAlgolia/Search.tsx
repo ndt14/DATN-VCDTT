@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import {
   Configure,
+  HierarchicalMenu,
   Highlight,
   Hits,
   InstantSearch,
+  Menu,
   Pagination,
   RangeInput,
   RefinementList,
@@ -16,7 +18,8 @@ import { Panel } from './Panel';
 import type { Hit } from 'instantsearch.js';
 
 import './Search.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+
 
 const searchClient = algoliasearch(
   "ZKNG517W50",
@@ -24,57 +27,66 @@ const searchClient = algoliasearch(
 );
 
 export function Search() {
+  const { search } = useLocation();
+  console.log(search);
+  
+  const queryParams = new URLSearchParams(search);
+  const queryParam = queryParams.get('?tours%5Bquery%5D');
+  const [query, setQuery] = useState(queryParam || '');
+ 
+  
   return (
    <>
     <div>
+    <section className="inner-banner-wrap">
+        <div
+          className="inner-baner-container"
+          style={{
+            backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
+          }}
+        >
+          <div className="container">
+            <div className="inner-banner-content">
+              <h1 className="inner-title">Tìm kiếm tour</h1>
+            </div>
+          </div>
+        </div>
+        <div className="inner-shape"></div>
+      </section>
       <div className="container">
       <div className="row">
-      <InstantSearch searchClient={searchClient} indexName="tours_to_categories" >
+      <InstantSearch searchClient={searchClient} indexName="tours" routing={true}
+      insights={true}>
           <Configure hitsPerPage={8} />
               <div className="col-lg-4">
               <Panel header="brand">
-                <RefinementList attribute="cate_name" showMore={true} limit={5}/>
+                <RefinementList attribute="parent_category" showMore={true} limit={5}/>
               </Panel>
-              <Panel header="Price">
-              <RangeInput attribute="child_price" precision={0} min={0} max={100000000}/>
+            
+            <Panel header="Price">
+              <RangeInput attribute="adult_price" precision={1} />
+            </Panel>
+            <Panel header="Tỉnh">
+            <HierarchicalMenu
+                attributes={[
+                  'category.lvl0',
+                  'category.lvl1',
+                  // 'hierarchicalCategories.lvl2',
+                ]}
+                showMore={true}
+              />
             </Panel>
                 </div>
                 <div className="col-lg-8">
-                <SearchBox placeholder="" className="searchbox" />
+                <SearchBox  placeholder="Tìm kiếm" className="searchbox" searchAsYouType={false} />
               <Hits hitComponent={Hit} />
 
               <div className="pagination">
                 <Pagination />
               </div>
-                </div>  
+                </div> 
                 </InstantSearch>
        </div>         
-        
-   
-
-
-       
-          {/* <div className="search-panel">
-            <div className="search-panel__filters">
-              <Panel header="brand">
-                <RefinementList attribute="cate_name" showMore={true} limit={5}/>
-              </Panel>
-              <Panel header="Price">
-              <RangeInput attribute="child_price" precision={1}  />
-            </Panel>
-            </div>
-            
-            <div className="search-panel__results">
-              <SearchBox placeholder="" className="searchbox" />
-              <Hits hitComponent={Hit} />
-
-              <div className="pagination">
-                <Pagination />
-              </div>
-            </div>
-          </div>
-        
-      </div> */}
       
     </div>
     </div>

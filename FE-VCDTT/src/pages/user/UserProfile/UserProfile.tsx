@@ -38,8 +38,8 @@ const UserProfile = () => {
     gender: userGender,
     date_of_birth: userDateOfBirth,
   } = userData?.data?.user ?? {};
-  const parts = userDateOfBirth.split("-");
-  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  // const parts = userDateOfBirth.split("-");
+  // const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   const { TabPane } = Tabs;
   const [editUser] = useUpdateUserMutation();
   const [updatePassword] = useUpdatePasswordMutation();
@@ -237,7 +237,7 @@ const UserProfile = () => {
                 </p>
                 <p>
                   Ngày tháng năm sinh:{" "}
-                  <span className="fw-bold">{formattedDate}</span>
+                  {/* <span className="fw-bold">{formattedDate}</span> */}
                 </p>
                 <p>
                   Giới tính: <span className="fw-bold">{gender}</span>

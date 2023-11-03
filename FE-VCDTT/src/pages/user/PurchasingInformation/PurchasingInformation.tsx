@@ -12,9 +12,9 @@ import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { log } from "console";
 import { Link } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../../api/user";
+import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 
 // type Props = {};
 
@@ -77,6 +77,8 @@ const PurchasingInformation = (props: Props) => {
     address: userAddress,
     gender: userGender,
   } = userData?.data?.user ?? {};
+  console.log(userData);
+  
 
   // const userEmail = userData?.email;
   // const phoneNumber = userData?.phone_number;
@@ -199,7 +201,11 @@ const PurchasingInformation = (props: Props) => {
   };
 
   //
-
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -232,6 +238,21 @@ const PurchasingInformation = (props: Props) => {
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
 
+    if (paymentMethod === 'cash') {
+      addBill(variables)
+      .then((response) => {
+        alert("Đặt tour thành công");
+        const billID = response?.data?.data?.purchase_history.id;
+        console.log(billID);
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error(error);
+      });
+      setShowPaymentModal(true);
+     
+    } else if (paymentMethod === 'bank') {
+
     addBill(variables)
       .then((response) => {
         alert("Đặt tour thành công");
@@ -245,8 +266,34 @@ const PurchasingInformation = (props: Props) => {
         // Handle any errors here
         console.error(error);
       });
+    };
   };
-
+  const variables = {
+    name: formik.values.name,
+    user_id: userId,
+    tour_name: tourName,
+    tour_id: tourId,
+    child_count: productChildNumber,
+    adult_count: productNumber,
+    tour_start_time: formattedDate,
+    tour_location: tourLocation,
+    tour_child_price: tourChildPrice,
+    tour_adult_price: tourPrice,
+    email: formik.values.email,
+    phone_number: formik.values.phone_number,
+    suggestion: formik.values.message,
+    gender: parseInt(formik.values.honorific),
+    coupon_name: couponData.couponName,
+    coupon_code: couponData.couponCode,
+    coupon_percentage:
+      couponData.percentage > 0 ? couponData.percentage : null,
+    coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
+    tour_sale_percentage: 0,
+    address: formik.values.address,
+    purchase_status: 0, 
+    payment_status: 0,
+    formattedFinalPrice: formattedFinalPrice,
+  };
   // console.log(onChange);
 
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
@@ -510,6 +557,7 @@ const PurchasingInformation = (props: Props) => {
                     )}
                   </form>
                   {/* Modal xác nhận thông tin */}
+                  {showPaymentModal===false ? (
                   <div className="">
                     <div
                       className="modal fade"
@@ -619,17 +667,23 @@ const PurchasingInformation = (props: Props) => {
                               <div className="form-group">
                                 <label htmlFor="">Phương thức thanh toán</label>
                                 <div className="mr-3">
-                                  <input
-                                    type="radio"
-                                    name="payment_status"
-                                    className="mr-2"
-                                  />
-                                  Tiền mặt
-                                </div>
                                 <input
-                                  type="radio"
-                                  name="payment_status"
-                                  className="mr-2"
+                                   type="radio"
+                                   name="payment_status"
+                                   value="cash"
+                                   className="mr-2"
+                                   onChange={handlePaymentMethodChange}
+                                   />
+                                  Chuyển khoản trực tiếp
+                                </div>
+                             
+
+                                <input
+                                   type="radio"
+                                   name="payment_status"
+                                   value="bank"
+                                   className="mr-2"
+                                   onChange={handlePaymentMethodChange}
                                 />
                                 Ngân hàng
                               </div>
@@ -677,6 +731,12 @@ const PurchasingInformation = (props: Props) => {
                       </div>
                     </div>
                   </div>
+                  ) : null}
+                <CashPaymentModal
+  show={showPaymentModal}
+  onHide={() => setShowPaymentModal(false)}
+  modalData={variables}
+/>
                 </div>
               </div>
               <div className="col-md-4">

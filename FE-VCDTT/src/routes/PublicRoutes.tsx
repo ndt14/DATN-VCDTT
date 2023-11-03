@@ -45,11 +45,12 @@ const PublicRoutes = () => {
         <Route path="purchase_histories" element={<HomePage />} />
         <Route path="signin" element={<HomePage />} />
         <Route path="signup" element={<HomePage />} />
-        <Route path="search/:id" element={<TourSearch />} />
+        <Route path="searchs/:id" element={<TourSearch />} />
         <Route path="user/profile" element={<UserProfile />} />
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
+        <Route path="/search" element={<Search/>}></Route>
         
         <Route path="*" element={<NotFoundPage />} />
       </Route>
@@ -59,7 +60,7 @@ const PublicRoutes = () => {
       </Route>
       <Route path="reset-password/:token" element={<ResetPasswordModal/>} />
       <Route path="*" element={<NotFoundPage />}></Route>
-      <Route path="/se" element={<Search/>}></Route>
+      
     </Routes>
   );
 };
