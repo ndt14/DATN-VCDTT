@@ -92,6 +92,7 @@ const Header = () => {
         setShowSignIn(false);
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("accessToken", data.token);
+        localStorage.removeItem("tempUser");
         alert("Đăng nhập thành công!");
         navigate("/");
       } else {

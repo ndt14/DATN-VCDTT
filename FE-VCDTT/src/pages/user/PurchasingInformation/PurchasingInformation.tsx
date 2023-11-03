@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { log } from "console";
 import { Link } from "react-router-dom";
+import { useGetUserByIdQuery } from "../../../api/user";
 
 // type Props = {};
 
@@ -24,7 +25,7 @@ const PurchasingInformation = (props: Props) => {
     email: string;
     phone_number: string;
     message: string;
-    honorific: string;
+    honorific: number;
     address: string;
   }
 
@@ -64,37 +65,48 @@ const PurchasingInformation = (props: Props) => {
   } = location.state;
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const userName = userData?.name;
-  const userId = userData?.id;
-  const userEmail = userData?.email;
-  const phoneNumber = userData?.phone_number;
-  const userAddress = userData?.address;
+  const localData = JSON.parse(localStorage.getItem("user"));
+  const userId = localData?.id;
+  console.log(userId);
+
+  const { data: userData } = useGetUserByIdQuery(userId || "");
+  const {
+    name: userName,
+    email: userEmail,
+    phone_number: phoneNumber,
+    address: userAddress,
+    gender: userGender,
+  } = userData?.data?.user ?? {};
+
+  // const userEmail = userData?.email;
+  // const phoneNumber = userData?.phone_number;
+  // const userAddress = userData?.address;
+  // const userGender = userData?.gender;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
   // Xử lý xác nhận thông tin form
-  const [formData, setFormData] = useState({
-    user_info: "",
-    email: "",
-    phone_number: "",
-    message: "",
-  });
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  // const [formData, setFormData] = useState({
+  //   user_info: "",
+  //   email: "",
+  //   phone_number: "",
+  //   message: "",
+  // });
+  // const handleChange = (
+  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: value,
+  //   }));
+  // };
   const formik = useFormik<FormValues>({
     initialValues: {
       name: userName ? userName : "",
       email: userEmail ? userEmail : "",
       phone_number: phoneNumber ? phoneNumber : "",
       message: "",
-      honorific: "",
+      honorific: userGender ? userGender : null,
       address: userAddress ? userAddress : "",
     },
     validationSchema: Yup.object({
