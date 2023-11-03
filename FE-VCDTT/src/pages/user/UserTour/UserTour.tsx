@@ -1,15 +1,26 @@
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useGetBillsWithUserIDQuery } from "../../../api/bill";
+import {
+  useGetBillsWithUserIDQuery,
+  useUpdateBillMutation,
+} from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
+import { Button, message, Popconfirm } from "antd";
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
   const { data: TourData } = useGetBillsWithUserIDQuery(userId | "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
+  const [updateBill] = useUpdateBillMutation();
+
+  useEffect(() => {
+    if (TourData) {
+      console.log(TourData);
+    }
+  }, [TourData]);
 
   const userName = userData?.data?.user.name;
 
@@ -25,20 +36,41 @@ const UserTour = () => {
     window.location.href = VnpayURL;
   };
 
-  const [showModal, setShowModal] = useState({});
+  // const [showModal, setShowModal] = useState({});
 
-  const handleButtonClick = (id: any) => {
-    setShowModal((prevState) => ({
-      ...prevState,
-      [id]: true,
-    }));
+  // const handleButtonClick = (id: any) => {
+  //   setShowModal((prevState) => ({
+  //     ...prevState,
+  //     [id]: true,
+  //   }));
+  // };
+
+  // const handleCloseModal = (id: any) => {
+  //   setShowModal((prevState) => ({
+  //     ...prevState,
+  //     [id]: false,
+  //   }));
+  // };
+
+  //
+  const cancelTour = async (id: number) => {
+    const data = {
+      purchase_status: 7,
+      id: id,
+    };
+
+    await updateBill(data).then(() => {
+      alert("Hủy tour thành công");
+    });
   };
 
-  const handleCloseModal = (id: any) => {
-    setShowModal((prevState) => ({
-      ...prevState,
-      [id]: false,
-    }));
+  const confirm = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+  };
+
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
   };
 
   return (
@@ -52,7 +84,7 @@ const UserTour = () => {
         >
           <div className="container">
             <div className="inner-banner-content">
-              <h1 className="inner-title">Tìm kiếm tour</h1>
+              <h1 className="inner-title">Thông tin tài khoản</h1>
             </div>
           </div>
         </div>
@@ -78,62 +110,15 @@ const UserTour = () => {
               <hr />
               {/* Left panel */}
 
-              {/* <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
-                  Hồ sơ
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className="border-0 btn w-100" type="button">
-                  Tour đã đặt
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
-                  Tour yêu thích
-                </button>
-              </Link> */}
-              {/* <div className="">
-                <div className="">
-                  <nav id="navigation" className="">
-                    <ul>
-                      <ul>
-                        <li>
-                          <Link to="user/profile">Thông tin cá nhân</Link>
-                        </li>
-                        <li>
-                          <Link to="user/tours">Tour đã mua</Link>
-                        </li>
-                        <li>
-                          <Link to="user/favorite">Tour yêu thích</Link>
-                        </li>
-                      </ul>
-                    </ul>
-                  </nav>
-                </div>
-              </div> */}
               <nav className="nav flex-column">
                 <Link className="nav-link" to={"/user/profile"}>
                   Thông tin cá nhân
                 </Link>
-                <Link className="nav-link active" to={"/user/tours"}>
+                <Link
+                  className="nav-link text-white"
+                  style={{ backgroundColor: "#1677FF" }}
+                  to={"/user/tours"}
+                >
                   Tour đã đặt
                 </Link>
                 <Link className="nav-link" to={"/user/favorite"}>
@@ -172,6 +157,11 @@ const UserTour = () => {
                     goToPayment(id);
                   }
                 };
+                const handleCancelTour = () => {
+                  if (id) {
+                    cancelTour(id);
+                  }
+                };
                 let tourStatus;
                 if (purchase_status === 0) {
                   tourStatus = "Chờ thanh toán";
@@ -194,8 +184,8 @@ const UserTour = () => {
                 } else if (purchase_status === 9) {
                   tourStatus = "Đã hoàn tiền do hủy tour";
                 } else if (purchase_status === 10) {
-                tourStatus = "Đã Đánh giá tour";
-              }
+                  tourStatus = "Đã Đánh giá tour";
+                }
 
                 const finalPrice =
                   coupon_percentage == 0 || null
@@ -225,13 +215,18 @@ const UserTour = () => {
                       Giá:{" "}
                       <span className="fw-bold">{formattedFinalPrice}</span>
                     </p>
+                    <p>
+                      Trạng thái đơn hàng:{" "}
+                      <span className="fw-bold">{tourStatus}</span>
+                    </p>
 
                     <button
                       type="button"
                       data-toggle="modal"
                       data-target={`#bill-${id}`}
+                      className="btn-continue"
                     >
-                      Chi tiết đơn hàng
+                      Chi tiết
                     </button>
                     <div
                       className="modal fade"
@@ -243,9 +238,12 @@ const UserTour = () => {
                       <div className="modal-dialog" role="document">
                         <div className="modal-content">
                           <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                              Chi tiết đơn hàng
-                            </h5>
+                            <h3
+                              className="modal-title text-primary"
+                              id="exampleModalLabel"
+                            >
+                              Chi tiết đơn hàng số <span>{id}</span>
+                            </h3>
                             <button
                               type="button"
                               className="close"
@@ -311,18 +309,37 @@ const UserTour = () => {
 
                             <p>Ngày bắt đầu tour: {tour_start_time}</p>
                             <p>Ngày kết thúc tour: {tour_end_time}</p>
-                            <p>Trạng thái thanh toán: {tourStatus}</p>
+                            <p>
+                              Trạng thái thanh toán:{" "}
+                              <span className="fw-bold text-danger">
+                                {tourStatus}
+                              </span>
+                            </p>
                             {payment_status == 0 ? (
-                              <button onClick={handleGoToPayment}>
-                                Đi đến thanh toán
+                              <button
+                                className="btn-continue mr-2"
+                                onClick={handleGoToPayment}
+                              >
+                                Thanh toán
                               </button>
                             ) : (
                               <div></div>
                             )}
-                            {payment_status && payment_status > 3 ? (
+                            {purchase_status && purchase_status > 3 ? (
                               <div></div>
                             ) : (
-                              <button>Hủy tour</button>
+                              <Popconfirm
+                                title="Delete the task"
+                                description="Are you sure to delete this task?"
+                                onConfirm={handleCancelTour}
+                                onCancel={cancel}
+                                okText="Yes"
+                                cancelText="No"
+                              >
+                                <button className="btn-continue">
+                                  Hủy tour
+                                </button>
+                              </Popconfirm>
                             )}
                           </div>
                         </div>

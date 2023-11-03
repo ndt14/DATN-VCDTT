@@ -5,4 +5,5 @@ export interface User {
     phone_number: string;
     gender:number,
     image:string,
+    date_of_birth: string,
 }

@@ -50,7 +50,7 @@ const UserTour = () => {
         >
           <div className="container">
             <div className="inner-banner-content">
-              <h1 className="inner-title">Tìm kiếm tour</h1>
+              <h1 className="inner-title">Thông tin tài khoản</h1>
             </div>
           </div>
         </div>
@@ -75,75 +75,29 @@ const UserTour = () => {
               </div>
               <hr />
               {/* Left panel */}
-
-              {/* <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
-                  Hồ sơ
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className="border-0 btn w-100" type="button">
-                  Tour đã đặt
-                </button>
-              </Link>
-
-              <Link
-                to={"/user/profile"}
-                className="nav row "
-                id="myTab"
-                role="tablist"
-              >
-                <button className=" border-0 btn w-100" type="button">
-                  Tour yêu thích
-                </button>
-              </Link> */}
-              {/* <div className="">
-                <div className="">
-                  <nav id="navigation" className="">
-                    <ul>
-                      <ul>
-                        <li>
-                          <Link to="user/profile">Thông tin cá nhân</Link>
-                        </li>
-                        <li>
-                          <Link to="user/tours">Tour đã mua</Link>
-                        </li>
-                        <li>
-                          <Link to="user/favorite">Tour yêu thích</Link>
-                        </li>
-                      </ul>
-                    </ul>
-                  </nav>
-                </div>
-              </div> */}
-              <nav className="nav flex-column">
-                <Link className="nav-link" to={"/user/profile"}>
-                  Thông tin cá nhân
-                </Link>
-                <Link className="nav-link active" to={"/user/tours"}>
-                  Tour đã đặt
-                </Link>
-                <Link className="nav-link" to={"/user/favorite"}>
-                  Tour yêu thích
-                </Link>
-              </nav>
+              <div className="shadow-lg">
+                <nav className="nav flex-column ">
+                  <Link className="nav-link" to={"/user/profile"}>
+                    Thông tin cá nhân
+                  </Link>
+                  <Link className="nav-link active" to={"/user/tours"}>
+                    Tour đã đặt
+                  </Link>
+                  <Link
+                    className="nav-link text-white"
+                    style={{ backgroundColor: "#1677FF" }}
+                    to={"/user/favorite"}
+                  >
+                    Tour yêu thích
+                  </Link>
+                </nav>
+              </div>
 
               {/* End left panel */}
             </div>
           </div>
           <div className="col-8">
-            <h3></h3>
+            <h3>Tour yêu thích</h3>
             <div className="row">
               {tourFavorite?.map(
                 ({
