@@ -37,8 +37,8 @@ class CouponRequest extends FormRequest
                             'code' => 'required',
                             'start_date' => 'required',
                             'expiration_date' => 'required',
-                            'percentage_price' => 'required',
-                            'fixed_price' => 'required',
+                            // 'percentage_price' => 'required',
+                            // 'fixed_price' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
                             //     return empty($this->input('cate_id'));
                             // })],
@@ -54,8 +54,8 @@ class CouponRequest extends FormRequest
                             'code' => 'required',
                             'start_date' => 'required',
                             'expiration_date' => 'required',
-                            'percentage_price' => 'required',
-                            'fixed_price' => 'required',
+                            // 'percentage_price' => 'required',
+                            // 'fixed_price' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
                             //     return empty($this->input('cate_id'));
                             // })],

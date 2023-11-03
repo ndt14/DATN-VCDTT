@@ -7,7 +7,9 @@ import {
 } from 'react-instantsearch-dom';
 import './css/SearchBar.css';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 type Props = {};
 
@@ -16,11 +18,20 @@ const searchClient = algoliasearch(
   "f2d72a41c3b3dd95d40c9d0ac7e56434"
 );
 
-const indexName = 'tours_to_categories';
+const indexName = 'tours';
 
 const SearchBar = (props: Props) => {
   const [inputValue, setInputValue] = useState('');
+  const history = useNavigate();
+  // ...
 
+  const handleSearch = () => {
+    // Gửi yêu cầu tìm kiếm Algolia ở đây
+    // Sử dụng giá trị `inputValue` để tìm kiếm
+
+    // Sau khi gửi yêu cầu tìm kiếm, điều hướng đến trang tìm kiếm và truyền giá trị tìm kiếm trong URL
+    history(`/search?tours%5Bquery%5D=${inputValue}`);
+  };
   const handleInputFocus = () => {
     setInputValue(''); // Clear the input value to trigger suggestions
   };
@@ -37,9 +48,12 @@ const SearchBar = (props: Props) => {
       <InstantSearch searchClient={searchClient} indexName={indexName}>
         <Configure hitsPerPage={5} />
         <SearchBox
+         placeholder="Tìm kiếm"
           onChange={handleInputChange}
           value={inputValue}
-          onFocus={handleInputFocus} // Clear input on focus
+          onFocus={handleInputFocus} 
+          onSubmit={handleSearch}
+          
         />
         <div className="search-results">
           {inputValue && <InstantSearchHits hitComponent={HitItem} />}

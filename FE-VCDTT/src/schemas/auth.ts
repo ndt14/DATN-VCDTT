@@ -12,7 +12,7 @@ export const registrationSchema = Yup.object({
     phone_number: Yup.string()
     .required("Số điện thoại không để trống")
     .test('valid-phone-number', 'Số điện thoại không hợp lệ', (value) => {
-      const phoneRegex = /^[0-9]{9}$/; // Change the regex pattern according to your format
+      const phoneRegex = /^[0-9]{10}$/; // Change the regex pattern according to your format
       return phoneRegex.test(value);
     }),
     c_password: Yup.string()

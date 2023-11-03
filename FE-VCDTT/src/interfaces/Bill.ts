@@ -23,6 +23,7 @@ export interface Bill {
     tour_start_time? :string;
     tour_end_time? :number;
     transaction_id?: number;
-    payment_status?:number
-    purchase_status?:number
+    payment_status?:number;
+    purchase_status?:number;
+    purchase_method?:number;
 }

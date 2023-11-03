@@ -212,7 +212,7 @@ const Header = () => {
                         ({ id, name }: Category) => {
                           return (
                             <li key={id}>
-                              <Link to={`/search/${id}`}>{name}</Link>
+                              <Link to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}>{name}</Link>
                               {/* <a href="destination.html"></a> */}
                             </li>
                           );
