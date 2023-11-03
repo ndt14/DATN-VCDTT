@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class SendMailToClient extends Notification
 {
@@ -54,6 +55,12 @@ class SendMailToClient extends Notification
             case '10':
                 $this->status = 'đã đánh giá.';
                 break;
+            case '11':
+                $this->status = 'Admin thông báo bạn đã chuyển thiếu tiền.';
+                break;
+            case '12':
+                $this->status = 'Admin thông báo bạn đã chuyển thừa tiền.';
+                break;
         }
     }
 
@@ -72,11 +79,19 @@ class SendMailToClient extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->greeting('Xin chào!')
-            ->line('Đơn hàng của bạn vừa được cập nhật trạng thái: '. $this->status .' Vui lòng bấm vào đường link bên dưới để kiểm tra')
-            ->action('Kiểm tra đơn hàng của bạn ', url('/')) //link đến trang đơn hàng của khách
-            ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!');
+        if ($this->purchase_status >= 0 && $this->purchase_status <= 10) {
+            return (new MailMessage)
+                ->greeting('Xin chào!')
+                ->line('Đơn hàng của bạn vừa được cập nhật trạng thái: ' . $this->status)
+                ->action('Kiểm tra đơn hàng của bạn ', url('/')) //link đến trang đơn hàng của khách
+                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+        } elseif ($this->purchase_status == 11 || $this->purchase_status == 12) {
+            return (new MailMessage)
+                ->greeting('Xin chào!')
+                ->line($this->status . ' Vui lòng liên hệ với chúng tôi để được hỗ trợ')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+        }
     }
 
     /**

@@ -42,7 +42,6 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-
         $users = User::where('is_admin', 1)->get();
 
         $data = $request->except('coupon_code', '_token');

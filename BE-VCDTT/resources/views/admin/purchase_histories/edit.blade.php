@@ -338,12 +338,36 @@
                                     <label class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" class="custom-control-input"
                                             @if ($items['payment_status'] == '0') checked @endif name="payment_status"
-                                            value="0" disabled>
+                                            value="0" >
                                         <span class="custom-control-label">Chưa thanh toán</span>
                                     </label>
 
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('payment_status')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-label">Phương thức thanh toán</div>
+                                <div class="custom-controls-stacked">
+                                    <label class="custom-control custom-radio custom-control-inline me-2">
+                                        <input type="radio" class="custom-control-input"
+                                            @if ($items['purchase_method'] == '1') checked @endif name="purchase_method"
+                                            value="1" disabled>
+                                        <span class="custom-control-label">VN Pay</span>
+                                    </label>
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input"
+                                            @if ($items['purchase_method'] == '0') checked @endif name="purchase_method"
+                                            value="0" disabled>
+                                        <span class="custom-control-label">Chuyển khoản trực tiếp</span>
+                                    </label>
+
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('purchase_method')
                                             {{ $message }}
                                         @enderror
                                     </span>
@@ -375,6 +399,10 @@
                                     <option @if ($items['purchase_status'] == 9) selected @endif value="9">Đã hoàn tiền
                                     </option>
                                     <option @if ($items['purchase_status'] == 10) selected @endif value="10">Người dùng đã đánh giá
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 11) selected @endif value="11">Người dùng chuyển khoản thiếu
+                                    </option>
+                                    <option @if ($items['purchase_status'] == 12) selected @endif value="12">Người dùng chuyển khoản thừa
                                     </option>
                                 </select>
                             </div>
