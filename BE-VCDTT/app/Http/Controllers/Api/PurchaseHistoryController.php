@@ -14,6 +14,8 @@ use App\Http\Resources\CouponResource;
 use App\Http\Resources\PurchaseHistoryResource;
 use App\Models\Coupon;
 use App\Models\UsedCoupon;
+use App\Notifications\CancelNotification;
+use App\Notifications\CancelPurchaseNotification;
 use App\Notifications\SendMailToClient;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -142,14 +144,14 @@ class PurchaseHistoryController extends Controller
 
             if ($updateAdmin) {
                 $purchaseHistory->notify(new SendMailToClient($purchaseHistory->purchase_status));
-            } else {
-                // if (!$input['transaction_id']) {
-                //     $input['payment_status'] = 0;
-                //     $input['purchase_status'] = 0;
-                // } else {
-                //     $input['payment_status'] = 1;
-                //     $input['purchase_status'] = 1;
-                // }
+            } elseif (!$updateAdmin && $purchaseHistory->purchase_status == 7) {
+                $users = User::where('is_admin', 1)->get();
+                foreach ($users as $user) {
+                    $user->notify(new CancelNotification($purchaseHistory));
+                }
+                if ($purchaseHistory->payment_status == 1){
+                    $purchaseHistory->notify(new CancelPurchaseNotification($purchaseHistory));
+                }
             }
 
             return response()->json([
@@ -192,16 +194,16 @@ class PurchaseHistoryController extends Controller
     public function purchaseHistoryManagementList(Request $request)
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history');
-        if($response->status() == 200) {
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
 
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.purchase_histories.list', compact('data'));

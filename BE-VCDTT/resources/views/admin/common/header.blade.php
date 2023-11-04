@@ -83,13 +83,13 @@
                                                                 data-bs-placement="top" data-bs-title="Đã đọc"></span>
                                                         @endif
                                                 </div>
-                                                <div class="col text-truncate ">
+                                                <div class="col text-truncate " style="width: 850px">
                                                     <a onclick='@php $notification->markAsRead() @endphp'
                                                         href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                         class="text-body d-block">Mã giao dịch:
                                                         {{ $notification->data['transaction_id'] }}</a>
                                                     <div class="d-block text-secondary mt-n1">
-                                                        {{ string_truncate($notification->data['data'], 75) }} <br>
+                                                        <span class="text-wrap">{{ $notification->data['data'] }}</span>  <br>
                                                         Phương thức thanh toán: @if ($notification->data['purchase_method'] == 1)
                                                             VN Pay
                                                         @else
