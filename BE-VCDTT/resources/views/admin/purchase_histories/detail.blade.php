@@ -307,7 +307,7 @@
                 </select>
             </div>
 
-            <a class="button btn btn-primary" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
+            <a class="button btn btn-indigo" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
 
         </div>
     </div>

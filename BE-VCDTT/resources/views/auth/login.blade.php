@@ -62,7 +62,7 @@
             </label>
           </div>
           <div class="form-footer">
-            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+            <button type="submit" class="btn btn-indigo w-100">Đăng nhập</button>
           </div>
         </form>
       </div>
