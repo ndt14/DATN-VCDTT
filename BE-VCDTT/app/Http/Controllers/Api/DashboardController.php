@@ -80,7 +80,7 @@ class DashboardController extends Controller
         $month = [0,0,0,0,0,0,0,0,0,0,0,0];
         foreach ($total as $d) {
             for ($i=0; $i < 12 ; $i++) {
-                $i<10?$mrp="0$i":$mrp=$i;
+                $i<9?$mrp="0".($i+1):$mrp=$i+1;
                 if( date("m-Y",strtotime($d['time'])) == $mrp."-".date("Y")){
                     $month[$i] += number_format($d['price'] / 1000000, 2);
                 }
