@@ -16,6 +16,7 @@ use App\Models\Coupon;
 use App\Models\UsedCoupon;
 use App\Notifications\CancelNotification;
 use App\Notifications\CancelPurchaseNotification;
+use App\Notifications\ComfirmPayment;
 use App\Notifications\SendMailToClient;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -149,8 +150,16 @@ class PurchaseHistoryController extends Controller
                 foreach ($users as $user) {
                     $user->notify(new CancelNotification($purchaseHistory));
                 }
-                if ($purchaseHistory->payment_status == 1){
+                if ($purchaseHistory->payment_status == 1) {
                     $purchaseHistory->notify(new CancelPurchaseNotification($purchaseHistory));
+                }
+            } elseif (!$updateAdmin && $purchaseHistory->payment_status == 1 && $purchaseHistory->purchase_status != 7) {
+                $users = User::where('is_admin', 1)->get();
+                foreach ($users as $user) {
+                    $user->notify(new ComfirmPayment($purchaseHistory));
+                }
+                if ($purchaseHistory->payment_status == 1) {
+                    $purchaseHistory->notify(new ComfirmPayment($purchaseHistory));
                 }
             }
 
@@ -188,6 +197,11 @@ class PurchaseHistoryController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
+
+    // public function sendNotiComfirm(Request $request)
+    // {
+    //     $data = $request->except('_token');
+    // }
 
     //=======================================PurchaseHistoryAdmin Controller=======================================
 

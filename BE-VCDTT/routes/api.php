@@ -98,6 +98,7 @@ Route::get('/purchase-history-show/{id}', [PurchaseHistoryController::class, 'sh
 Route::get('/purchase-history-show-by-user/{user_id}', [PurchaseHistoryController::class, 'showByUser']); //show tất cả hóa đơn của người dùng
 Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'update'])->name('api.purchase_histories.edit');
 Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
+// Route::post('/comfirm-purchase', [PurchaseHistoryController::class, 'sendNotiComfirm']);
 
 //WishList
 Route::get('/wish-list/{id}', [WishListController::class, 'indexAll']); //Hiện thị tour theo user id
