@@ -1,13 +1,13 @@
-<div class="d-none d-sm-none d-lg-block  sticky-top shadow">
-    <header class="navbar navbar-expand-md d-print-none sticky-top" style="z-index: 99;">
+<div class="d-none d-sm-none d-lg-block  sticky-top shadow-lg border-0">
+    <header class="navbar navbar-expand-md d-print-none sticky-top shadow-lg border-0" style="z-index: 99;">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
                 aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
                 <!-- <span class="navbar-toggler-icon"></span> -->
             </button>
             <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 ms-5">
-                <a href="/" class="d-flex align-items-center text-primary text-decoration-none">
-                    <span class="fs-1 text-primary me-1">VCDTT</span><span class="fw-light fst-italic">quản trị</span>
+                <a href="/" class="d-flex align-items-center text-indigo text-decoration-none">
+                    <span class="fs-1 text-indigo me-1">VCDTT</span><span class="fw-light fst-italic">quản trị</span>
                 </a>
             </h1>
             <div class="navbar-nav flex-row order-md-last">
@@ -63,9 +63,9 @@
                             @endforeach
                         </a>
                         <div
-                            class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card border-0 shadow-lg rounded-4 ">
-                            <div class="card">
-                                <div class="card-header">
+                            class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
+                            <div class="card border-0 shadow-lg rounded-4 ">
+                                <div class="card-header ">
                                     <h3 class="card-title">Thông báo</h3>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable">
@@ -133,7 +133,7 @@
                             style="background-image: url({{ asset('images/admin.jpg') }});"></span>
                         @if (auth()->user()->is_admin == 1)
                             <div class="d-none d-xl-block ps-2">
-                                <div>Nhóm VCDTT</div>
+                                <div>{{ auth()->user()->name }}</div>
                                 <div class="mt-1 small text-secondary">6 anh em</div>
                             </div>
                         @else
@@ -144,17 +144,22 @@
 
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <a href="#" class="dropdown-item">Status</a>
-                        <a href="./profile.html" class="dropdown-item">Profile</a>
-                        <a href="#" class="dropdown-item">Feedback</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="./settings.html" class="dropdown-item">Settings</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <a href="route('logout')"
                                 onclick="event.preventDefault();
                                         this.closest('form').submit();"
-                                class="dropdown-item">Logout</a>
+                                class="dropdown-item">
+                                <span class="me-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path>
+                                    <path d="M9 12h12l-3 -3"></path>
+                                    <path d="M18 15l3 -3"></path>
+                                    </svg>
+                                </span>
+                                Logout
+                            </a>
                         </form>
                     </div>
                 </div>

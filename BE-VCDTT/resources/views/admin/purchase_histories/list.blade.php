@@ -4,7 +4,7 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h1 class="text-primary mb-4" style="font-size: 36px;">
+                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
                     </h1>
                 </div>
@@ -24,7 +24,7 @@
                         </div> -->
                 {{-- <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('') }}" class="btn btn-primary d-none d-sm-inline-block">
+                        <a href="{{ route('') }}" class="btn btn-indigo d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -34,7 +34,7 @@
                             </svg>
                             Add new
                         </a>
-                        <a href="{{ url('/tour-add') }}" class="btn btn-primary d-sm-none btn-icon">
+                        <a href="{{ url('/tour-add') }}" class="btn btn-indigo d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -81,7 +81,7 @@
                                             <input type="text" name="keyword" class="form-control" placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-indigo">Submit</button>
                                         </div>
                                     </form>
                                 </div>

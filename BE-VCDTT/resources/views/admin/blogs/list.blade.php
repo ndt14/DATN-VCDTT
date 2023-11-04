@@ -4,7 +4,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
             <div class="col">
-                <h1 class="text-primary mb-4" style="font-size: 36px;">
+                <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Quản lý Blog
                 </h2>
             </div>
@@ -26,7 +26,7 @@
             @if(auth()->user()->can('add post') || auth()->user()->is_admin == 1)
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                    <a href="{{ route('blog.add')}}" class="btn btn-primary d-none d-sm-inline-block">
+                    <a href="{{ route('blog.add')}}" class="btn btn-indigo d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -34,7 +34,7 @@
                         </svg>
                         Thêm mới
                     </a>
-                    <a href="{{ url('/blog-add')}}" class="btn btn-primary d-sm-none btn-icon">
+                    <a href="{{ url('/blog-add')}}" class="btn btn-indigo d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <line x1="12" y1="5" x2="12" y2="19" />
@@ -83,7 +83,7 @@
                                         <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Tìm</button>
+                                        <button type="submit" class="btn btn-indigo">Tìm</button>
                                     </div>
                                 </form>
                             </div>

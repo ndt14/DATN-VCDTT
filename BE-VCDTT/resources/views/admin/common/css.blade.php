@@ -10,4 +10,22 @@
     .fancybox_content{
         z-index: 99 !important;
     }
+    .active-sidebar{
+        border-top-right-radius: var(--tblr-border-radius-xl) !important;
+        border-bottom-right-radius: var(--tblr-border-radius-xl) !important;
+        background-color: rgba(var(--tblr-info-lt-rgb));
+        color: var(--tblr-indigo) !important;
+    }
+    .active-sidebar>a{
+        color: var(--tblr-indigo) !important;
+    }
+    .accordion-button:not(.collapsed) {
+        color: var(--tblr-indigo) !important;
+    }
+    
+    li:has(.accordion-button:not(.collapsed)){
+        color: var(--tblr-indigo) !important;
+        border-top-right-radius: var(--tblr-border-radius-xl) !important;
+        border-bottom-right-radius: var(--tblr-border-radius-xl) !important;
+    }
 </style>

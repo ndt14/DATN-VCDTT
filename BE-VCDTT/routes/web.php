@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FAQController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
@@ -131,6 +132,13 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store')->middleware(['permission:admin|add category']);
     Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit')->middleware(['permission:admin|edit category']);
 
+
+
+    //Image
+    Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::post('/image-add', [ImageController::class, 'add'])->name('image.add');
+    Route::get('/image-download/{id}', [ImageController::class, 'download']);
+    Route::delete('/image-destroy/{id}', [ImageController::class, 'destroy']);
 
     Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
 

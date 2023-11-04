@@ -4,7 +4,7 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h1 class="text-primary mb-4" style="font-size: 36px;">
+                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
                     </h1>
                 </div>
@@ -70,7 +70,7 @@
                                         <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Gửi</button>
+                                        <button type="submit" class="btn btn-indigo">Gửi</button>
                                     </div>
                                 </form>
                             </div>
