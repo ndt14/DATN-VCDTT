@@ -25,7 +25,7 @@ class DashboardController extends Controller
         //passengers how many?
         //sold how many?
         $data = [];
-        $purchaseHistory = PurchaseHistory::whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
+        $purchaseHistory = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
 
         $total=[];
         foreach($purchaseHistory as $purchaseHistory){
@@ -55,9 +55,9 @@ class DashboardController extends Controller
         //
         $userCount = Count(User::where('is_admin',2)->get());
         //
-        $data['UVCount'] = Count(PurchaseHistory::where('purchase_status',2)->get());
+        $data['UVCount'] = Count(PurchaseHistory::where('payment_status',1)->where('purchase_status',1)->get());
         //
-        $paidPurchase = PurchaseHistory::where('payment_status',2)->get();
+        $paidPurchase = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
         $data['PPCToday']=0;
         $data['PPCWeek']=0;
         $data['PPCMonth']=0;
