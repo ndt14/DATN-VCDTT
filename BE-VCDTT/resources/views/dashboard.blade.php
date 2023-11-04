@@ -147,7 +147,7 @@
         </div>
             <div class="col-12 mt-4">
                 <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                    <h3>Chart</h3>
+                    <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
                     <div id="chart"  style="min-height: 365px;"></div>
                 </div>
             </div>
@@ -158,18 +158,12 @@
 @section('page_js')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    var jsonData = @json($data);
-    // console.log(jsonData);
+    var chartInfo = @json($data).chart;
+    // console.log(chartInfo);
     var options = {
           series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }, {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }, {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+          name: 'Số tiền thu được',
+          data: chartInfo
         }],
           chart: {
           type: 'bar',
@@ -191,11 +185,11 @@
           colors: ['transparent']
         },
         xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          categories: ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'],
         },
         yaxis: {
           title: {
-            text: '$ (thousands)'
+            text: '(Triệu VNĐ)'
           }
         },
         fill: {
@@ -204,7 +198,7 @@
         tooltip: {
           y: {
             formatter: function (val) {
-              return "$ " + val + " thousands"
+              return  val + " Triệu VNĐ"
             }
           }
         }
