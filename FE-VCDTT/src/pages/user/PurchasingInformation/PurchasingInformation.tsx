@@ -27,11 +27,12 @@ const PurchasingInformation = (props: Props) => {
     message: string;
     honorific: number;
     address: string;
+    method: number | null;
   }
 
   //
   const [isChecked, setIsChecked] = useState(false);
-  console.log(isChecked);
+  // console.log(isChecked);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -65,25 +66,24 @@ const PurchasingInformation = (props: Props) => {
   } = location.state;
   const parts = dateTour.split("-");
   const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  const localData = JSON.parse(localStorage.getItem("user"));
-  const userId = localData?.id;
-  console.log(userId);
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userId = userData?.id;
+  // console.log(userId);
 
-  const { data: userData } = useGetUserByIdQuery(userId || "");
-  const {
-    name: userName,
-    email: userEmail,
-    phone_number: phoneNumber,
-    address: userAddress,
-    gender: userGender,
-  } = userData?.data?.user ?? {};
-  console.log(userData);
-  
-
-  // const userEmail = userData?.email;
-  // const phoneNumber = userData?.phone_number;
-  // const userAddress = userData?.address;
-  // const userGender = userData?.gender;
+  // const { data: userData } = useGetUserByIdQuery(userId || "");
+  // const {
+  //   name: userName,
+  //   email: userEmail,
+  //   phone_number: phoneNumber,
+  //   address: userAddress,
+  //   gender: userGender,
+  // } = userData?.data?.user ?? {};
+  // console.log(userData);
+  const userName = userData?.name;
+  const userEmail = userData?.email;
+  const phoneNumber = userData?.phone_number;
+  const userAddress = userData?.address;
+  const userGender = userData?.gender;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
   // Xử lý xác nhận thông tin form
@@ -102,6 +102,7 @@ const PurchasingInformation = (props: Props) => {
   //     [name]: value,
   //   }));
   // };
+
   const formik = useFormik<FormValues>({
     initialValues: {
       name: userName ? userName : "",
@@ -110,6 +111,7 @@ const PurchasingInformation = (props: Props) => {
       message: "",
       honorific: userGender ? userGender : null,
       address: userAddress ? userAddress : "",
+      method: null,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nhập tên"),
@@ -133,7 +135,7 @@ const PurchasingInformation = (props: Props) => {
     couponName: "",
     couponCode: "",
   });
-  console.log(couponData);
+  // console.log(couponData);
 
   const [formCoupon, setFormCoupon] = useState({
     user_id: userId ? userId : "",
@@ -201,11 +203,13 @@ const PurchasingInformation = (props: Props) => {
   };
 
   //
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
   };
+  console.log(paymentMethod);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -233,40 +237,40 @@ const PurchasingInformation = (props: Props) => {
       address: formik.values.address,
       purchase_status: 0,
       payment_status: 0,
+      purchase_method: parseInt(paymentMethod),
     };
     console.log(variables);
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
 
-    if (paymentMethod === 'cash') {
+    if (paymentMethod === "0") {
       addBill(variables)
-      .then((response) => {
-        alert("Đặt tour thành công");
-        const billID = response?.data?.data?.purchase_history.id;
-        console.log(billID);
-      })
-      .catch((error) => {
-        // Handle any errors here
-        console.error(error);
-      });
+        .then((response) => {
+          alert("Đặt tour thành công");
+          const billID = response?.data?.data?.purchase_history.id;
+          console.log(billID);
+          localStorage.setItem("billIdSuccess", JSON.stringify(billID));
+        })
+        .catch((error) => {
+          // Handle any errors here
+          console.error(error);
+        });
       setShowPaymentModal(true);
-     
-    } else if (paymentMethod === 'bank') {
-
-    addBill(variables)
-      .then((response) => {
-        alert("Đặt tour thành công");
-        const billID = response?.data?.data?.purchase_history.id;
-        console.log(billID);
-        localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-        window.location.href = VnpayURL;
-      })
-      .catch((error) => {
-        // Handle any errors here
-        console.error(error);
-      });
-    };
+    } else if (paymentMethod === "1") {
+      addBill(variables)
+        .then((response) => {
+          alert("Đặt tour thành công");
+          const billID = response?.data?.data?.purchase_history.id;
+          console.log(billID);
+          localStorage.setItem("billIdSuccess", JSON.stringify(billID));
+          const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+          window.location.href = VnpayURL;
+        })
+        .catch((error) => {
+          // Handle any errors here
+          console.error(error);
+        });
+    }
   };
   const variables = {
     name: formik.values.name,
@@ -285,12 +289,11 @@ const PurchasingInformation = (props: Props) => {
     gender: parseInt(formik.values.honorific),
     coupon_name: couponData.couponName,
     coupon_code: couponData.couponCode,
-    coupon_percentage:
-      couponData.percentage > 0 ? couponData.percentage : null,
+    coupon_percentage: couponData.percentage > 0 ? couponData.percentage : null,
     coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
     tour_sale_percentage: 0,
     address: formik.values.address,
-    purchase_status: 0, 
+    purchase_status: 0,
     payment_status: 0,
     formattedFinalPrice: formattedFinalPrice,
   };
@@ -557,186 +560,189 @@ const PurchasingInformation = (props: Props) => {
                     )}
                   </form>
                   {/* Modal xác nhận thông tin */}
-                  {showPaymentModal===false ? (
-                  <div className="">
-                    <div
-                      className="modal fade"
-                      id="confirmTourForm"
-                      role="dialog"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                              Xác nhận thông tin
-                            </h5>
-                            <button
-                              type="button"
-                              className="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            <form onSubmit={handleSubmit}>
-                              <div className="row">
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Họ và tên</label>
-                                  <input
-                                    type="text"
-                                    name="name"
-                                    value={formik.values.name}
-                                    disabled
-                                  />{" "}
+                  {showPaymentModal === false ? (
+                    <div className="">
+                      <div
+                        className="modal fade"
+                        id="confirmTourForm"
+                        role="dialog"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div className="modal-dialog" role="document">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h5
+                                className="modal-title"
+                                id="exampleModalLabel"
+                              >
+                                Xác nhận thông tin
+                              </h5>
+                              <button
+                                type="button"
+                                className="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                              >
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div className="modal-body">
+                              <form onSubmit={handleSubmit}>
+                                <div className="row">
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Họ và tên</label>
+                                    <input
+                                      type="text"
+                                      name="name"
+                                      value={formik.values.name}
+                                      disabled
+                                    />{" "}
+                                  </div>
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Số điện thoại</label>
+                                    <input
+                                      type="text"
+                                      name="phone_number"
+                                      value={formik.values.phone_number}
+                                      disabled
+                                    />{" "}
+                                  </div>
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Email</label>
+                                    <input
+                                      type="email"
+                                      name="email"
+                                      value={formik.values.email}
+                                      disabled
+                                    />
+                                  </div>
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Ngày đặt tour</label>
+                                    <input
+                                      type="text"
+                                      name="tour_start_time"
+                                      value={formattedDate}
+                                      disabled
+                                    />
+                                  </div>
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Số lượng trẻ em</label>
+                                    <input
+                                      type="text"
+                                      name="child_count"
+                                      value={productChildNumber}
+                                      disabled
+                                    />
+                                  </div>
+                                  <div className="form-group col-6">
+                                    <label htmlFor="">Số lượng người lớn</label>
+                                    <input
+                                      type="text"
+                                      name="adult_count"
+                                      value={productNumber}
+                                      disabled
+                                    />
+                                  </div>
                                 </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số điện thoại</label>
-                                  <input
-                                    type="text"
-                                    name="phone_number"
-                                    value={formik.values.phone_number}
-                                    disabled
-                                  />{" "}
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Email</label>
-                                  <input
-                                    type="email"
-                                    name="email"
-                                    value={formik.values.email}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Ngày đặt tour</label>
-                                  <input
-                                    type="text"
-                                    name="tour_start_time"
-                                    value={formattedDate}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số lượng trẻ em</label>
-                                  <input
-                                    type="text"
-                                    name="child_count"
-                                    value={productChildNumber}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số lượng người lớn</label>
-                                  <input
-                                    type="text"
-                                    name="adult_count"
-                                    value={productNumber}
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-                              <div className="form-group">
-                                <label htmlFor="">Giá tour</label>
-                                <input
-                                  type="text"
-                                  name="created_at"
-                                  value={formattedResultPrice}
-                                  disabled
-                                />
-                              </div>
-                              {formattedResultPrice == formattedFinalPrice ? (
-                                <div></div>
-                              ) : (
                                 <div className="form-group">
-                                  <label htmlFor="">
-                                    Giá tour sau khi nhập coupon
-                                  </label>
+                                  <label htmlFor="">Giá tour</label>
                                   <input
                                     type="text"
                                     name="created_at"
-                                    value={formattedFinalPrice}
+                                    value={formattedResultPrice}
                                     disabled
                                   />
                                 </div>
-                              )}
+                                {formattedResultPrice == formattedFinalPrice ? (
+                                  <div></div>
+                                ) : (
+                                  <div className="form-group">
+                                    <label htmlFor="">
+                                      Giá tour sau khi nhập coupon
+                                    </label>
+                                    <input
+                                      type="text"
+                                      name="created_at"
+                                      value={formattedFinalPrice}
+                                      disabled
+                                    />
+                                  </div>
+                                )}
 
-                              <div className="form-group">
-                                <label htmlFor="">Phương thức thanh toán</label>
-                                <div className="mr-3">
-                                <input
-                                   type="radio"
-                                   name="payment_status"
-                                   value="cash"
-                                   className="mr-2"
-                                   onChange={handlePaymentMethodChange}
-                                   />
-                                  Chuyển khoản trực tiếp
+                                <div className="form-group">
+                                  <label htmlFor="">
+                                    Phương thức thanh toán
+                                  </label>
+                                  <div className="mr-3">
+                                    <input
+                                      type="radio"
+                                      name="purchase_method"
+                                      value="0"
+                                      className="mr-2"
+                                      onChange={handlePaymentMethodChange}
+                                    />
+                                    Chuyển khoản trực tiếp
+                                  </div>
+                                  <input
+                                    type="radio"
+                                    name="purchase_method"
+                                    value="1"
+                                    className="mr-2"
+                                    onChange={handlePaymentMethodChange}
+                                  />
+                                  Ngân hàng
                                 </div>
-                             
-
                                 <input
-                                   type="radio"
-                                   name="payment_status"
-                                   value="bank"
-                                   className="mr-2"
-                                   onChange={handlePaymentMethodChange}
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={handleCheckboxChange}
                                 />
-                                Ngân hàng
-                              </div>
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={handleCheckboxChange}
-                              />
-                              <span className="ml-2">
-                                Tôi đồng ý với{" "}
-                                <Link to={"/privacy_policy"}>Chính sách</Link>{" "}
-                                của trang
-                              </span>
-                              <br />
-                              <br />
-                              {!isChecked ? (
-                                <button
-                                  type="submit"
-                                  disabled
-                                  className="btn btn-primary"
-                                >
-                                  Xác nhận thanh toán
-                                </button>
-                              ) : (
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary"
-                                >
-                                  Xác nhận thanh toán
-                                </button>
-                              )}
-                            </form>
-                          </div>
-                          <div className="modal-footer">
-                            <button
-                              disabled={isChecked == false}
-                              type="button"
-                              className="btn btn-secondary"
-                              data-dismiss="modal"
-                            >
-                              Close
-                            </button>
+                                <span className="ml-2">
+                                  Tôi đồng ý với{" "}
+                                  <Link to={"/privacy_policy"}>Chính sách</Link>{" "}
+                                  của trang
+                                </span>
+                                <br />
+                                <br />
+                                {!isChecked ? (
+                                  <button
+                                    type="submit"
+                                    disabled
+                                    className="btn btn-primary"
+                                  >
+                                    Xác nhận thanh toán
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                  >
+                                    Xác nhận thanh toán
+                                  </button>
+                                )}
+                              </form>
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                disabled={isChecked == false}
+                                type="button"
+                                className="btn btn-secondary"
+                                data-dismiss="modal"
+                              >
+                                Close
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                   ) : null}
-                <CashPaymentModal
-  show={showPaymentModal}
-  onHide={() => setShowPaymentModal(false)}
-  modalData={variables}
-/>
+                  <CashPaymentModal
+                    show={showPaymentModal}
+                    onHide={() => setShowPaymentModal(false)}
+                    modalData={variables}
+                  />
                 </div>
               </div>
               <div className="col-md-4">
