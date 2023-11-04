@@ -7,6 +7,8 @@ use App\Http\Requests\AllocationRequest;
 use App\Models\Allocation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Permission;
@@ -14,8 +16,17 @@ use Spatie\Permission\Models\Role;
 class AllocationController extends Controller
 {
     //
-    public function allocationManagementList() {
+    public function allocationManagementList(Request $request) {
         $data = User::with('roles')->whereHas('roles')->get();
+        $perPage= $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        if($data->currentPage()>$data->lastPage()){
+            return redirect($data->url(1));
+        }
         return view('admin.decentralization.allocations.list', compact('data'));
     }
 
@@ -49,7 +60,7 @@ class AllocationController extends Controller
 
 
     public function allocationManagementEdit(AllocationRequest $request, $user_id) {
-        
+
         if($request->isMethod('POST')) {
             $user = User::find($user_id);
             $data = $request->all();
@@ -84,10 +95,10 @@ class AllocationController extends Controller
             $permission = DB::table('role_has_permissions')->where('role_id', $request->idRole)->select('permission_id')->get()->pluck('permission_id')
             ->toArray();
             $permissions[] = $permission;
-                
+
             if(!empty($permissions)) {
                 $permissions = array_unique(call_user_func_array('array_merge', $permissions));
-                
+
                 foreach($permissions as $item) {
                     $delete_model_has_permissions = DB::table('model_has_permissions')->where('permission_id', $item)->where('model_id', $request->idUser)->delete();
                 }
@@ -105,7 +116,7 @@ class AllocationController extends Controller
         if($user) {
             $roles_user = $user->roles->pluck('id')->toArray();
             if(!empty($roles_user)) {
-               
+
                 $permissions = [];
                 foreach($roles_user as $item) {
                     $delete_model_has_roles = DB::table('model_has_roles')->where('role_id', $item)->where('model_id', $user_id)->delete();
@@ -115,7 +126,7 @@ class AllocationController extends Controller
                 }
             if(!empty($permissions)) {
                 $permissions = array_unique(call_user_func_array('array_merge', $permissions));
-                
+
                 foreach($permissions as $item) {
                     $delete_model_has_permissions = DB::table('model_has_permissions')->where('permission_id', $item)->where('model_id', $user_id)->delete();
                 }
@@ -143,7 +154,7 @@ class AllocationController extends Controller
     // thấy rằng đúng là nếu xóa vai trò thì list show cấp quyền cũng rút theo và thấy rằng được cái model_has_roles cũng rút role, và role_permission cũng vậy
     // nhưng ở bảng model_has_permisson thì chưa.
     // hôm nay tiếp tục lưu ý các phần trên để đảm bảo tính toàn vẹn về dữ liệu
-    // làm tiếp chức năng xóa và cập nhật và đi phân quyền trong hệ thống (blade, route) 
+    // làm tiếp chức năng xóa và cập nhật và đi phân quyền trong hệ thống (blade, route)
 
-    // hướng giải quyết tính toàn vẹn: khi xóa vai trò => danh sách cấp rút theo (tức bản ghi tại 3 bảng: role, role_has, model_has_role) => thì mình dựa vào id_role vừa xóa để lấy ra tất cả các user thuộc id_role (vì mỗi role tạo ra đều có quyền hoặc nhóm quyền) => mình sẽ dựa vào id_role để lấy ra nhóm user thuộc vai trò đó => dựa vào nhóm user thuộc để xóa đi những bản ghi 
+    // hướng giải quyết tính toàn vẹn: khi xóa vai trò => danh sách cấp rút theo (tức bản ghi tại 3 bảng: role, role_has, model_has_role) => thì mình dựa vào id_role vừa xóa để lấy ra tất cả các user thuộc id_role (vì mỗi role tạo ra đều có quyền hoặc nhóm quyền) => mình sẽ dựa vào id_role để lấy ra nhóm user thuộc vai trò đó => dựa vào nhóm user thuộc để xóa đi những bản ghi
 }
