@@ -7,13 +7,13 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <h1 class="text-primary navbar-brand">
-      <a href="http://datn-vcdtt.test:5173/" class="d-flex align-items-center text-primary text-decoration-none">
-        <span class="fs-1 text-primary">Home page</span>
+    <h1 class="text-indigo navbar-brand">
+      <a href="http://datn-vcdtt.test:5173/" class="d-flex align-items-center text-indigo text-decoration-none">
+        <span class="fs-1 text-indigo">Home page</span>
       </a>
     </h1>
     <div class="collapse navbar-collapse" id="sidebar-menu">
-      <ul class="navbar-nav pt-lg-5 accordion" id="nav-parent">
+      <ul class="navbar-nav pt-lg-5 mt-lg-3 accordion" id="nav-parent">
         <li class="nav-item py-lg-2 {{ $currentController == 'DashboardController' ? 'active active-sidebar' : '' }}">
           <a class="nav-link" href="{{ route('dashboard') }}">
             <span class="me-1 d-md-none d-lg-inline-block">

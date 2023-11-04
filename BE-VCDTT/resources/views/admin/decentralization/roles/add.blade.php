@@ -84,7 +84,7 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
-                            <p class="text-primary" style="font-weight: bold;">Vai trò này có quyền gì?</p>
+                            <p class="text-indigo" style="font-weight: bold;">Vai trò này có quyền gì?</p>
                         </div>
                     </div>
                     <div class="row">
@@ -98,12 +98,12 @@
                                   <table class="table card-table table-vcenter text-nowrap datatable">
                                     <thead>
                                       <tr>
-                                        <th class="text-primary" style="font-weight: 700;">Chức năng</th>
-                                        <th class="text-primary" style="font-weight: 700;">Truy cập</th>
-                                        <th class="text-primary" style="font-weight: 700;">Thêm</th>
-                                        <th class="text-primary" style="font-weight: 700;">Sửa</th>
-                                        <th class="text-primary" style="font-weight: 700;">Xóa</th>
-                                        <th class="text-primary" style="font-weight: 700;">Trả lời</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Chức năng</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Truy cập</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Thêm</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Sửa</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Xóa</th>
+                                        <th class="text-indigo" style="font-weight: 700;">Trả lời</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -248,7 +248,7 @@
                     
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-primary">Thêm mới</button>
+                        <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>
                     </div>
                 </form>
             </div>

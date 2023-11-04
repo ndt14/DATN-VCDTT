@@ -23,7 +23,7 @@
                 <!-- <div class="page-pretitle">
                     Overview
                 </div> -->
-                <h1 class="text-primary mb-4" style="font-size: 36px;">
+                <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Tours management
                 </h2>
             </div>
@@ -245,7 +245,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center">
-                                <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Submit</button>
+                                <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Submit</button>
                             </div>
                         </form>
                     </div>
