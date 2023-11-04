@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Role;
@@ -15,16 +17,25 @@ class RoleController extends Controller
 
     public function __construct()
     {
-        
+
     }
 
-    public function roleManagementList() {
-      $data = Role::all();
-      return view('admin.decentralization.roles.list', compact('data'));
+    public function roleManagementList(Request $request) {
+        $data = Role::all();
+            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            if($data->currentPage()>$data->lastPage()){
+                return redirect($data->url(1));
+            }
+        return view('admin.decentralization.roles.list', compact('data'));
     }
 
     public function roleManagementAdd(RoleRequest $request) {
-        
+
         if($request->isMethod('POST')) {
           $data = $request->all();
           $data_insert_role = [
@@ -34,20 +45,20 @@ class RoleController extends Controller
           ];
 
           $role = Role::create($data_insert_role);
-          
+
           if($role->id) {
             $role = Role::find($role->id);
             $role->syncPermissions($data['permission']);
             $role->save();
             return redirect()->route('role.add')->with('success', 'Thêm vai trò thành công');
-           
+
           }
 
         }
         return view('admin.decentralization.roles.add');
     }
     public function roleManagementEdit(RoleRequest $request, $id) {
-        
+
       if($request->isMethod('POST')) {
           $data = $request->all();
           $data_update_role = [
@@ -61,7 +72,7 @@ class RoleController extends Controller
             $role = Role::find($id);
             $role->syncPermissions($data['permission']);
             $user = DB::table('model_has_roles')->where('role_id', $id)->select('model_id')->get()->pluck('model_id')->toArray();
-           
+
             if(!empty($user)) {
 
               foreach($user as $user_id) {
@@ -70,7 +81,7 @@ class RoleController extends Controller
                 $user_item->syncPermissions($data['permission']);
               }
             }
-            
+
             $role->save();
             return redirect()->route('role.edit',['id' => $id])->with('success', 'Cập nhật vai trò thành công');
           }
@@ -89,9 +100,9 @@ class RoleController extends Controller
     // api delete
 
     public function destroy($id) {
-  
+
       $role = Role::findById($id);
-    
+
       if($role) {
           $deleteRole = $role->delete();
           if (!$deleteRole) {
@@ -103,6 +114,6 @@ class RoleController extends Controller
       }
     }
 
-    // 
+    //
 
 }

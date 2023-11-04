@@ -68,7 +68,7 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                       
+
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
@@ -96,24 +96,24 @@
                                 </thead>
                                 <tbody>
                                     @if (!empty($data))
-                                    @foreach ($data as $data)
+                                    @foreach ($data as $item)
                                         <tr>
-                                            <td><span class="text-muted">{{ $data->id }}</span></td>
+                                            <td><span class="text-muted">{{ $item->id }}</span></td>
                                             <td>
-                                            <a href="javascript: viewDetail({{$data->id}});" title="Show Detail">{{ string_truncate($data->name, 70) }}</a>
+                                            <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->name, 70) }}</a>
                                             </td>
                                             <td>
-                                                {{ string_truncate($data->desc_role, 70) }}
+                                                {{ string_truncate($item->desc_role, 70) }}
                                             </td>
                                             <td>
-                                                {{ time_format($data->created_at) }}
+                                                {{ time_format($item->created_at) }}
                                             </td>
                                             <td>
-                                                {{ time_format($data->updated_at) }}
+                                                {{ time_format($item->updated_at) }}
                                             </td>
-                                            @if(!($data->name == 'Admin'))
+                                            @if(!($item->name == 'Admin'))
                                             <td class="text-end">
-                                                <a class="btn btn-icon btn-outline-green" href="{{ route('role.edit', ['id' => $data->id]) }}">
+                                                <a class="btn btn-icon btn-outline-green" href="{{ route('role.edit', ['id' => $item->id]) }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
@@ -121,7 +121,7 @@
                                                     <path d="M16 5l3 3"></path>
                                                     </svg>
                                                 </a>
-                                                <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $data->id}})">
+                                                <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M4 7l16 0"></path>
@@ -146,20 +146,21 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
+                            @php
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>1</span> trên <span>1</span> của <span>16</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
+
                             <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -167,13 +168,26 @@
                                             <path d="M15 6l-6 6l6 6"></path>
                                         </svg>prev</a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                </li>
+                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
+
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                    </li>
+
+                                @endfor
+                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
                                 <li class="page-item">
-                                    <a class="page-link" href="#">
+                                        ...
+                                </li>
+                                @endif
+                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                </li>
+                                <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">

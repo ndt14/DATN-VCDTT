@@ -155,6 +155,9 @@ class FAQController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            if($data->currentPage()>$data->lastPage()){
+                return redirect($data->url(1));
+            }
             return view('admin.faqs.list', compact('data'));
         }else{
             $data = [];
