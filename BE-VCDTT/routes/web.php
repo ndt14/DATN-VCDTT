@@ -103,13 +103,16 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET', 'POST'], '/blog/add', [BlogController::class, 'blogManagementAdd'])->name('blog.add')->middleware(['permission:admin|add post']);
     Route::match(['GET', 'POST'], '/blog/edit/{id}', [BlogController::class, 'blogManagementEdit'])->name('blog.edit')->middleware(['permission:admin|edit post']);
     Route::get('/blog/detail/{id}', [BlogController::class, 'blogManagementDetail'])->name('blog.detail')->middleware(['permission:admin|access post|add post|edit post|delete post']);
+    Route::get('/blog/trash', [BlogController::class, 'blogManagementTrash'])->name('blog.trash')->middleware(['permission:admin|delete post']);
+    Route::get('/blog/restore/{id}', [BlogController::class, 'blogManagementRestore'])->name('blog.restore')->middleware(['permission:admin|delete post']);
 
     
     Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
     Route::match(['GET', 'POST'], '/faq/add', [FAQController::class, 'faqManagementAdd'])->name('faq.add')->middleware(['permission:admin|add faq']);
     Route::match(['GET', 'POST'], '/faq/edit/{id}', [FAQController::class, 'faqManagementEdit'])->name('faq.edit')->middleware(['permission:admin|edit faq']);
     Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
-
+    Route::get('/faq/trash', [FAQController::class, 'faqManagementTrash'])->name('faq.trash')->middleware(['permission:admin|delete faq']);
+    Route::get('faq/restore/{id}', [FAQController::class, 'faqManagementRestore'])->name('faq.restore')->middleware(['permission:admin|delete faq']);
     Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);

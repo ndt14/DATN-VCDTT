@@ -93,7 +93,7 @@ class BlogController extends Controller
             // get all data from table images
             $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
             // get info blog by id
-            $blog = Blog::select(
+            $blog = Blog::withTrashed()->select(
                 'id',
                 'title',
                 'author',
@@ -164,6 +164,24 @@ class BlogController extends Controller
         }
     }
 
+    public function destroyForever(string $id) 
+    {
+        $blog = Blog::withTrashed()->find($id);
+        if ($blog) {
+            $delete_blog =  $blog->forceDelete();
+            if ($delete_blog) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function blogManagementList(Request $request)
@@ -218,5 +236,30 @@ class BlogController extends Controller
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
         $html = view('admin.blogs.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
+    }
+
+    public function blogManagementTrash(Request $request) {
+        $data = Blog::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $collection = new Collection($data);
+            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.blogs.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function blogManagementRestore($id) {
+
+        if($id) {
+            $data = Blog::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('blog.trash')->with('success', 'Khôi phục bài viết thành công');
+        }
+        return redirect()->route('blog.trash');
     }
 }

@@ -50,6 +50,7 @@ Route::post('/blog-store', [BlogController::class, 'store']);
 Route::get('/blog-show/{id}', [BlogController::class, 'show']);
 Route::put('/blog-edit/{id}', [BlogController::class, 'update'])->name('api.blog.edit');
 Route::delete('/blog-destroy/{id}', [BlogController::class, 'destroy']);
+Route::delete('/blog-destroy-forever/{id}', [BlogController::class, 'destroyForever']);
 
 // Category
 Route::get('/category', [CategoryController::class, 'index']);
@@ -81,6 +82,7 @@ Route::get('/faq-show/{id}', [FAQController::class, 'show']);
 Route::get('/faq-search', [FAQController::class, 'search_faq']);
 Route::put('/faq-edit/{id}', [FAQController::class, 'update'])->name('api.faq.edit');
 Route::delete('/faq-destroy/{id}', [FAQController::class, 'destroy']);
+Route::delete('/faq-destroy-forever/{id}', [FAQController::class, 'destroyForever']);
 
 //User
 Route::get('/user', [UserController::class, 'index']);

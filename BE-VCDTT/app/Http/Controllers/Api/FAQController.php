@@ -61,7 +61,7 @@ class FAQController extends Controller
     public function show(string $id)
     {
         //
-        $faq = FAQ::find($id);
+        $faq = FAQ::withTrashed()->find($id);
 
         if (!$faq) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -142,6 +142,24 @@ class FAQController extends Controller
         }
     }
 
+    public function destroyForever(string $id) 
+    {
+        $faq = FAQ::withTrashed()->find($id);
+        if ($faq) {
+            $delete_faq =  $faq->forceDelete();
+            if ($delete_faq) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
@@ -199,5 +217,29 @@ class FAQController extends Controller
         }
     }
 
+    public function faqManagementTrash(Request $request) {
+        $data = FAQ::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.faqs.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function faqManagementRestore($id) {
+
+        if($id) {
+            $data = FAQ::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('faq.trash')->with('success', 'Khôi phục faq thành công');
+        }
+        return redirect()->route('faq.trash');
+    }
 
 }
