@@ -75,7 +75,7 @@ class CouponController extends Controller
     {
         //
 
-        $coupon = Coupon::find($id);
+        $coupon = Coupon::withTrashed()->find($id);
         if($coupon) {
             return response()->json([
                 'data' => [
@@ -185,6 +185,25 @@ class CouponController extends Controller
 
     }
 
+
+    public function destroyForever(string $id) 
+    {
+        $coupon = Coupon::withTrashed()->find($id);
+        if ($coupon) {
+            $delete_coupon =  $coupon->forceDelete();
+            if ($delete_coupon) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function couponManagementList(Request $request) {
@@ -240,6 +259,31 @@ class CouponController extends Controller
             $html = view('admin.coupons.detail', compact('item'))->render();
             return response()->json(['html' => $html, 'status' => 200]);
         }
+    }
+
+    public function couponManagementTrash(Request $request) {
+        $data = Coupon::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.coupons.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function couponManagementRestore($id) {
+
+        if($id) {
+            $data = Coupon::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('coupon.trash')->with('success', 'Khôi phục coupon thành công');
+        }
+        return redirect()->route('coupon.trash');
     }
 
 }

@@ -66,7 +66,7 @@ Route::post('/coupon-store', [CouponController::class, 'store']);
 Route::get('/coupon-show/{id}', [CouponController::class, 'show']);
 Route::put('/coupon-edit/{id}', [CouponController::class, 'update'])->name('api.coupon.edit');
 Route::delete('/coupon-destroy/{id}', [CouponController::class, 'destroy']);
-
+Route::delete('/coupon-destroy-forever/{id}', [CouponController::class, 'destroyForever']);
 // Rating
 Route::get('/rating/{id}', [RatingController::class, 'index']);
 Route::get('/rating', [RatingController::class, 'indexAll']);
@@ -92,6 +92,7 @@ Route::get('/user-search', [UserController::class, 'search_user']);
 Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('api.user.edit');
 Route::delete('/user-destroy/{id}', [UserController::class, 'destroy']);
 Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
+Route::delete('/user-destroy-forever/{id}', [UserController::class, 'destroyForever']);
 
 //PurchaseHistory
 Route::get('/purchase-history', [PurchaseHistoryController::class, 'index']);

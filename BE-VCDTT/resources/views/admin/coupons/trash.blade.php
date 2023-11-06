@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-primary mb-4" style="font-size: 36px;">
-                        Quản lý Faqs
+                        Quản lý mã giảm giá
                     </h1>
                 </div>
                 <div class="col-12 ">
@@ -22,6 +22,7 @@
                     </div>
                     @endif
                 </div>
+                
             </div>
         </div>
     </div>
@@ -32,7 +33,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3> <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
+                            <h3 class="card-title">Mã giảm giá</h3> <a href="{{route('coupon.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -49,17 +50,17 @@
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="lang_code">
                                                 <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
+                                                <option value="ja">Đang hoạt dộng</option>
                                                 <option value="en">Không hoạt động</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" class="form-control"
+                                            <input type="text" name="keyword" value="keyword" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                            <button type="submit" class="btn btn-primary">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -70,8 +71,11 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Câu hỏi</th>
-                                        <th>Câu trả lời</th>
+                                        <th>Tên/mô tả</th>
+                                        <th>Mã</th>
+                                        <th>Loại mã</th>
+                                        <th>Lượng giảm giá</th>
+                                        <th>Ngày hết hạn</th>
                                         <th>Ngày tạo</th>
                                         <th>Ngày sửa</th>
                                         <th></th>
@@ -84,10 +88,19 @@
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->question, 70) }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->name, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->answer, 70) }}
+                                                    {{ string_truncate($item->code, 70) }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->percentage_price!=null?'Percentage':($item->fixed_price!=null?'Fixed':'Null') }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->percentage_price??$item->fixed_price??'Null' }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($item->expiration_date) }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
@@ -96,18 +109,18 @@
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
-                                                    @if(auth()->user()->can('delete faq') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{route('faq.restore', ['id'=>$item->id])}}">
+                                                    @if(auth()->user()->can('delete post') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-green" href="{{route('coupon.restore', ['id'=>$item->id])}}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                             <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
                                                             <path d="M19 22v-6"></path>
                                                             <path d="M22 19l-3 -3l-3 3"></path>
                                                             <path d="M12 7v5l2.5 2.5"></path>
-                                                            </svg>
+                                                        </svg>
                                                     </a>
                                                     @endif
-                                                    @if(auth()->user()->can('delete faq') || auth()->user()->is_admin == 1)
+                                                    @if(auth()->user()->can('delete discount') || auth()->user()->is_admin == 1)
                                                     <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -134,56 +147,56 @@
                         </div>
                         <div class="card-footer d-flex align-items-center">
                             @php
-                            $pageLimits = [5,10,20,50,100,250,300];
-                        @endphp
-                        <select id="rpp" class="form-select me-2" style="max-width: 75px;">
-                            @foreach ($pageLimits as $p)
-                            <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
-                            @endforeach
-                        </select>
+                                $pageLimits = [5,10,20,50,100,250,300];
+                            @endphp
+                            <select id="rpp" class="form-select me-2" style="max-width: 75px;">
+                                @foreach ($pageLimits as $p)
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
+                            </select>
 
-                        <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                            bản ghi</p>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
+                                bản ghi</p>
 
-                        <ul class="pagination m-0 ms-auto">
-                            <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M15 6l-6 6l6 6"></path>
-                                    </svg>prev</a>
-                            </li>
-                            <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $data->url(1) }}">1</a>
-                            </li>
-                            @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
-
-                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                            <ul class="pagination m-0 ms-auto">
+                                <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M15 6l-6 6l6 6"></path>
+                                        </svg>prev</a>
                                 </li>
+                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                </li>
+                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
 
-                            @endfor
-                            @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
-                            <li class="page-item">
-                                    ...
-                            </li>
-                            @endif
-                            <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
-                            </li>
-                            <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M9 6l6 6l-6 6"></path>
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                    </li>
+
+                                @endfor
+                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
+                                <li class="page-item">
+                                        ...
+                                </li>
+                                @endif
+                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                </li>
+                                <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M9 6l6 6l-6 6"></path>
+                                        </svg>
+                                    </a>
+                                </li>
+                            </ul>
 
                         </div>
                     </div>
@@ -209,7 +222,7 @@
         });
 
         let viewDetail = function(id) {
-        axios.get(`/faq/detail/${id}`)
+        axios.get(`/coupon/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
@@ -225,14 +238,14 @@
         $.confirm({
             theme: theme,
             title: 'Xác nhận',
-            content: 'Xóa vĩnh viễn faq?',
+            content: 'Bạn có muốn xóa vĩnh viễn?',
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
                     text: 'OK!',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/faq-destroy-forever/${id}`).then(function(response) {
+                        axios.delete(`/api/coupon-destroy-forever/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();

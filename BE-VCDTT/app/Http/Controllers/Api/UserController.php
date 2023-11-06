@@ -80,7 +80,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
-        $user = User::find($id);
+        $user = User::withTrashed()->find($id);
 
         if (!$user) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -162,6 +162,25 @@ class UserController extends Controller
         }
     }
 
+
+    public function destroyForever(string $id) 
+    {
+        $user = User::withTrashed()->find($id);
+        if ($user) {
+            $delete_user =  $user->forceDelete();
+            if ($delete_user) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
     // ## ============================================ NHÓM HÀM CHO CRUD USER TRONG BLADE ADMIN ==================================
 
     public function userManagementList(Request $request)
@@ -218,5 +237,30 @@ class UserController extends Controller
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user-show/' . $request->id)->json()['data']['user'];
         $html = view('admin.users.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
+    }
+
+    public function userManagementTrash(Request $request) {
+        $data = User::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.users.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function userManagementRestore($id) {
+
+        if($id) {
+            $data = User::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('user.trash')->with('success', 'Khôi phục tài khoản thành công');
+        }
+        return redirect()->route('user.trash');
     }
 }

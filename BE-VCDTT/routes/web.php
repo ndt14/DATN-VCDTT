@@ -123,11 +123,15 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET', 'POST'], '/coupon/add', [CouponController::class, 'couponManagementAdd'])->name('coupon.add')->middleware(['permission:admin|add discount']);
     Route::match(['GET', 'POST'], '/coupon/edit/{id}', [CouponController::class, 'couponManagementEdit'])->name('coupon.edit')->middleware(['permission:admin|edit discount']);
     Route::get('/coupon/detail/{id}', [CouponController::class, 'couponManagementDetail'])->name('coupon.detail')->middleware(['permission:admin|access discount|add discount|edit discount|delete discount']);
+    Route::get('/coupon/trash', [CouponController::class, 'couponManagementTrash'])->name('coupon.trash')->middleware(['permission:admin|delete coupon']);
+    Route::get('coupon/restore/{id}', [CouponController::class, 'couponManagementRestore'])->name('coupon.restore')->middleware(['permission:admin|delete coupon']);
 
     Route::get('/user', [UserController::class, 'userManagementList'])->name('user.list')->middleware(['permission:admin|access account|add account|edit account|delete account']);
     Route::get('/user/detail/{id}', [UserController::class, 'userManagementDetail'])->name('user.detail')->middleware(['permission:admin|access account|add account|edit account|delete account']);
     Route::match(['GET', 'POST'], '/user/add', [UserController::class, 'userManagementAdd'])->name('user.add')->middleware(['permission:admin|add account']);
     Route::match(['GET', 'POST'], '/user/edit/{id}', [UserController::class, 'userManagementEdit'])->name('user.edit')->middleware(['permission:admin|edit account']);
+    Route::get('/user/trash', [UserController::class, 'userManagementTrash'])->name('user.trash')->middleware(['permission:admin|delete user']);
+    Route::get('user/restore/{id}', [UserController::class, 'userManagementRestore'])->name('user.restore')->middleware(['permission:admin|delete account']);
 
     Route::get('/category', [CategoryController::class, 'cateManagementList'])->name('category.list')->middleware(['permission:admin|access category|add category|edit category|delete category']);
     Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add')->middleware(['permission:admin|add category']);
