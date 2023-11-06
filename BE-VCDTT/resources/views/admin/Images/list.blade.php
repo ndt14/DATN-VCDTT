@@ -5,27 +5,26 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý mã giảm giá
+                        Quản lý thư viện ảnh
                     </h1>
                 </div>
-                <div class="col-12 ">
+                <!-- <div class="col-12 ">
                     @if (Session::has('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                        {{ Session::get('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                            {{ Session::get('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     @endif
                     @if (Session::has('fail'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                        {{ Session::get('fail') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                            {{ Session::get('fail') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     @endif
-                </div>
-                @if(auth()->user()->can('add discount') || auth()->user()->is_admin == 1)
-                <div class="col-auto ms-auto d-print-none">
+                </div> -->
+                <!-- <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('coupon.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
+                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -33,10 +32,19 @@
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
-                            Thêm mới
+                           Thêm mới
                         </a>
-                </div>
-                @endif
+                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </a>
+                    </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -47,10 +55,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Mã giảm giá</h3> 
-                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete coupon'))
-                            <a href="{{route('coupon.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
-                            @endif
+                            <h3 class="card-title">Ảnh</h3> <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -65,16 +70,15 @@
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt dộng</option>
-                                                <option value="en">Không hoạt động</option>
-                                            </select>
+                                        <select class="form-select" name="lang_code">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="ja">Đang hoạt động</option>
+                                            <option value="en">Không hoạt động</option>
+                                        </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="keyword" class="form-control"
-                                                placeholder="Keyword">
+                                            <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -87,57 +91,61 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>Tên/mô tả</th>
-                                        <th>Mã</th>
-                                        <th>Loại mã</th>
-                                        <th>Lượng giảm giá</th>
-                                        <th>Ngày hết hạn</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
+                                        <th class="">Ảnh</th>
+                                        <th class="w-1">Tên Tour</th>
+                                        <th>Tên Ảnh</th>
+                                        <th>Định dạng</th>
+                                        <th>Đường dẫn</th>
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($data)
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->name, 70) }}</a>
-                                                </td>
+                                                <a data-fancybox data-src="{{ $item->url}}" href="javascript:void(0);">
+                                                    <img style="width: 150px; height: 90px; object-fit: cover;" src="{{ $item->url}}" alt="{{ $item->name}}">
+                                                </a>
+                                            </td>
+                                                <td><span class="text-muted">{{ string_truncate($item->tour_name, 70) }}</span></td>
                                                 <td>
-                                                    {{ string_truncate($item->code, 70) }}
+                                                {{ string_truncate($item->name, 70) }}
                                                 </td>
-                                                <td>
-                                                    {{ $item->percentage_price!=null?'Percentage':($item->fixed_price!=null?'Fixed':'Null') }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->percentage_price??$item->fixed_price??'Null' }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($item->expiration_date) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($item->created_at) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($item->updated_at) }}
-                                                </td>
+                                                                                            <td>
+                                                {{ $item->type }}
+                                            </td>
+                                            <td>
+                                                {{ $item->url }}
+                                            </td>
                                                 <td class="text-end">
-                                                    @if(auth()->user()->can('edit discount') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('coupon.edit', ['id' => $item->id]) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <a href="javascript: void(0);" data-url="{{ url($item->url)}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn đầy đủ">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                        <path d="M16 5l3 3"></path>
+                                                        <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                                        <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                                        <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                                        <path d="M8.7 10.7l6.6 -3.4"></path>
+                                                        <path d="M8.7 13.3l6.6 3.4"></path>
                                                         </svg>
                                                     </a>
-                                                    @endif
-                                                    @if(auth()->user()->can('delete discount') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
+                                                    <a href="javascript: void(0);" data-url="{{ $item->url}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M9 15l6 -6"></path>
+                                                        <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path>
+                                                        <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <a class="btn btn-icon btn-outline-indigo" href="/image-download/{{ $item->id}}" title="Tải xuống">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                                                        <path d="M7 11l5 5l5 -5"></path>
+                                                        <path d="M12 4l0 12"></path>
+                                                        </svg>
+                                                    </a>
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})" title="Xoá">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M4 7l16 0"></path>
@@ -147,10 +155,9 @@
                                                         <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
                                                         </svg>
                                                     </a>
-                                                    @endif
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                                                                    @endforeach
                                     @else
                                         <tr>
                                             <td colspan="9">
@@ -162,7 +169,7 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            @php
+@php
                                 $pageLimits = [5,10,20,50,100,250,300];
                             @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
@@ -173,7 +180,7 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
-
+                                
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
@@ -227,8 +234,26 @@
         </div>
     </div>
 @endSection
+@section('page_css')
+<link rel="stylesheet" href="{{ asset('admin/assets/css/fancybox.css') }}"/>
+@endSection
 @section('page_js')
+<script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
     <script type="text/javascript">
+$(document).ready(function () {
+    Fancybox.bind('[data-fancybox]');
+    $('.btn-copy-url').click(function () {
+    let _self = $(this);
+    let url = _self.attr('data-url');
+    clipboard.writeText(url).then(function(){
+        bs5Utils.Snack.show('success', 'File url is copied.', delay = 5000, dismissible = true);
+    }, function(err){
+        bs5Utils.Snack.show('danger', 'Can not copy file url.', delay = 5000, dismissible = true);
+    });
+
+    });
+});
         let modalContainer;
         $(document).ready(function() {
             modalContainer = new bootstrap.Modal('#modalContainer', {
@@ -238,7 +263,7 @@
         });
 
         let viewDetail = function(id) {
-        axios.get(`/coupon/detail/${id}`)
+        axios.get(`/faq/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
@@ -261,7 +286,7 @@
                     text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/coupon-destroy/${id}`).then(function(response) {
+                        axios.delete(`/image-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();

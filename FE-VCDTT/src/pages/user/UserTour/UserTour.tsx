@@ -60,6 +60,14 @@ const UserTour = () => {
     };
 
     await updateBill(data).then(() => {
+      // const modal = document.getElementById(`bill-${id}`);
+      // if (modal) {
+      //   modal.classList.remove("show");
+      //   modal.setAttribute("aria-hidden", "true");
+      //   modal.style.display = "none";
+      //   document.body.classList.remove("modal-open");
+      // }
+      // $(`#bill-${id}`).modal("hide");
       alert("Hủy tour thành công");
     });
   };
@@ -68,10 +76,7 @@ const UserTour = () => {
     console.log(e);
   };
 
-  const cancel = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
-    message.error("Click on No");
-  };
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {};
 
   return (
     <div>
@@ -329,12 +334,12 @@ const UserTour = () => {
                               <div></div>
                             ) : (
                               <Popconfirm
-                                title="Delete the task"
-                                description="Are you sure to delete this task?"
+                                title="Hủy tour"
+                                description="Bạn có chắc muốn hủy tour?"
                                 onConfirm={handleCancelTour}
                                 onCancel={cancel}
-                                okText="Yes"
-                                cancelText="No"
+                                okText="Đồng ý"
+                                cancelText="Hủy bỏ"
                               >
                                 <button className="btn-continue">
                                   Hủy tour

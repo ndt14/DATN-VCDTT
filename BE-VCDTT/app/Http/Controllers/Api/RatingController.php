@@ -185,7 +185,9 @@ class RatingController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-
+            if($data->currentPage()>$data->lastPage()){
+                return redirect($data->url(1));
+            }
         }else{
             $data = [];
         }
@@ -204,6 +206,9 @@ class RatingController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data->ratings = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->ratings->setPath(request()->url())->appends(['limit' => $perPage]);
+            if($data->ratings->currentPage()>$data->ratings->lastPage()){
+                return redirect($data->ratings->url(1));
+            }
         }else{
             $data = [];
 

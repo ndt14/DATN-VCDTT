@@ -325,6 +325,9 @@ class TourController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            if($data->currentPage()>$data->lastPage()){
+                return redirect($data->url(1));
+            }
         }else{
             $data = [];
         }
@@ -334,8 +337,8 @@ class TourController extends Controller
     public function tourManagementAdd(TourRequest $request)
     {
         if ($request->isMethod('POST')) {
-            
-            $data = $request->except('_token'); 
+
+            $data = $request->except('_token');
 
             $data = $request->except('_token');
 
@@ -346,8 +349,8 @@ class TourController extends Controller
                     $images = [];
                     $fileNames = [];
                     $files = $request->file('files');
-                    foreach ($files as $file) {   
-                        $type = $file->extension();                             
+                    foreach ($files as $file) {
+                        $type = $file->extension();
                         $fileName = time() . '_' . uniqid(). '.' . $type;
                         $file->move(public_path('uploads'), $fileName);
                         $fileNames[] = [

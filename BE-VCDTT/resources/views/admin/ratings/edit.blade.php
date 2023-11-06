@@ -23,7 +23,7 @@
                 <!-- <div class="page-pretitle">
                     Overview
                 </div> -->
-                <h1 class="text-primary mb-4" style="font-size: 36px;">
+                <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Ratings management
                 </h2>
             </div>
@@ -83,7 +83,7 @@
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitEdit" type="submit" class="btn btn-primary">Gửi</button>
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Gửi</button>
                     </div>
                 </form>
             </div>

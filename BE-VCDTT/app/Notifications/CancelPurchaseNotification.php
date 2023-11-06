@@ -3,21 +3,23 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
-use PhpCsFixer\Cache\Signature;
 
-class ComfirmPaymentMail extends Notification
+class CancelPurchaseNotification extends Notification
 {
     use Queueable;
+    protected $tour_name;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($purchaseHistory)
     {
         //
+        $this->tour_name = $purchaseHistory->tour_name;
     }
 
     /**
@@ -36,9 +38,10 @@ class ComfirmPaymentMail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->greeting('Xin chào Admin!')
-                    ->line('Có một khách hàng vừa chuyển tiền! Vui lòng kiểm tra tài khoản của bạn');
-
+            ->greeting('Xin chào!')
+            ->line('Bạn vừa hủy tour ' . $this->tour_name . '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền')
+            ->line('Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ')
+            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
     /**
