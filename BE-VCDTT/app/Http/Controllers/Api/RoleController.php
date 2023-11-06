@@ -67,24 +67,60 @@ class RoleController extends Controller
             'desc_role' => $data['desc_role']
           ];
           $role = Role::where('id', $id)->update($data_update_role);
-
+          $role_has_permissions_before = DB::table('role_has_permissions')->where('role_id', $id)->select('permission_id')->get()->pluck('permission_id')->toArray();
           if($role) {
             $role = Role::find($id);
             $role->syncPermissions($data['permission']);
             $user = DB::table('model_has_roles')->where('role_id', $id)->select('model_id')->get()->pluck('model_id')->toArray();
-
             if(!empty($user)) {
+              if(count(array_map('intval', $data['permission'])) > count($role_has_permissions_before)) {
+                // sự khác biệt khi tăng quyền (thêm)
+                $compare_arrays = array_diff(array_map('intval', $data['permission']), $role_has_permissions_before);
 
-              foreach($user as $user_id) {
+                foreach($user as $user_id) {
 
-                $user_item = User::find($user_id);
-                $user_item->syncPermissions($data['permission']);
-              }
+                  $user_item = User::find($user_id);
+                  foreach($compare_arrays as $permission_want_add) {
+                    $check_user_has_permission = DB::table('model_has_permissions')->where('model_id', $user_id)->where('permission_id', $permission_want_add)->exists();
+                   if(!$check_user_has_permission) {
+                    $give_permission_user = DB::table('model_has_permissions')->insert(['permission_id' => $permission_want_add, 'model_type' => 'App\Models\User', 'model_id' => $user_id]);
+                   }  
+                  }
+                }
+                }else {
+                // sự khác biệt khi giảm quyền (xóa)
+                $compare_arrays = array_diff($role_has_permissions_before, array_map('intval', $data['permission']));
+                foreach($user as $user_id) {
+                // lấy list role từ user hiện tại (trừ role hiện tại)
+                // lặp list role trong lúc lặp lấy các quyền từ các role
+                // kiểm tra xem có quyền hiện tại hay không. Có => thôi, không => xóa
+
+                $user_has_roles = DB::table('model_has_roles')->where('model_id', $user_id)->where('role_id', '<>', $id)->select('role_id')->get()->pluck('role_id')->toArray();
+                if(!empty($user_has_roles)) {
+
+                  foreach($user_has_roles as $role) {
+                    $role_has_permissions = DB::table('role_has_permissions')->where('role_id', $role)->select('permission_id')->get()->pluck('permission_id')->toArray();
+                    if(!empty($role_has_permissions)) {
+
+                        foreach($compare_arrays as $permission_want_del) {
+
+                          if(!in_array($permission_want_del, $role_has_permissions)) {
+                              $delete_permission_user = DB::table('model_has_permissions')->where('model_id', $user_id)->where('permission_id', $permission_want_del)->delete();
+                          }
+                        }
+                    }
+                  }
+                }
+
+                }
             }
 
-            $role->save();
             return redirect()->route('role.edit',['id' => $id])->with('success', 'Cập nhật vai trò thành công');
           }
+
+
+
+        }
       }
 
         $role = Role::findById($id);

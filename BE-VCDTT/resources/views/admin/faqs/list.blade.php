@@ -8,20 +8,20 @@
                         Quản lý Faqs
                     </h1>
                 </div>
-                <!-- <div class="col-12 ">
+                <div class="col-12 ">
                     @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                        {{ Session::get('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                     @if (Session::has('fail'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                        {{ Session::get('fail') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
-                </div> -->
+                </div>
 
                 @if(auth()->user()->can('add faq') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">
@@ -58,7 +58,10 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3> <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
+                            <h3 class="card-title">Faq</h3> 
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
+                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">

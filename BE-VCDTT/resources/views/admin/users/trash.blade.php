@@ -4,7 +4,7 @@
     <div class="container-xl">
         <div class="row g-2 align-items-center">
             <div class="col">
-                <h1 class="text-indigo mb-4" style="font-size: 36px;">
+                <h1 class="text-primary mb-4" style="font-size: 36px;">
                     Users management
                 </h2>
             </div>
@@ -22,27 +22,7 @@
                 </div>
                 @endif
             </div>
-            @if(auth()->user()->can('add account') || auth()->user()->is_admin == 1)
-            <div class="col-auto ms-auto d-print-none">
-                <div class="btn-list">
-                    <a href="{{ route('user.add')}}" class="btn btn-indigo d-none d-sm-inline-block">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                        Thêm mới
-                    </a>
-                    <a href="{{ route('user.add')}}" class="btn btn-indigo d-sm-none btn-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            @endif
+           
         </div>
     </div>
 </div>
@@ -53,10 +33,7 @@
             <div class="col-12">
                 <div class="card border-0 shadow-lg rounded-4 ">
                     <div class="card-header">
-                        <h3 class="card-title">User</h3> 
-                        @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete account'))
-                        <a href="{{route('user.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
-                        @endif
+                        <h3 class="card-title">User</h3> <a href="{{route('user.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                     </div>
                     <div class="card-body border-bottom py-3">
                         <div class="d-flex">
@@ -82,7 +59,7 @@
                                         <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-indigo">Submit</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </form>
                             </div>
@@ -132,15 +109,16 @@
                                             @endif
                                         </td>
                                         <td class="text-end">
-                                            @if(auth()->user()->can('edit account') || auth()->user()->is_admin == 1)
-                                            <a class="btn btn-icon btn-outline-green" href="{{route('user.edit', ['id'=>$item->id])}}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                <path d="M16 5l3 3"></path>
-                                                </svg>
-                                            </a>
+                                            @if(auth()->user()->can('delete account') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-green" href="{{route('user.restore', ['id'=>$item->id])}}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
+                                                            <path d="M19 22v-6"></path>
+                                                            <path d="M22 19l-3 -3l-3 3"></path>
+                                                            <path d="M12 7v5l2.5 2.5"></path>
+                                                            </svg>
+                                                    </a>
                                             @endif
                                             @if(auth()->user()->can('delete account') || auth()->user()->is_admin == 1)
                                             <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
@@ -264,15 +242,15 @@
     let removeItem = function(id) {
         $.confirm({
             theme: theme,
-            title: 'Confirm',
-            content: 'Are you sure to remove?',
+            title: 'Xác nhận',
+            content: 'Bạn có muốn xóa vĩnh viễn',
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'Yes',
+                    text: 'Ok!',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/user-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/user-destroy-forever/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();

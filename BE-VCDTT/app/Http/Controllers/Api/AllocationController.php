@@ -98,9 +98,24 @@ class AllocationController extends Controller
 
             if(!empty($permissions)) {
                 $permissions = array_unique(call_user_func_array('array_merge', $permissions));
-
+                $user_has_roles = DB::table('model_has_roles')->where('model_id', $request->idUser)->where('role_id', '<>', $request->idRole)->select('role_id')->get()->pluck('role_id')->toArray();
                 foreach($permissions as $item) {
-                    $delete_model_has_permissions = DB::table('model_has_permissions')->where('permission_id', $item)->where('model_id', $request->idUser)->delete();
+                    if(!empty($user_has_roles)) {
+
+                        foreach($user_has_roles as $role_id) {
+                            $role_has_permissions = DB::table('role_has_permissions')->where('role_id', $role_id)->select('permission_id')->get()->pluck('permission_id')->toArray();
+                            if(!empty($role_has_permissions)) {
+
+                                if(!in_array($item, $role_has_permissions)) {
+                                    $delete_model_has_permissions = DB::table('model_has_permissions')->where('permission_id', $item)->where('model_id', $request->idUser)->delete();
+                                }
+                            }
+                        }
+
+                        
+                    }else {
+                        $delete_model_has_permissions = DB::table('model_has_permissions')->where('permission_id', $item)->where('model_id', $request->idUser)->delete();
+                    }
                 }
             }
             return response()->json(['message' => 'OK', 'status' => 200]);
