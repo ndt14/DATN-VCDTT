@@ -2,7 +2,7 @@
 .ais-SearchBox-reset{
     /* display: none !important; */
 }
-/* .ais-SearchBox-input{
+/* .ais-SearchBox-input-search{
    width: 1000px !important;
 }
 .search-results{
@@ -24,7 +24,78 @@
     display: none;
   }
   
-  .input-focused .search-results {
+  .input-search-focused .search-results {
     display: block;
   } */
+  .input-search{
+    width: 1050px;
+  }
+  .search-results .ais-Hits .ais-Hits-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
   
+  .search-results .ais-Hits .ais-Hits-list .ais-Hits-item {
+    flex: 0 0 calc(50% - 10px); /* Chia flex mỗi hàng thành 2 sản phẩm và cách nhau bởi 10px */
+    margin: 5px; /* Tạo khoảng cách giữa các sản phẩm */
+    box-sizing: border-box; /* Đảm bảo các sản phẩm không bị tràn qua ngoài khoảng cách */
+  }
+  
+  .search-results .ais-Hits{
+   
+    
+
+ }
+  @media(max-width:1110px){
+    .input-search{
+      width: 900px;
+
+    }
+  }
+
+  @media(max-width:1000px){
+    .input-search{
+      width: 800px;
+
+    }
+  }
+
+  @media(max-width:900px){
+    .input-search{
+      width: 700px;
+
+    }
+  }
+
+  @media(max-width:800px){
+    .input-search{
+      width: 600px;
+
+    }
+  }
+
+  @media(max-width:700px){
+    .input-search{
+      width: 450px;
+
+    }
+  }
+
+  @media(max-width:500px){
+    .input-search{
+      width: 350px;
+
+    }
+  }
+  @media(max-width:400px){
+    .input-search{
+      width: 250px;
+
+    }
+  }
+  @media(max-width:300px){
+    .input-search{
+      width: 200px;
+
+    }
+  }

@@ -22,19 +22,19 @@ const PDFDocument = ({ data }) => {
 
     // Thêm nội dung cho "Đơn vị mua hàng"
     doc.setFontSize(14);
-    doc.text("Đơn vị mua hàng", 20, 60);
+    doc.text("Bên mua hàng", 20, 60);
     doc.setFontSize(12);
-    doc.text(`Họ và tên: ${data.fullName} ${data.userName}`, 20, 70);
+    doc.text(`${data.fullName} ${data.userName}`, 20, 70);
     doc.text(`Email: ${data.userEmail}`, 20, 80);
-    doc.text(`Số điện thoại: ${data.phoneNumber}`, 20, 90);
+    doc.text(`So dien thoai: ${data.phoneNumber}`, 20, 90);
 
     // Thêm nội dung cho "Đơn vị bán hàng"
     doc.setFontSize(14);
-    doc.text("Đơn vị bán hàng", 140, 60);
+    doc.text("Bên bán hàng", 140, 60);
     doc.setFontSize(12);
     doc.text("VCDTT", 140, 70);
     doc.addImage(data.imageSrc, 'PNG', 140, 80, 50, 50);
-    doc.text(`Mã số thanh toán: ${data.transactionId}`, 140, 140);
+    doc.text(`Mã thanh toán: ${data.transactionId}`, 140, 140);
 
     // Thêm nội dung cho "Tên tour"
     doc.setFontSize(14);
@@ -42,12 +42,12 @@ const PDFDocument = ({ data }) => {
 
     // Tạo một mảng dữ liệu cho bảng
     const tableData = [
-      ["#", "Số lượng", "Đơn giá", "Thành tiền"],
-      ["Người lớn", data.adultCount, data.tourAdultPrice, data.totalAdultPrice],
-      ["Trẻ em", data.childCount, data.tourChildPrice, data.totalChildPrice],
-      ["Tổng", "", "", data.totalPrice],
+      ["#", "So luong", "Don gia", "Thanh tien"],
+      ["Nguoi lon", data.adultCount, data.tourAdultPrice, data.totalAdultPrice],
+      ["Tre em", data.childCount, data.tourChildPrice, data.totalChildPrice],
+      ["Tong", "", "", data.totalPrice],
       ["Coupon", "", data.couponPercentage != null ? `${data.couponPercentage}%` : data.couponFixed, ""],
-      ["Giá cuối", "", "", data.formattedFinalPrice],
+      ["Gia cuoi", "", "", data.formattedFinalPrice],
     ];
 
     // Thêm bảng vào tài liệu sử dụng jspdf-autotable
