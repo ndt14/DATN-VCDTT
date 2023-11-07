@@ -8,20 +8,20 @@
                         Quản lý đánh giá
                     </h1>
                 </div>
-                <!-- <div class="col-12 ">
+                <div class="col-12 ">
                     @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                        {{ Session::get('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                     @if (Session::has('fail'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                        {{ Session::get('fail') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
-                </div> -->
+                </div>
                 <div class="col-auto ms-auto d-print-none">
                 </div>
             </div>
@@ -45,7 +45,9 @@
                                 @endphp
                                 {{ $t }}
                             </h3>
-                            <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete rating'))
+                            <a href="{{route('rating.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
