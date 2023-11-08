@@ -1,58 +1,142 @@
-.package-price{
-    border-radius: 8px;
-    /* background-color: gray !important; */
+.package-price {
+  border-radius: 8px;
+  /* background-color: gray !important; */
 }
-.quantity{
-width: 50px !important;
-/* padding: 50px; */
+
+.quantity {
+  width: 50px !important;
+  /* padding: 50px; */
 }
-.bg-title{
-    border-radius: 8px; 
+
+.bg-title {
+  border-radius: 8px;
 }
-.submit-btn input{
-    border-radius: 8px; 
-    width: 100%;
+
+.submit-btn input {
+  border-radius: 8px;
+  width: 100%;
 }
+
 .h6,
-.h5{
-    font-weight: bold;
+.h5 {
+  font-weight: bold;
 }
-.price{
-    color: red;
-    font-weight: bold;
+
+.price {
+  color: red;
+  font-weight: bold;
 
 }
-table thead tr{
-    background-color: white;
+
+table thead tr {
+  background-color: white;
 }
-.ant-picker-content{
-    border: none;
-    border-color: white;
+
+.ant-picker-content {
+  border: none;
+  border-color: white;
 }
+
 .star-icon.yellow {
-    color: #FADB14 !important;
-  }
-  .star-icon.gray {
-    color: #F8F8F8 !important;
-  }
-  /* Style for the star icons */
-.star-icon {
-    font-size: 20px; /* Adjust the size as needed */
-    color: #F8F8F8; /* Color of inactive stars */
-  
-    /* Add additional styles like margin, padding, etc., to adjust the spacing between stars */
-  }
-  
-  .star-active {
-    color: #FADB14; /* Color of active stars (yellow) */
-    cursor: pointer; /* Change cursor to a pointer on hover for interaction */
-  }
-  
-  /* Add any other styles you need for your rating component */
-  
-  /* Optional: Add hover effect for star icons */
-  .star-icon:hover {
-    color: #FADB14; /* Change color when hovering over the stars */
-  }
-  
+  color: #FADB14 !important;
+}
 
+.star-icon.gray {
+  color: #F8F8F8 !important;
+}
+
+/* Style for the star icons */
+.star-icon {
+  font-size: 20px;
+  /* Adjust the size as needed */
+  color: #F8F8F8;
+  /* Color of inactive stars */
+
+  /* Add additional styles like margin, padding, etc., to adjust the spacing between stars */
+}
+
+.star-active {
+  color: #FADB14;
+  /* Color of active stars (yellow) */
+  cursor: pointer;
+  /* Change cursor to a pointer on hover for interaction */
+}
+
+/* Add any other styles you need for your rating component */
+
+/* Optional: Add hover effect for star icons */
+.star-icon:hover {
+  color: #FADB14;
+  /* Change color when hovering over the stars */
+}
+
+
+
+.carousel-indicator {
+  /* position: absolute; */
+
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-left: 15%;
+  margin-bottom: 1rem;
+  margin-right: 15%;
+}
+
+.carousel-indicator li {
+  cursor: pointer;
+}
+
+.carousel-indicator [data-bs-target] {
+  box-sizing: content-box;
+  flex: 0 1 auto;
+  width: 30px;
+  height: 3px;
+  padding: 0;
+  margin-left: 3px;
+  margin-right: 3px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  opacity: 0.5;
+  transition: opacity 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-indicators [data-bs-target] {
+    transition: none;
+  }
+}
+
+.carousel-indicator .active {
+  opacity: 1;
+}
+
+.carousel-caption {
+  position: absolute;
+  left: 15%;
+  bottom: 1.25rem;
+  right: 15%;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+.carousel-dark .carousel-control-next-icon,
+.carousel-dark .carousel-control-prev-icon {
+  filter: invert(1) grayscale(100);
+}
+
+.carousel-dark .carousel-indicator [data-bs-target] {
+  background-color: #000000;
+}
+
+.carousel-dark .carousel-caption {
+  color: #000000;
+}

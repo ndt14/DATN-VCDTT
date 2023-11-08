@@ -40,14 +40,14 @@ const HomePage = () => {
   //   autoplay: true,
   // });
 
-  const settings1 = {
-    lazyload: false,
-    nav: false,
-    mouseDrag: true,
-    items: 3,
-    autoplay: true,
-    autoplayButtonOutput: false,
-  };
+  // const settings1 = {
+  //   lazyload: false,
+  //   nav: false,
+  //   mouseDrag: true,
+  //   items: 3,
+  //   autoplay: true,
+  //   autoplayButtonOutput: false,
+  // };
 
   const settings2 = {
     lazyload: false,
@@ -111,8 +111,8 @@ const HomePage = () => {
 
       <main id="content" className="site-main">
         {/* <!-- Home slider html start --> */}
-        <section className="home-slider-section">
-          <div className="home-slider">
+        <section className="home-slider-section ">
+          <div className="home-slider d-none d-md-block">
             <div className="home-banner-items">
               <div className="banner-inner-wrap">
                 <Carousel autoplay>
@@ -148,11 +148,11 @@ const HomePage = () => {
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
-              <div className="input-group width-col-9  flex-grow-2">
-                {/* <label> Tìm kiếm địa điểm * </label> */}
+              {/* <div className="input-group width-col-9  flex-grow-2">
+                 <label> Tìm kiếm địa điểm * </label>
                 <SearchBar />
-                {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> */}
-              </div>
+                {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> *
+              </div>/}
 
               {/* <div className="input-group width-col-3">
               <Link to={'/search'}>
