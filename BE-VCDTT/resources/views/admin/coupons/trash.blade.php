@@ -246,10 +246,18 @@
                     btnClass: 'btn-danger',
                     action: function() {
                         axios.delete(`/api/coupon-destroy-forever/${id}`).then(function(response) {
-                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
-                            setTimeout(() => {
+                            Swal.fire({
+                            position: "top-center",
+                            icon: "success",
+                            title: "Xóa thành công",
+                            showConfirmButton: false,
+                            timer: 1500
+                            })
+                            .then((response) => {
+                            if (response) {
                                 location.reload();
-                            }, 2000);
+                            }
+                        });
                         });
                     }
                 },
