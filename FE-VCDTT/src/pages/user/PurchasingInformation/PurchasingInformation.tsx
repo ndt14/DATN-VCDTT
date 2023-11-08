@@ -208,7 +208,22 @@ const PurchasingInformation = (props: Props) => {
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
   };
-  console.log(paymentMethod);
+  // console.log(paymentMethod);
+
+
+  // Khi bạn tắt modal CashPaymentModal, đặt showConfirmTourFormModal thành false
+  const hideConfirmTourFormModal = () => {
+    const confirmTourFormModal = document.getElementById('confirmTourForm'); // Lấy modal confirmTourForm bằng id
+    if (confirmTourFormModal) {
+      confirmTourFormModal.style.display = 'none'; // Ẩn modal
+    }
+  };
+  
+  // Trong hàm handleCashPaymentModalClose, sau khi bạn đã đặt showPaymentModal thành false, gọi hàm hideConfirmTourFormModal để ẩn modal confirmTourForm
+  const handleCashPaymentModalClose = () => {
+    setShowPaymentModal(false);
+    hideConfirmTourFormModal();
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -250,12 +265,15 @@ const PurchasingInformation = (props: Props) => {
           const billID = response?.data?.data?.purchase_history.id;
           console.log(billID);
           localStorage.setItem("billIdSuccess", JSON.stringify(billID));
+    hideConfirmTourFormModal();
+
+          setShowPaymentModal(true);
         })
         .catch((error) => {
           // Handle any errors here
           console.error(error);
         });
-      setShowPaymentModal(true);
+      
     } else if (paymentMethod === "1") {
       addBill(variables)
         .then((response) => {
@@ -560,7 +578,7 @@ const PurchasingInformation = (props: Props) => {
                     )}
                   </form>
                   {/* Modal xác nhận thông tin */}
-                  {showPaymentModal === false ? (
+                
                     <div className="">
                       <div
                         className="modal fade"
@@ -681,6 +699,7 @@ const PurchasingInformation = (props: Props) => {
                                       value="0"
                                       className="mr-2"
                                       onChange={handlePaymentMethodChange}
+
                                     />
                                     Chuyển khoản trực tiếp
                                   </div>
@@ -725,7 +744,9 @@ const PurchasingInformation = (props: Props) => {
                             </div>
                             <div className="modal-footer">
                               <button
-                                disabled={isChecked == false}
+                                
+                                aria-label="Close"
+                                // disabled={isChecked == false}
                                 type="button"
                                 className="btn btn-secondary"
                                 data-dismiss="modal"
@@ -737,12 +758,15 @@ const PurchasingInformation = (props: Props) => {
                         </div>
                       </div>
                     </div>
-                  ) : null}
-                  <CashPaymentModal
-                    show={showPaymentModal}
-                    onHide={() => setShowPaymentModal(false)}
-                    modalData={variables}
-                  />
+                  
+                 
+                 {showPaymentModal ? (
+  <CashPaymentModal
+    show={showPaymentModal}
+    onHide={handleCashPaymentModalClose}
+    modalData={variables}
+  />
+) : null}
                 </div>
               </div>
               <div className="col-md-4">

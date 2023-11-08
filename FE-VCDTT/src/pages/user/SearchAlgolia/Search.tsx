@@ -13,6 +13,7 @@ import {
   SortBy,
   SearchBox,
   useInstantSearch,
+  CurrentRefinements,
 } from 'react-instantsearch';
 
 import { Panel } from './Panel';
@@ -115,6 +116,22 @@ if (submit) {
               ]}
             />
 </div>
+    
+            {/* <CurrentRefinements
+              // transformItems={(items) =>
+              //   items.map((item) => {
+              //     const label = item.label.startsWith('hierarchicalCategories')
+              //       ? 'Hierarchy'
+              //       : item.label;
+
+              //     return {
+              //       ...item,
+              //       attribute: label,
+              //     };
+              //   })
+              // }
+            /> */}
+
                   </div>
              
                 <NoResultsBoundary fallback={<NoResults />}/>
