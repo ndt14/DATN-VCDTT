@@ -63,6 +63,7 @@ const BillSuccess = () => {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
             payment_status: 1,
+            purchase_status: 1,
           };
           await updateBill(updatedBillData);
         } else {
@@ -83,8 +84,6 @@ const BillSuccess = () => {
 
   const navigate = useNavigate();
   const [isPrinting, setIsPrinting] = useState(false);
-
-
 
   const handlePrintPDF = () => {
     setIsPrinting(true);
@@ -122,12 +121,11 @@ const BillSuccess = () => {
     couponPercentage: billData?.data.purchase_history.coupon_percentage,
     couponFixed: billData?.data.purchase_history.coupon_fixed,
     formattedFinalPrice: formattedFinalPrice,
-    titles:"Thông tin mua hàng",
+    titles: "Thông tin mua hàng",
     fullName: "Ho và tên:",
     email: "Email:",
-    phone:"Số điện thoại:"
+    phone: "Số điện thoại:",
   };
-
 
   return (
     <div>
@@ -143,9 +141,6 @@ const BillSuccess = () => {
         <div className="inner-shape"></div>
       </section>
       <div className="container">
-
-    
-
         {transactionStatus === "00" ? (
           <div>
             <h2 className="text-success">Thanh toán thành công</h2>
@@ -241,13 +236,13 @@ const BillSuccess = () => {
               <Link to={"/"}>Trở về trang chủ</Link>
             </button>
             <button className="button" onClick={handlePrintPDF}>
-          In đơn hàng của bạn
-          </button>
-        {isPrinting && (
-          <div id="your-element-id">
-            <PDFDocument data={apiData} />
-          </div>
-        )}
+              In đơn hàng của bạn
+            </button>
+            {isPrinting && (
+              <div id="your-element-id">
+                <PDFDocument data={apiData} />
+              </div>
+            )}
             {/* <button onClick={handleSubmit}>Cập nhật</button> */}
           </div>
         ) : (
