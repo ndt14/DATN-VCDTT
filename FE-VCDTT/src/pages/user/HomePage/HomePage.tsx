@@ -148,6 +148,7 @@ const HomePage = () => {
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
+            <SearchBar />
               {/* <div className="input-group width-col-9  flex-grow-2">
                  <label> Tìm kiếm địa điểm * </label>
                 <SearchBar />
