@@ -33,6 +33,10 @@ class Tour extends Model
     ];
     protected $categoriesArray;
 
+    public function categories() {
+        
+    }
+
     public function setCategoriesArray(array $categoriesArray)
     {
         $this->categoriesArray = $categoriesArray;

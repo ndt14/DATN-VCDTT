@@ -5,9 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý đánh giá cho tour: 
-                        <a href="javascript: viewDetailT({{ $data->tour->id ?? 1}});" title="Show Detail">{{ $data->tour->name ?? 'test'}}</a>
-                        
+                        Quản lý đánh giá
                     </h1>
                 </div>
                 <div class="col-12 ">
@@ -24,7 +22,8 @@
                     </div>
                     @endif
                 </div>
-            <div class="col-auto ms-auto d-print-none">
+                <div class="col-auto ms-auto d-print-none">
+                </div>
             </div>
         </div>
     </div>
@@ -35,18 +34,20 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Trung bình đánh giá:
+                            <h3 class="card-title">Tổng số đánh giá:
                                 @php
                                 $star = 0;
                                 $t=0;
-                                $count = $data->ratings;
+                                $count = $data;
                                 foreach ($count as $c) {
-                                    $star += $c->star;
                                     $t++;
                                 }
                                 @endphp
-                                {{ round($star/($t==0?1:$t),1) }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> (Tổng số đánh giá: {{ $t }} )
+                                {{ $t }}
                             </h3>
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete rating'))
+                            <a href="{{route('rating.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -57,58 +58,78 @@
                                     </div>
                                     entries
                                 </div>-->
-                            <div class="ms-auto text-muted">
-                                <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                    <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                        <select class="form-select" name="lang_code">
-                                            <option value="">Chọn trạng thái</option>
-                                            <option value="ja">Đang hoạt động</option>
-                                            <option value="en">Không hoạt động</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                        <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-indigo">Gửi</button>
-                                    </div>
-                                </form>
+                                <div class="ms-auto text-muted">
+                                    <form method="get" action="" class="row gy-2 gx-3 align-items-center">
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            <select class="form-select" name="lang_code">
+                                                <option value="">Chọn trạng thái</option>
+                                                <option value="ja">Đang hoạt động</option>
+                                                <option value="en">Không hoạt động</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                            <input type="text" name="keyword" value="keyword" class="form-control"
+                                                placeholder="Keyword">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-indigo">Gửi</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="table table-responsive">
-                        <table class="table card-table table-vcenter text-nowrap datatable">
-                            <thead>
-                                <tr>
-                                    <th class="w-1">ID</th>
-                                    <th>Tên người dùng</th>
-                                    <th>Số sao đánh giá</th>
-                                    <th>Nội dung</th>
-                                    <th>Trả lời của công ty</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Ngày sửa</th>
-                                    <th></th>
+                        <div class="table table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap datatable">
+                                <thead>
+                                    <tr>
+                                        <th class="w-1">ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Số sao đánh giá</th>
+                                        <th>Nội dung</th>
+                                        <th>Trả lời của công ty</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày sửa</th>
+                                        <th></th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data->ratings)
-                                        @foreach ($data->ratings as $item)
+                                    @if ($data)
+                                        @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
+                                                    {{-- @if (property_exists($object, 'user_name'))
+                                                        <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
+                                                     @else
+                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail"></a>
+                                                     @endif --}}
+                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
+
+                                                     {{-- @if (property_exists($item, 'user_name'))
                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
+                                                    @else
+                                                    <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail"></a>
+                                                    @endif --}}
+
+
+
                                                 </td>
                                                 <td>
                                                     {{ $item->star }}
                                                     <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                                    {{-- @if (property_exists($item, 'star'))
+                                                    {{ $item->star }}
+                                                    <i class="fa-solid fa-star" style="color: #fffa75;"></i>
+                                                    @endif --}}
                                                 </td>
                                                 <td>
                                                 <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $item->admin_answer??'Null' }}
+                                                    {{ string_truncate($item->admin_answer??'Null',30) }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
@@ -117,16 +138,15 @@
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
-                                                    @if(auth()->user()->can('reply review') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('rating.edit', ['id' => $item->id]) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M8 9h8"></path>
-                                                        <path d="M8 13h6"></path>
-                                                        <path d="M12.01 18.594l-4.01 2.406v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"></path>
-                                                        <path d="M16 19h6"></path>
-                                                        <path d="M19 16v6"></path>
-                                                        </svg>
+                                                    @if(auth()->user()->can('delete rating') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-green" href="{{route('rating.restore', ['id'=>$item->id])}}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
+                                                            <path d="M19 22v-6"></path>
+                                                            <path d="M22 19l-3 -3l-3 3"></path>
+                                                            <path d="M12 7v5l2.5 2.5"></path>
+                                                            </svg>
                                                     </a>
                                                     @endif
                                                     @if(auth()->user()->can('delete review') || auth()->user()->is_admin == 1)
@@ -160,16 +180,16 @@
                             @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
                                 @foreach ($pageLimits as $p)
-                                <option {{ $data->ratings->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
                                 @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->ratings->currentPage() }}</span> trên <span>{{ $data->ratings->lastPage() }}</span> của <span>{{ $data->ratings->total() }}</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
 
                             <ul class="pagination m-0 ms-auto">
-                                <li class="page-item {{ $data->ratings->currentPage() != 1 ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->ratings->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
+                                <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -177,26 +197,26 @@
                                             <path d="M15 6l-6 6l6 6"></path>
                                         </svg>prev</a>
                                 </li>
-                                <li class="page-item {{ $data->ratings->currentPage() == 1 ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->ratings->url(1) }}">1</a>
+                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
                                 </li>
-                                @for ($page = max(2, $data->ratings->currentPage()-2); $page <= $data->ratings->currentPage()+2 && $page <= $data->ratings->lastPage()-1; $page++)
+                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
 
-                                    <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $data->ratings->url($page) }}">{{ $page }}</a>
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
                                     </li>
 
                                 @endfor
-                                @if($data->ratings->currentPage()+3 != $data->ratings->lastPage() && $data->ratings->lastPage() >3)
+                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
                                 <li class="page-item">
                                         ...
                                 </li>
                                 @endif
-                                <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->ratings->url($data->ratings->lastPage()) }}">{{ $data->ratings->lastPage() }}</a>
+                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
                                 </li>
-                                <li class="page-item {{ $data->ratings->currentPage() != $data->ratings->lastPage() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->ratings->nextPageUrl()}}">Next
+                                <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -207,30 +227,30 @@
                                 </li>
                             </ul>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            </div>
         </div>
     </div>
-</div>
 @endSection
 @section('page_js')
-<script type="text/javascript">
-    let modalContainer;
-    $(document).ready(function() {
-        modalContainer = new bootstrap.Modal('#modalContainer', {
-            keyboard: true,
-            backdrop: 'static'
+    <script type="text/javascript">
+        let modalContainer;
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
         });
-    });
 
-    let viewDetail = function(id) {
+        let viewDetail = function(id) {
         axios.get(`/rating/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -239,10 +259,11 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {});
-    };
+            .finally(function() {
+            });
+        };
 
-    let viewDetailT = function(id) {
+        let viewDetailT = function(id) {
         axios.get(`/tour/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -251,9 +272,10 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {});
-    };
-    let viewDetailU = function(id) {
+            .finally(function() {
+            });
+        };
+        let viewDetailU = function(id) {
         axios.get(`/user/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
@@ -262,26 +284,35 @@
             .catch(function(error) {
                 bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             })
-            .finally(function() {});
-    };
+            .finally(function() {
+            });
+        };
 
 
-    let removeItem = function(id) {
+        let removeItem = function(id) {
         $.confirm({
             theme: theme,
-            title: 'Confirm',
-            content: 'Are you sure to remove?',
+            title: 'Xác nhận',
+            content: 'Bạn có muốn xóa vĩnh viễn?',
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'Yes',
+                    text: 'OK!',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/rating-destroy/${id}`).then(function(response) {
-                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
-                            setTimeout(() => {
+                        axios.delete(`/api/rating-destroy-forever/${id}`).then(function(response) {
+                            Swal.fire({
+                            position: "top-center",
+                            icon: "success",
+                            title: "Xóa thành công",
+                            showConfirmButton: false,
+                            timer: 1500
+                            })
+                            .then((response) => {
+                            if (response) {
                                 location.reload();
-                            }, 2000);
+                            }
+                        });
                         });
                     }
                 },
@@ -289,5 +320,5 @@
             }
         });
     };
-</script>
+    </script>
 @endSection

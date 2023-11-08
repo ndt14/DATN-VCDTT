@@ -112,7 +112,7 @@ class RatingController extends Controller
     public function show(string $id)
     {
         //
-        $rating = Rating::find($id);
+        $rating = Rating::withTrashed()->find($id);
 
         if (!$rating) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -172,13 +172,30 @@ class RatingController extends Controller
         }
     }
 
+    public function destroyForever(string $id) 
+    {
+        $rating = Rating::withTrashed()->find($id);
+        if ($rating) {
+            $delete_rating =  $rating->forceDelete();
+            if ($delete_rating) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
      // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function allRatingManagementList(Request $request) {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating');
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['ratings']), false);
-
             $perPage= $request->limit??5;// Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
@@ -238,5 +255,29 @@ class RatingController extends Controller
         }
     }
 
+    public function ratingManagementTrash(Request $request) {
+        $data = Rating::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.ratings.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function ratingManagementRestore($id) {
+
+        if($id) {
+            $data = Rating::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('rating.trash')->with('success', 'Khôi phục đánh giá thành công');
+        }
+        return redirect()->route('rating.trash');
+    }
 
 }

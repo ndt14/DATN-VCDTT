@@ -91,7 +91,7 @@ class PurchaseHistoryController extends Controller
     public function showByUser(string $user_id) //show theo user_id
     {
         //
-        $purchaseHistory = PurchaseHistory::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+        $purchaseHistory = PurchaseHistory::withTrashed()->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
 
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -109,7 +109,7 @@ class PurchaseHistoryController extends Controller
     public function showById(string $id) //show theo id đơn hàng
     {
         //
-        $purchaseHistory = PurchaseHistory::where('id', $id)->first();
+        $purchaseHistory = PurchaseHistory::withTrashed()->where('id', $id)->first();
 
         if (!$purchaseHistory) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
@@ -203,6 +203,23 @@ class PurchaseHistoryController extends Controller
     //     $data = $request->except('_token');
     // }
 
+    public function destroyForever(string $id) 
+    {
+        $purchaseHistory = PurchaseHistory::withTrashed()->find($id);
+        if ($purchaseHistory) {
+            $delete_purchaseHistory =  $purchaseHistory->forceDelete();
+            if ($delete_purchaseHistory) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
     //=======================================PurchaseHistoryAdmin Controller=======================================
 
     public function purchaseHistoryManagementList(Request $request)
@@ -229,6 +246,7 @@ class PurchaseHistoryController extends Controller
     public function purchaseHistoryManagementEdit(Request $request)
     {
         $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
+        // dd($items);
         return view('admin.purchase_histories.edit', compact('items'));
     }
 
@@ -273,4 +291,32 @@ class PurchaseHistoryController extends Controller
             }
         }
     }
+
+
+    public function purchaseHistoryManagementTrash(Request $request) {
+        $data = PurchaseHistory::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.purchase_histories.trash', compact('data'));
+    }
+
+    // khôi phục bản ghi bị xóa mềm
+
+    public function purchaseHistoryManagementRestore($id) {
+
+        if($id) {
+            $data = PurchaseHistory::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('purchase_histories.trash')->with('success', 'Khôi phục đơn đặt thành công');
+        }
+        return redirect()->route('purchase_histories.trash');
+    }
+
+
 }
