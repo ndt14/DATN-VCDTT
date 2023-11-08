@@ -3,13 +3,17 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class PurchaseNotification extends Notification
 {
-    use Queueable;
+    use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $payment_status;
     protected $purchaseHistoryID;
@@ -63,5 +67,10 @@ class PurchaseNotification extends Notification
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel('datn-vcdtt-development');
     }
 }

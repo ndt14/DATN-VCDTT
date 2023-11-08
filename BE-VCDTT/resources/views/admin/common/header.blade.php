@@ -110,6 +110,7 @@
                                                             <path d="M2 12l5 5m5 -5l5 -5"></path>
                                                         </svg></a>
                                                 </div>
+                                                <p class="menu-notification"></p>
                                             </div>
                                         </div>
                                     @else
@@ -169,3 +170,19 @@
         </div>
     </header>
 </div>
+<script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
+{{-- <script type="text/javascript">
+    var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+        cluster: "ap1"
+    });
+    var channel = pusher.subscribe('PurchaseNotification');
+    channel.bind('datn-vcdtt-development', function(data) {
+        var newNotificationHtml = `
+        <a class="dropdown-item" href="#">
+            <span>${data}</span><br>
+        </a>
+        `;
+
+        $('.menu-notification').prepend(newNotificationHtml);
+    });
+</script> --}}

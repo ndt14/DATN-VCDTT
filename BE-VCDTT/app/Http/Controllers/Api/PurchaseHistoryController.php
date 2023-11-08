@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+use Pusher\Pusher;
 use App\Models\User;
+use App\Models\Coupon;
+use App\Models\UsedCoupon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PurchaseHistory;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use App\Notifications\ComfirmPayment;
+use App\Http\Resources\CouponResource;
+use App\Notifications\SendMailToClient;
+use App\Notifications\CancelNotification;
 use App\Notifications\PurchaseNotification;
 use Illuminate\Support\Facades\Notification;
-use App\Http\Resources\CouponResource;
 use App\Http\Resources\PurchaseHistoryResource;
-use App\Models\Coupon;
-use App\Models\UsedCoupon;
-use App\Notifications\CancelNotification;
-use App\Notifications\CancelPurchaseNotification;
-use App\Notifications\ComfirmPayment;
-use App\Notifications\SendMailToClient;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-
+use App\Models\Notification as NotificationModel;
+use App\Notifications\CancelPurchaseNotification;
 
 class PurchaseHistoryController extends Controller
 {
@@ -45,7 +46,7 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $users = User::where('is_admin', 1)->get();
+        $user = User::where('is_admin', 1)->first();
 
         $data = $request->except('coupon_code', '_token');
 
@@ -60,7 +61,11 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory = PurchaseHistory::create($data);
 
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
-        Notification::send($users, new PurchaseNotification($purchaseHistory));
+        Notification::send($user, new PurchaseNotification($purchaseHistory));
+
+        // không xóa, đây là code bắn dữ liệu thông báo lên pusher
+        // $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
+        // config_pusher()->trigger('PurchaseNotification', 'datn-vcdtt-development', $newNotification->data['data']);
 
         if ($purchaseHistory->id) {
             return response()->json([
@@ -217,10 +222,10 @@ class PurchaseHistoryController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-            if($data->currentPage()>$data->lastPage()){
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.purchase_histories.list', compact('data'));
