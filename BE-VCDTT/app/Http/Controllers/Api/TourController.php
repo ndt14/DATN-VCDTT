@@ -406,6 +406,14 @@ class TourController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data']['tour'];
+        $listRatings = Rating::where('tour_id',$request->id)->orderBy('id', 'desc')->get();
+        $star = 0; $t=0;
+        foreach ($listRatings as $c) {
+            $star += $c->star;
+            $t++;
+        }
+        $item['star'] = $star;
+        $item['rcount'] = $t;
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
