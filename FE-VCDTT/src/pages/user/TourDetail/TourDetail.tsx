@@ -12,7 +12,7 @@ import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { useAddRatingMutation } from "../../../api/rating";
+import { useAddRatingMutation, useGetRatingByIdQuery } from "../../../api/rating";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
@@ -20,14 +20,18 @@ const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
   const [addRating] = useAddRatingMutation();
+  const {id:idRating}= useParams<{ id: string }>();
+  const {data: dataRating} = useGetRatingByIdQuery(idRating|"")
+  console.log(dataRating);
+  
   const user = JSON.parse(localStorage.getItem("user")) || "";
   // console.log(user);
 
   const userId = user?.id;
   const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
-  const purchase_history = TourHistoryData?.data?.purchase_history;
+ console.log(TourHistoryData);
+ 
 
-  console.log(purchase_history);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
@@ -49,25 +53,11 @@ const TourDetail = () => {
 
   //
   const { id } = useParams<{ id: string }>();
-  if (purchase_history) {
-    var foundPurchase = purchase_history.find((purchase) =>  purchase.tour_id === Number(id))
-
-  // console.log(foundPurchase.purchase_status);
-  
-    if (foundPurchase) {
-      // A matching purchase_history object was found
-      console.log('Found purchase_history:', foundPurchase);
-    } else {
-      // No matching purchase_history object was found
-      console.log('Purchase_history not found for id:', id);
-    }
-  } else {
-    // Handle the case where purchase_history is undefined or empty
-    console.log('Purchase_history is undefined or empty');
-  }
+ 
 
   const { data: tourData } = useGetTourByIdQuery(id || "");
   console.log(tourData);
+  const [tour, setTour] = useState(tourData);
 
   const tourId = parseInt(id);
   console.log(typeof tourId);
@@ -144,6 +134,7 @@ const TourDetail = () => {
     currency: "VND",
   }).format(price + childPrice);
 
+  //đánh giá
   const renderStarRating = (rating: number): JSX.Element[] => {
     const starIcons: JSX.Element[] = [];
     for (let i = 1; i <= 5; i++) {
@@ -181,15 +172,43 @@ const TourDetail = () => {
   ) => {
     setRatingData({ ...ratingData, content: event.target.value });
   };
-  const navigate = useNavigate();
+ 
+
+ 
+
   const handleSubmitRating = async () => {
     if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
       try {
         const response = await addRating(ratingData);
+      
         // Handle success, e.g., show a success message or update UI
         console.log("Đánh giá thành công", response);
-        alert("đánh giá thành công");
-        navigate("/");
+        alert("Đánh giá thành công");
+  
+        // After a successful rating submission, update the component's state
+        const newRating = {
+          id: response.data.id, // Use the actual ID received from the server
+          user_name: ratingData.user_name,
+          content: ratingData.content,
+          star: ratingData.star,
+          created_at: new Date().toLocaleString(), // You can format the date accordingly
+        };
+  
+        // Create a copy of the existing ratings and add the new rating
+        const updatedRatings = [...tourData.data.listRatings, newRating];
+  
+        // Update the component's state with the new ratings
+        setTour({ ...tourData, data: { ...tourData.data, listRatings: updatedRatings } });
+  
+        // Reset the rating form or clear the inputs
+        setRatingData({
+          star: 5, // Set the default rating or any other value you prefer
+          user_id: userId,
+          user_name: userName,
+          content: "",
+          tour_id: id, // Assuming 'id' is the tour ID
+        });
+        
       } catch (error) {
         // Handle error, e.g., show an error message
         console.error("Đánh giá thất bại", error);
@@ -199,6 +218,35 @@ const TourDetail = () => {
       console.error("Please fill in all rating details");
     }
   };
+  useEffect(() => {
+    if (tourData) {
+      
+      setTour(tourData);
+    }
+  }, [tourData]);
+
+// console.log(tour);
+
+
+
+  
+const purchase_history = TourHistoryData?.data?.purchase_history;
+if (purchase_history) {
+  var foundPurchase = purchase_history.find((purchase) =>  purchase.tour_id === Number(id))
+
+// console.log(foundPurchase.purchase_status);
+
+  if (foundPurchase) {
+    // A matching purchase_history object was found
+    console.log('Found purchase_history:', foundPurchase);
+  } else {
+    // No matching purchase_history object was found
+    console.log('Purchase_history not found for id:', id);
+  }
+} else {
+  // Handle the case where purchase_history is undefined or empty
+  console.log('Purchase_history is undefined or empty');
+}
 
   // Calculate the average rating from the list of ratings
   const calculateAverageRating = () => {
@@ -213,9 +261,9 @@ const TourDetail = () => {
   };
 
   const averageRating = calculateAverageRating();
-
+//end đánh giá
   const isLoggedIn = user != "";
-
+//map
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -226,7 +274,7 @@ const TourDetail = () => {
       iframeRef.current.src = iframeSrc;
     }
   }, [exact_location]);
-
+//end map
   return (
     <>
       <Loader />
@@ -446,10 +494,10 @@ const TourDetail = () => {
                         {/* <!-- review comment html --> */}
                         <div className="comment-area">
                           <h3 className="comment-title">
-                            Có {tourData?.data.listRatings.length} đánh giá
+                            Có {tour?.data.listRatings.length} đánh giá
                           </h3>
                           <div className="comment-area-inner">
-                            {tourData?.data.listRatings.map(
+                            {tour?.data.listRatings.map(
                               ({
                                 id,
                                 user_name,
@@ -512,6 +560,7 @@ const TourDetail = () => {
                           <div className="comment-form-wrap">
                             <h3 className="comment-title">Đánh giá của bạn</h3>
                             {isLoggedIn ? (
+                              tour === tourData &&
                               foundPurchase?.purchase_status ==5
                                ? (
                                 <form className="comment-form">
