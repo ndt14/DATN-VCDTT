@@ -290,9 +290,6 @@
         </div>
     </div>
 @endsection
-@section('page_css')
-<link rel="stylesheet" href="{{ asset('admin/assets/css/fancybox.css') }}"/>
-@endsection
 @section('page_js')
 <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
@@ -315,9 +312,9 @@ Fancybox.bind('[data-fancybox]');
     let _self = $(this);
     let url = _self.attr('data-url');
     clipboard.writeText(url).then(function(){
-        bs5Utils.Snack.show('success', 'File url is copied.', delay = 5000, dismissible = true);
+        bs5Utils.Snack.show('success', 'Đã copy đường dẫn thành công!', delay = 5000, dismissible = true);
     }, function(err){
-        bs5Utils.Snack.show('danger', 'Can not copy file url.', delay = 5000, dismissible = true);
+        bs5Utils.Snack.show('danger', 'Lỗi.', delay = 5000, dismissible = true);
     });
 });
 $(document).ready(function() {
@@ -448,6 +445,7 @@ $(document).ready(function() {
     </script>
 @endSection
 @section('page_css')
+<link rel="stylesheet" href="{{ asset('admin/assets/css/fancybox.css') }}"/>
 <style>
         .list_attach {
             display: block;

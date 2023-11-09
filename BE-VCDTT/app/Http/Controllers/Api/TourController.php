@@ -363,7 +363,7 @@ class TourController extends Controller
                         $data = [
                             'name' => $img['name'],
                             'type' => $img['type'],
-                            'url' => '/uploads/' . $img['full_name'],
+                            'url' => 'http://be-vcdtt.datn-vcdtt.test//uploads/' . $img['full_name'],
                             'tour_id' => $tour_id
                         ];
                         $newImage = Image::create($data);

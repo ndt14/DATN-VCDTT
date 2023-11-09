@@ -22,7 +22,7 @@
                                             <img style="width: 150px; height: 90px; object-fit: cover;" src="{{ $item->url}}" alt="{{ $item->name}}">
                                         </td>
                                         <td class="text-end">
-                                            <a href="javascript: void(0);" data-url="{{ url($item->url)}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
+                                            <a href="javascript: void(0);" data-url="{{ $item->url}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M9 15l6 -6"></path>
