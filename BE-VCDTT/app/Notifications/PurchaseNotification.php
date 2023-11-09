@@ -1,11 +1,13 @@
 <?php
+//Thông báo mua hàng gửi cho bên admin
 
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class PurchaseNotification extends Notification
 {
@@ -39,7 +41,7 @@ class PurchaseNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail','database'];
     }
 
     /**
@@ -47,7 +49,11 @@ class PurchaseNotification extends Notification
      */
     public function toMail(object $notifiable)
     {
-
+        return (new MailMessage)
+            ->greeting('Xin chào!')
+            ->line('Bạn có đơn đặt hàng mới từ khách hàng ' . $this->name)
+            ->line('Vui lòng kiểm tra trong đơn hàng của bạn')
+            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
     /**

@@ -234,10 +234,10 @@ class PurchaseHistoryController extends Controller
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url())->appends(['limit' => $perPage]);
-            if($data->currentPage()>$data->lastPage()){
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.purchase_histories.list', compact('data'));
