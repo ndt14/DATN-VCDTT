@@ -15,6 +15,7 @@ import _ from "lodash";
 import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 import { number } from "yup";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
+import { AiFillEye } from "react-icons/ai";
 
 const HomePage = () => {
   //
@@ -62,7 +63,7 @@ const HomePage = () => {
   // Sắp xếp danh sách tour theo view_count giảm dần
   const sortedTours = _.orderBy(data?.data.tours, ["view_count"], ["desc"]);
   const featuredTours = sortedTours.slice(0, 4);
-console.log(featuredTours);
+  console.log(featuredTours);
 
   //tour giảm giá
   const sortedDiscountedTours = _.orderBy(
@@ -105,7 +106,11 @@ console.log(featuredTours);
       e.preventDefault();
       handleFavorite(id);
     };
-
+  //SEO
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Trang chủ - VCDTT";
+  }
   return (
     <>
       <Loader />
@@ -117,22 +122,10 @@ console.log(featuredTours);
             <div className="home-banner-items">
               <div className="banner-inner-wrap">
                 <Carousel autoplay>
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_4.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_5.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_6.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://file.hstatic.net/1000376021/file/1920x720_copy_42b3f822c4ca4cd099bfb116931e6361.png"
-                    alt=""
-                  />
+                  <img src="../../../../assets/images/bg/bg1.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg3.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg6.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg7.jpg" alt="" />
                 </Carousel>
               </div>
               <div className="banner-content-wrap">
@@ -149,7 +142,7 @@ console.log(featuredTours);
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
-            <SearchBar />
+              <SearchBar />
               {/* <div className="input-group width-col-9  flex-grow-2">
                  <label> Tìm kiếm địa điểm * </label>
                 <SearchBar />
@@ -194,7 +187,7 @@ console.log(featuredTours);
                       main_img,
                       view_count,
                       adult_price,
-                      star
+                      star,
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -209,9 +202,15 @@ console.log(featuredTours);
                                   />
                                 </Link>
                               </figure>
-                              <div className="package-price">
+                              <div className="">
                                 <h6>
-                                  <span>{adult_price} đ </span> / người
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}
+                                  </span>{" "}
+                                  / người
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -228,17 +227,18 @@ console.log(featuredTours);
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                  <div
-                        className=""
-                        title={`Rated ${star} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={star} />
-                         
-                        </span>  <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
-                      </div>
+                                    <div
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        s
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
+                                    </div>
                                   </div>
                                   <div className="text-description">
                                     <p className="text-content">{details}</p>
@@ -269,8 +269,14 @@ console.log(featuredTours);
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -287,18 +293,17 @@ console.log(featuredTours);
                                     </h3>
                                   </div>
                                   <div className="review-areab">
-                                   
                                     <div
-                        className=""
-                        title={`Rated ${star} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={star} />
-                         
-                        </span>  <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
-                      </div>
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
+                                    </div>
                                   </div>
                                   <div className="text-description">
                                     <p className="text-content">{details}</p>
@@ -350,7 +355,7 @@ console.log(featuredTours);
                       main_img,
                       view_count,
                       adult_price,
-                      star
+                      star,
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -366,8 +371,14 @@ console.log(featuredTours);
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -384,16 +395,16 @@ console.log(featuredTours);
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                  <div
-                        className=""
-                        title={`Rated ${star} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={star} />
-                         
-                        </span>  <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
+                                    <div
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -425,8 +436,14 @@ console.log(featuredTours);
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -443,16 +460,16 @@ console.log(featuredTours);
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                  <div
-                        className=""
-                        title={`Rated ${star} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={star} />
-                         
-                        </span>  <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
+                                    <div
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -501,7 +518,7 @@ console.log(featuredTours);
                     main_img,
                     view_count,
                     adult_price,
-                    star
+                    star,
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
@@ -513,8 +530,14 @@ console.log(featuredTours);
                               </Link>
                             </figure>
                             <div className="package-price">
-                              <h6>
-                                <span>{adult_price} đ </span> / người
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -529,7 +552,7 @@ console.log(featuredTours);
                                 </div>
                                 <div className="review-area">
                                   <span className="review-text">
-                                    ({view_count} reviews)
+                                    ({view_count} <AiFillEye size={25} />)
                                   </span>
                                   <div
                                     className="rating-start"
@@ -566,8 +589,14 @@ console.log(featuredTours);
                               </Link>
                             </figure>
                             <div className="package-price">
-                              <h6>
-                                <span>{adult_price} đ </span> / người
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -581,15 +610,15 @@ console.log(featuredTours);
                                   </h3>
                                 </div>
                                 <div className="review-area">
-                                <div
-                        className=""
-                        title={`Rated ${star} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={star} />
-                         
-                        </span>  <span className="review-text">
-                                      ({view_count} reviews)
+                                  <div
+                                    className=""
+                                    title={`Rated ${star} out of 5`}
+                                  >
+                                    <span className="w-90">
+                                      <Rate allowHalf disabled value={star} />
+                                    </span>{" "}
+                                    <span className="review-text">
+                                      ({view_count} <AiFillEye size={25} />)
                                     </span>
                                   </div>
                                 </div>

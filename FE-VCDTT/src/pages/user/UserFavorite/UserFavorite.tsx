@@ -39,6 +39,10 @@ const UserTour = () => {
       handleFavorite(id);
     };
 
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Thông tin người dùng";
+  }
   return (
     <div>
       <section className="inner-banner-wrap">

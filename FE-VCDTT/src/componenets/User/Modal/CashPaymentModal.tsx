@@ -1,25 +1,47 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import { useUpdateBillMutation } from "../../../api/bill";
+import { Navigate, useNavigate } from "react-router";
 
 function CashPaymentModal(props) {
   const { formattedFinalPrice, id /* các biến khác */ } = props.modalData;
   const billId = JSON.parse(localStorage.getItem("billIdSuccess"));
+  const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+  console.log(isLoggedIn);
+
   console.log(billId);
   const [updatePaymentStatus] = useUpdateBillMutation();
+  const navigate = useNavigate();
   const updateBill = () => {
     const data = {
       id: billId,
       payment_status: 1,
     };
     updatePaymentStatus(data).then(() => {
-      alert("Bạn xác nhận đã thanh toán");
+      if (isLoggedIn && isLoggedIn == true) {
+        alert(
+          "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn"
+        );
+        navigate("/user/tours");
+        window.location.reload();
+      } else {
+        alert(
+          "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn. Hãy đăng ký/đăng nhập để trải nghiệm các dịch vụ ưu đãi cho người dùng"
+        );
+        navigate("/");
+        window.location.reload();
+      }
     });
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} backdrop="static" keyboard={false}>
-      <Modal.Header >
+    <Modal
+      show={props.show}
+      onHide={props.onHide}
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
         <Modal.Title>
           <div className="text-center">
             Vui lòng quét qr hoặc chuyển khoản cho thông tin dưới đây
@@ -52,7 +74,9 @@ function CashPaymentModal(props) {
       <Modal.Footer>
         <div className="text-center">
           {/* Thêm nút "Chuyển khoản thành công" */}
-          <button className="btn btn-danger" onClick={props.onHide}>Thoát</button>
+          <button className="btn btn-danger" onClick={props.onHide}>
+            Thoát
+          </button>
           <button onClick={updateBill} className="btn btn-success">
             Chuyển khoản thành công
           </button>
