@@ -146,6 +146,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::get('/image/image-list', [ImageController::class, 'imageList']);
+
     Route::post('/image-add', [ImageController::class, 'add'])->name('image.add');
     Route::get('/image-download/{id}', [ImageController::class, 'download']);
     Route::delete('/image-destroy/{id}', [ImageController::class, 'destroy']);

@@ -372,7 +372,7 @@ class TourController extends Controller
                         $data = [
                             'name' => $img['name'],
                             'type' => $img['type'],
-                            'url' => '/uploads/' . $img['full_name'],
+                            'url' => 'http://be-vcdtt.datn-vcdtt.test//uploads/' . $img['full_name'],
                             'tour_id' => $tour_id
                         ];
                         $newImage = Image::create($data);
@@ -391,9 +391,10 @@ class TourController extends Controller
     public function tourManagementEdit(TourRequest $request, $id)
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)['data'];
-        $tour = $tourObject = json_decode(json_encode($response['tour']), false);
+        $tour = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
         $cateIds = [];
+        // dd($tourToCate);
         foreach ($tourToCate as $item) {
             $cateIds[] = $item['cate_id'];
         }

@@ -77,8 +77,23 @@
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Ảnh đại diện</label>
-                                        <input type="text" name="main_img" class="form-control"
-                                            placeholder="Link ảnh đại diện" >
+                                        <div class="row g-2">
+                                            <div class="col">
+                                                <input type="text" name="main_img" class="form-control" placeholder="Link ảnh đại diện">
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="javascript: viewImageList();" class="btn btn-icon btn-indigo" aria-label="Button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M15 8h.01"></path>
+                                                    <path d="M11.5 21h-5.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"></path>
+                                                    <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                                    <path d="M20.2 20.2l1.8 1.8"></path>
+                                                    <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l2 2"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('main_img')
                                                 {{ $message }}
@@ -267,14 +282,53 @@
 
             </div>
         </div>
+
+    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
 @endsection
 @section('page_js')
+<script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
 <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
+let viewImageList = function() {
+axios.get(`/image/image-list`)
+    .then(function(response) {
+        $('#modalContainer div.modal-content').html(response.data.html);
+        modalContainer.show();
+    })
+    .catch(function(error) {
+        bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+    })
+    .finally(function() {
+    });
+};
+Fancybox.bind('[data-fancybox]');
+    $('.btn-copy-url').click(function () {
+    let _self = $(this);
+    let url = _self.attr('data-url');
+    clipboard.writeText(url).then(function(){
+        bs5Utils.Snack.show('success', 'Đã copy đường dẫn thành công!', delay = 5000, dismissible = true);
+    }, function(err){
+        bs5Utils.Snack.show('danger', 'Lỗi.', delay = 5000, dismissible = true);
+    });
+});
 $(document).ready(function() {
+    modalContainer = new bootstrap.Modal('#modalContainer', {
+        keyboard: true,
+        backdrop: 'static'
+    });
+
+
+
+
+
     let categories_data = [];
     if ($('#frmAdd').length) {
-33
     $.ajax({
             url: "/api/category",
             method: 'GET',
@@ -391,6 +445,7 @@ $(document).ready(function() {
     </script>
 @endSection
 @section('page_css')
+<link rel="stylesheet" href="{{ asset('admin/assets/css/fancybox.css') }}"/>
 <style>
         .list_attach {
             display: block;
