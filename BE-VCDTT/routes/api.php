@@ -74,6 +74,7 @@ Route::post('/rating-store', [RatingController::class, 'store']);
 Route::get('/rating-show/{id}', [RatingController::class, 'show']);
 Route::put('/rating-edit/{id}', [RatingController::class, 'update'])->name('api.rating.edit');
 Route::delete('/rating-destroy/{id}', [RatingController::class, 'destroy']);
+Route::delete('/rating-destroy-forever/{id}', [RatingController::class, 'destroyForever']);
 
 //FAQ
 Route::get('/faq', [FAQController::class, 'index']);
@@ -101,6 +102,7 @@ Route::get('/purchase-history-show/{id}', [PurchaseHistoryController::class, 'sh
 Route::get('/purchase-history-show-by-user/{user_id}', [PurchaseHistoryController::class, 'showByUser']); //show tất cả hóa đơn của người dùng
 Route::put('/purchase-history-edit/{id}', [PurchaseHistoryController::class, 'update'])->name('api.purchase_histories.edit');
 Route::delete('/purchase-history-destroy/{id}', [PurchaseHistoryController::class, 'destroy']);
+Route::delete('/purchase-history-destroy-forever/{id}', [PurchaseHistoryController::class, 'destroyForever']);
 // Route::post('/comfirm-purchase', [PurchaseHistoryController::class, 'sendNotiComfirm']);
 
 //WishList

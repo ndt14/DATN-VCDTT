@@ -18,8 +18,8 @@ function CashPaymentModal(props) {
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide}>
-      <Modal.Header closeButton>
+    <Modal show={props.show} onHide={props.onHide} backdrop="static" keyboard={false}>
+      <Modal.Header >
         <Modal.Title>
           <div className="text-center">
             Vui lòng quét qr hoặc chuyển khoản cho thông tin dưới đây
@@ -52,7 +52,7 @@ function CashPaymentModal(props) {
       <Modal.Footer>
         <div className="text-center">
           {/* Thêm nút "Chuyển khoản thành công" */}
-          <button className="btn btn-danger">Thoát</button>
+          <button className="btn btn-danger" onClick={props.onHide}>Thoát</button>
           <button onClick={updateBill} className="btn btn-success">
             Chuyển khoản thành công
           </button>

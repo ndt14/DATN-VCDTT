@@ -1,4 +1,5 @@
 <?php
+//Thông báo cho client khi admin chuyển trạng thái
 
 namespace App\Notifications;
 
@@ -41,24 +42,27 @@ class SendMailToClient extends Notification
                 $this->status = 'tour đã kết thúc.';
                 break;
             case '6':
-                $this->status = 'admin đã hủy tour.';
+                $this->status = 'đang chờ admin xác nhận hủy tour và hoàn tiền.';
                 break;
             case '7':
-                $this->status = 'khách hàng đã hủy đơn hàng.';
+                $this->status = 'Admin đã hủy tour.';
                 break;
             case '8':
-                $this->status = 'tự động hủy do quá hạn thanh toán.';
+                $this->status = 'Admin đã hủy tour và hoàn tiền cho bạn.';
                 break;
             case '9':
-                $this->status = 'đã hoàn tiền.';
+                $this->status = 'tự động hủy do quá hạn thanh toán.';
                 break;
             case '10':
-                $this->status = 'đã đánh giá.';
+                $this->status = 'đã hoàn tiền.';
                 break;
             case '11':
-                $this->status = 'Admin thông báo bạn đã chuyển thiếu tiền.';
+                $this->status = 'đã đánh giá.';
                 break;
             case '12':
+                $this->status = 'Admin thông báo bạn đã chuyển thiếu tiền.';
+                break;
+            case '13':
                 $this->status = 'Admin thông báo bạn đã chuyển thừa tiền.';
                 break;
         }
@@ -79,14 +83,14 @@ class SendMailToClient extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        if ($this->purchase_status >= 0 && $this->purchase_status <= 10) {
+        if ($this->purchase_status >= 0 && $this->purchase_status <= 11) {
             return (new MailMessage)
                 ->greeting('Xin chào!')
                 ->line('Đơn hàng của bạn vừa được cập nhật trạng thái: ' . $this->status)
                 ->action('Kiểm tra đơn hàng của bạn ', url('/')) //link đến trang đơn hàng của khách
                 ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
                 ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-        } elseif ($this->purchase_status == 11 || $this->purchase_status == 12) {
+        } elseif ($this->purchase_status == 12 || $this->purchase_status == 13) {
             return (new MailMessage)
                 ->greeting('Xin chào!')
                 ->line($this->status . ' Vui lòng liên hệ với chúng tôi để được hỗ trợ')

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DashboardResource;
 use App\Models\PurchaseHistory;
+use App\Models\Rating;
+use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\Count;
@@ -14,16 +16,7 @@ class DashboardController extends Controller
     public function index(){
         return view('dashboard');
     }
-    public function totalEarn(Request $request){
-        //
-        //today
-        //this week
-        //this month
-        //this year
-        //over all
-        //views how many?
-        //passengers how many?
-        //sold how many?
+    public function totalEarnDashboard(Request $request){
         $data = [];
         $purchaseHistory = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
 
@@ -52,16 +45,11 @@ class DashboardController extends Controller
         }
         }
 
-        //
-        $userCount = Count(User::where('is_admin',2)->get());
-        //
         $data['UVCount'] = Count(PurchaseHistory::where('payment_status',1)->where('purchase_status',1)->get());
         //
         $paidPurchase = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
-        $data['PPCToday']=0;
-        $data['PPCWeek']=0;
-        $data['PPCMonth']=0;
-        $data['PPCYear']=0;
+
+        $data['PPCToday']=0;$data['PPCWeek']=0;$data['PPCMonth']=0;$data['PPCYear']=0;
         foreach ($paidPurchase as $PP){
         if(date("d-m-Y",strtotime($PP->created_at)) == date("d-m-Y")){
             $data['PPCToday']++;
@@ -76,34 +64,63 @@ class DashboardController extends Controller
             $data['PPCYear']++;
         }
     }
+        //chartpie view
+        $sort=$request->sort??'view_count';
+        $direction=$request->direction??'desc';
+        $tourViewCounts = Tour::select('id','name','view_count')->orderBy($sort,$direction)->limit(5)->get();
+        $data['tourVC'] = $tourViewCounts;
+
+        //chartpie rating
+        $sort=$request->sort??'view_count';
+        $direction=$request->direction??'desc';
+        $tourRatings = Tour::select('id','name')->get();
+        foreach($tourRatings as $tour){
+            $listRatings = Rating::where('tour_id',$tour->id)->orderBy('id', 'desc')->get();
+            $star = 0; $t=0;
+            foreach ($listRatings as $c) {
+                $star += $c->star;
+                $t++;
+            }
+            $tour->star=$star/($t==0?1:$t);
+            $tour->starCount= $t;
+        }
+        $tourRatings = collect($tourRatings);
+        $tourRatings = $tourRatings->sortByDesc(function ($item) {
+            return [$item['star'], $item['starCount']];
+        });
+        $tourRatings = $tourRatings->filter(function ($a) {
+            return $a->star > 0;
+        })->slice(0, 5);
+        $data['tourR'] = $tourRatings;
         //chart
-        $month = [0,0,0,0,0,0,0,0,0,0,0,0];
+        $months = [0,0,0,0,0,0,0,0,0,0,0,0];
         foreach ($total as $d) {
             for ($i=0; $i < 12 ; $i++) {
                 $i<9?$mrp="0".($i+1):$mrp=$i+1;
                 if( date("m-Y",strtotime($d['time'])) == $mrp."-".date("Y")){
-                    $month[$i] += number_format($d['price'] / 1000000, 2);
+                    $months[$i] += number_format($d['price'] / 1000000, 2);
                 }
             }
         }
-        $data['chart']=$month;
+        $data['chart']=$months;
         //
-        $data['userCount'] = $userCount;
+
         $data = json_decode(json_encode($data));
-        return view('dashboard',compact('data'));
+        return view('admin.dashboards.tour',compact('data'));
     }
-    public function totalEarning(Request $request){
+    public function userDashboard(Request $request){
         //
-        //daily
-        //weekly
-        //monthly
-        //yearly-not important
-        //views how many?
-        //passengers how many?
-        //sold how many?
+        $data['userCount'] = Count(User::where('is_admin',2)->get());
+
+        $data['userBannedCount'] =  Count(User::where('is_admin',2)->where('status',3)->get());
+        // chua dang ky
+        $data['notRegisteredCount'] = 0;
+
+        $data = json_decode(json_encode($data));
+        return view('admin.dashboards.user',compact('data'));
     }
-    public function totalEarnCate(Request $request){
-        // money made by category
+    public function webSetting(Request $request){
+
     }
 }
 

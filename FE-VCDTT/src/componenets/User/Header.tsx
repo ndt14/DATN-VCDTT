@@ -13,6 +13,11 @@ import { useGetCategoriesQuery } from "../../api/category.js";
 import { Category } from "../../interfaces/Category.js";
 import ForgotPasswordModal from "./Modal/ForgotPasswordModal.js";
 import { useNavigate } from "react-router-dom";
+//
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 const Header = () => {
   const [login] = useLoginMutation();
@@ -181,7 +186,7 @@ const Header = () => {
       <header id="masthead" className="site-header header-primary">
         {/* <!-- header html start --> */}
         <div className="top-header"></div>
-        <div className="bottom-header">
+        <div className="bottom-header d-none d-lg-block d-sm-none">
           <div className="container d-flex justify-content-between align-items-center">
             <div className="site-identity">
               <h1 className="site-title">
@@ -212,7 +217,11 @@ const Header = () => {
                         ({ id, name }: Category) => {
                           return (
                             <li key={id}>
-                              <Link to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}>{name}</Link>
+                              <Link
+                                to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                              >
+                                {name}
+                              </Link>
                               {/* <a href="destination.html"></a> */}
                             </li>
                           );
@@ -521,43 +530,58 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="mobile-menu-container">
-          <div className="slicknav_menu">
-            <a
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseMenu"
-              href="#"
-              aria-haspopup="true"
-              role="button"
-              tabIndex={0}
-              className="slicknav_btn slicknav_open"
-            >
-              <span className="slicknav_menutxt">Menu</span>
-            </a>
-            <nav
-              className="slicknav_nav slicknav_hidden"
-              aria-hidden="true"
-              role="menu"
-              id="collapseMenu"
-            >
-              <ul>
-                <li className="menu-item-has-children">
-                  <Link to={""}>Trang chủ</Link>
-                </li>
-                <li className="menu-item-has-children">
-                  <a href="#">Danh mục</a>
-                  <ul></ul>
-                </li>
-                <li className="menu-item-has-children">
-                  <Link to="blogs">Bài viết</Link>
-                  <ul></ul>
-                </li>
-                <li className="menu-item-has-children">
-                  <Link to="contact">Liên hệ</Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+        <div className=" d-block d-sm-none bg-white" style={{ zIndex: "99" }}>
+          <Navbar expand="lg" className="bg-body-tertiary">
+            <Container>
+              <Navbar.Brand href="/">
+                <img
+                  className="white-logo"
+                  src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                  alt="logo"
+                  style={{ width: "120px" }}
+                />
+              </Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  {isLoggedIn ? (
+                    <NavDropdown title={userName} id="basic-nav-dropdown">
+                      <NavDropdown.Item href="#action/3.1">
+                        Thông tin cá nhân
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="#action/3.2">
+                        Tour đã mua
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="#action/3.3">
+                        Tour yêu thích
+                      </NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item href="#action/3.4">
+                        Đăng xuất
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  ) : (
+                    <button className=" border-0" onClick={handleShowSignIn}>
+                      Đăng nhập/Đăng ký
+                    </button>
+                  )}
+
+                  <Nav.Link className="text-primary" href="">
+                    Trang chủ
+                  </Nav.Link>
+                  <Nav.Link className="text-primary" href="#link">
+                    Danh mục
+                  </Nav.Link>
+                  <Nav.Link className="text-primary" href="#link">
+                    Bài viết
+                  </Nav.Link>
+                  <Nav.Link className="text-primary" href="/contact">
+                    Liên hệ
+                  </Nav.Link>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
         </div>
       </header>
       {/* <a id="backTotop" href="#" className="to-top-icon">

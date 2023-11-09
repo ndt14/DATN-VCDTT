@@ -4,11 +4,11 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h2 class="page-title">
-                        Quản lý Roles
-                    </h2>
+                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
+                       Quản lý Tours
+                    </h1>
                 </div>
-                <!-- <div class="col-12 ">
+                <div class="col-12 ">
                     @if (Session::has('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                             {{ Session::get('success') }}
@@ -21,10 +21,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-                </div> -->
+                </div>
+                @if(auth()->user()->can('add tour') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('role.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
+                        <a href="{{ route('tour.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -34,7 +35,7 @@
                             </svg>
                             Thêm mới
                         </a>
-                        <a href="{{ url('/role/add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                        <a href="{{ url('/tour-add') }}" class="btn btn-indigo d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -45,6 +46,7 @@
                         </a>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -53,9 +55,12 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Role</h3>
+                            <h3 class="card-title">Tour</h3> 
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
+                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -68,11 +73,18 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            <select class="form-select" name="lang_code">
+                                                <option value="">Chọn trạng thái</option>
+                                                <option value="ja">Đang hoạt động</option>
+                                                <option value="en">Không hoạt động</option>
+                                            </select>
+                                        </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" class="form-control"
-                                                placeholder="tên vai trò">
+                                                placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm kiếm</button>
@@ -86,62 +98,85 @@
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Tên vai trò</th>
-                                        <th>Mô tả</th>
+                                        <th>Tên</th>
+                                        <th>Vị trí</th>
+                                        <th>Số hành khách</th>
+                                        <th>Lượt xem</th>
                                         <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
+                                        <th class="text-center">Hành động</th>
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (!empty($data))
-                                    @foreach ($data as $item)
+                                    @if ($data)
+                                        @foreach ($data as $item)
+                                            <tr>
+                                                <td><span class="text-muted">{{ $item->id }}</span></td>
+                                                <td>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ $item->name }}</a>
+                                                </td>
+                                                <td>
+                                                    {{ string_truncate($item->location, 50) }}
+                                                </td>
+                                                <td class="text-wrap text-break">
+                                                    {{ $item->tourist_count }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->view_count }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($item->created_at) }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($item->status == 1)
+                                                        <span class="badge bg-success" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                    @else
+                                                        <span class="badge bg-danger" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-end">
+                                                    @if(auth()->user()->can('reply review') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-yellow" href="{{ route('rating.list', ['id' => $item->id]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star-half-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M12 1a.993 .993 0 0 1 .823 .443l.067 .116l2.852 5.781l6.38 .925c.741 .108 1.08 .94 .703 1.526l-.07 .095l-.078 .086l-4.624 4.499l1.09 6.355a1.001 1.001 0 0 1 -1.249 1.135l-.101 -.035l-.101 -.046l-5.693 -3l-5.706 3c-.105 .055 -.212 .09 -.32 .106l-.106 .01a1.003 1.003 0 0 1 -1.038 -1.06l.013 -.11l1.09 -6.355l-4.623 -4.5a1.001 1.001 0 0 1 .328 -1.647l.113 -.036l.114 -.023l6.379 -.925l2.853 -5.78a.968 .968 0 0 1 .904 -.56zm0 3.274v12.476a1 1 0 0 1 .239 .029l.115 .036l.112 .05l4.363 2.299l-.836 -4.873a1 1 0 0 1 .136 -.696l.07 -.099l.082 -.09l3.546 -3.453l-4.891 -.708a1 1 0 0 1 -.62 -.344l-.073 -.097l-.06 -.106l-2.183 -4.424z" stroke-width="0" fill="currentColor"></path>
+                                                        </svg>
+                                                    </a>
+                                                    @endif
+                                                    @if(auth()->user()->can('edit tour') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-green" href="{{ route('tour.edit', ['id' => $item->id]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                        <path d="M16 5l3 3"></path>
+                                                        </svg>
+                                                    </a>
+                                                    @endif
+                                                    @if(auth()->user()->can('delete tour') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                        <path d="M4 7l16 0"></path>
+                                                        <path d="M10 11l0 6"></path>
+                                                        <path d="M14 11l0 6"></path>
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                        </svg>
+                                                    </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td><span class="text-muted">{{ $item->id }}</span></td>
-                                            <td>
-                                            <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->name, 70) }}</a>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
                                             </td>
-                                            <td>
-                                                {{ string_truncate($item->desc_role, 70) }}
-                                            </td>
-                                            <td>
-                                                {{ time_format($item->created_at) }}
-                                            </td>
-                                            <td>
-                                                {{ time_format($item->updated_at) }}
-                                            </td>
-                                            @if(!($item->name == 'Admin'))
-                                            <td class="text-end">
-                                                <a class="btn btn-icon btn-outline-green" href="{{ route('role.edit', ['id' => $item->id]) }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                    </svg>
-                                                </a>
-                                                <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M4 7l16 0"></path>
-                                                    <path d="M10 11l0 6"></path>
-                                                    <path d="M14 11l0 6"></path>
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                            @endif
                                         </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="9">
-                                            <div>Không có dữ liệu</div>
-                                        </td>
-                                    </tr>
-                                @endif
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -212,17 +247,17 @@
     </div>
 @endSection
 @section('page_js')
-    <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
+<script type="text/javascript">
+    let modalContainer;
+    $(document).ready(function() {
+        modalContainer = new bootstrap.Modal('#modalContainer', {
+            keyboard: true,
+            backdrop: 'static'
         });
+    });
 
-        let viewDetail = function(id) {
-        axios.get(`/faq/detail/${id}`)
+    let viewDetail = function(id) {
+        axios.get(`/tour/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
@@ -232,20 +267,20 @@
             })
             .finally(function() {
             });
-        };
+    };
 
-        let removeItem = function(id) {
+    let removeItem = function(id) {
         $.confirm({
             theme: theme,
-            title: 'Xác nhận',
-            content: 'Bạn có chắc muốn xóa?',
+            title: 'Confirm',
+            content: 'Are you sure to remove?',
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'Ok!',
+                    text: 'Yes',
                     btnClass: 'btn-danger',
                     action: function() {
-                        axios.delete(`/api/role-destroy/${id}`).then(function(response) {
+                        axios.delete(`/api/tour-destroy/${id}`).then(function(response) {
                             bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
                             setTimeout(() => {
                                 location.reload();
@@ -257,5 +292,5 @@
             }
         });
     };
-    </script>
+</script>
 @endSection
