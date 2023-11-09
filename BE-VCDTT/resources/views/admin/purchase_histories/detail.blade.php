@@ -8,312 +8,216 @@
             <div class="row">
                 <div class="mb-3 col-9">
                     <label class="form-label">Tên người dùng</label>
-                    <input type="text" name="name" class="form-control" placeholder="Nhập tên người dùng"
-                        value="{{ $item['name'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('name')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    <h3>{{ $item['name'] }}</h3>
                 </div>
                 <div class="mb-3 col-3">
                     <label class="form-label">ID người dùng</label>
-                    <input type="text" name="user_id" class="form-control" placeholder="Nhập ID người dùng"
-                        value="{{ $item['user_id'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('user_id')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['user_id'] }}
                 </div>
             </div>
+            <hr>
             <div class="row">
                 <div class="mb-3 col-4">
                     <label class="form-label">Email</label>
-                    <input type="email" name="main_img" class="form-control" placeholder="Email người đặt tour"
-                        value="{{ $item['email'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('email')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['email'] }}
                 </div>
                 <div class="mb-3 col-4">
                     <label class="form-label">Số điện thoại</label>
-                    <input type="text" name="phone_number" class="form-control"
-                        placeholder="Nhập số điện thoại người đặt tour" value="{{ $item['phone_number'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('phone_number')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['phone_number'] }}
+
                 </div>
                 <div class="mb-3 col-4">
                     <div class="form-label">Giới tính</div>
-                    <select class="form-select" aria-label="Default select example" disabled>
-                        <option>-----Chọn giới tính-----</option>
-                        <option @if ($item['gender'] == 1) selected @endif value="1">Nam
-                        </option>
-                        <option @if ($item['gender'] == 2) selected @endif value="2">Nữ
-                        </option>
-                        <option @if ($item['gender'] == 3) selected @endif value="3">Không xác
-                            định</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="mb-3 col-6">
-                    <div class="form-label">Tên tour</div>
-                    <input name="tour_name" type="text" placeholder="Nhập tên tour" class="form-control"
-                        value="{{ $item['tour_name'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_name')
-                            {{ $message }}
-                        @enderror
-                    </span>
-                </div>
-                <div class="mb-3 col-6">
-                    <div class="form-label">Độ dài tour</div>
-                    <input name="tour_duration" type="text" placeholder="Nhập độ dài tour" class="form-control"
-                        value="{{ $item['tour_duration'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_duration')
-                            {{ $message }}
-                        @enderror
-                    </span>
-                </div>
-            </div>
+                    @switch ($item['gender'])
+                        @case(0)
+                            Nam
+                        @break
 
+                        @case(1)
+                            Nữ
+                        @break
+
+                        @case(2)
+                            Không xác định
+                        @break
+                    @endswitch
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="mb-3 col-9">
+                    <div class="form-label">Tên tour</div>
+                    {{ $item['tour_name'] }}
+                </div>
+                <div class="mb-3 col-3">
+                    <div class="form-label">Độ dài tour</div>
+                    {{ $item['tour_duration'] }}
+                </div>
+            </div>
+            <hr>
             <div class="row">
                 <div class="mb-3 col-3">
                     <div class="form-label">Số trẻ em</div>
-                    <input name="child_count" type="text" placeholder="Nhập số trẻ em" class="form-control"
-                        value="{{ $item['child_count'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('child_count')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['child_count'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Giá trẻ em</div>
-                    <input name="tour_child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
-                        class="form-control" value="{{ $item['tour_child_price'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_child_price')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_child_price'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Số người lớn</div>
-                    <input name="adult_count" type="text" placeholder="Nhập số người lớn" class="form-control"
-                        value="{{ $item['adult_count'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('adult_count')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['adult_count'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Giá người lớn</div>
-                    <input name="tour_adult_price" type="text" placeholder="Nhập giá cho người lớn"
-                        class="form-control" value="{{ $item['tour_adult_price'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_adult_price')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_adult_price'] }}
                 </div>
             </div>
-
+            <hr>
             <div class="row">
                 <div class="mb-3 col-6">
                     <div class="form-label">Điểm bắt đầu</div>
-                    <input name="tour_start_destination" type="text" placeholder="Nhập điểm khởi hành tour"
-                        class="form-control" value="{{ $item['tour_start_destination'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_start_destination')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_start_destination'] }}
                 </div>
                 <div class="mb-3 col-6">
                     <div class="form-label">Điểm kết thúc</div>
-                    <input name="tour_end_destination" type="text" placeholder="Nhập điểm kết thúc tour"
-                        class="form-control" value="{{ $item['tour_end_destination'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_end_destination')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_end_destination'] }}
                 </div>
             </div>
-
+            <hr>
             <div class="row">
                 <div class="mb-3 ">
                     <div class="form-label">Vị trí tour</div>
-                    <input name="tour_location" type="text" class="form-control"
-                        placeholder="Nhập vị trí của tour" value="{{ $item['tour_location'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_location')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_location'] }}
                 </div>
             </div>
-
+            <hr>
             <div class="row">
                 <div class="mb-3 col-3">
                     <div class="form-label">Tour giảm giá (%)</div>
-                    <input name="tour_sale_percentage" type="text" class="form-control"
-                        placeholder="Nhập phần trăm giảm giá của tour" value="{{ $item['tour_sale_percentage'] }}"
-                        disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_sale_percentage')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_sale_percentage'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Mã giảm giá</div>
-                    <input name="coupon_name" type="text" class="form-control" placeholder="Nhập mã giảm giá"
-                        value="{{ $item['coupon_name'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('coupon_name')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['coupon_name'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Phần trăm giảm giá</div>
-                    <input name="coupon_percentage" type="text" class="form-control"
-                        placeholder="Nhập phần trăm giảm giá của mã giảm giá"
-                        value="{{ $item['coupon_percentage'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('coupon_percentage')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['coupon_percentage'] }}
                 </div>
                 <div class="mb-3 col-3">
                     <div class="form-label">Số tiền giảm trực tiếp</div>
-                    <input name="coupon_fixed" type="text" class="form-control"
-                        placeholder="Nhập phần trăm giảm giá của mã giảm giá" value="{{ $item['coupon_fixed'] }}"
-                        disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('coupon_fixed')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['coupon_fixed'] }}
                 </div>
             </div>
-
+            <hr>
             <div class="row">
-                <div class="mb-3 ">
+                <div class="mb-3 col-3">
                     <div class="form-label">Phần trăm hoàn tiền</div>
-                    <input name="refund_percentage" type="text" class="form-control"
-                        placeholder="Nhập vị trí của tour" value="{{ $item['refund_percentage'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('refund_percentage')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['refund_percentage'] }}
+                </div>
+
+
+                <div class="mb-3 col-9">
+                    <div class="form-label">Góp ý của khách hàng</div>
+                    {{ $item['suggestion'] }}
                 </div>
             </div>
-
-            <div class="mb-3">
-                <div class="form-label">Góp ý của khách hàng</div>
-                <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="suggestion"
-                    placeholder="Nhập nội dung mô tả" disabled>{{ $item['suggestion'] }}</textarea>
-                <span class="text-danger d-flex justify-content-start">
-                    @error('suggestion')
-                        {{ $message }}
-                    @enderror
-                </span>
-            </div>
-
+            <hr>
             <div class="row">
                 <div class="mb-3 col-6">
                     <div class="form-label">Thời gian bắt đầu</div>
-                    <input name="tour_start_time" type="text" placeholder="Nhập điểm khởi hành tour"
-                        class="form-control" value="{{ $item['tour_start_time'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_start_time')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_start_time'] }}
                 </div>
                 <div class="mb-3 col-6">
                     <div class="form-label">Thời gian kết thúc</div>
-                    <input name="tour_end_time" type="text" placeholder="Nhập điểm kết thúc tour"
-                        class="form-control" value="{{ $item['tour_end_time'] }}" disabled>
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('tour_end_time')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                    {{ $item['tour_end_time'] }}
                 </div>
             </div>
+            <hr>
+            <div class="row">
+                <div class="mb-3 col-6">
+                    <div class="form-label">Trạng thái thanh toán</div>
+                    <div class="custom-controls-stacked">
+                        @switch ($item['purchase_status'])
+                            @case(0)
+                                <span class="badge bg-red-lt">Chưa thanh toán</span>
+                            @break
 
-            <div class="mb-3">
-                <div class="form-label">Trạng thái thanh toán</div>
-                <div class="custom-controls-stacked">
-                    <label class="custom-control custom-radio custom-control-inline me-2">
-                        <input type="radio" class="custom-control-input" disabled
-                            @if ($item['payment_status'] == '1') checked @endif name="payment_status" value="1">
-                        <span class="custom-control-label">Đã thanh toán</span>
-                    </label>
-                    <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" disabled
-                            @if ($item['payment_status'] == '0') checked @endif name="payment_status" value="0">
-                        <span class="custom-control-label">Chưa thanh toán</span>
-                    </label>
+                            @case(1)
+                                <span class="badge bg-green-lt">Đã thanh toán</span>
+                            @break
+                        @endswitch
+                    </div>
+                </div>
 
-                    <span class="text-danger d-flex justify-content-start">
-                        @error('payment_status')
-                            {{ $message }}
-                        @enderror
-                    </span>
+                <div class="mb-3 col-6">
+                    <div class="form-label">Trạng thái mua hàng</div>
+                    @switch($item['purchase_status'])
+                        @case(0)
+                            <span class="badge bg-red-lt">Chưa thanh toán</span>
+                        @break
+
+                        @case(1)
+                            <span class="badge bg-orange-lt">Đang đợi xác nhận</span>
+                        @break
+
+                        @case(2)
+                            <span class="badge bg-green-lt">Chưa tới ngày đi</span>
+                        @break
+
+                        @case(3)
+                            <span class="badge bg-green-lt">Còn một ngày tới ngày đi</span>
+                        @break
+
+                        @case(4)
+                            <span class="badge bg-muted-lt">Đang diễn ra</span>
+                        @break
+
+                        @case(5)
+                            <span class="badge bg-muted-lt">Đã kết thúc</span>
+                        @break
+
+                        @case(6)
+                            <span class="badge bg-muted-lt">Đang đợi xác nhận hủy tour</span>
+                        @break
+
+                        @case(7)
+                            <span class="badge bg-muted-lt">Khách đã hủy</span>
+                        @break
+
+                        @case(8)
+                            <span class="badge bg-muted-lt">Admin đã hủy</span>
+                        @break
+
+                        @case(9)
+                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
+                        @break
+
+                        @case(10)
+                            <span class="badge bg-muted-lt">Đã hoàn tiền</span>
+                        @break
+
+                        @case(11)
+                            <span class="badge bg-muted-lt">Đã kết thúc, khách đã đánh giá</span>
+                        @break
+
+                        @case(12)
+                            <span class="badge bg-muted-lt">Chuyển khoản thiếu</span>
+                        @break
+
+                        @case(13)
+                            <span class="badge bg-muted-lt">Chuyển khoản thừa</span>
+                        @break
+
+                        @default
+                        @break
+                    @endswitch
                 </div>
             </div>
-
-            <div class="mb-3">
-                <div class="form-label">Trạng thái mua hàng</div>
-                <select name="purchase_status" class="form-select" aria-label="Default select example" disabled>
-                    <option>-----Trạng thái-----</option>
-                    <option @if ($item['purchase_status'] == 0) selected @endif value="0">Người dùng chưa thanh toán
-                    </option>
-                    <option @if ($item['purchase_status'] == 1) selected @endif value="1">Đang đợi Admin xác nhận
-                    </option>
-                    <option @if ($item['purchase_status'] == 2) selected @endif value="2">Admin đã xác nhận, chưa đến ngày đi tour
-                    </option>
-                    <option @if ($item['purchase_status'] == 3) selected @endif value="3">Còn một ngày tới ngày đi tour
-                    </option>
-                    <option @if ($item['purchase_status'] == 4) selected @endif value="4">Tour đang diễn ra
-                    </option>
-                    <option @if ($item['purchase_status'] == 5) selected @endif value="5">Tour đã kết thúc
-                    </option>
-                    <option @if ($item['purchase_status'] == 6) selected @endif value="6">Người dùng đã hủy tour, đang chờ admin xác nhận
-                    </option>
-                    <option @if ($item['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
-                    </option>
-                    <option @if ($item['purchase_status'] == 8) selected @endif value="8">Admin đã hủy tour
-                    </option>
-                    <option @if ($item['purchase_status'] == 9) selected @endif value="9">Tự động đơn đặt hủy do quá hạn thanh toán
-                    </option>
-                    <option @if ($item['purchase_status'] == 10) selected @endif value="10">Đã hoàn tiền
-                    </option>
-                    <option @if ($item['purchase_status'] == 11) selected @endif value="11">Người dùng đã đánh giá
-                    </option>
-                    <option @if ($item['purchase_status'] == 12) selected @endif value="12">Người dùng chuyển khoản thiếu
-                    </option>
-                    <option @if ($item['purchase_status'] == 13) selected @endif value="13">Người dùng chuyển khoản thừa
-                    </option>
-                </select>
-            </div>
-
-            <a class="button btn btn-indigo" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
+            <hr>
+            <a class="button btn btn-indigo"
+                href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
 
         </div>
     </div>

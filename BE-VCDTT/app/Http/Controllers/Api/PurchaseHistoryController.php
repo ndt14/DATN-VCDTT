@@ -145,7 +145,7 @@ class PurchaseHistoryController extends Controller
 
             if ($updateAdmin) {
                 $purchaseHistory->notify(new SendMailToClient($purchaseHistory->purchase_status));
-            } elseif (!$updateAdmin && $purchaseHistory->purchase_status == 6) {
+            } elseif (!$updateAdmin && ($purchaseHistory->purchase_status == 6 || $purchaseHistory->purchase_status == 7)) {
                 $users = User::where('is_admin', 1)->get();
                 foreach ($users as $user) {
                     $user->notify(new CancelNotification($purchaseHistory));

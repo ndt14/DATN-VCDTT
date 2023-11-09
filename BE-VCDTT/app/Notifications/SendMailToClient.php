@@ -48,7 +48,7 @@ class SendMailToClient extends Notification
                 $this->status = 'Admin đã hủy tour.';
                 break;
             case '8':
-                $this->status = 'Admin đã hủy tour và hoàn tiền cho bạn.';
+                $this->status = 'Admin xác nhận hủy tour và hoàn tiền cho bạn.';
                 break;
             case '9':
                 $this->status = 'tự động hủy do quá hạn thanh toán.';
