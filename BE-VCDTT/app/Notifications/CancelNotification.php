@@ -52,6 +52,7 @@ class CancelNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->subject('Khách Hàng ' . $this->name . ' Đã Hủy Tour ' . $this->tour_name)
             ->greeting('Xin chào!')
             ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '. Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
             ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')

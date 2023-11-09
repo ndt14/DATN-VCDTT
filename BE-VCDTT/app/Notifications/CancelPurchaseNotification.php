@@ -38,6 +38,7 @@ class CancelPurchaseNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->subject('Hủy Tour ' . $this->tour_name)
             ->greeting('Xin chào!')
             ->line('Bạn vừa hủy tour ' . $this->tour_name . '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền')
             ->line('Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ')

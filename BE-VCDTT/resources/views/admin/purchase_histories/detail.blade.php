@@ -286,7 +286,7 @@
                     </option>
                     <option @if ($item['purchase_status'] == 1) selected @endif value="1">Đang đợi Admin xác nhận
                     </option>
-                    <option @if ($item['purchase_status'] == 2) selected @endif value="2">Admin đã xác nhận, chờ người dùng ngày đi tour
+                    <option @if ($item['purchase_status'] == 2) selected @endif value="2">Admin đã xác nhận, chưa đến ngày đi tour
                     </option>
                     <option @if ($item['purchase_status'] == 3) selected @endif value="3">Còn một ngày tới ngày đi tour
                     </option>
@@ -294,15 +294,21 @@
                     </option>
                     <option @if ($item['purchase_status'] == 5) selected @endif value="5">Tour đã kết thúc
                     </option>
-                    <option @if ($item['purchase_status'] == 6) selected @endif value="6">Admin đã hủy tour
+                    <option @if ($item['purchase_status'] == 6) selected @endif value="6">Người dùng đã hủy tour, đang chờ admin xác nhận
                     </option>
                     <option @if ($item['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
                     </option>
-                    <option @if ($item['purchase_status'] == 8) selected @endif value="8">Tự  động đơn đặt  hủy do quá hạn than toán
+                    <option @if ($item['purchase_status'] == 8) selected @endif value="8">Admin đã hủy tour
                     </option>
-                    <option @if ($item['purchase_status'] == 9) selected @endif value="9">Đã hoàn tiền
+                    <option @if ($item['purchase_status'] == 9) selected @endif value="9">Tự động đơn đặt hủy do quá hạn thanh toán
                     </option>
-                    <option @if ($item['purchase_status'] == 10) selected @endif value="10">Người dùng đã đánh giá
+                    <option @if ($item['purchase_status'] == 9) selected @endif value="10">Đã hoàn tiền
+                    </option>
+                    <option @if ($item['purchase_status'] == 10) selected @endif value="11">Người dùng đã đánh giá
+                    </option>
+                    <option @if ($items['purchase_status'] == 11) selected @endif value="12">Người dùng chuyển khoản thiếu
+                    </option>
+                    <option @if ($items['purchase_status'] == 12) selected @endif value="13">Người dùng chuyển khoản thừa
                     </option>
                 </select>
             </div>
