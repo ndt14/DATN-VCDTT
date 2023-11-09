@@ -43,11 +43,7 @@ class CancelNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        if ($this->payment_status == 1) {
-            return ['mail', 'database'];
-        } else {
-            return ['database'];
-        }
+        return ['mail', 'database'];
     }
 
     /**
@@ -58,7 +54,7 @@ class CancelNotification extends Notification
         return (new MailMessage)
             ->subject('Khách Hàng ' . $this->name . ' Đã Hủy Tour ' . $this->tour_name)
             ->greeting('Xin chào!')
-            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name .'(khách hàng '. $this->paid. '). Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
+            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '(khách hàng ' . $this->paid . '). Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
             ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
             ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
