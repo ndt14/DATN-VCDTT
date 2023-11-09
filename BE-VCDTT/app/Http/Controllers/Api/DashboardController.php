@@ -116,6 +116,43 @@ class DashboardController extends Controller
         // chua dang ky
         $data['notRegisteredCount'] = 0;
 
+        $maleCount = User::where('is_admin', 2)->where('gender', 1)->count();
+        $femaleCount = User::where('is_admin', 2)->where('gender', 2)->count();
+        $otherCount = User::where('is_admin', 2)->where('gender', 3)->count();
+        $data['genderDP'] = [
+            $maleCount,
+            $femaleCount,
+            $otherCount,
+        ];
+        $now = date('Y-m-d');
+        $ageGroups = [
+            '18-24' => 0,
+            '25-34' => 0,
+            '35-44' => 0,
+            '45+' => 0,
+        ];
+
+        foreach ($ageGroups as $range => &$count) {
+        if ($range === '18-24') {
+            $startYear = date('Y-m-d', strtotime('-24 years', strtotime($now)));
+            $endYear = date('Y-m-d', strtotime('-18 years', strtotime($now)));
+        } elseif ($range === '25-34') {
+            $startYear = date('Y-m-d', strtotime('-34 years', strtotime($now)));
+            $endYear = date('Y-m-d', strtotime('-25 years', strtotime($now)));
+        } elseif ($range === '35-44') {
+            $startYear = date('Y-m-d', strtotime('-44 years', strtotime($now)));
+            $endYear = date('Y-m-d', strtotime('-35 years', strtotime($now)));
+        } elseif ($range === '45+') {
+            $startYear = date('Y-m-d', strtotime('-999 years', strtotime($now)));
+            $endYear = date('Y-m-d', strtotime('-45 years', strtotime($now)));
+        }
+
+        $count = User::where('is_admin', 2)->whereBetween('date_of_birth', [$startYear, $endYear])->count();
+        }
+
+        unset($count); // Remove reference to avoid potential issues
+
+        $data['ageDP'] = $ageGroups;
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.user',compact('data'));
     }

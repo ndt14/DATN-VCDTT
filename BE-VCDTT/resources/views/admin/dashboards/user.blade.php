@@ -48,86 +48,20 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="tab-pane" id="tabs-weekly-5" role="tabpanel">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng tiền đã thu được</h3>
-                                            {{ money_format($data->week) }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số tour đã bán</h3>
-                                            {{ $data->PPCWeek }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="tabs-monthly-5" role="tabpanel">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng tiền đã thu được</h3>
-                                            {{ money_format($data->month) }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số tour đã bán</h3>
-                                            {{ $data->PPCMonth }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="tabs-yearly-5" role="tabpanel">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng tiền đã thu được</h3>
-                                            {{ money_format($data->year) }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số tour đã bán</h3>
-                                            {{ $data->PPCYear }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                 </div>
-                {{-- <div class="row  shadow-lg rounded-4 p-4 pt-3 mt-4">
+                <div class="row  shadow-lg rounded-4 p-4 pt-3 mt-4">
                     <div class="col-6 card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>5 Tour được chú ý nhất</h3>
+                        <h3>Giới tính người dùng sử dụng web</h3>
                         <div id="chartpie"></div>
                     </div>
                     <div class="col-6 card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>5 Tour được đánh giá cao nhất</h3>
+                        <h3>Độ tuổi người dùng sử dụng web</h3>
                         <div id="chartpie2"></div>
                     </div>
                 </div>
-                <div class="col-12 mt-4">
+                {{-- <div class="col-12 mt-4">
                     <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
                         <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
                         <div id="chart" style="min-height: 365px;"></div>
@@ -140,65 +74,55 @@
 @section('page_js')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        // var chartPieInfo = @json($data).tourVC;
-        // // console.log(chartPieInfo);
-        // const nameList = Object.values(chartPieInfo).map(({
-        //     name
-        // }) => name);
-        // const viewCountList = Object.values(chartPieInfo).map(({
-        //     view_count
-        // }) => view_count);
-        // var options = {
-        //     series: viewCountList,
-        //     chart: {
-        //         width: 500,
-        //         type: 'pie',
-        //     },
-        //     labels: nameList,
-        //     responsive: [{
-        //         breakpoint: 200,
-        //         options: {
-        //             chart: {
-        //                 width: 200
-        //             },
-        //             legend: {
-        //                 position: 'bottom'
-        //             }
-        //         }
-        //     }]
-        // };
-        // var chartpie = new ApexCharts(document.querySelector("#chartpie"), options);
-        // chartpie.render();
-        // var chartPieInfo2 = @json($data).tourR;
-        // // console.log(chartPieInfo2);
-        // const nameList2 = Object.values(chartPieInfo2).map(({
-        //     name,
-        //     starCount
-        // }) => `${name} (${starCount} lượt đánh giá)`);
-        // const ratingList = Object.values(chartPieInfo2).map(({
-        //     star
-        // }) => star);
-        // var options2 = {
-        //     series: ratingList,
-        //     chart: {
-        //         width: 610,
-        //         type: 'pie',
-        //     },
-        //     labels: nameList2,
-        //     responsive: [{
-        //         breakpoint: 200,
-        //         options: {
-        //             chart: {
-        //                 width: 200
-        //             },
-        //             legend: {
-        //                 position: 'bottom'
-        //             }
-        //         }
-        //     }]
-        // };
-        // var chartpie2 = new ApexCharts(document.querySelector("#chartpie2"), options2);
-        // chartpie2.render();
+        var chartPieInfo = @json($data).genderDP;
+        // console.log(chartPieInfo);
+        var options = {
+            series: chartPieInfo,
+            chart: {
+                width: 400,
+                type: 'pie',
+            },
+            labels: ['Nam','Nữ','Khác'],
+            responsive: [{
+                breakpoint: 200,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+        var chartpie = new ApexCharts(document.querySelector("#chartpie"), options);
+        chartpie.render();
+        var chartPieInfo2 = @json($data).ageDP;
+        const keyschart2 = Object.keys(chartPieInfo2);
+        const valueschart2 = Object.values(chartPieInfo2);
+        console.log(keyschart2);
+        console.log(valueschart2);
+        var options2 = {
+            series: valueschart2,
+            chart: {
+                width: 400,
+                type: 'pie',
+            },
+            labels:  keyschart2,
+            responsive: [{
+                breakpoint: 200,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+        var chartpie2 = new ApexCharts(document.querySelector("#chartpie2"), options2);
+        chartpie2.render();
 
         // var chartInfo = @json($data).chart;
         // // console.log(chartInfo);
