@@ -390,7 +390,7 @@
                                     </option>
                                     <option @if ($items['purchase_status'] == 5) selected @endif value="5">Tour đã kết thúc
                                     </option>
-                                    <option @if ($item['purchase_status'] == 6) selected @endif value="6">Người dùng đã hủy tour, đang chờ admin xác nhận
+                                    <option @if ($items['purchase_status'] == 6) selected @endif value="6">Người dùng đã hủy tour, đang chờ admin xác nhận
                                     </option>
                                     <option @if ($items['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
                                     </option>

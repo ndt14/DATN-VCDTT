@@ -306,9 +306,9 @@
                     </option>
                     <option @if ($item['purchase_status'] == 11) selected @endif value="11">Người dùng đã đánh giá
                     </option>
-                    <option @if ($items['purchase_status'] == 12) selected @endif value="12">Người dùng chuyển khoản thiếu
+                    <option @if ($item['purchase_status'] == 12) selected @endif value="12">Người dùng chuyển khoản thiếu
                     </option>
-                    <option @if ($items['purchase_status'] == 13) selected @endif value="13">Người dùng chuyển khoản thừa
+                    <option @if ($item['purchase_status'] == 13) selected @endif value="13">Người dùng chuyển khoản thừa
                     </option>
                 </select>
             </div>
