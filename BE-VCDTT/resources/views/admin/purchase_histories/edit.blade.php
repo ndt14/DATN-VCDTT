@@ -394,17 +394,17 @@
                                     </option>
                                     <option @if ($items['purchase_status'] == 7) selected @endif value="7">Người dùng đã hủy
                                     </option>
-                                    <option @if ($items['purchase_status'] == 6) selected @endif value="8">Admin đã hủy tour
+                                    <option @if ($items['purchase_status'] == 8) selected @endif value="8">Admin đã hủy tour
                                     </option>
-                                    <option @if ($items['purchase_status'] == 8) selected @endif value="9">Tự động đơn đặt hủy do quá hạn thanh toán
+                                    <option @if ($items['purchase_status'] == 9) selected @endif value="9">Tự động đơn đặt hủy do quá hạn thanh toán
                                     </option>
-                                    <option @if ($items['purchase_status'] == 9) selected @endif value="10">Đã hoàn tiền
+                                    <option @if ($items['purchase_status'] == 10) selected @endif value="10">Đã hoàn tiền
                                     </option>
-                                    <option @if ($items['purchase_status'] == 10) selected @endif value="11">Người dùng đã đánh giá
+                                    <option @if ($items['purchase_status'] == 11) selected @endif value="11">Người dùng đã đánh giá
                                     </option>
-                                    <option @if ($items['purchase_status'] == 11) selected @endif value="12">Người dùng chuyển khoản thiếu
+                                    <option @if ($items['purchase_status'] == 12) selected @endif value="12">Người dùng chuyển khoản thiếu
                                     </option>
-                                    <option @if ($items['purchase_status'] == 12) selected @endif value="13">Người dùng chuyển khoản thừa
+                                    <option @if ($items['purchase_status'] == 13) selected @endif value="13">Người dùng chuyển khoản thừa
                                     </option>
                                 </select>
                             </div>

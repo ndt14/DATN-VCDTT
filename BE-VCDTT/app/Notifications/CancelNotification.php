@@ -1,5 +1,7 @@
 <?php
 
+//Thông báo hủy tour về bên admin
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;

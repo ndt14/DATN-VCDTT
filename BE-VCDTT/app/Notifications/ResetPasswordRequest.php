@@ -1,4 +1,5 @@
 <?php
+//Thông báo đổi mật khẩu luồng quên mật khẩu
 
 namespace App\Notifications;
 

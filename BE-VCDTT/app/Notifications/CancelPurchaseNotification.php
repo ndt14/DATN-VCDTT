@@ -1,4 +1,5 @@
 <?php
+//Thông báo cho user khi user yêu cầu hủy tour khi đã thanh toán
 
 namespace App\Notifications;
 

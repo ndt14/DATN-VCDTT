@@ -1,4 +1,5 @@
 <?php
+//Thông báo mua hàng gửi cho bên admin
 
 namespace App\Notifications;
 

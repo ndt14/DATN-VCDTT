@@ -1,4 +1,5 @@
 <?php
+//Thông báo cho admin khi khách hàng xác nhận thanh toán
 
 namespace App\Notifications;
 
