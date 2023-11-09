@@ -1,5 +1,5 @@
 import "./HomePage.css";
-import { Carousel } from "antd";
+import { Carousel, Rate } from "antd";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
@@ -22,7 +22,7 @@ const HomePage = () => {
   //
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { data } = useGetToursQuery();
-  // console.log(data);
+  console.log(data);
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
   };
@@ -62,6 +62,7 @@ const HomePage = () => {
   // Sắp xếp danh sách tour theo view_count giảm dần
   const sortedTours = _.orderBy(data?.data.tours, ["view_count"], ["desc"]);
   const featuredTours = sortedTours.slice(0, 4);
+console.log(featuredTours);
 
   //tour giảm giá
   const sortedDiscountedTours = _.orderBy(
@@ -193,6 +194,7 @@ const HomePage = () => {
                       main_img,
                       view_count,
                       adult_price,
+                      star
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -226,15 +228,17 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
+                                  <div
+                        className=""
+                        title={`Rated ${star} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={star} />
+                         
+                        </span>  <span className="review-text">
                                       ({view_count} reviews)
                                     </span>
-                                    <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
-                                    >
-                                      <span className="w-3/5"></span>
-                                    </div>
+                      </div>
                                   </div>
                                   <div className="text-description">
                                     <p className="text-content">{details}</p>
@@ -282,16 +286,19 @@ const HomePage = () => {
                                       </Link>
                                     </h3>
                                   </div>
-                                  <div className="review-area">
-                                    <span className="review-text">
+                                  <div className="review-areab">
+                                   
+                                    <div
+                        className=""
+                        title={`Rated ${star} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={star} />
+                         
+                        </span>  <span className="review-text">
                                       ({view_count} reviews)
                                     </span>
-                                    <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
-                                    >
-                                      <span className="w-3/5"></span>
-                                    </div>
+                      </div>
                                   </div>
                                   <div className="text-description">
                                     <p className="text-content">{details}</p>
@@ -343,6 +350,7 @@ const HomePage = () => {
                       main_img,
                       view_count,
                       adult_price,
+                      star
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -376,14 +384,16 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
+                                  <div
+                        className=""
+                        title={`Rated ${star} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={star} />
+                         
+                        </span>  <span className="review-text">
                                       ({view_count} reviews)
                                     </span>
-                                    <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
-                                    >
-                                      <span className="w-3/5"></span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -433,14 +443,16 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
+                                  <div
+                        className=""
+                        title={`Rated ${star} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={star} />
+                         
+                        </span>  <span className="review-text">
                                       ({view_count} reviews)
                                     </span>
-                                    <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
-                                    >
-                                      <span className="w-3/5"></span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -476,12 +488,6 @@ const HomePage = () => {
                     KHÁM PHÁ CÁC ĐỊA DANH NỔI TIẾNG
                   </h5>
                   <h2 className="">DANH SÁCH CÁC TOUR</h2>
-                  <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p>
                 </div>
               </div>
             </div>
@@ -495,6 +501,7 @@ const HomePage = () => {
                     main_img,
                     view_count,
                     adult_price,
+                    star
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
@@ -574,14 +581,16 @@ const HomePage = () => {
                                   </h3>
                                 </div>
                                 <div className="review-area">
-                                  <span className="review-text">
-                                    ({view_count} reviews)
-                                  </span>
-                                  <div
-                                    className="rating-start"
-                                    title="Rated 5 out of 5"
-                                  >
-                                    <span className="w-3/5"></span>
+                                <div
+                        className=""
+                        title={`Rated ${star} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={star} />
+                         
+                        </span>  <span className="review-text">
+                                      ({view_count} reviews)
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="text-description">

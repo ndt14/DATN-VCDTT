@@ -66,7 +66,7 @@ const UserTour = () => {
 
   const cancelTourRefund = async (id: number) => {
     const data = {
-      purchase_status: 11,
+      purchase_status: 6,
       id: id,
     };
 
@@ -190,16 +190,23 @@ const UserTour = () => {
                 } else if (purchase_status === 5) {
                   tourStatus = "Tour đã kết thúc";
                 } else if (purchase_status === 6) {
-                  tourStatus = "Admin đã hủy";
+                  tourStatus = "Yêu cầu hủy tour, chờ admin xác nhận";
                 } else if (purchase_status === 7) {
                   tourStatus = "Bạn đã hủy";
                 } else if (purchase_status === 8) {
-                  tourStatus = "Đơn tự động hủy do quá hạn thanh toán";
+                  tourStatus = "Admin đã hủy tour";
                 } else if (purchase_status === 9) {
-                  tourStatus = "Đã hoàn tiền do hủy tour";
+                  tourStatus = "Tự động đơn đặt hủy do quá hạn thanh toán";
                 } else if (purchase_status === 10) {
+                  tourStatus = "Đã hoàn tiền";
+                } else if (purchase_status === 11) {
                   tourStatus = "Đã Đánh giá tour";
-                }
+                } else if (purchase_status === 12) {
+                tourStatus = "Bạn chuyển khoản thiếu tiền";
+              }  else if (purchase_status === 13) {
+                tourStatus = "Bạn chuyển khoản thừa tiền";
+              }
+
                 let paymentStatus;
                 if (payment_status == 0) {
                   paymentStatus = "Chưa thanh toán";
