@@ -22,9 +22,9 @@
                         </div>
                     @endif
                 </div> -->
-                <!-- <div class="col-auto ms-auto d-print-none">
+                <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
+                        <a href="/image/dropzone" class="btn btn-indigo d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -34,7 +34,7 @@
                             </svg>
                            Thêm mới
                         </a>
-                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                        <a href="/image/dropzone}" class="btn btn-indigo d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -44,7 +44,7 @@
                             </svg>
                         </a>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -96,6 +96,7 @@
                                         <th>Tên Ảnh</th>
                                         <th>Định dạng</th>
                                         <th>Đường dẫn</th>
+                                        <th>Ngày thêm</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -118,6 +119,9 @@
                                             <td>
                                                 {{ $item->url }}
                                             </td>
+                                            <td>
+                                                {{ time_format($item->created_at) }}
+                                                </td>
                                                 <td class="text-end">
                                                     <a href="javascript: void(0);" data-url="{{ url($item->url)}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

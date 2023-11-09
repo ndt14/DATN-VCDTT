@@ -5,15 +5,9 @@
 <div class="card border-0 shadow-lg rounded-4 ">
     <div class="row g-0">
         <div class="col d-flex flex-column">
-            <div class="card-body">
+            <div class="card-body card-body-scrollable card-body-scrollable-shadow" style="height: 40rem;">
                 <div class="table table-responsive">
                     <table class="table card-table table-vcenter text-nowrap datatable">
-                        <thead>
-                            <tr>
-                                <th class="">Ảnh</th>
-                                <th></th>
-                            </tr>
-                        </thead>
                         <tbody>
                             @if ($data)
                                 @foreach ($data as $item)
@@ -40,7 +34,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                                                            @endforeach
+                                @endforeach
                             @else
                                 <tr>
                                     <td colspan="9">
