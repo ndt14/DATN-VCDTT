@@ -92,9 +92,6 @@ class TourController extends Controller
     {
         $listCate = Category::select('id', 'name', 'parent_id')
             ->get();
-        // get all data from table images
-        $listImage = Image::select('name', 'type', 'url', 'tour_id')
-            ->get();
         // get all data from table coupon
         $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
             ->where('coupons.status', 1)
@@ -103,7 +100,6 @@ class TourController extends Controller
             [
                 'data' => [
                     'categories' => CategoryResource::collection($listCate),
-                    'images' => ImageResource::collection($listImage),
                     'coupons' => CouponResource::collection($listCoupon),
                 ],
                 'message' => 'OK',
@@ -353,32 +349,6 @@ class TourController extends Controller
 
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
             if ($response->status() == 200) {
-                $tour_id = $response['data']['tour']['id'];
-                if ($request->hasFile('files')) {
-                    $images = [];
-                    $fileNames = [];
-                    $files = $request->file('files');
-                    foreach ($files as $file) {
-                        $type = $file->extension();
-                        $fileName = time() . '_' . uniqid(). '.' . $type;
-                        $file->move(public_path('uploads'), $fileName);
-                        $fileNames[] = [
-                            'name' => time() . '_' . uniqid(),
-                            'type' => $type,
-                            'full_name'=> $fileName,
-                        ];
-                    }
-                    foreach ($fileNames as $img) {
-                        $data = [
-                            'name' => $img['name'],
-                            'type' => $img['type'],
-                            'url' => 'http://be-vcdtt.datn-vcdtt.test//uploads/' . $img['full_name'],
-                            'tour_id' => $tour_id
-                        ];
-                        $newImage = Image::create($data);
-                        $images[] = $newImage;
-                    }
-                }
                 return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
             } else {
                 return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');

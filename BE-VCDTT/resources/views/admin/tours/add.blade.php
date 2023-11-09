@@ -82,6 +82,16 @@
                                                 <input type="text" name="main_img" class="form-control" placeholder="Link ảnh đại diện">
                                             </div>
                                             <div class="col-auto">
+                                                <a href="/image/dropzone" target="_blank" class="btn btn-icon btn-indigo" aria-label="Button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                                                    <path d="M7 9l5 -5l5 5"></path>
+                                                    <path d="M12 4l0 12"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                            <div class="col-auto">
                                                 <a href="javascript: viewImageList();" class="btn btn-icon btn-indigo" aria-label="Button">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -204,7 +214,7 @@
 
 
                                 <div class="row">
-                                    <div class="mb-3 col-4">
+                                    <div class="mb-3 col-6">
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="sale_percentage" type="text" class="form-control"
                                             placeholder="Nhập phần trăm giảm giá"
@@ -216,7 +226,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="mb-3 col-4">
+                                    <div class="mb-3 col-6">
                                         <div class="form-label">Số lượng hành khách</div>
                                         <input name="tourist_count" type="text" class="form-control"
                                             placeholder="Nhập số lượng hành khách"
@@ -226,16 +236,6 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <label class="multi-file_insert_attach btn btn-outline-muted"><span>Đính kèm ảnh</span></label>
-                                        <div class="list_attach">
-                                            <ul class="multi-file_attach_view">
-
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -273,7 +273,7 @@
                                 </div>
                                 <input name="imgArray" type="hidden" id="imgArray">
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer text-end">
                                 <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Submit</button>
                             </div>
                         </form>
@@ -292,7 +292,6 @@
 @endsection
 @section('page_js')
 <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
-<script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
 <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
 let viewImageList = function() {
@@ -460,8 +459,8 @@ $(document).ready(function() {
         
         ul.multi-file_attach_view li {
             float: left;
-            width: 80px;
-            margin: 0 20px 20px 0 !important;
+            width: 14%;
+            margin: 0 2% 2% 0 !important;
             padding: 0!important;
             border: 0!important;
             overflow: inherit;
@@ -511,6 +510,7 @@ $(document).ready(function() {
         
         .img-wrap-box img {
             right: 0;
+            border-radius: 10px;
             width: 100%!important;
             height: 100%!important;
             bottom: 0;
