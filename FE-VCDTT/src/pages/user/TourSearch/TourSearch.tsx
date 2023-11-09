@@ -4,14 +4,13 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Range } from "react-range";
 import Loader from "../../../componenets/User/Loader";
-import {  useGetCategoryByIdQuery } from "../../../api/category";
+import { useGetCategoryByIdQuery } from "../../../api/category";
 import { Tour } from "../../../interfaces/Tour";
 const TourSearch = () => {
-  const {id} = useParams<{id: string}>();
-  const {data:cateData} = useGetCategoryByIdQuery(id ||"");
+  const { id } = useParams<{ id: string }>();
+  const { data: cateData } = useGetCategoryByIdQuery(id || "");
   console.log(cateData);
- 
-  
+
   const [showGridSearch, setShowGridSearch] = useState(false);
   const [showListSearch, setShowListSearch] = useState(true);
   const [isButtonListClicked, setIsButtonListClicked] = useState(true);
@@ -39,8 +38,11 @@ const TourSearch = () => {
     setIsButtonGridClicked(false);
   };
 
-  
-  
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Tìm kiếm tour";
+  }
+
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -68,8 +70,7 @@ const TourSearch = () => {
         ></div>
         <div className="breadcrumb-outer">
           <div className="container">
-            <div className="breadcrumb-content text-center">
-            </div>
+            <div className="breadcrumb-content text-center"></div>
           </div>
         </div>
         <div className="dot-overlay"></div>
@@ -146,68 +147,87 @@ const TourSearch = () => {
                       data-bs-parent="#tourSearch"
                     >
                       <div className="accordion-body">
-{cateData?.data.toursByCate.map(({ id, name,details, main_img,  view_count,  adult_price,}: Tour)=>{
-  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(adult_price);
-  return(
-    <>
-    <div className="trend-full bg-white rounded box-shadow overflow-hidden p-4 mb-4 border" key={id}>
-                          <div className="row">
-                            <div className="col-lg-4 col-md-3">
-                              <div className="trend-item2 rounded">
-                                <a href="tour-single.html">
-                                  <img
-                                    className="w-full"
-                                    src={main_img}
-                                    alt=""
-                                  />
-                                </a>
-                                <div className="color-overlay"></div>
-                              </div>
-                            </div>
-                            <div className="col-lg-5 col-md-6">
-                              <div className="trend-content position-relative text-md-start text-center">
-                                <h3 className="mb-1">
-                                  <Link to={`/tours/${id}`}>
-                                    {name}
-                                  </Link>
-                                </h3>
-                                <h6 className="theme mb-0 my-2">
-                                  <i className="icon-location-pin"></i>{" "}
-                                  <span className="text-primary mt-2 fs-4">
-                                    Greece
-                                  </span>
-                                </h6>
-                              </div>
-                            </div>
-                            <div className="col-lg-3 col-md-3">
-                              <div className="trend-content text-md-end text-center">
-                                <div className="rating">
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
-                                  <span className="fa fa-star checked"></span>
+                        {cateData?.data.toursByCate.map(
+                          ({
+                            id,
+                            name,
+                            details,
+                            main_img,
+                            view_count,
+                            adult_price,
+                          }: Tour) => {
+                            const formattedTourPrice = new Intl.NumberFormat(
+                              "vi-VN",
+                              {
+                                style: "currency",
+                                currency: "VND",
+                              }
+                            ).format(adult_price);
+                            return (
+                              <>
+                                <div
+                                  className="trend-full bg-white rounded box-shadow overflow-hidden p-4 mb-4 border"
+                                  key={id}
+                                >
+                                  <div className="row">
+                                    <div className="col-lg-4 col-md-3">
+                                      <div className="trend-item2 rounded">
+                                        <a href="tour-single.html">
+                                          <img
+                                            className="w-full"
+                                            src={main_img}
+                                            alt=""
+                                          />
+                                        </a>
+                                        <div className="color-overlay"></div>
+                                      </div>
+                                    </div>
+                                    <div className="col-lg-5 col-md-6">
+                                      <div className="trend-content position-relative text-md-start text-center">
+                                        <h3 className="mb-1">
+                                          <Link to={`/tours/${id}`}>
+                                            {name}
+                                          </Link>
+                                        </h3>
+                                        <h6 className="theme mb-0 my-2">
+                                          <i className="icon-location-pin"></i>{" "}
+                                          <span className="text-primary mt-2 fs-4">
+                                            Greece
+                                          </span>
+                                        </h6>
+                                      </div>
+                                    </div>
+                                    <div className="col-lg-3 col-md-3">
+                                      <div className="trend-content text-md-end text-center">
+                                        <div className="rating">
+                                          <span className="fa fa-star checked"></span>
+                                          <span className="fa fa-star checked"></span>
+                                          <span className="fa fa-star checked"></span>
+                                          <span className="fa fa-star checked"></span>
+                                          <span className="fa fa-star checked"></span>
+                                        </div>
+                                        <small>{view_count} Reviews</small>
+                                        <div className="trend-price my-2">
+                                          <span className="mb-0">Từ</span>
+                                          <h3 className="mb-0">
+                                            {formattedTourPrice}
+                                          </h3>
+                                          <small>mỗi người lớn</small>
+                                        </div>
+                                        <a
+                                          href="tour-single.html"
+                                          className="nir-btn"
+                                        >
+                                          View Detail
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                                <small>{view_count} Reviews</small>
-                                <div className="trend-price my-2">
-                                  <span className="mb-0">Từ</span>
-                                  <h3 className="mb-0">{formattedTourPrice}</h3>
-                                  <small>mỗi người lớn</small>
-                                </div>
-                                <a href="tour-single.html" className="nir-btn">
-                                  View Detail
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-    </>
-  )
-})
-}
+                              </>
+                            );
+                          }
+                        )}
                       </div>
                     </div>
                   </div>
@@ -218,69 +238,88 @@ const TourSearch = () => {
                     <Loader />
                     <h4 className="my-3">Tìm thấy 2 tour</h4>
                     <div className="row my-3 destination-list accordion-collapse collapse show">
-                    {cateData?.data.toursByCate.map(({ id, name,details, main_img,  view_count,  adult_price,}: Tour)=>{
-  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(adult_price);
-  return(
-    <>   
-    <div className="col-lg-6 col-md-6" key={id}>
-                        <div className="package-wrap">
-                          <figure className="feature-image">
-                            <Link to="tours/1">
-                              <img
-                                className="w-full"
-                                src={main_img}
-                                alt=""
-                              />
-                            </Link>
-                          </figure>
-                          <div className="package-price">
-                            <h6>
-                              <span>{formattedTourPrice}</span> / mỗi người
-                            </h6>
-                          </div>
-                          <div className="package-content-wrap">
-                            {/* <div className="package-meta text-center"></div> */}
-                            <div className="package-content">
-                              <h3 className="margin-top-12">
-                                <Link className="mt-12" to={`tours/${id}`}>
-                                 {name}
-                                </Link>
-                              </h3>
-                              <div className="review-area">
-                                <span className="review-text">
-                                  ({view_count} reviews)
-                                </span>
-                                <div
-                                  className="rating-start"
-                                  title="Rated 5 out of 5"
-                                >
-                                  <span className="w-3/5"></span>
+                      {cateData?.data.toursByCate.map(
+                        ({
+                          id,
+                          name,
+                          details,
+                          main_img,
+                          view_count,
+                          adult_price,
+                        }: Tour) => {
+                          const formattedTourPrice = new Intl.NumberFormat(
+                            "vi-VN",
+                            {
+                              style: "currency",
+                              currency: "VND",
+                            }
+                          ).format(adult_price);
+                          return (
+                            <>
+                              <div className="col-lg-6 col-md-6" key={id}>
+                                <div className="package-wrap">
+                                  <figure className="feature-image">
+                                    <Link to="tours/1">
+                                      <img
+                                        className="w-full"
+                                        src={main_img}
+                                        alt=""
+                                      />
+                                    </Link>
+                                  </figure>
+                                  <div className="package-price">
+                                    <h6>
+                                      <span>{formattedTourPrice}</span> / mỗi
+                                      người
+                                    </h6>
+                                  </div>
+                                  <div className="package-content-wrap">
+                                    {/* <div className="package-meta text-center"></div> */}
+                                    <div className="package-content">
+                                      <h3 className="margin-top-12">
+                                        <Link
+                                          className="mt-12"
+                                          to={`tours/${id}`}
+                                        >
+                                          {name}
+                                        </Link>
+                                      </h3>
+                                      <div className="review-area">
+                                        <span className="review-text">
+                                          ({view_count} reviews)
+                                        </span>
+                                        <div
+                                          className="rating-start"
+                                          title="Rated 5 out of 5"
+                                        >
+                                          <span className="w-3/5"></span>
+                                        </div>
+                                      </div>
+                                      <p>{details}</p>
+                                      <div className="btn-wrap">
+                                        <a
+                                          href="#"
+                                          className="button-text width-6"
+                                        >
+                                          Đặt ngay
+                                          <i className="fas fa-arrow-right"></i>
+                                        </a>
+                                        <a
+                                          href="#"
+                                          className="button-text width-6"
+                                        >
+                                          Thêm vào yêu thích
+                                          <i className="far fa-heart"></i>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                              <p>
-                               {details}
-                              </p>
-                              <div className="btn-wrap">
-                                <a href="#" className="button-text width-6">
-                                  Đặt ngay<i className="fas fa-arrow-right"></i>
-                                </a>
-                                <a href="#" className="button-text width-6">
-                                  Thêm vào yêu thích
-                                  <i className="far fa-heart"></i>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-    </>
-    )
-  })
-  }
-
+                            </>
+                          );
+                        }
+                      )}
                     </div>
                   </div>
                 )}

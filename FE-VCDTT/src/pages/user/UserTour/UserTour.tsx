@@ -81,6 +81,10 @@ const UserTour = () => {
 
   const cancel = (e: React.MouseEvent<HTMLElement>) => {};
 
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Thông tin người dùng";
+  }
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -202,10 +206,10 @@ const UserTour = () => {
                 } else if (purchase_status === 11) {
                   tourStatus = "Đã Đánh giá tour";
                 } else if (purchase_status === 12) {
-                tourStatus = "Bạn chuyển khoản thiếu tiền";
-              }  else if (purchase_status === 13) {
-                tourStatus = "Bạn chuyển khoản thừa tiền";
-              }
+                  tourStatus = "Bạn chuyển khoản thiếu tiền";
+                } else if (purchase_status === 13) {
+                  tourStatus = "Bạn chuyển khoản thừa tiền";
+                }
 
                 let paymentStatus;
                 if (payment_status == 0) {
