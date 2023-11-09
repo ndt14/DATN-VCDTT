@@ -153,7 +153,7 @@ class PurchaseHistoryController extends Controller
                 if ($purchaseHistory->payment_status == 1) {
                     $purchaseHistory->notify(new CancelPurchaseNotification($purchaseHistory));
                 }
-            } elseif (!$updateAdmin && $purchaseHistory->payment_status == 1 && $purchaseHistory->purchase_status != 7) {
+            } elseif (!$updateAdmin && $purchaseHistory->payment_status == 1 && $purchaseHistory->purchase_status != 7 && $purchaseHistory->payment_method == 0) {
                 $users = User::where('is_admin', 1)->get();
                 foreach ($users as $user) {
                     $user->notify(new ComfirmPayment($purchaseHistory));
@@ -203,7 +203,7 @@ class PurchaseHistoryController extends Controller
     //     $data = $request->except('_token');
     // }
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $purchaseHistory = PurchaseHistory::withTrashed()->find($id);
         if ($purchaseHistory) {
