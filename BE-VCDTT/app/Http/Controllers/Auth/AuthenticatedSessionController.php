@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Điều chỉnh chuyển hướng khi đăng nhập thành công tại đây
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard.tour');
     }
 
     /**
