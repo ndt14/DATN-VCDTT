@@ -150,9 +150,9 @@ class PurchaseHistoryController extends Controller
                 foreach ($users as $user) {
                     $user->notify(new CancelNotification($purchaseHistory));
                 }
-                if ($purchaseHistory->payment_status == 1) {
+
                     $purchaseHistory->notify(new CancelPurchaseNotification($purchaseHistory));
-                }
+
             } elseif (!$updateAdmin && $purchaseHistory->payment_status == 1 && $purchaseHistory->purchase_status != 6 && $purchaseHistory->payment_method == 0) {
                 $users = User::where('is_admin', 1)->get();
                 foreach ($users as $user) {
