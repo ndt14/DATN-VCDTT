@@ -62,8 +62,17 @@ class TourController extends Controller
             'status',
             'created_at',
             'updated_at'
-        )
-            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
+        )->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
+        foreach($tours as $tour){
+            $listRatings = Rating::where('tour_id',$tour->id)->orderBy('id', 'desc')->get();
+            $star = 0; $t=0;
+            foreach ($listRatings as $c) {
+                $star += $c->star;
+                $t++;
+            }
+            $tour->star=$star/($t==0?1:$t);
+            $tour->starCount= $t;
+        }
         return response()->json(
             [
                 'data' => [
@@ -412,7 +421,7 @@ class TourController extends Controller
             $star += $c->star;
             $t++;
         }
-        $item['star'] = $star;
+        $item['star'] = $star/$t;
         $item['rcount'] = $t;
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
