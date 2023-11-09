@@ -62,8 +62,7 @@
                                 @endif
                             @endforeach
                         </a>
-                        <div
-                            class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
+                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
                             <div class="card border-0 shadow-lg rounded-4 ">
                                 <div class="card-header ">
                                     <h3 class="card-title">Thông báo</h3>
@@ -86,24 +85,28 @@
                                                 <div class="col text-truncate " style="width: 850px">
                                                     <a onclick='@php $notification->markAsRead() @endphp'
                                                         href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
-                                                        class="text-body d-block">Mã giao dịch:
-                                                        {{ $notification->data['transaction_id'] }}</a>
-                                                    <div class="d-block text-secondary mt-n1">
-                                                        <span class="text-wrap">{{ $notification->data['data'] }}</span>  <br>
-                                                        Phương thức thanh toán: @if ($notification->data['purchase_method'] == 1)
-                                                            VN Pay
+                                                        class="text-body d-block">
+                                                        @if ($notification->data['purchase_method'] == 1)
+                                                        Mã giao dịch VN Pay:
+                                                        {{ $notification->data['transaction_id'] }}
                                                         @else
-                                                            Chuyển khoản trực tiếp
+                                                        Khách hàng chuyển khoản trực tiếp:
                                                         @endif
+                                                    </a>
+                                                    <div class="d-block text-secondary mt-n1">
+                                                        <span
+                                                            class="text-wrap">{{ $notification->data['data'] }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Đánh dấu là đã đọc" href="{{ route('purchase_histories.mark_as_read') }}"><svg
+                                                    <a data-bs-toggle="tooltip" data-bs-placement="right"
+                                                        data-bs-title="Đánh dấu là đã đọc"
+                                                        href="{{ route('purchase_histories.mark_as_read') }}"><svg
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             class="icon icon-tabler icon-tabler-checks" width="30"
                                                             height="24" viewBox="0 0 24 24" stroke-width="5"
-                                                            stroke="paleGreen" fill="none"
-                                                            stroke-linecap="round" stroke-linejoin="round">
+                                                            stroke="paleGreen" fill="none" stroke-linecap="round"
+                                                            stroke-linejoin="round">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none">
                                                             </path>
                                                             <path d="M7 12l5 5l10 -10"></path>
@@ -151,11 +154,16 @@
                                         this.closest('form').submit();"
                                 class="dropdown-item">
                                 <span class="me-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path>
-                                    <path d="M9 12h12l-3 -3"></path>
-                                    <path d="M18 15l3 -3"></path>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-logout" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path
+                                            d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2">
+                                        </path>
+                                        <path d="M9 12h12l-3 -3"></path>
+                                        <path d="M18 15l3 -3"></path>
                                     </svg>
                                 </span>
                                 Logout
@@ -169,3 +177,19 @@
         </div>
     </header>
 </div>
+<script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
+{{-- <script type="text/javascript">
+    var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+        cluster: "ap1"
+    });
+    var channel = pusher.subscribe('PurchaseNotification');
+    channel.bind('datn-vcdtt-development', function(data) {
+        var newNotificationHtml = `
+        <a class="dropdown-item" href="#">
+            <span>${data}</span><br>
+        </a>
+        `;
+
+        $('.menu-notification').prepend(newNotificationHtml);
+    });
+</script> --}}
