@@ -331,9 +331,14 @@ $(document).ready(function() {
                     }
                     selectCatogories.append(option);
                     $.each(category.child, function(index, childCategory) {
-                        let chlidId = childCategory.id;
-                        chlidId = +chlidId;
-                        let option = $('<option></option>').val(chlidId).text(category.name + '-> '+ childCategory.name);
+                        var childId = childCategory.id;
+                        childId = +childId;
+                        if (categories_data.includes(childId)) {
+                            option = $('<option selected></option>').val(childId).text(category.name + '-> '+ childCategory.name);
+                        } else {
+                            option = $('<option></option>').val(childId).text(category.name + '-> '+ childCategory.name);
+
+                        }
                         selectCatogories.append(option);
                     });
                 });
