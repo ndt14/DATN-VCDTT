@@ -421,7 +421,7 @@ class TourController extends Controller
             $star += $c->star;
             $t++;
         }
-        $item['star'] = $star/$t;
+        $item['star'] = $star/($t==0?1:$t);
         $item['rcount'] = $t;
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
