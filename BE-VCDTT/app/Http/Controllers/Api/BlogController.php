@@ -189,7 +189,6 @@ class BlogController extends Controller
         $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/blog?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['blogs']), false);
-            // Sorting logic
             $perPage = $request->limit??5;// Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
