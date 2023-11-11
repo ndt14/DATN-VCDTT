@@ -14,6 +14,7 @@ import {
   SearchBox,
   useInstantSearch,
   CurrentRefinements,
+  
 } from "react-instantsearch";
 
 import { Panel } from "./Panel";
@@ -23,6 +24,7 @@ import type { Hit } from "instantsearch.js";
 import "./Search.css";
 import { Link, useLocation } from "react-router-dom";
 import { NoResultsBoundary } from "./Noresults";
+import { PriceSlider } from "./PriceSider";
 
 const searchClient = algoliasearch(
   "ZKNG517W50",
@@ -86,7 +88,7 @@ export function Search() {
               insights={true}
             >
               <Configure hitsPerPage={6} />
-              <div className="col-lg-4">
+              <div className="col-lg-3">
                 <br />
                 <Panel header="Vùng miền">
                   <RefinementList
@@ -107,10 +109,12 @@ export function Search() {
                   />
                 </Panel>
                 <Panel header="Khoảng giá">
-                  <RangeInput attribute="adult_price" precision={1} />
+                  <br />
+                <PriceSlider attribute="adult_price"/>
+                  {/* <RangeInput attribute="adult_price" precision={1} /> */}
                 </Panel>
               </div>
-              <div className="col-lg-8">
+              <div className="col-lg-9">
                 <div className="row my-4">
                   <div className="col-lg-8 height">
                     <SearchBox
@@ -163,7 +167,7 @@ export function Search() {
                 {/* </div> */}
 
                 <div className="pagination">
-                  <Pagination />
+                <Pagination padding={2} showFirst={false} showLast={false} />
                 </div>
               </div>
             </InstantSearch>

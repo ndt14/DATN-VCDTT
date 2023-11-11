@@ -55,7 +55,7 @@ function CashPaymentModal(props) {
               Ngân hàng MB BANK <br />
             </span>
             {/* Hiển thị ảnh QR code */}
-            <img src="/path-to-your-qr-code-image.png" alt="QR Code" />
+            <img src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg" alt="QR Code" />
           </div>
 
           <div className="text-center mt-3">
