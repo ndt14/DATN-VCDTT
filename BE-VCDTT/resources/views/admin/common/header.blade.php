@@ -45,7 +45,7 @@
 
 
                     <div class="nav-item dropdown d-none d-md-flex me-3">
-                        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1"
+                        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" id="notificationPing"
                             aria-label="Show notifications" aria-expanded="false" data-bs-auto-close="outside">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -193,7 +193,6 @@
             var purchaseMethodText = 'Khách hàng chuyển khoản trực tiếp:';
         }
 
-
         var newNotificationHtml = `
             <div class="list-group-item">
                 <div class="row align-items-center">
@@ -232,6 +231,11 @@
             </div>
         `;
 
+        var notificationPing = `
+            <span class="badge bg-red"></span>
+        `
+
         $('.notification').prepend(newNotificationHtml);
+        $('#notificationPing').prepend(notificationPing);
     });
 </script>
