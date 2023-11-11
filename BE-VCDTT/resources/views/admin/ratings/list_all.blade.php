@@ -60,21 +60,37 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
+                                        @php
+                                            $tableCols = [
+                                                'user_name' => 'Tên người dùng',
+                                                'star' => 'Số sao đánh giá',
+                                                'content' => 'Nội dung',
+                                                'admin_answer' => 'Trả lời của công ty',
+                                                'created_at' => 'Ngày tạo',
+                                                'updated_at' => 'Ngày sửa',
+                                            ];
+                                        @endphp
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
-                                                <option value="en">Không hoạt động</option>
+                                            <select class="form-select" name="searchCol">
+                                                @if(!request()->query('searchCol'))
+                                                <option value="">Chọn cột</option>
+                                                @else
+                                                <option value="">Mặc định</option>
+                                                @endif
+                                                <option value="id">ID</option>
+                                                @foreach ($tableCols as $key => $value)
+                                                    <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="keyword" class="form-control"
+                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-indigo">Gửi</button>
+                                            <button type="submit" class="btn btn-indigo">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -84,30 +100,32 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>Tên người dùng</th>
-                                        <th>Số sao đánh giá</th>
-                                        <th>Nội dung</th>
-                                        <th>Trả lời của công ty</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
+                                        <th class="w-1">@sortablelink('id', 'ID')</th>
+                                        @foreach ($tableCols as $key => $value)
+                                        <th>@sortablelink($key, $value)</th>
+                                        @endforeach
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
+                                    @if($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data)
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
                                                     {{-- @if (property_exists($object, 'user_name'))
                                                         <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
-                                                     @else
-                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail"></a>
-                                                     @endif --}}
+                                                    @else
+                                                    <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail"></a>
+                                                    @endif --}}
 
-                                                     @if (property_exists($item, 'user_name'))
+                                                    @if (property_exists($item, 'user_name'))
                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail">{{ $item->user_name }}</a>
                                                     @else
                                                     <a href="javascript: viewDetailU({{$item->id}});" title="Show Detail"></a>
@@ -123,10 +141,10 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 70) }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 40) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->admin_answer??'Null',30) }}
+                                                    {{ string_truncate($item->admin_answer??'Null',20) }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
@@ -162,32 +180,29 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
                             @php
-                                $pageLimits = [5,10,20,50,100,250,300];
+                                $pageLimits = [5, 10, 20, 50, 100, 250, 300];
                             @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
                                 @foreach ($pageLimits as $p)
-                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                    <option {{ $data->perPage() == $p ? 'selected' : '' }} value="{{ $p }}">
+                                        {{ $p }}</option>
                                 @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
+                                <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
+                                    <a class="page-link" href="{{ $data->previousPageUrl() }}" tabindex="-1"
+                                        aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -198,23 +213,22 @@
                                 <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
                                     <a class="page-link" href="{{ $data->url(1) }}">1</a>
                                 </li>
-                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
-
+                                @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage() - 1; $page++)
                                     <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
                                         <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
                                     </li>
-
                                 @endfor
-                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
-                                <li class="page-item">
+                                @if ($data->currentPage() + 3 != $data->lastPage() && $data->lastPage() > 3)
+                                    <li class="page-item">
                                         ...
-                                </li>
+                                    </li>
                                 @endif
                                 <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                    <a class="page-link"
+                                        href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
                                 </li>
                                 <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
+                                    <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
