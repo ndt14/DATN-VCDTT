@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,4 +26,20 @@ class Coupon extends Model
         'fixed_price',
         'status',
     ];
+
+    protected static function booted()
+    {
+        static::retrieved(function ($coupon) {
+            $now = time();
+
+            if ($coupon->start_date && $now < strtotime($coupon->start_date)) {
+                $coupon->status = 2;
+            } elseif ($coupon->expiration_date && $now >= strtotime($coupon->start_date) && $now <= strtotime($coupon->expiration_date)) {
+                $coupon->status = 1;
+            } elseif ($coupon->expiration_date && $now > strtotime($coupon->expiration_date)) {
+                $coupon->status = 3;
+            }
+            $coupon->save();
+        });
+    }
 }

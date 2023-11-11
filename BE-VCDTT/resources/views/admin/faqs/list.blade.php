@@ -23,7 +23,21 @@
                     @endif
                 </div>
 
-                @if(auth()->user()->can('add faq') || auth()->user()->is_admin == 1)
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg rounded-4 ">
+                        <div class="card-header">
+                            <h3 class="card-title">Faq</h3>
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
+                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
+                            @if(auth()->user()->can('add faq') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <a href="{{ route('faq.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
@@ -48,20 +62,6 @@
                     </div>
                 </div>
                 @endif
-            </div>
-        </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-        <div class="container-xl">
-            <div class="row row-deck row-cards">
-                <div class="col-12">
-                    <div class="card border-0 shadow-lg rounded-4 ">
-                        <div class="card-header">
-                            <h3 class="card-title">Faq</h3> 
-                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
-                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
-                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -74,21 +74,35 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
+                                        @php
+                                            $tableCols = [
+                                                'question' => 'Câu hỏi',
+                                                'answer' => 'Câu trả lời',
+                                                'created_at' => 'Ngày tạo',
+                                                'updated_at' => 'Ngày sửa',
+                                            ];
+                                        @endphp
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
-                                                <option value="en">Không hoạt động</option>
+                                            <select class="form-select" name="searchCol">
+                                                @if(!request()->query('searchCol'))
+                                                <option value="">Chọn cột</option>
+                                                @else
+                                                <option value="">Mặc định</option>
+                                                @endif
+                                                <option value="id">ID</option>
+                                                @foreach ($tableCols as $key => $value)
+                                                    <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" class="form-control"
+                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-indigo">Tìm kiếm</button>
+                                            <button type="submit" class="btn btn-indigo">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -98,17 +112,21 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>Câu hỏi</th>
-                                        <th>Câu trả lời</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
+                                        <th class="w-1">@sortablelink('id', 'ID')</th>
+                                        @foreach ($tableCols as $key => $value)
+                                        <th>@sortablelink($key, $value)</th>
+                                        @endforeach
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
+                                    @if($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data)
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
@@ -150,12 +168,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>

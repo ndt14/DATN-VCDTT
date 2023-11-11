@@ -9,29 +9,61 @@ use App\Http\Requests\CouponRequest;
 use App\Http\Requests\TourRequest;
 use App\Http\Resources\CouponResource;
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class CouponController extends Controller
 {
-   public function index()
+    public function index(Request $request)
     {
-        //
-        $listCounpon = Coupon::all();
-        if(count($listCounpon) > 0) {
-            return response()->json([
-                'data' => [
-                    'coupons' =>  CouponResource::collection($listCounpon),
-                ],
-                'message' => 'OK',
-                'status' => 200
-            ]);
-        }else {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        $code_type = $request->code_type=='1'?'percentage_price':($request->code_type=='2'?'fixed_price':'name');
+        if(!$request->searchCol){
+            $coupons = Coupon::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new Coupon())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->where('status', 'LIKE', '%' . $request->status??'' . '%')
+            ->where(function ($query) use ($code_type) {
+            if ($code_type === 'fixed_price') {
+                $query->whereNull('percentage_price');
+            } elseif ($code_type === 'percentage_price') {
+                $query->wherenotNull('percentage_price');
+            }
+            })
+            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }elseif($request->searchCol=='amount'){
+            $coupons = Coupon::where('percentage_price', 'LIKE', '%' . $keyword . '%')->orWhere('fixed_price', 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
+            ->where(function ($query) use ($code_type) {
+                if ($code_type === 'fixed_price') {
+                    $query->whereNull('percentage_price');
+                } elseif ($code_type === 'percentage_price') {
+                    $query->wherenotNull('percentage_price');
+                }
+                })
+            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $coupons = Coupon::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
+            ->where(function ($query) use ($code_type) {
+                if ($code_type === 'fixed_price') {
+                    $query->whereNull('percentage_price');
+                } elseif ($code_type === 'percentage_price') {
+                    $query->wherenotNull('percentage_price');
+                }
+                })
+            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
         }
+        return response()->json([
+            'data' => [
+                'coupons' =>  CouponResource::collection($coupons),
+            ],
+            'message' => 'OK',
+            'status' => 200
+        ]);
     }
 
     /**
@@ -186,7 +218,7 @@ class CouponController extends Controller
     }
 
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $coupon = Coupon::withTrashed()->find($id);
         if ($coupon) {
@@ -207,7 +239,13 @@ class CouponController extends Controller
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function couponManagementList(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon');
+        $data['status']=$status = $request->status??'';
+        $data['code_type']=$code_type = $request->code_type??'';
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['coupons']), false);
 
@@ -216,7 +254,13 @@ class CouponController extends Controller
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
+            $request->code_type?$data->setPath(request()->url())->appends(['code_type'=>$code_type]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }
