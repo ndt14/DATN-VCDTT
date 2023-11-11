@@ -158,9 +158,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list')->middleware(['permission:admin|access bill|edit bill|delete bill']);
     Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit')->middleware(['permission:admin|edit bill']);
     Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail')->middleware(['permission:admin|access bill|edit bill|delete bill']);
-    Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
+    Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
+    Route::get('/purchase-history/mark-all-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class, 'markAsRead'])->name('mark-as-read');
     Route::get('/purchase-history/trash', [PurchaseHistoryController::class, 'purchaseHistoryManagementTrash'])->name('purchase_histories.trash')->middleware(['permission:admin|delete bill']);
-    Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class, 'markAsRead'])->name('mark-as-read');
     Route::get('purchase-history/restore/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementRestore'])->name('purchase_histories.restore')->middleware(['permission:admin|delete bill']);
 
     Route::middleware('isAdmin')->group(function(){
