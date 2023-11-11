@@ -11,18 +11,29 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
 class FAQController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         //
-        $listFaqs = FAQ::orderBy('updated_at', 'desc')->get();
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            $faqs = FAQ::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new FAQ())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $faqs = FAQ::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }
         return response()->json(
             [
                 'data' => [
-                    'faqs' => FAQResource::collection($listFaqs)
+                    'faqs' => FAQResource::collection($faqs)
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -142,7 +153,7 @@ class FAQController extends Controller
         }
     }
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $faq = FAQ::withTrashed()->find($id);
         if ($faq) {
@@ -164,7 +175,11 @@ class FAQController extends Controller
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function faqManagementList(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq');
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/faq?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['faqs']), false);
             $perPage = $request->limit??5;// Số mục trên mỗi trang
@@ -172,16 +187,20 @@ class FAQController extends Controller
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }
-            return view('admin.faqs.list', compact('data'));
         }else{
             $data = [];
-            return view('admin.faqs.list', compact('data'));
         }
-    }
+        return view('admin.faqs.list', compact('data'));
+}
+
 
     public function faqManagementAdd(FAQRequest $request) {
         $data = $request->except('_token');
