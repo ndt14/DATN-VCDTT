@@ -70,18 +70,6 @@
                                 </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="status">
-                                                @if(!request()->query('status'))
-                                                <option value="">Chọn trạng thái</option>
-                                                @else
-                                                <option value="">Mặc định</option>
-                                                @endif
-                                                <option {{ request()->query('status')==1?'selected':'' }} value="1">Đang hoạt động</option>
-                                                <option {{ request()->query('status')==2?'selected':'' }} value="2">Không hoạt động</option>
-                                            </select>
-                                        </div>
                                         @php
                                             $tableCols = [
                                                 'child' => 'Con',

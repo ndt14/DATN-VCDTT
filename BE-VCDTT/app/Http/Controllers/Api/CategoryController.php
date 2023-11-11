@@ -175,12 +175,11 @@ class CategoryController extends Controller
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
 
     public function cateManagementList(Request $request) {
-        $data['status']=$status = $request->status??'';
         $data['sortField']=$sortField = $request->sort??'';
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/category?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
             foreach($data as $key => $item ) {
@@ -201,7 +200,6 @@ class CategoryController extends Controller
             $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
             $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
             $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
             $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
