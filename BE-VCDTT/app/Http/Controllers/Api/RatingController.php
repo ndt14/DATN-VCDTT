@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 
 class RatingController extends Controller
 {
@@ -22,12 +23,22 @@ class RatingController extends Controller
     public function index(Request $request)
     {
         //
-        $listRatings = Rating::where('tour_id',$request->id)->orderBy('updated_at', 'desc')->get();
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            $ratings = Rating::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new Rating())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->where('tour_id',$request->id)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('tour_id',$request->id)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }
         $tour = Tour::find($request->id);
         return response()->json(
             [
                 'data' => [
-                    'ratings' => new RatingResource($listRatings),
+                    'ratings' => new RatingResource($ratings),
                     'tour' => new TourResource($tour)
                 ],
                 'message' => 'OK',
@@ -36,13 +47,23 @@ class RatingController extends Controller
         );
     }
 
-    public function indexAll()
+    public function indexAll(Request $request)
     {
-        $listRatings = Rating::orderBy('created_at', 'desc')->get();
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            $ratings = Rating::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new Rating())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }
         return response()->json(
             [
                 'data' => [
-                    'ratings' => new RatingResource($listRatings),
+                    'ratings' => RatingResource::collection($ratings),
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -172,7 +193,7 @@ class RatingController extends Controller
         }
     }
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $rating = Rating::withTrashed()->find($id);
         if ($rating) {
@@ -193,7 +214,11 @@ class RatingController extends Controller
      // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
     public function allRatingManagementList(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating');
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/rating?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['ratings']), false);
             $perPage= $request->limit??5;// Số mục trên mỗi trang
@@ -201,7 +226,11 @@ class RatingController extends Controller
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }
@@ -213,8 +242,11 @@ class RatingController extends Controller
 
 
     public function ratingManagementList(Request $request) {
-
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/'.$request->id);
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/'.$request->id."?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']), false);
             $perPage= $request->limit??5;// Số mục trên mỗi trang
@@ -222,7 +254,11 @@ class RatingController extends Controller
             $collection = new Collection($data->ratings);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data->ratings = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->ratings->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->ratings->setPath(request()->url());
+            $request->limit?$data->ratings->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->ratings->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->ratings->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->keyword?$data->ratings->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->ratings->currentPage()>$data->ratings->lastPage()){
                 return redirect($data->ratings->url(1));
             }

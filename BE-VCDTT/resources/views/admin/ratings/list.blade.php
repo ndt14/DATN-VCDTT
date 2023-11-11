@@ -5,9 +5,9 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý đánh giá cho tour: 
+                        Quản lý đánh giá cho tour:
                         <a href="javascript: viewDetailT({{ $data->tour->id ?? 1}});" title="Show Detail">{{ $data->tour->name ?? 'test'}}</a>
-                        
+
                     </h1>
                 </div>
                 <div class="col-12 ">
@@ -59,21 +59,38 @@
                                 </div>-->
                             <div class="ms-auto text-muted">
                                 <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                    <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                        <select class="form-select" name="lang_code">
-                                            <option value="">Chọn trạng thái</option>
-                                            <option value="ja">Đang hoạt động</option>
-                                            <option value="en">Không hoạt động</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                        <input type="text" name="keyword" value="keyword" class="form-control" placeholder="Keyword">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-indigo">Gửi</button>
-                                    </div>
+                                        @php
+                                            $tableCols = [
+                                                'user_name' => 'Tên người dùng',
+                                                'star' => 'Số sao đánh giá',
+                                                'content' => 'Nội dung',
+                                                'admin_answer' => 'Trả lời của công ty',
+                                                'created_at' => 'Ngày tạo',
+                                                'updated_at' => 'Ngày sửa',
+                                            ];
+                                        @endphp
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            <select class="form-select" name="searchCol">
+                                                @if(!request()->query('searchCol'))
+                                                <option value="">Chọn cột</option>
+                                                @else
+                                                <option value="">Mặc định</option>
+                                                @endif
+                                                <option value="id">ID</option>
+                                                @foreach ($tableCols as $key => $value)
+                                                    <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
+                                                placeholder="Keyword">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-indigo">Tìm</button>
+                                        </div>
                                 </form>
                             </div>
                         </div>
@@ -82,18 +99,21 @@
                         <table class="table card-table table-vcenter text-nowrap datatable">
                             <thead>
                                 <tr>
-                                    <th class="w-1">ID</th>
-                                    <th>Tên người dùng</th>
-                                    <th>Số sao đánh giá</th>
-                                    <th>Nội dung</th>
-                                    <th>Trả lời của công ty</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Ngày sửa</th>
+                                    <th class="w-1">@sortablelink('id', 'ID')</th>
+                                    @foreach ($tableCols as $key => $value)
+                                    <th>@sortablelink($key, $value)</th>
+                                    @endforeach
                                     <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data->ratings)
+                                    @if($data->ratings->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data->ratings)
                                         @foreach ($data->ratings as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
@@ -105,10 +125,10 @@
                                                     <i class="fa-solid fa-star" style="color: #fffa75;"></i>
                                                 </td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 70) }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->content, 40) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $item->admin_answer??'Null' }}
+                                                    {{ string_truncate($item->admin_answer??'Null',20)  }}
                                                 </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
@@ -144,12 +164,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
