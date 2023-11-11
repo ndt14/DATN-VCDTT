@@ -116,7 +116,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
+                                    @if($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data)
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
@@ -198,12 +204,6 @@
                                                 @endforeach
                                             @endif
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
