@@ -17,6 +17,8 @@
 <script src="{{ asset('admin/assets/libs/jsvectormap/dist/maps/world-merc.js') }}" defer></script>
 <script src="{{ asset('admin/assets/libs/fslightbox/index.js') }}" defer></script>
 <script src="{{ asset('admin/assets/libs/jquery-confirm/jquery-confirm.min.js') }}"></script>
+{{-- Apex chart --}}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <!-- JS -->
 <script type="text/javascript">
     Bs5Utils.defaults.toasts.position = 'top-center';
@@ -63,17 +65,22 @@
             });
         }
     });
+    let modalContainer;
+    $(document).ready(function() {
+        modalContainer = new bootstrap.Modal('#modalContainer', {
+            keyboard: true,
+            backdrop: 'static'
+        });
+    });
     let viewPurchaseHistoryDetail = function(id) {
         axios.get(`/purchase-history/detail/${id}`)
             .then(function(response) {
                 $('#modalContainer div.modal-content').html(response.data.html);
                 modalContainer.show();
             })
-            .catch(function(error) {
-                bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
-            })
+            // .catch(function(error) {
+            //     bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            // })
             .finally(function() {});
     };
 </script>
-
-

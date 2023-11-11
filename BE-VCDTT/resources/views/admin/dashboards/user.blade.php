@@ -68,12 +68,20 @@
                     </div>
                 </div> --}}
             </div>
+            {{-- Hiển thị chi tiết từ thông báo, vui lòng không xóa đi --}}
+            <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
 @section('page_js')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
+        // Apexjs tôi đã để bên javascript là js chung cho tất cả rồi nha, ông không cần gọi lại nó nữa đâu
+
         var chartPieInfo = @json($data).genderDP;
         // console.log(chartPieInfo);
         var options = {
@@ -82,7 +90,7 @@
                 width: 400,
                 type: 'pie',
             },
-            labels: ['Nam','Nữ','Khác'],
+            labels: ['Nam', 'Nữ', 'Khác'],
             responsive: [{
                 breakpoint: 200,
                 options: {
@@ -108,7 +116,7 @@
                 width: 400,
                 type: 'pie',
             },
-            labels:  keyschart2,
+            labels: keyschart2,
             responsive: [{
                 breakpoint: 200,
                 options: {
@@ -179,20 +187,3 @@
 //
 </script> --}}
 @endSection
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout> --}}

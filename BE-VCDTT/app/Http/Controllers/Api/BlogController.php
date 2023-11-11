@@ -164,7 +164,7 @@ class BlogController extends Controller
         }
     }
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $blog = Blog::withTrashed()->find($id);
         if ($blog) {
@@ -215,7 +215,7 @@ class BlogController extends Controller
                 return redirect()->route('blog.add')->with('fail', 'Đã xảy ra lỗi');
             }
         };
-        return view ('admin.blogs.add');
+        return view('admin.blogs.add');
     }
 
     public function blogManagementEdit(BlogRequest $request, $id)
