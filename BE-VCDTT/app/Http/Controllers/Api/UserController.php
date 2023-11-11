@@ -12,19 +12,30 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Traits\HasRoles;
 
 class UserController extends Controller
 {
     use HasRoles;
 
-    public function index()
+    public function index(Request $request)
     {
         //
-        $listUsers = User::orderBy('updated_at', 'desc')->get();
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            $users = User::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new User())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $users = User::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }
         return response()->json([
             'data' => [
-                'users' => UserResource::collection($listUsers)
+                'users' => UserResource::collection($users)
             ],
             'message' => 'OK',
             'status' => 200
@@ -163,7 +174,7 @@ class UserController extends Controller
     }
 
 
-    public function destroyForever(string $id) 
+    public function destroyForever(string $id)
     {
         $user = User::withTrashed()->find($id);
         if ($user) {
@@ -185,7 +196,12 @@ class UserController extends Controller
 
     public function userManagementList(Request $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user');
+        $data['status']=$status = $request->status??'';
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/user?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['users']), false);
 
@@ -194,7 +210,12 @@ class UserController extends Controller
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }

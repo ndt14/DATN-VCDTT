@@ -5,7 +5,7 @@
         <div class="row g-2 align-items-center">
             <div class="col">
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Users management
+                    Quản lý tài khoản
                 </h2>
             </div>
             <div class="col-12 ">
@@ -22,7 +22,22 @@
                 </div>
                 @endif
             </div>
-            @if(auth()->user()->can('add account') || auth()->user()->is_admin == 1)
+
+        </div>
+    </div>
+</div>
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-xl">
+        <div class="row row-deck row-cards">
+            <div class="col-12">
+                <div class="card border-0 shadow-lg rounded-4 ">
+                    <div class="card-header">
+                        <h3 class="card-title">User</h3>
+                        @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete account'))
+                        <a href="{{route('user.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                        @endif
+                        @if(auth()->user()->can('add account') || auth()->user()->is_admin == 1)
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <a href="{{ route('user.add')}}" class="btn btn-indigo d-none d-sm-inline-block">
@@ -43,20 +58,6 @@
                 </div>
             </div>
             @endif
-        </div>
-    </div>
-</div>
-<!-- Page body -->
-<div class="page-body">
-    <div class="container-xl">
-        <div class="row row-deck row-cards">
-            <div class="col-12">
-                <div class="card border-0 shadow-lg rounded-4 ">
-                    <div class="card-header">
-                        <h3 class="card-title">User</h3> 
-                        @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete account'))
-                        <a href="{{route('user.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
-                        @endif
                     </div>
                     <div class="card-body border-bottom py-3">
                         <div class="d-flex">
@@ -70,21 +71,48 @@
                             <div class="ms-auto text-muted">
                                 <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                     <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingSelect">Status</label>
-                                        <select class="form-select" name="lang_code">
-                                            <option value="">Select status...</option>
-                                            <option value="ja">Active</option>
-                                            <option value="en">Unactive</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                        <input type="text" name="keyword" value="" class="form-control" placeholder="Keyword">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-indigo">Submit</button>
-                                    </div>
-                                </form>
+                                        <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                        <select class="form-select" name="status">
+                                        @if(!request()->query('status'))
+                                        <option value="">Chọn trạng thái</option>
+                                        @else
+                                        <option value="">Mặc định</option>
+                                        @endif
+                                        <option {{ request()->query('status')==1?'selected':'' }} value="1">Đang hoạt động</option>
+                                        <option {{ request()->query('status')==2?'selected':'' }} value="2">Không hoạt động</option>
+                                    </select>
+                                </div>
+                                @php
+                                    $tableCols = [
+                                        'name' => 'Tên người dùng',
+                                        'email' => 'Email',
+                                        'phone_number' => 'Số điện thoại',
+                                        'gender' => 'Giới tính',
+                                    ];
+                                @endphp
+                                <div class="col-auto">
+                                    <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                    <select class="form-select" name="searchCol">
+                                        @if(!request()->query('searchCol'))
+                                        <option value="">Chọn cột</option>
+                                        @else
+                                        <option value="">Mặc định</option>
+                                        @endif
+                                        <option value="id">ID</option>
+                                        @foreach ($tableCols as $key => $value)
+                                            <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                    <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
+                                        placeholder="Keyword">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-indigo">Tìm</button>
+                                </div>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -92,17 +120,22 @@
                         <table class="table card-table table-vcenter text-nowrap datatable">
                             <thead>
                                 <tr>
-                                    <th class="w-1">ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Gender</th>
-                                    <th class="text-center">Active</th>
+                                    <th class="w-1">@sortablelink('id', 'ID')</th>
+                                    @foreach ($tableCols as $key => $value)
+                                    <th>@sortablelink($key, $value)</th>
+                                    @endforeach
+                                    <th class="text-center">Trạng thái</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($data)
+                                    @if($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif($data)
                                     @foreach($data as $item)
                                         <tr>
                                         <td><span class="text-muted">{{$item->id}}</span></td>
@@ -126,9 +159,9 @@
                                         </td>
                                         <td class="text-center">
                                             @if($item->status == 1)
-                                            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Activated"></span>
+                                            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hoạt động"></span>
                                             @else
-                                            <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                            <span class="badge bg-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                             @endif
                                         </td>
                                         <td class="text-end">
@@ -157,12 +190,6 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                @else
-                                <tr>
-                                    <td colspan="9">
-                                        <div>No data</div>
-                                    </td>
-                                </tr>
                                 @endif
                             </tbody>
                         </table>
