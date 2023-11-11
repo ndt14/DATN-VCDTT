@@ -20,19 +20,45 @@ use App\Notifications\ComfirmPayment;
 use App\Notifications\SendMailToClient;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 
 class PurchaseHistoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $listPurchaseHistory = PurchaseHistory::orderBy('created_at', 'asc')->get();
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            if(!$request->purchase_status){
+                $purchasehistorys = PurchaseHistory::where(function($query) use ($keyword) {
+                    $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
+                    foreach ($columns as $column) {
+                        $query->orWhere($column, 'like', '%' . $keyword . '%');
+                    }
+                })->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            }else{
+                $purchasehistorys = PurchaseHistory::where(function($query) use ($keyword) {
+                    $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
+                    foreach ($columns as $column) {
+                        $query->orWhere($column, 'like', '%' . $keyword . '%');
+                    }
+                })->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')
+                ->where('purchase_status',$request->purchase_status)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            }
+
+        }else{
+            if(!$request->purchase_status){
+                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            }else{
+                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')->where('purchase_status',$request->purchase_status)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            }
+
+        }
         return response()->json(
             [
                 'data' => [
-                    'purchase_history' => PurchaseHistoryResource::collection($listPurchaseHistory)
+                    'purchase_history' => PurchaseHistoryResource::collection($purchasehistorys)
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -224,17 +250,28 @@ class PurchaseHistoryController extends Controller
 
     public function purchaseHistoryManagementList(Request $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history');
+        $data['payment_status']=$payment_status = $request->payment_status??'';
+        $data['purchase_status']=$purchase_status = $request->purchase_status??'';
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
-
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
-            if ($data->currentPage() > $data->lastPage()) {
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->status?$data->setPath(request()->url())->appends(['payment_status'=>$payment_status]):'';
+            $request->status?$data->setPath(request()->url())->appends(['purchase_status'=>$purchase_status]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
+            if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }
         } else {
