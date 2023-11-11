@@ -64,8 +64,8 @@ class PurchaseHistoryController extends Controller
         Notification::send($user, new PurchaseNotification($purchaseHistory));
 
         // không xóa, đây là code bắn dữ liệu thông báo lên pusher
-        // $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
-        // config_pusher()->trigger('PurchaseNotification', 'datn-vcdtt-development', $newNotification->data['data']);
+        $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
+        config_pusher()->trigger('PurchaseNotification', 'datn-vcdtt-development', $newNotification);
 
         if ($purchaseHistory->id) {
             return response()->json([
@@ -263,12 +263,11 @@ class PurchaseHistoryController extends Controller
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAsRead()
+    public function purchaseHistoryMarkAsRead(string $id)
     {
-        $user = User::where('is_admin', 1)->first();
-        foreach ($user->unreadNotifications as $notification) {
-            $notification->markAsRead();
-        }
+        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        $notification = $user->notifications->where('id', $id)->first();
+        $notification->markAsRead();
         return redirect()->back();
     }
 

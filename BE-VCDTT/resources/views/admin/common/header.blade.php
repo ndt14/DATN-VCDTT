@@ -67,60 +67,61 @@
                                 <div class="card-header ">
                                     <h3 class="card-title">Thông báo</h3>
                                 </div>
-                                <div class="list-group list-group-flush list-group-hoverable">
-                                    @foreach ($user->notifications as $notification)
-                                        <div class="list-group-item">
-
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    @if ($notification)
-                                                        @if ($notification->read_at == null)
-                                                            <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" data-bs-title="Chưa đọc"></span>
-                                                        @else
-                                                            <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" data-bs-title="Đã đọc"></span>
+                                <div class="list-group list-group-flush list-group-hoverable notification">
+                                    @if ($user->notifications)
+                                        @foreach ($user->notifications as $notification)
+                                            <div class="list-group-item">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        @if ($notification)
+                                                            @if ($notification->read_at == null)
+                                                                <span class="badge bg-danger" data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    data-bs-title="Chưa đọc"></span>
+                                                            @else
+                                                                <span class="badge bg-success" data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    data-bs-title="Đã đọc"></span>
+                                                            @endif
                                                         @endif
-                                                </div>
-                                                <div class="col text-truncate " style="width: 850px">
-                                                    <a onclick='@php $notification->markAsRead() @endphp'
-                                                        href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
-                                                        class="text-body d-block">
-                                                        @if ($notification->data['purchase_method'] == 1)
-                                                        Mã giao dịch VN Pay:
-                                                        {{ $notification->data['transaction_id'] }}
-                                                        @else
-                                                        Khách hàng chuyển khoản trực tiếp:
-                                                        @endif
-                                                    </a>
-                                                    <div class="d-block text-secondary mt-n1">
-                                                        <span
-                                                            class="text-wrap">{{ $notification->data['data'] }}</span>
+                                                    </div>
+                                                    <div class="col text-truncate " style="width: 850px">
+                                                        <a onclick='{{ route('purchase_histories.mark_as_read', ['id' => $notification->id]) }}'
+                                                            href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
+                                                            class="text-body d-block">
+                                                            @if ($notification->data['purchase_method'] == 1)
+                                                                Mã giao dịch VN Pay:
+                                                                {{ $notification->data['transaction_id'] }}
+                                                            @else
+                                                                Khách hàng chuyển khoản trực tiếp:
+                                                            @endif
+                                                        </a>
+                                                        <div class="d-block text-secondary mt-n1">
+                                                            <span
+                                                                class="text-wrap">{{ $notification->data['data'] }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <a data-bs-toggle="tooltip" data-bs-placement="right"
+                                                            data-bs-title="Đánh dấu là đã đọc"
+                                                            href="{{ route('purchase_histories.mark_as_read', ['id' => $notification->id]) }}"><svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                class="icon icon-tabler icon-tabler-checks"
+                                                                width="30" height="24" viewBox="0 0 24 24"
+                                                                stroke-width="5" stroke="paleGreen" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                </path>
+                                                                <path d="M7 12l5 5l10 -10"></path>
+                                                                <path d="M2 12l5 5m5 -5l5 -5"></path>
+                                                            </svg></a>
                                                     </div>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <a data-bs-toggle="tooltip" data-bs-placement="right"
-                                                        data-bs-title="Đánh dấu là đã đọc"
-                                                        href="{{ route('purchase_histories.mark_as_read') }}"><svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            class="icon icon-tabler icon-tabler-checks" width="30"
-                                                            height="24" viewBox="0 0 24 24" stroke-width="5"
-                                                            stroke="paleGreen" fill="none" stroke-linecap="round"
-                                                            stroke-linejoin="round">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none">
-                                                            </path>
-                                                            <path d="M7 12l5 5l10 -10"></path>
-                                                            <path d="M2 12l5 5m5 -5l5 -5"></path>
-                                                        </svg></a>
-                                                </div>
-                                                <p class="menu-notification"></p>
                                             </div>
-                                        </div>
+                                        @endforeach
                                     @else
                                         <span class="col text-truncate">Không có thông báo</span>
                                     @endif
-                                    @endforeach
-
 
                                 </div>
                             </div>
@@ -179,18 +180,58 @@
     </header>
 </div>
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
-{{-- <script type="text/javascript">
+<script type="text/javascript">
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1"
     });
     var channel = pusher.subscribe('PurchaseNotification');
     channel.bind('datn-vcdtt-development', function(data) {
+        var id = data.id;
+        if (data.data.purchase_method == 1){
+            var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.data.transaction_id;
+        } else {
+            var purchaseMethodText = 'Khách hàng chuyển khoản trực tiếp:';
+        }
+
+
         var newNotificationHtml = `
-        <a class="dropdown-item" href="#">
-            <span>${data}</span><br>
-        </a>
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="badge bg-danger" data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Chưa đọc"></span>
+                    </div>
+                    <div class="col text-truncate " style="width: 850px">
+                        <a onclick='/purchase-history/mark-as-read/` + id + `'
+                            href="javascript: viewPurchaseHistoryDetail(${data.data.purchase_history_id});"
+                            class="text-body d-block">
+                            ` + purchaseMethodText + `
+                        </a>
+                        <div class="d-block text-secondary mt-n1">
+                            <span
+                                class="text-wrap">${data.data.data}</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <a data-bs-toggle="tooltip" data-bs-placement="right"
+                            data-bs-title="Đánh dấu là đã đọc"
+                            href="/purchase-history/mark-as-read/` + id + `"><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="icon icon-tabler icon-tabler-checks"
+                                width="30" height="24" viewBox="0 0 24 24"
+                                stroke-width="5" stroke="paleGreen" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                </path>
+                                <path d="M7 12l5 5l10 -10"></path>
+                                <path d="M2 12l5 5m5 -5l5 -5"></path>
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
         `;
 
-        $('.menu-notification').prepend(newNotificationHtml);
+        $('.notification').prepend(newNotificationHtml);
     });
-</script> --}}
+</script>
