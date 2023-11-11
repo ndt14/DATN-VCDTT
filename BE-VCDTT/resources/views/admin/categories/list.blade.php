@@ -22,7 +22,19 @@
                         </div>
                     @endif
                 </div> -->
-                @if(auth()->user()->can('add category') || auth()->user()->is_admin == 1)
+
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg rounded-4 ">
+                        <div class="card-header">
+                            <h3 class="card-title">Danh mục</h3> <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
+                            @if(auth()->user()->can('add category') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <a href="{{ route('category.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
@@ -47,17 +59,6 @@
                     </div>
                 </div>
                 @endif
-            </div>
-        </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-        <div class="container-xl">
-            <div class="row row-deck row-cards">
-                <div class="col-12">
-                    <div class="card border-0 shadow-lg rounded-4 ">
-                        <div class="card-header">
-                            <h3 class="card-title">Danh mục</h3> <a href="" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
