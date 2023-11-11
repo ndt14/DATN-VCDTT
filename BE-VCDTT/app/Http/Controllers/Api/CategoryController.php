@@ -12,28 +12,36 @@ use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 
 class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = new Category;
-
-        $keyword = trim($request->keyword) ? trim($request->keyword) : '';
-        $limit = intval($request->limit);
-        $sql_order = 'updated_at';
-
-        $categoriesParent = $categories->getCategoriesParent($keyword, $sql_order, $limit);
-
-        foreach($categoriesParent as $parent){
-            $parent->child = $categories->getCategoriesChild($parent->id);
+        $keyword = $request->keyword ? trim($request->keyword) : '';
+        if(!$request->searchCol){
+            $categories = Category::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new Category())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->where('parent_id', NULL)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }elseif($request->searchCol=='child'){
+            $childSearch = (new Category)->getCategoriesChildSearch($keyword)->pluck('parent_id')->toArray();
+            $categories = Category::whereIn('id',$childSearch)->where('parent_id', NULL)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }else{
+            $categories = Category::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('parent_id', NULL)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
         }
+        foreach($categories as $parent){
+            $parent->child = (new Category)->getCategoriesChild($parent->id);
+        }
+
 
         return response()->json(
 
             [
                 'data' => [
-                    'categoriesParent' => CategoryResource::collection($categoriesParent)
+                    'categoriesParent' => CategoryResource::collection($categories)
                 ],
                 'message' => 'OK',
                 'status' => 200
@@ -167,7 +175,11 @@ class CategoryController extends Controller
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
 
     public function cateManagementList(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category');
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
             foreach($data as $key => $item ) {
@@ -179,13 +191,16 @@ class CategoryController extends Controller
                 }
             }
             $data = json_decode(json_encode($data),false);
-
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage= $request->limit??5;
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }

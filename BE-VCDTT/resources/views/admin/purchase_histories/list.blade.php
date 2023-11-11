@@ -43,28 +43,90 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                                Show
-                                                <div class="mx-2 d-inline-block">
-                                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                                </div>
-                                                entries
-                                            </div>-->
+                                                    Show
+                                                    <div class="mx-2 d-inline-block">
+                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                    </div>
+                                                    entries
+                                                </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Status</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Select status...</option>
-                                                <option value="ja">Active</option>
-                                                <option value="en">Unactive</option>
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            <select class="form-select" name="payment_status">
+                                                @if (!request()->query('payment_status'))
+                                                    <option value="">Chọn trạng thái thanh toán</option>
+                                                @else
+                                                    <option value="">Mặc định</option>
+                                                @endif
+                                                <option {{ request()->query('payment_status') == 1 ? 'selected' : '' }}
+                                                    value="1">Đã thanh toán</option>
+                                                <option {{ request()->query('payment_status') == "0" ? 'selected' : '' }}
+                                                    value="0">Chưa thanh toán</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Keyword</label>
-                                            <input type="text" name="keyword" class="form-control" placeholder="Keyword">
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            @php
+                                                $purchaseStatus = [
+                                                0=>'Chưa thanh toán',
+                                                1=>'Đang đợi xác nhận',
+                                                2=>'Chưa tới ngày đi',
+                                                3=>'Còn một ngày tới ngày đi',
+                                                4=>'Đang diễn ra',
+                                                5=>'Đã kết thúc',
+                                                6=>'Đang đợi xác nhận hủy tour',
+                                                7=>'Khách đã hủy',
+                                                8=>'Admin đã hủy',
+                                                9=>'Tự động hủy do quá hạn',
+                                                10=>'Đã hoàn tiền',
+                                                11=>'Đã kết thúc',
+                                                12=>'khách đã đánh giá',
+                                                13=>'Chuyển khoản thiếu',
+                                                14=>'Chuyển khoản thừa'];
+                                            @endphp
+                                            <select class="form-select" name="purchase_status">
+                                                @if (!request()->query('purchase_status'))
+                                                    <option value="">Chọn trạng thái đơn</option>
+                                                @else
+                                                    <option value="">Mặc định</option>
+                                                @endif
+                                                @foreach ($purchaseStatus as $key => $value)
+                                                <option {{ request()->query('purchase_status') === "$key" ? 'selected' : '' }} value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @php
+                                            $tableCols = [
+                                                'name' => 'Tên',
+                                                'email' => 'Tác giả',
+                                                'transaction_id' => 'Mã giao dịch',
+                                                'tour_name' => 'Tên Tour',
+                                                'created_at' => 'Ngày tạo',
+                                            ];
+                                        @endphp
+                                        <div class="col-auto">
+                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                            <select class="form-select" name="searchCol">
+                                                @if (!request()->query('searchCol'))
+                                                    <option value="">Chọn cột</option>
+                                                @else
+                                                    <option value="">Mặc định</option>
+                                                @endif
+                                                <option {{ request()->query('searchCol') == 'id' ? 'selected' : '' }} value="id">ID</option>
+                                                @foreach ($tableCols as $key => $value)
+                                                    <option {{ request()->query('searchCol') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-indigo">Submit</button>
+                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}"
+                                                class="form-control" placeholder="Keyword">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-indigo">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
@@ -74,19 +136,23 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>User Name</th>
-                                        <th>Email</th>
-                                        <th>Transaction id</th>
-                                        <th>Tour name</th>
-                                        <th>Created at</th>
-                                        <th class="text-center">Payment status</th>
-                                        <th class="text-center">Purchase status</th>
+                                        <th class="w-1">@sortablelink('id', 'ID')</th>
+                                        @foreach ($tableCols as $key => $value)
+                                        <th>@sortablelink($key, $value)</th>
+                                        @endforeach
+                                        <th class="text-center">Trạng thái thanh toán</th>
+                                        <th class="text-center">Trạng thái đơn</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
+                                    @if ($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data)
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
@@ -124,8 +190,8 @@
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-x m-0" width="24"
                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                                stroke-linejoin="round">
+                                                                stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none">
                                                                 </path>
                                                                 <path d="M18 6l-12 12"></path>
@@ -191,6 +257,7 @@
                                                         @case(13)
                                                             <span class="badge bg-muted-lt">Chuyển khoản thừa</span>
                                                         @break
+
                                                         @default
                                                         @break
                                                     @endswitch
@@ -238,12 +305,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>No data</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
@@ -261,7 +322,8 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                                bản ghi</p>
+                                bản ghi
+                            </p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">

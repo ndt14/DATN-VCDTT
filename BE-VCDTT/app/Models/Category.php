@@ -20,18 +20,19 @@ class Category extends Model
         'parent_id',
     ];
 
-    public function getCategoriesParent($keyword = '', $sql_order = '', $limit = ''){
+    public function getCategoriesParent($keyword = '', $sort = ''){
         $query = $this->select( 'id', 'name', 'parent_id', 'created_at', 'updated_at')
         ->where('name', 'LIKE', '%' . $keyword . '%')
         ->where('parent_id', NULL);
-        
-        if(!empty($sql_order)){
-            $query->orderBy($sql_order, 'DESC');
+
+        if(!empty($sort)){
+            $query->orderBy($sort, 'DESC');
         }
         if(!empty($limit)){
             $query->limit($limit);
         }
         return $query->get();
+
     }
 
     public function getCategoriesChild($parentID = ''){
@@ -47,5 +48,10 @@ class Category extends Model
         }else {
             return "Chưa có danh mục cha";
         }
+    }
+
+    public function getCategoriesChildSearch($keyword=''){
+        return $this->where('name', 'LIKE', '%' . $keyword . '%')
+        ->get();
     }
 }

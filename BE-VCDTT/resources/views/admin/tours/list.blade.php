@@ -22,7 +22,21 @@
                         </div>
                     @endif
                 </div>
-                @if(auth()->user()->can('add tour') || auth()->user()->is_admin == 1)
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                    <div class="card border-0 shadow-lg rounded-4 ">
+                        <div class="card-header">
+                            <h3 class="card-title">Tour</h3>
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete tour'))
+                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
+                            @if(auth()->user()->can('add tour') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
                         <a href="{{ route('tour.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
@@ -47,20 +61,6 @@
                     </div>
                 </div>
                 @endif
-            </div>
-        </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-        <div class="container-xl">
-            <div class="row row-deck row-cards">
-                <div class="col-12">
-                    <div class="card border-0 shadow-lg rounded-4 ">
-                        <div class="card-header">
-                            <h3 class="card-title">Tour</h3> 
-                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete tour'))
-                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
-                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -72,24 +72,51 @@
                                     entries
                                 </div>-->
                                 <div class="ms-auto text-muted">
-                                    <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
-                                            <select class="form-select" name="lang_code">
-                                                <option value="">Chọn trạng thái</option>
-                                                <option value="ja">Đang hoạt động</option>
-                                                <option value="en">Không hoạt động</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" class="form-control"
-                                                placeholder="Keyword">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-indigo">Tìm kiếm</button>
-                                        </div>
-                                    </form>
+                                        <form method="get" action="" class="row gy-2 gx-3 align-items-center">
+                                            <div class="col-auto">
+                                                <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                                <select class="form-select" name="status">
+                                                    @if(!request()->query('status'))
+                                                    <option value="">Chọn trạng thái</option>
+                                                    @else
+                                                    <option value="">Mặc định</option>
+                                                    @endif
+                                                    <option {{ request()->query('status')==1?'selected':'' }} value="1">Đang hoạt động</option>
+                                                    <option {{ request()->query('status')==2?'selected':'' }} value="2">Không hoạt động</option>
+                                                </select>
+                                            </div>
+                                            @php
+                                                $tableCols = [
+                                                    'name' => 'Tên',
+                                                    'location' => 'Vị trí',
+                                                    'tourist_count' => 'Số hành khách',
+                                                    'view_count' => 'Số lượt xem',
+                                                    'created_at' => 'Ngày tạo',
+                                                ];
+                                            @endphp
+                                            <div class="col-auto">
+                                                <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
+                                                <select class="form-select" name="searchCol">
+                                                    @if(!request()->query('searchCol'))
+                                                    <option value="">Chọn cột</option>
+                                                    @else
+                                                    <option value="">Mặc định</option>
+                                                    @endif
+                                                    <option value="id">ID</option>
+                                                    @foreach ($tableCols as $key => $value)
+                                                        <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-auto">
+                                                <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
+                                                <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
+                                                    placeholder="Keyword">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-indigo">Tìm</button>
+                                            </div>
+                                        </form>
                                 </div>
                             </div>
                         </div>
@@ -97,18 +124,22 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">ID</th>
-                                        <th>Tên</th>
-                                        <th>Vị trí</th>
-                                        <th>Số hành khách</th>
-                                        <th>Lượt xem</th>
-                                        <th>Ngày tạo</th>
-                                        <th class="text-center">Hành động</th>
+                                        <th class="w-1">@sortablelink('id', 'ID')</th>
+                                        @foreach ($tableCols as $key => $value)
+                                        <th>@sortablelink($key, $value)</th>
+                                        @endforeach
+                                        <th>Trạng thái</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data)
+                                    @if($data->items() == [])
+                                        <tr>
+                                            <td colspan="9">
+                                                <div>Không có dữ liệu</div>
+                                            </td>
+                                        </tr>
+                                    @elseif ($data)
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
@@ -170,32 +201,29 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="9">
-                                                <div>Không có dữ liệu</div>
-                                            </td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
                             @php
-                                $pageLimits = [5,10,20,50,100,250,300];
+                                $pageLimits = [5, 10, 20, 50, 100, 250, 300];
                             @endphp
                             <select id="rpp" class="form-select me-2" style="max-width: 75px;">
                                 @foreach ($pageLimits as $p)
-                                <option {{ $data->perPage() == $p?'selected':'' }} value="{{ $p }}">{{ $p }}</option>
+                                    <option {{ $data->perPage() == $p ? 'selected' : '' }} value="{{ $p }}">
+                                        {{ $p }}</option>
                                 @endforeach
                             </select>
 
-                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
+                            <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
+                                <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
+                                    <a class="page-link" href="{{ $data->previousPageUrl() }}" tabindex="-1"
+                                        aria-disabled="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -206,23 +234,22 @@
                                 <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
                                     <a class="page-link" href="{{ $data->url(1) }}">1</a>
                                 </li>
-                                @for ($page = max(2, $data->currentPage()-2); $page <= $data->currentPage()+2 && $page <= $data->lastPage()-1; $page++)
-
+                                @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage() - 1; $page++)
                                     <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
                                         <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
                                     </li>
-
                                 @endfor
-                                @if($data->currentPage()+3 != $data->lastPage() && $data->lastPage() >3)
-                                <li class="page-item">
+                                @if ($data->currentPage() + 3 != $data->lastPage() && $data->lastPage() > 3)
+                                    <li class="page-item">
                                         ...
-                                </li>
+                                    </li>
                                 @endif
                                 <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                    <a class="page-link"
+                                        href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
                                 </li>
                                 <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->nextPageUrl()}}">Next
+                                    <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                             fill="none" stroke-linecap="round" stroke-linejoin="round">

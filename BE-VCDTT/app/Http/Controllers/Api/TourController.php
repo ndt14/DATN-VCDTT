@@ -23,6 +23,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -34,35 +35,20 @@ class TourController extends Controller
     public function index(Request $request)
     {
         // Tích hợp tìm kiếm
-        $keyword = trim($request->keyword) ? trim($request->keyword) : '';
-        // $keyword = null;
-        $sql_where = '';
-        // $sql_where=' AND delete_at IS NULL';
-        if (!empty($keyword)) {
-            $sql_where .= 'name LIKE %{$keyword}%';
-        }
-        $sql_order = 'id';
+        $keyword = $request->keyword ? trim($request->keyword) : '';
         $limit = intval($request->limit) ? intval($request->limit) : '';
-        $tours = Tour::select(
-            'id',
-            'name',
-            'duration',
-            'child_price',
-            'adult_price',
-            'sale_percentage',
-            'start_destination',
-            'end_destination',
-            'tourist_count',
-            'details',
-            'location',
-            'exact_location',
-            'pathway',
-            'main_img',
-            'view_count',
-            'status',
-            'created_at',
-            'updated_at'
-        )->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
+        if(!$request->searchCol){
+            $tours = Tour::where(function($query) use ($keyword) {
+                $columns = Schema::getColumnListing((new Tour())->getTable());
+                foreach ($columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $keyword . '%');
+                }
+            })->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }elseif($limit){
+            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->limit($limit)->get();
+        }else{
+            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+        }
         foreach($tours as $tour){
             $listRatings = Rating::where('tour_id',$tour->id)->orderBy('id', 'desc')->get();
             $star = 0; $t=0;
@@ -320,7 +306,12 @@ class TourController extends Controller
 
     public function tourManagementList(Request $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour');
+        $data['status']=$status = $request->status??'';
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/tour?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['tours']), false);
 
@@ -329,7 +320,12 @@ class TourController extends Controller
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+            $data->setPath(request()->url());
+            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
+            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
+            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
+            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
+            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
             if($data->currentPage()>$data->lastPage()){
                 return redirect($data->url(1));
             }
