@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\checkIsAdmin;
 use App\Models\Allocation;
+use App\Models\Rating;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,7 +108,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/blog/trash', [BlogController::class, 'blogManagementTrash'])->name('blog.trash')->middleware(['permission:admin|delete post']);
     Route::get('/blog/restore/{id}', [BlogController::class, 'blogManagementRestore'])->name('blog.restore')->middleware(['permission:admin|delete post']);
 
-    
+
     Route::get('/faq', [FAQController::class, 'faqManagementList'])->name('faq.list')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
     Route::match(['GET', 'POST'], '/faq/add', [FAQController::class, 'faqManagementAdd'])->name('faq.add')->middleware(['permission:admin|add faq']);
     Route::match(['GET', 'POST'], '/faq/edit/{id}', [FAQController::class, 'faqManagementEdit'])->name('faq.edit')->middleware(['permission:admin|edit faq']);
@@ -119,6 +120,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);
     Route::get('/rating/edit/{id}', [RatingController::class, 'ratingManagementEdit'])->name('rating.edit')->middleware(['permission:admin|reply review']);
     Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail')->middleware(['permission:admin|access review|reply review|delete review']);
+    Route::get('/rating/trash/all', [RatingController::class, 'ratingManagementTrash'])->name('rating.trash')->middleware(['permission:admin|delete rating']);
+    Route::get('rating/restore/{id}', [RatingController::class, 'ratingManagementRestore'])->name('rating.restore')->middleware(['permission:admin|delete rating']);
 
     Route::get('/coupon', [CouponController::class, 'couponManagementList'])->name('coupon.list')->middleware(['permission:admin|access discount|add discount|edit discount|delete discount']);
     Route::match(['GET', 'POST'], '/coupon/add', [CouponController::class, 'couponManagementAdd'])->name('coupon.add')->middleware(['permission:admin|add discount']);
@@ -143,6 +146,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::get('/image/image-list', [ImageController::class, 'imageList']);
+
+    Route::get('/image/dropzone', [ImageController::class, 'dropzone']);
     Route::post('/image-add', [ImageController::class, 'add'])->name('image.add');
     Route::get('/image-download/{id}', [ImageController::class, 'download']);
     Route::delete('/image-destroy/{id}', [ImageController::class, 'destroy']);
@@ -153,8 +159,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit')->middleware(['permission:admin|edit bill']);
     Route::get('/purchase-history/detail/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementDetail'])->name('purchase_histories.detail')->middleware(['permission:admin|access bill|edit bill|delete bill']);
     Route::get('/purchase-history/mark-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead'])->name('purchase_histories.mark_as_read');
-
+    Route::get('/purchase-history/trash', [PurchaseHistoryController::class, 'purchaseHistoryManagementTrash'])->name('purchase_histories.trash')->middleware(['permission:admin|delete bill']);
     Route::get('/mark-as-read', [App\Http\Controllers\Api\PurchaseHistoryController::class, 'markAsRead'])->name('mark-as-read');
+    Route::get('purchase-history/restore/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementRestore'])->name('purchase_histories.restore')->middleware(['permission:admin|delete bill']);
 
     Route::middleware('isAdmin')->group(function(){
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
@@ -165,7 +172,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET','POST'], '/allocation/edit/{user_id}', [AllocationController::class, 'allocationManagementEdit'])->name('allocation.edit');
     Route::get('/allocation/delete', [AllocationController::class, 'delete_one_user_role'])->name('allocation.delete.one');
     });
-    Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarn'])->name('dashboard');
+    Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarnDashboard'])->name('dashboard.tour');
+    Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
+    Route::match(['GET', 'POST'],'/dashboard/settings',[DashboardController::class,'webSetting'])->name('dashboard.settings');
 });
 
 

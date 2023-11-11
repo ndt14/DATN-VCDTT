@@ -1,4 +1,5 @@
 <?php
+//Thông báo cho user khi user yêu cầu hủy tour khi đã thanh toán
 
 namespace App\Notifications;
 
@@ -12,6 +13,7 @@ class CancelPurchaseNotification extends Notification
 {
     use Queueable;
     protected $tour_name;
+    protected $purchase_status_noti;
 
     /**
      * Create a new notification instance.
@@ -20,6 +22,11 @@ class CancelPurchaseNotification extends Notification
     {
         //
         $this->tour_name = $purchaseHistory->tour_name;
+        if ($purchaseHistory->purchase_status == 6) {
+            $this->purchase_status_noti =  '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền';
+        } elseif ($purchaseHistory->purchase_status == 7) {
+            $this->purchase_status_noti =  '';
+        }
     }
 
     /**
@@ -37,11 +44,14 @@ class CancelPurchaseNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->greeting('Xin chào!')
-            ->line('Bạn vừa hủy tour ' . $this->tour_name . '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền')
-            ->line('Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ')
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+
+            return (new MailMessage)
+                ->subject('Hủy Tour ' . $this->tour_name)
+                ->greeting('Xin chào!')
+                ->line('Bạn vừa hủy tour ' . $this->tour_name . $this->purchase_status_noti)
+                ->line('Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+
     }
 
     /**

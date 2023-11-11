@@ -1,4 +1,5 @@
 <?php
+//Thông báo đổi mật khẩu luồng quên mật khẩu
 
 namespace App\Notifications;
 
@@ -44,7 +45,7 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->line('Bạn nhận được mail này vì có một yêu cầu đổi mật khẩu cho tài khoản của bạn')
-            ->action('Đổi mật khẩu', $url)
+            ->action('Đổi mật khẩu', url($url))
             ->line('Nếu không phải là bạn, vui lòng bỏ qua email này');
     }
 }

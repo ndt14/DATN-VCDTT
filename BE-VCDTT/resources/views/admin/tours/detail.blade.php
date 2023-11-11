@@ -33,9 +33,11 @@
                         <span class="badge bg-blue me-1 text-light">{{ $item['view_count'] }}</span>
                     </div>
                     <div class="col-md">
-                        <div class="form-label">Lượt đánh giá</div>
-                        <span class="badge bg-blue me-1 text-light">số đánh giá </span>
-                        + link sang đánh giá
+                        <div class="form-label">Đánh giá (số lượt)</div>
+                        <span class="badge bg-blue me-1 text-light">{{ $item['star'] }} <i class="fa-solid fa-star" style="color: #fffa75;"></i> ({{ $item['rcount'] }})</span>
+                            <a class="badge bg-yellow me-1 text-light" href="{{ route('rating.list', ['id' => $item['id']]) }}">
+                                Xem
+                            </a>
                     </div>
                     <div class="col-md">
                         <div class="form-label">Số lượng bán được</div>

@@ -72,3 +72,10 @@ em {
 .ais-SearchBox-form:before {
   display: none;
 }
+
+.ais-SearchBox-input{
+  height: 40px !important;
+}
+.ais-RangeInput-submit{
+  margin-bottom: 5px;
+}

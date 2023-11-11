@@ -60,15 +60,18 @@ const UserTour = () => {
     };
 
     await updateBill(data).then(() => {
-      // const modal = document.getElementById(`bill-${id}`);
-      // if (modal) {
-      //   modal.classList.remove("show");
-      //   modal.setAttribute("aria-hidden", "true");
-      //   modal.style.display = "none";
-      //   document.body.classList.remove("modal-open");
-      // }
-      // $(`#bill-${id}`).modal("hide");
       alert("Hủy tour thành công");
+    });
+  };
+
+  const cancelTourRefund = async (id: number) => {
+    const data = {
+      purchase_status: 6,
+      id: id,
+    };
+
+    await updateBill(data).then(() => {
+      alert("Bạn đã yêu cầu hủy tour. Đang đợi admin xác nhận");
     });
   };
 
@@ -78,6 +81,10 @@ const UserTour = () => {
 
   const cancel = (e: React.MouseEvent<HTMLElement>) => {};
 
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Thông tin người dùng";
+  }
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -154,6 +161,7 @@ const UserTour = () => {
                 tour_end_time,
                 transaction_id,
                 payment_status,
+                purchase_method,
                 purchase_status,
                 phone_number,
               }: Bill) => {
@@ -165,6 +173,11 @@ const UserTour = () => {
                 const handleCancelTour = () => {
                   if (id) {
                     cancelTour(id);
+                  }
+                };
+                const handleCancelTourRefund = () => {
+                  if (id) {
+                    cancelTourRefund(id);
                   }
                 };
                 let tourStatus;
@@ -181,177 +194,244 @@ const UserTour = () => {
                 } else if (purchase_status === 5) {
                   tourStatus = "Tour đã kết thúc";
                 } else if (purchase_status === 6) {
-                  tourStatus = "Admin đã hủy";
+                  tourStatus = "Yêu cầu hủy tour, chờ admin xác nhận";
                 } else if (purchase_status === 7) {
                   tourStatus = "Bạn đã hủy";
                 } else if (purchase_status === 8) {
-                  tourStatus = "Đơn tự động hủy do quá hạn thanh toán";
+                  tourStatus = "Admin đã hủy tour";
                 } else if (purchase_status === 9) {
-                  tourStatus = "Đã hoàn tiền do hủy tour";
+                  tourStatus = "Tự động đơn đặt hủy do quá hạn thanh toán";
                 } else if (purchase_status === 10) {
+                  tourStatus = "Đã hoàn tiền";
+                } else if (purchase_status === 11) {
                   tourStatus = "Đã Đánh giá tour";
+                } else if (purchase_status === 12) {
+                  tourStatus = "Bạn chuyển khoản thiếu tiền";
+                } else if (purchase_status === 13) {
+                  tourStatus = "Bạn chuyển khoản thừa tiền";
                 }
 
-                const finalPrice =
-                  coupon_percentage == 0 || null
-                    ? adult_count * tour_adult_price +
-                      child_count * tour_child_price -
-                      coupon_fixed
-                    : (adult_count * tour_adult_price +
-                        child_count * tour_child_price) *
-                      (1 - coupon_percentage / 100);
+                let paymentStatus;
+                if (payment_status == 0) {
+                  paymentStatus = "Chưa thanh toán";
+                } else if (payment_status == 1) {
+                  paymentStatus = "Đã thanh toán";
+                }
+                console.log(coupon_fixed);
+
+                const finalPrice = coupon_fixed
+                  ? adult_count * tour_adult_price +
+                    child_count * tour_child_price -
+                    coupon_fixed
+                  : (adult_count * tour_adult_price +
+                      child_count * tour_child_price) *
+                    (1 - coupon_percentage / 100);
                 const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 }).format(finalPrice);
                 return (
-                  <div className="p-3 my-3 shadow" key={id}>
-                    <p>
-                      Mã đơn: <span className="fw-bold">{id}</span>
-                    </p>
-                    <p>
-                      Mã giao dịch VNPAY:{" "}
-                      <span className="fw-bold">{transaction_id}</span>
-                    </p>
-                    <p>
-                      Tên tour: <span className="fw-bold">{tour_name}</span>
-                    </p>
-                    <p>
-                      Giá:{" "}
-                      <span className="fw-bold">{formattedFinalPrice}</span>
-                    </p>
-                    <p>
-                      Trạng thái đơn hàng:{" "}
-                      <span className="fw-bold">{tourStatus}</span>
-                    </p>
+                  <div className="p-3 my-3 shadow row" key={id}>
+                    <div className="col-8">
+                      <p>
+                        Mã đơn: <span className="fw-bold">{id}</span>
+                      </p>
+                      <p>
+                        Mã giao dịch VNPAY:{" "}
+                        <span className="fw-bold">{transaction_id}</span>
+                      </p>
+                      <p>
+                        Tên tour: <span className="fw-bold">{tour_name}</span>
+                      </p>
+                      <p>
+                        Giá:{" "}
+                        <span className="fw-bold">{formattedFinalPrice}</span>
+                      </p>
+                      <p>
+                        Phương thức thanh toán:{" "}
+                        {purchase_method == 0 ? (
+                          <span className="fw-bold">
+                            Chuyển khoản ngân hàng
+                          </span>
+                        ) : (
+                          <span className="fw-bold">VNPAY</span>
+                        )}
+                      </p>
+                      {/* <p>
+                      Trạng thái thanh toán:{" "}
+                      <span className="fw-bold">{paymentStatus}</span>
+                    </p> */}
+                      <p>
+                        Trạng thái đơn hàng:{" "}
+                        <span className="fw-bold">{tourStatus}</span>
+                      </p>
 
-                    <button
-                      type="button"
-                      data-toggle="modal"
-                      data-target={`#bill-${id}`}
-                      className="btn-continue"
-                    >
-                      Chi tiết
-                    </button>
-                    <div
-                      className="modal fade"
-                      id={`bill-${id}`}
-                      role="dialog"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h3
-                              className="modal-title text-primary"
-                              id="exampleModalLabel"
-                            >
-                              Chi tiết đơn hàng số <span>{id}</span>
-                            </h3>
-                            <button
-                              type="button"
-                              className="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            <h3>Thông tin khách hàng</h3>
-                            <p>
-                              Họ và tên: <span className="fw-bold">{name}</span>
-                            </p>
-                            <p>
-                              Số điện thoại:{" "}
-                              <span className="fw-bold">{phone_number}</span>
-                            </p>
-                            <p>
-                              Email: <span className="fw-bold">{email}</span>
-                            </p>
-                            <hr className="mb-3" />
-                            <h3>Thông tin tour</h3>
-                            <p>
-                              Mã số thanh toán VNPAY:{" "}
-                              <span className="fw-bold">{transaction_id}</span>
-                            </p>
-                            <p>
-                              Tên tour:{" "}
-                              <span className="fw-bold">{tour_name}</span>
-                            </p>
-                            <div className="d-flex justify-content-between mb-3">
-                              <div>
-                                Số lượng trẻ em:{" "}
-                                <span className="fw-bold">{child_count}</span>
-                              </div>
-                              <div>
-                                Số lượng người lớn:{" "}
-                                <span className="fw-bold">{adult_count}</span>
-                              </div>
-                            </div>
-                            {coupon_percentage == 0 || null ? (
-                              <p>
-                                Coupon:{" "}
-                                <span className="fw-bold">
-                                  Giảm {coupon_fixed}đ
-                                </span>
-                              </p>
-                            ) : (
-                              <p>
-                                Coupon:{" "}
-                                <span className="fw-bold">
-                                  Giảm {coupon_percentage}%
-                                </span>
-                              </p>
-                            )}
-                            <p>
-                              Giá tour:{" "}
-                              <span className="fw-bold">
-                                {formattedFinalPrice}
-                              </span>
-                            </p>
-
-                            <p>Ngày bắt đầu tour: {tour_start_time}</p>
-                            <p>Ngày kết thúc tour: {tour_end_time}</p>
-                            <p>
-                              Trạng thái thanh toán:{" "}
-                              <span className="fw-bold text-danger">
-                                {tourStatus}
-                              </span>
-                            </p>
-                            {payment_status == 0 ? (
+                      <button
+                        type="button"
+                        data-toggle="modal"
+                        data-target={`#bill-${id}`}
+                        className="btn-continue"
+                      >
+                        Chi tiết
+                      </button>
+                      <div
+                        className="modal fade"
+                        id={`bill-${id}`}
+                        role="dialog"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div className="modal-dialog" role="document">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h3
+                                className="modal-title text-primary"
+                                id="exampleModalLabel"
+                              >
+                                Chi tiết đơn hàng số <span>{id}</span>
+                              </h3>
                               <button
-                                className="btn-continue mr-2"
-                                onClick={handleGoToPayment}
+                                type="button"
+                                className="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
                               >
-                                Thanh toán
+                                <span aria-hidden="true">&times;</span>
                               </button>
-                            ) : (
-                              <div></div>
-                            )}
-                            {purchase_status && purchase_status > 3 ? (
-                              <div></div>
-                            ) : (
-                              <Popconfirm
-                                title="Hủy tour"
-                                description="Bạn có chắc muốn hủy tour?"
-                                onConfirm={handleCancelTour}
-                                onCancel={cancel}
-                                okText="Đồng ý"
-                                cancelText="Hủy bỏ"
-                              >
-                                <button className="btn-continue">
-                                  Hủy tour
+                            </div>
+                            <div className="modal-body">
+                              <h3>Thông tin khách hàng</h3>
+                              <p>
+                                Họ và tên:{" "}
+                                <span className="fw-bold">{name}</span>
+                              </p>
+                              <p>
+                                Số điện thoại:{" "}
+                                <span className="fw-bold">{phone_number}</span>
+                              </p>
+                              <p>
+                                Email: <span className="fw-bold">{email}</span>
+                              </p>
+                              <hr className="mb-3" />
+                              <h3>Thông tin tour</h3>
+                              <div>
+                                {purchase_method == 1 ? (
+                                  <div>
+                                    <p>
+                                      Mã số thanh toán VNPAY:{" "}
+                                      <span className="fw-bold">
+                                        {transaction_id ? (
+                                          <span>{transaction_id}</span>
+                                        ) : (
+                                          <span>Chưa có</span>
+                                        )}
+                                      </span>
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div></div>
+                                )}
+                              </div>
+
+                              <p>
+                                Tên tour:{" "}
+                                <span className="fw-bold">{tour_name}</span>
+                              </p>
+                              <p>
+                                Phương thức thanh toán:{" "}
+                                {purchase_method == 0 ? (
+                                  <span className="fw-bold">
+                                    Chuyển khoản ngân hàng
+                                  </span>
+                                ) : (
+                                  <span className="fw-bold">VNPAY</span>
+                                )}
+                              </p>
+                              <div className="d-flex justify-content-between mb-3">
+                                <div>
+                                  Số lượng trẻ em:{" "}
+                                  <span className="fw-bold">{child_count}</span>
+                                </div>
+                                <div>
+                                  Số lượng người lớn:{" "}
+                                  <span className="fw-bold">{adult_count}</span>
+                                </div>
+                              </div>
+                              {coupon_fixed ? (
+                                <p>
+                                  Coupon:{" "}
+                                  <span className="fw-bold">
+                                    Giảm {coupon_fixed}đ
+                                  </span>
+                                </p>
+                              ) : (
+                                <p>
+                                  Coupon:{" "}
+                                  <span className="fw-bold">
+                                    Giảm {coupon_percentage}%
+                                  </span>
+                                </p>
+                              )}
+
+                              <p>
+                                Giá tour:{" "}
+                                <span className="fw-bold">
+                                  {formattedFinalPrice}
+                                </span>
+                              </p>
+
+                              <p>Ngày bắt đầu tour: {tour_start_time}</p>
+                              <p>Ngày kết thúc tour: {tour_end_time}</p>
+                              <p>
+                                Trạng thái đơn hàng:{" "}
+                                <span className="fw-bold text-danger">
+                                  {tourStatus}
+                                </span>
+                              </p>
+                              {payment_status == 0 && purchase_method == 1 ? (
+                                <button
+                                  className="btn-continue mr-2"
+                                  onClick={handleGoToPayment}
+                                >
+                                  Thanh toán
                                 </button>
-                              </Popconfirm>
-                            )}
+                              ) : (
+                                <div></div>
+                              )}
+                              {purchase_status == 0 ? (
+                                <button
+                                  onClick={handleCancelTour}
+                                  className="btn-continue"
+                                >
+                                  Hủy
+                                </button>
+                              ) : (
+                                <span>
+                                  {purchase_status == 1 ||
+                                  purchase_status == 2 ? (
+                                    <Popconfirm
+                                      title="Hủy tour"
+                                      description="Bạn có chắc muốn hủy tour?"
+                                      onConfirm={handleCancelTourRefund}
+                                      onCancel={cancel}
+                                      okText="Đồng ý"
+                                      cancelText="Hủy bỏ"
+                                    >
+                                      <button className="btn-continue">
+                                        Hủy tour
+                                      </button>
+                                    </Popconfirm>
+                                  ) : (
+                                    <div></div>
+                                  )}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* {payment_status == 0 ? (
+                      {/* {payment_status == 0 ? (
                       <div>
                         <p>
                           Trạng thái:{" "}
@@ -372,6 +452,13 @@ const UserTour = () => {
                         </p>
                       </div>
                     )} */}
+                    </div>
+                    <div className="col-4">
+                      <img
+                        src="https://via.placeholder.com/640x480.png/000044?text=dolorem"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 );
               }

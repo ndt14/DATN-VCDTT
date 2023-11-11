@@ -62,8 +62,17 @@ class TourController extends Controller
             'status',
             'created_at',
             'updated_at'
-        )
-            ->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
+        )->where('name', 'LIKE', '%' . $keyword . '%')->orderBy($sql_order, 'ASC')->limit($limit)->get();
+        foreach($tours as $tour){
+            $listRatings = Rating::where('tour_id',$tour->id)->orderBy('id', 'desc')->get();
+            $star = 0; $t=0;
+            foreach ($listRatings as $c) {
+                $star += $c->star;
+                $t++;
+            }
+            $tour->star=$star/($t==0?1:$t);
+            $tour->starCount= $t;
+        }
         return response()->json(
             [
                 'data' => [
@@ -83,9 +92,6 @@ class TourController extends Controller
     {
         $listCate = Category::select('id', 'name', 'parent_id')
             ->get();
-        // get all data from table images
-        $listImage = Image::select('name', 'type', 'url', 'tour_id')
-            ->get();
         // get all data from table coupon
         $listCoupon = Coupon::select('id', 'name', 'description', 'start_date', 'end_date', 'tour_id', 'percentage_price', 'fixed_price')
             ->where('coupons.status', 1)
@@ -94,7 +100,6 @@ class TourController extends Controller
             [
                 'data' => [
                     'categories' => CategoryResource::collection($listCate),
-                    'images' => ImageResource::collection($listImage),
                     'coupons' => CouponResource::collection($listCoupon),
                 ],
                 'message' => 'OK',
@@ -344,32 +349,6 @@ class TourController extends Controller
 
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
             if ($response->status() == 200) {
-                $tour_id = $response['data']['tour']['id'];
-                if ($request->hasFile('files')) {
-                    $images = [];
-                    $fileNames = [];
-                    $files = $request->file('files');
-                    foreach ($files as $file) {
-                        $type = $file->extension();
-                        $fileName = time() . '_' . uniqid(). '.' . $type;
-                        $file->move(public_path('uploads'), $fileName);
-                        $fileNames[] = [
-                            'name' => time() . '_' . uniqid(),
-                            'type' => $type,
-                            'full_name'=> $fileName,
-                        ];
-                    }
-                    foreach ($fileNames as $img) {
-                        $data = [
-                            'name' => $img['name'],
-                            'type' => $img['type'],
-                            'url' => '/uploads/' . $img['full_name'],
-                            'tour_id' => $tour_id
-                        ];
-                        $newImage = Image::create($data);
-                        $images[] = $newImage;
-                    }
-                }
                 return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
             } else {
                 return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
@@ -382,9 +361,10 @@ class TourController extends Controller
     public function tourManagementEdit(TourRequest $request, $id)
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)['data'];
-        $tour = $tourObject = json_decode(json_encode($response['tour']), false);
+        $tour = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
         $cateIds = [];
+        // dd($tourToCate);
         foreach ($tourToCate as $item) {
             $cateIds[] = $item['cate_id'];
         }
@@ -406,6 +386,14 @@ class TourController extends Controller
     {
         $data = $request->except('_token');
         $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data']['tour'];
+        $listRatings = Rating::where('tour_id',$request->id)->orderBy('id', 'desc')->get();
+        $star = 0; $t=0;
+        foreach ($listRatings as $c) {
+            $star += $c->star;
+            $t++;
+        }
+        $item['star'] = $star/($t==0?1:$t);
+        $item['rcount'] = $t;
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }

@@ -43,20 +43,24 @@ const SearchBar = (props: Props) => {
 
   return (
     <>
-      <div className='my-2'>Tìm kiếm tour:</div>
-      <br />
+     
       <InstantSearch searchClient={searchClient} indexName={indexName}>
-        <Configure hitsPerPage={5} />
+        <Configure hitsPerPage={6} />
+        <div className="search">
+        <div className='my-2'>Tìm kiếm tour:</div>
+      {/* <br /> */}
         <SearchBox
-         placeholder="Tìm kiếm"
+         placeholder="Tìm kiếm..."
           onChange={handleInputChange}
           value={inputValue}
           onFocus={handleInputFocus} 
           onSubmit={handleSearch}
-          
+          className='input-search'
         />
-        <div className="search-results">
-          {inputValue && <InstantSearchHits hitComponent={HitItem} />}
+        </div>
+        
+        <div className="search-results mt-4">
+         {inputValue && <InstantSearchHits hitComponent={HitItem} />}  
         </div>
       </InstantSearch>
     </>
@@ -65,7 +69,7 @@ const SearchBar = (props: Props) => {
 
 const HitItem = ({ hit }: any) => {
   return (
-    <div className="hit-item  my-2 ">
+    <div className="mt-2">
       <Link to={`/tours/${hit.objectID}`}>
         <div className='d-flex'>
           <div className='mr-2  my-2 h6 col-lg-5'>

@@ -32,7 +32,10 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3> <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
+                            <h3 class="card-title">Faq</h3> 
+                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
+                            <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -233,10 +236,18 @@
                     btnClass: 'btn-danger',
                     action: function() {
                         axios.delete(`/api/faq-destroy-forever/${id}`).then(function(response) {
-                            bs5Utils.Snack.show('success', 'Success', delay = 5000, dismissible = true);
-                            setTimeout(() => {
+                            Swal.fire({
+                            position: "top-center",
+                            icon: "success",
+                            title: "Xóa thành công",
+                            showConfirmButton: false,
+                            timer: 1500
+                            })
+                            .then((response) => {
+                            if (response) {
                                 location.reload();
-                            }, 2000);
+                            }
+                        });
                         });
                     }
                 },

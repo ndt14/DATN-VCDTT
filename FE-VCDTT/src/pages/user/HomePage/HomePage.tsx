@@ -1,5 +1,5 @@
 import "./HomePage.css";
-import { Carousel } from "antd";
+import { Carousel, Rate } from "antd";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
@@ -15,6 +15,7 @@ import _ from "lodash";
 import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 import { number } from "yup";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
+import { AiFillEye } from "react-icons/ai";
 
 const HomePage = () => {
   //
@@ -22,7 +23,7 @@ const HomePage = () => {
   //
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { data } = useGetToursQuery();
-  // console.log(data);
+  console.log(data);
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
   };
@@ -40,14 +41,14 @@ const HomePage = () => {
   //   autoplay: true,
   // });
 
-  const settings1 = {
-    lazyload: false,
-    nav: false,
-    mouseDrag: true,
-    items: 3,
-    autoplay: true,
-    autoplayButtonOutput: false,
-  };
+  // const settings1 = {
+  //   lazyload: false,
+  //   nav: false,
+  //   mouseDrag: true,
+  //   items: 3,
+  //   autoplay: true,
+  //   autoplayButtonOutput: false,
+  // };
 
   const settings2 = {
     lazyload: false,
@@ -62,6 +63,7 @@ const HomePage = () => {
   // Sắp xếp danh sách tour theo view_count giảm dần
   const sortedTours = _.orderBy(data?.data.tours, ["view_count"], ["desc"]);
   const featuredTours = sortedTours.slice(0, 4);
+  console.log(featuredTours);
 
   //tour giảm giá
   const sortedDiscountedTours = _.orderBy(
@@ -104,34 +106,26 @@ const HomePage = () => {
       e.preventDefault();
       handleFavorite(id);
     };
-
+  //SEO
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = "Trang chủ - VCDTT";
+  }
   return (
     <>
       <Loader />
 
       <main id="content" className="site-main">
         {/* <!-- Home slider html start --> */}
-        <section className="home-slider-section">
-          <div className="home-slider">
+        <section className="home-slider-section ">
+          <div className="home-slider d-none d-md-block">
             <div className="home-banner-items">
               <div className="banner-inner-wrap">
                 <Carousel autoplay>
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_4.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_5.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://theme.hstatic.net/1000376021/1000834008/14/slideshow_6.jpg?v=3691"
-                    alt=""
-                  />
-                  <img
-                    src="https://file.hstatic.net/1000376021/file/1920x720_copy_42b3f822c4ca4cd099bfb116931e6361.png"
-                    alt=""
-                  />
+                  <img src="../../../../assets/images/bg/bg1.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg3.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg6.jpg" alt="" />
+                  <img src="../../../../assets/images/bg/bg7.jpg" alt="" />
                 </Carousel>
               </div>
               <div className="banner-content-wrap">
@@ -148,11 +142,12 @@ const HomePage = () => {
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
-              <div className="input-group width-col-9  flex-grow-2">
-                {/* <label> Tìm kiếm địa điểm * </label> */}
+              <SearchBar />
+              {/* <div className="input-group width-col-9  flex-grow-2">
+                 <label> Tìm kiếm địa điểm * </label>
                 <SearchBar />
-                {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> */}
-              </div>
+                {/* <input type="text" name="s" placeholder="Nhập địa điểm" /> *
+              </div>/}
 
               {/* <div className="input-group width-col-3">
               <Link to={'/search'}>
@@ -192,6 +187,7 @@ const HomePage = () => {
                       main_img,
                       view_count,
                       adult_price,
+                      star,
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -206,9 +202,15 @@ const HomePage = () => {
                                   />
                                 </Link>
                               </figure>
-                              <div className="package-price">
+                              <div className="">
                                 <h6>
-                                  <span>{adult_price} đ </span> / người
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}
+                                  </span>{" "}
+                                  / người
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -225,14 +227,17 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
                                     <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
                                     >
-                                      <span className="w-3/5"></span>
+                                      <span className="w-90">
+                                        s
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -264,8 +269,14 @@ const HomePage = () => {
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -281,15 +292,17 @@ const HomePage = () => {
                                       </Link>
                                     </h3>
                                   </div>
-                                  <div className="review-area">
-                                    <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
+                                  <div className="review-areab">
                                     <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
                                     >
-                                      <span className="w-3/5"></span>
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -342,6 +355,7 @@ const HomePage = () => {
                       main_img,
                       view_count,
                       adult_price,
+                      star,
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
@@ -357,8 +371,14 @@ const HomePage = () => {
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -375,14 +395,16 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
                                     <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
                                     >
-                                      <span className="w-3/5"></span>
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -414,8 +436,14 @@ const HomePage = () => {
                                 </Link>
                               </figure>
                               <div className="package-price">
-                                <h6>
-                                  <span>{adult_price} đ </span> / người
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
                                 </h6>
                               </div>
                               <div className="package-content-wrap">
@@ -432,14 +460,16 @@ const HomePage = () => {
                                     </h3>
                                   </div>
                                   <div className="review-area">
-                                    <span className="review-text">
-                                      ({view_count} reviews)
-                                    </span>
                                     <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
                                     >
-                                      <span className="w-3/5"></span>
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="text-description">
@@ -475,12 +505,6 @@ const HomePage = () => {
                     KHÁM PHÁ CÁC ĐỊA DANH NỔI TIẾNG
                   </h5>
                   <h2 className="">DANH SÁCH CÁC TOUR</h2>
-                  <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p>
                 </div>
               </div>
             </div>
@@ -494,6 +518,7 @@ const HomePage = () => {
                     main_img,
                     view_count,
                     adult_price,
+                    star,
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
@@ -505,8 +530,14 @@ const HomePage = () => {
                               </Link>
                             </figure>
                             <div className="package-price">
-                              <h6>
-                                <span>{adult_price} đ </span> / người
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -521,7 +552,7 @@ const HomePage = () => {
                                 </div>
                                 <div className="review-area">
                                   <span className="review-text">
-                                    ({view_count} reviews)
+                                    ({view_count} <AiFillEye size={25} />)
                                   </span>
                                   <div
                                     className="rating-start"
@@ -558,8 +589,14 @@ const HomePage = () => {
                               </Link>
                             </figure>
                             <div className="package-price">
-                              <h6>
-                                <span>{adult_price} đ </span> / người
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
                               </h6>
                             </div>
                             <div className="package-content-wrap">
@@ -573,14 +610,16 @@ const HomePage = () => {
                                   </h3>
                                 </div>
                                 <div className="review-area">
-                                  <span className="review-text">
-                                    ({view_count} reviews)
-                                  </span>
                                   <div
-                                    className="rating-start"
-                                    title="Rated 5 out of 5"
+                                    className=""
+                                    title={`Rated ${star} out of 5`}
                                   >
-                                    <span className="w-3/5"></span>
+                                    <span className="w-90">
+                                      <Rate allowHalf disabled value={star} />
+                                    </span>{" "}
+                                    <span className="review-text">
+                                      ({view_count} <AiFillEye size={25} />)
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="text-description">

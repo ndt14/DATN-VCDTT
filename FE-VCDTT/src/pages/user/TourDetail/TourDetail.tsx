@@ -12,7 +12,10 @@ import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { useAddRatingMutation } from "../../../api/rating";
+import {
+  useAddRatingMutation,
+  useGetRatingByIdQuery,
+} from "../../../api/rating";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
@@ -20,14 +23,16 @@ const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
   const [addRating] = useAddRatingMutation();
+  const { id: idRating } = useParams<{ id: string }>();
+  const { data: dataRating } = useGetRatingByIdQuery(idRating | "");
+  console.log(dataRating);
+
   const user = JSON.parse(localStorage.getItem("user")) || "";
   // console.log(user);
 
   const userId = user?.id;
   const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
-  const purchase_history = TourHistoryData?.data?.purchase_history;
-
-  console.log(purchase_history);
+  console.log(TourHistoryData);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
@@ -52,10 +57,11 @@ const TourDetail = () => {
 
   const { data: tourData } = useGetTourByIdQuery(id || "");
   console.log(tourData);
+  const [tour, setTour] = useState(tourData);
 
   const tourId = parseInt(id);
-  console.log(typeof(tourId));
-  
+  console.log(typeof tourId);
+
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
@@ -87,7 +93,7 @@ const TourDetail = () => {
   const [productNumber, setProductNumber] = useState(1);
   const [productChildNumber, setProductChildNumber] = useState(0);
   const [price, setPrice] = useState(tourPrice);
-  const [childPrice, setChildPrice] = useState(tourChildPrice || 0);
+  const [childPrice, setChildPrice] = useState(0);
 
   useEffect(() => {
     // Update price state when tourPrice is available
@@ -128,13 +134,13 @@ const TourDetail = () => {
     currency: "VND",
   }).format(price + childPrice);
 
+  //đánh giá
   const renderStarRating = (rating: number): JSX.Element[] => {
     const starIcons: JSX.Element[] = [];
     for (let i = 1; i <= 5; i++) {
       // Check if the current star should be yellow (active) or gray (inactive)
       const starClassName = i <= rating ? "star-icon yellow" : "star-icon gray";
       starIcons.push(
-        
         <FontAwesomeIcon icon={faStar} className={starClassName} key={i} />
       );
     }
@@ -166,15 +172,42 @@ const TourDetail = () => {
   ) => {
     setRatingData({ ...ratingData, content: event.target.value });
   };
-  const navigate = useNavigate();
+
   const handleSubmitRating = async () => {
     if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
       try {
         const response = await addRating(ratingData);
+
         // Handle success, e.g., show a success message or update UI
         console.log("Đánh giá thành công", response);
-        alert("đánh giá thành công");
-        navigate("/");
+        alert("Đánh giá thành công");
+
+        // After a successful rating submission, update the component's state
+        const newRating = {
+          id: response.data.id, // Use the actual ID received from the server
+          user_name: ratingData.user_name,
+          content: ratingData.content,
+          star: ratingData.star,
+          created_at: new Date().toLocaleString(), // You can format the date accordingly
+        };
+
+        // Create a copy of the existing ratings and add the new rating
+        const updatedRatings = [...tourData.data.listRatings, newRating];
+
+        // Update the component's state with the new ratings
+        setTour({
+          ...tourData,
+          data: { ...tourData.data, listRatings: updatedRatings },
+        });
+
+        // Reset the rating form or clear the inputs
+        setRatingData({
+          star: 5, // Set the default rating or any other value you prefer
+          user_id: userId,
+          user_name: userName,
+          content: "",
+          tour_id: id, // Assuming 'id' is the tour ID
+        });
       } catch (error) {
         // Handle error, e.g., show an error message
         console.error("Đánh giá thất bại", error);
@@ -184,24 +217,50 @@ const TourDetail = () => {
       console.error("Please fill in all rating details");
     }
   };
+  useEffect(() => {
+    if (tourData) {
+      setTour(tourData);
+    }
+  }, [tourData]);
+
+  // console.log(tour);
+
+  const purchase_history = TourHistoryData?.data?.purchase_history;
+  if (purchase_history) {
+    var foundPurchase = purchase_history.find(
+      (purchase) => purchase.tour_id === Number(id)
+    );
+
+    // console.log(foundPurchase.purchase_status);
+
+    if (foundPurchase) {
+      // A matching purchase_history object was found
+      console.log("Found purchase_history:", foundPurchase);
+    } else {
+      // No matching purchase_history object was found
+      console.log("Purchase_history not found for id:", id);
+    }
+  } else {
+    // Handle the case where purchase_history is undefined or empty
+    console.log("Purchase_history is undefined or empty");
+  }
 
   // Calculate the average rating from the list of ratings
-const calculateAverageRating = () => {
-  let totalRating = 0;
-  if (tourData?.data?.listRatings) {
-    tourData.data.listRatings.forEach((rating) => {
-      totalRating += parseInt(rating.star);
-    });
-    return totalRating / tourData.data.listRatings.length;
-  }
-  return 0; // Default to 0 if there are no ratings
-};
+  const calculateAverageRating = () => {
+    let totalRating = 0;
+    if (tourData?.data?.listRatings) {
+      tourData.data.listRatings.forEach((rating) => {
+        totalRating += parseInt(rating.star);
+      });
+      return totalRating / tourData.data.listRatings.length;
+    }
+    return 0; // Default to 0 if there are no ratings
+  };
 
-const averageRating = calculateAverageRating();
-
-
+  const averageRating = calculateAverageRating();
+  //end đánh giá
   const isLoggedIn = user != "";
-
+  //map
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -212,7 +271,14 @@ const averageRating = calculateAverageRating();
       iframeRef.current.src = iframeSrc;
     }
   }, [exact_location]);
+  //end map
 
+  //SEO
+
+  const titleElement = document.querySelector("title");
+  if (titleElement) {
+    titleElement.innerText = tourData?.data?.tour.name + " - " + "VCDTT";
+  }
   return (
     <>
       <Loader />
@@ -235,9 +301,99 @@ const averageRating = calculateAverageRating();
               <div className="col-lg-7">
                 <div className="single-tour-inner">
                   <h2>{tourData?.data?.tour.name}</h2>
-                  <figure className="feature-image">
-                    <img src={tourData?.data?.tour.main_img} alt="" />
-                  </figure>
+                  <div>
+                    <div
+                      id="carousel-thumb"
+                      className="carousel slide carousel-fade carousel-thumbnails"
+                      data-ride="carousel"
+                      data-interval="false"
+                    >
+                      <div className="carousel-inner" role="listbox">
+                        <div className="carousel-item active">
+                          <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/VgLF55D/slider-1.jpg"
+                            alt="First slide"
+                          />
+                        </div>
+                        <div className="carousel-item">
+                          <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/9p3Cnk9/slider-2.jpg"
+                            alt="Second slide"
+                          />
+                        </div>
+                        <div className="carousel-item">
+                          <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
+                            alt="Third slide"
+                          />
+                        </div>
+                      </div>
+
+                      <a
+                        className="carousel-control-prev"
+                        href="#carousel-thumb"
+                        role="button"
+                        data-slide="prev"
+                      >
+                        <span
+                          className="carousel-control-prev-icon"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="sr-only">Previous</span>
+                      </a>
+                      <a
+                        className="carousel-control-next"
+                        href="#carousel-thumb"
+                        role="button"
+                        data-slide="next"
+                      >
+                        <span
+                          className="carousel-control-next-icon"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="sr-only">Next</span>
+                      </a>
+
+                      <ul className="carousel-indicator">
+                        <li
+                          data-target="#carousel-thumb"
+                          data-slide-to="0"
+                          className=" mx-1"
+                          style={{ width: "80px" }}
+                        >
+                          <img
+                            className="d-block img-fluid"
+                            src="https://i.ibb.co/VgLF55D/slider-1.jpg"
+                          />
+                        </li>
+                        <li
+                          data-target="#carousel-thumb"
+                          data-slide-to="1"
+                          style={{ width: "80px" }}
+                          className="mx-1"
+                        >
+                          <img
+                            className="d-block w-100 img-fluid"
+                            src="https://i.ibb.co/9p3Cnk9/slider-2.jpg"
+                          />
+                        </li>
+                        <li
+                          data-target="#carousel-thumb"
+                          data-slide-to="2"
+                          style={{ width: "80px" }}
+                          className="mx-1"
+                        >
+                          <img
+                            className="d-block w-100 img-fluid"
+                            src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
+                          />
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
 
                   <div className="tab-container">
                     <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -342,10 +498,10 @@ const averageRating = calculateAverageRating();
                         {/* <!-- review comment html --> */}
                         <div className="comment-area">
                           <h3 className="comment-title">
-                            Có {tourData?.data.listRatings.length} đánh giá
+                            Có {tour?.data.listRatings.length} đánh giá
                           </h3>
                           <div className="comment-area-inner">
-                            {tourData?.data.listRatings.map(
+                            {tour?.data.listRatings.map(
                               ({
                                 id,
                                 user_name,
@@ -408,9 +564,8 @@ const averageRating = calculateAverageRating();
                           <div className="comment-form-wrap">
                             <h3 className="comment-title">Đánh giá của bạn</h3>
                             {isLoggedIn ? (
-                              purchase_history &&
-                              purchase_history.length > 0 &&
-                              purchase_history[0].purchase_status === 5 ? (
+                              tour === tourData &&
+                              foundPurchase?.purchase_status == 5 ? (
                                 <form className="comment-form">
                                   <div className="full-width rate-wrap">
                                     <label>Chọn sao</label>
@@ -493,14 +648,15 @@ const averageRating = calculateAverageRating();
                       <span> {formattedTourPrice} </span>
                     </h5>
                     <div className="start-wrap">
-  <div className="" title={`Rated ${averageRating} out of 5`}>
-
-    <span className="w-90">
-    <Rate allowHalf disabled value={averageRating} />
-      </span>
-  </div>
-</div>
-
+                      <div
+                        className=""
+                        title={`Rated ${averageRating} out of 5`}
+                      >
+                        <span className="w-90">
+                          <Rate allowHalf disabled value={averageRating} />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   <div className="widget-bg booking-form-wrap">
                     <h4 className="bg-title">Thông tin đặt tour</h4>
@@ -582,7 +738,7 @@ const averageRating = calculateAverageRating();
                                   tourPrice,
                                   tourChildPrice,
                                   tourId,
-                                  exact_location
+                                  exact_location,
                                 }}
                               >
                                 <input

@@ -14,9 +14,9 @@
     </h1>
     <div class="collapse navbar-collapse" id="sidebar-menu">
       <ul class="navbar-nav pt-lg-5 mt-lg-3 accordion" id="nav-parent">
-        <li class="nav-item py-lg-2 {{ $currentController == 'DashboardController' ? 'active active-sidebar' : '' }}">
-          <a class="nav-link" href="{{ route('dashboard') }}">
-            <span class="me-1 d-md-none d-lg-inline-block">
+        <li class="nav-item py-lg-2 accordion-item {{ $currentController == 'DashboardController' ? 'active active-sidebar' : '' }}" style="border: none;">
+            <a class="accordion-header accordion-button nav-link {{ $currentController == 'DashboardController' ? '' : 'collapsed' }}" href="#navbar-help" data-bs-toggle="collapse" data-bs-target="#nav-link-3" role="button" aria-expanded="{{ $currentController == 'DashboardController' ? 'true' : 'false' }}">
+              <span class="d-md-none d-lg-inline-block text-back me-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                 <path d="M3 3v18h18"></path>
@@ -30,7 +30,17 @@
             <span class="fw-bold ms-1 fs-3">
               Thống kê
             </span>
-          </a>
+            </a>
+            <div id="nav-link-3" class="accordion-collapse collapse {{ $currentController == 'DashboardController' ? 'show' : '' }}" data-bs-parent="#nav-parent">
+                <div class="accordion-body pt-0 ps-3">
+                  <a class="nav-link fw-bold" href="{{route('dashboard.tour')}}">
+                    - Thông kế doanh số tour
+                  </a>
+                  <a class="nav-link fw-bold" href="{{route('dashboard.user')}}" rel="noopener">
+                    - Thống kê số liệu user
+                  </a>
+                </div>
+              </div>
         </li>
         @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'access review', 'reply review', 'delete review']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2 accordion-item {{ $currentController == 'TourController' ||$currentController == 'RatingController' ? 'active active-sidebar' : '' }}" style="border: none;">

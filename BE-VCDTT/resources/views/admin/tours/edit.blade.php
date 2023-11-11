@@ -78,8 +78,33 @@
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Ảnh đại diện</label>
-                                        <input type="text" name="main_img" class="form-control"
-                                            placeholder="Link ảnh đại diện" value="{{ $tour->main_img  }}">
+                                        <div class="row g-2">
+                                            <div class="col">
+                                                <input type="text" value="{{ $tour->main_img  }}" name="main_img" class="form-control" placeholder="Link ảnh đại diện">
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="/image/dropzone" target="_blank" class="btn btn-icon btn-indigo" aria-label="Button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                                                    <path d="M7 9l5 -5l5 5"></path>
+                                                    <path d="M12 4l0 12"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="javascript: viewImageList();" class="btn btn-icon btn-indigo" aria-label="Button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M15 8h.01"></path>
+                                                    <path d="M11.5 21h-5.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5"></path>
+                                                    <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                                    <path d="M20.2 20.2l1.8 1.8"></path>
+                                                    <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l2 2"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('main_img')
                                                 {{ $message }}
@@ -186,7 +211,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="mb-3 col-4">
+                                    <div class="mb-3 col-6">
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="sale_percentage" type="text" class="form-control"
                                             placeholder="Nhập phần trăm giảm giá của tour"
@@ -198,7 +223,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="mb-3 col-4">
+                                    <div class="mb-3 col-6">
                                         <div class="form-label">Số lượng hành khách</div>
                                         <input name="tourist_count" type="text" class="form-control"
                                             placeholder="Nhập tỉ lệ bán hàng của tour"
@@ -272,16 +297,48 @@
                 </div> -->
             </div>
         </div>
-    @endsection
+<div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@endsection
 @section('page_css')
 <link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
 @endsection
 @section('page_js')
-<script src="{{ asset('admin/assets/libs/dropzone/dist/dropzone-min.js')}}" defer></script>
+<script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
+<script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
 <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js')}}" defer></script>
 <script type="text/javascript">
-
+let viewImageList = function() {
+axios.get(`/image/image-list`)
+    .then(function(response) {
+        $('#modalContainer div.modal-content').html(response.data.html);
+        modalContainer.show();
+    })
+    .catch(function(error) {
+        bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+    })
+    .finally(function() {
+    });
+};
+Fancybox.bind('[data-fancybox]');
+    $('.btn-copy-url').click(function () {
+    let _self = $(this);
+    let url = _self.attr('data-url');
+    clipboard.writeText(url).then(function(){
+        bs5Utils.Snack.show('success', 'Đã copy đường dẫn thành công!', delay = 5000, dismissible = true);
+    }, function(err){
+        bs5Utils.Snack.show('danger', 'Lỗi.', delay = 5000, dismissible = true);
+    });
+});
 $(document).ready(function() {
+    modalContainer = new bootstrap.Modal('#modalContainer', {
+        keyboard: true,
+        backdrop: 'static'
+    });
         var categories_data = <?php echo htmlspecialchars(json_encode($cateIds)) ?>;
         if ($('#frmEdit').length) {
 //             $('#frmEdit').submit(function() {
@@ -331,9 +388,14 @@ $(document).ready(function() {
                     }
                     selectCatogories.append(option);
                     $.each(category.child, function(index, childCategory) {
-                        let chlidId = childCategory.id;
-                        chlidId = +chlidId;
-                        let option = $('<option></option>').val(chlidId).text(category.name + '-> '+ childCategory.name);
+                        var childId = childCategory.id;
+                        childId = +childId;
+                        if (categories_data.includes(childId)) {
+                            option = $('<option selected></option>').val(childId).text(category.name + '-> '+ childCategory.name);
+                        } else {
+                            option = $('<option></option>').val(childId).text(category.name + '-> '+ childCategory.name);
+
+                        }
                         selectCatogories.append(option);
                     });
                 });

@@ -1,5 +1,7 @@
 <?php
 
+//Thông báo hủy tour về bên admin
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -17,6 +19,7 @@ class CancelNotification extends Notification
     protected $tour_name;
     protected $name;
     protected $purchase_method;
+    protected $paid;
 
     /**
      * Create a new notification instance.
@@ -30,6 +33,7 @@ class CancelNotification extends Notification
         $this->name = $purchaseHistory->name;
         $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
+        $this->paid = ($this->payment_status == 1) ? 'đã thanh toán' : 'chưa thanh toán';
     }
 
     /**
@@ -39,11 +43,7 @@ class CancelNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        if ($this->payment_status == 1) {
-            return ['mail', 'database'];
-        } else {
-            return ['database'];
-        }
+        return ['mail', 'database'];
     }
 
     /**
@@ -52,8 +52,9 @@ class CancelNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->subject('Khách Hàng ' . $this->name . ' Đã Hủy Tour ' . $this->tour_name)
             ->greeting('Xin chào!')
-            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '. Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
+            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '(khách hàng ' . $this->paid . '). Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
             ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
             ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }

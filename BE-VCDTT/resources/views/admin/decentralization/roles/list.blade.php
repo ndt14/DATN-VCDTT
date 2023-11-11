@@ -237,12 +237,12 @@
         let removeItem = function(id) {
         $.confirm({
             theme: theme,
-            title: 'Confirm',
-            content: 'Are you sure to remove?',
+            title: 'Xác nhận',
+            content: 'Bạn có chắc muốn xóa?',
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'Yes',
+                    text: 'Ok!',
                     btnClass: 'btn-danger',
                     action: function() {
                         axios.delete(`/api/role-destroy/${id}`).then(function(response) {

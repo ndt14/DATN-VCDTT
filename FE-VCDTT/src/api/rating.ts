@@ -40,7 +40,7 @@ const RatingApi = createApi({
         }),
         updateRating: builder.mutation<Rating, Rating>({
             query: (Rating) => ({
-                url: `/Ratings/${Rating.id}`,
+                url: `/rating-edit/${Rating.id}`,
                 method: "PUT",
                 body: Rating
             }),

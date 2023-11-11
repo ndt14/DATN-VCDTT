@@ -22,9 +22,9 @@
                         </div>
                     @endif
                 </div> -->
-                <!-- <div class="col-auto ms-auto d-print-none">
+                <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
+                        <a href="/image/dropzone" class="btn btn-indigo d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -34,7 +34,7 @@
                             </svg>
                            Thêm mới
                         </a>
-                        <a href="{{ route('image.add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                        <a href="/image/dropzone}" class="btn btn-indigo d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -44,7 +44,7 @@
                             </svg>
                         </a>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -96,6 +96,7 @@
                                         <th>Tên Ảnh</th>
                                         <th>Định dạng</th>
                                         <th>Đường dẫn</th>
+                                        <th>Ngày thêm</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -118,18 +119,11 @@
                                             <td>
                                                 {{ $item->url }}
                                             </td>
+                                            <td>
+                                                {{ time_format($item->created_at) }}
+                                                </td>
                                                 <td class="text-end">
-                                                    <a href="javascript: void(0);" data-url="{{ url($item->url)}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn đầy đủ">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
-                                                        <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
-                                                        <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
-                                                        <path d="M8.7 10.7l6.6 -3.4"></path>
-                                                        <path d="M8.7 13.3l6.6 3.4"></path>
-                                                        </svg>
-                                                    </a>
-                                                    <a href="javascript: void(0);" data-url="{{ $item->url}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
+                                                    <a href="javascript: void(0);" data-url="{{ url($item->url)}}" class="btn btn-icon btn-outline-indigo btn-copy-url" title="Sao chép đường dẫn nội tuyến">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                         <path d="M9 15l6 -6"></path>
@@ -241,24 +235,23 @@
 <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
     <script type="text/javascript">
-$(document).ready(function () {
-    Fancybox.bind('[data-fancybox]');
-    $('.btn-copy-url').click(function () {
-    let _self = $(this);
-    let url = _self.attr('data-url');
-    clipboard.writeText(url).then(function(){
-        bs5Utils.Snack.show('success', 'File url is copied.', delay = 5000, dismissible = true);
-    }, function(err){
-        bs5Utils.Snack.show('danger', 'Can not copy file url.', delay = 5000, dismissible = true);
-    });
 
-    });
-});
         let modalContainer;
         $(document).ready(function() {
             modalContainer = new bootstrap.Modal('#modalContainer', {
                 keyboard: true,
                 backdrop: 'static'
+            });
+
+            Fancybox.bind('[data-fancybox]');
+            $('.btn-copy-url').click(function () {
+                let _self = $(this);
+                let url = _self.attr('data-url');
+                clipboard.writeText(url).then(function(){
+                    bs5Utils.Snack.show('success', 'Đã copy đường dẫn thành công!', delay = 5000, dismissible = true);
+                }, function(err){
+                    bs5Utils.Snack.show('danger', 'Lỗi.', delay = 5000, dismissible = true);
+                });
             });
         });
 

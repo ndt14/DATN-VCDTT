@@ -5,23 +5,25 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý đánh giá cho tour: <a href="javascript: viewDetailT({{ $data->tour->id}});" title="Show Detail">{{ $data->tour->name}}</a>
+                        Quản lý đánh giá cho tour: 
+                        <a href="javascript: viewDetailT({{ $data->tour->id ?? 1}});" title="Show Detail">{{ $data->tour->name ?? 'test'}}</a>
+                        
                     </h1>
                 </div>
-                <!-- <div class="col-12 ">
+                <div class="col-12 ">
                     @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                        {{ Session::get('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                     @if (Session::has('fail'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                        {{ Session::get('fail') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
-                </div> -->
+                </div>
             <div class="col-auto ms-auto d-print-none">
             </div>
         </div>
