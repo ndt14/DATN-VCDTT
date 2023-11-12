@@ -45,8 +45,9 @@
 
 
                     <div class="nav-item dropdown d-none d-md-flex me-3">
-                        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" id="notificationPing"
-                            aria-label="Show notifications" aria-expanded="false" data-bs-auto-close="outside">
+                        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1"
+                            id="notificationPing" aria-label="Show notifications" aria-expanded="false"
+                            data-bs-auto-close="outside">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -187,7 +188,7 @@
     var channel = pusher.subscribe('PurchaseNotification');
     channel.bind('datn-vcdtt-development', function(data) {
         var id = data.id;
-        if (data.data.purchase_method == 1){
+        if (data.data.purchase_method == 1) {
             var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.data.transaction_id;
         } else {
             var purchaseMethodText = 'Khách hàng chuyển khoản trực tiếp:';
@@ -238,4 +239,13 @@
         $('.notification').prepend(newNotificationHtml);
         $('#notificationPing').prepend(notificationPing);
     });
+
+    // let markAsRead = function(id) {
+    //     axios.get(`/purchase-history/mark-as-read/${id}`).then(function(response) {
+    //         var notificationPing = `
+    //             <span class="badge bg-green"></span>
+    //         `
+    //         $('#notificationPing').prepend(notificationPing);
+    //     });
+    // };
 </script>
