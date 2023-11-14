@@ -30,6 +30,15 @@
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
+                    <a href="{{url('/rating/'.$data->tour_id)}}" class="btn btn-default d-none d-sm-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                        Back to list by tour
+                    </a>
                     <a href="{{url('/rating')}}" class="btn btn-default d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -37,15 +46,7 @@
                             <path d="M5 12l4 4"></path>
                             <path d="M5 12l4 -4"></path>
                         </svg>
-                        Back
-                    </a>
-                    <a href="{{url('/rating')}}" class="btn btn-default d-sm-none btn-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M5 12l14 0"></path>
-                            <path d="M5 12l4 4"></path>
-                            <path d="M5 12l4 -4"></path>
-                        </svg>
+                        Back to list all
                     </a>
                 </div>
             </div>
@@ -57,10 +58,10 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " action="{{ route('api.rating.edit', ['id' => $data->id])}}" method="POST">
+                <form id="frmEdit" method="POST" class="card border-0 shadow-lg rounded-4 " action="{{ route('rating.edit', ['id' => $data->id])}}" >
                     @csrf
-                    @method('PUT')
                     <input type="hidden" name="id" value="{{$data->id}}">
+                    <input type="hidden" name="tour_id" value="{{$data->tour_id}}">
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Nội dung đánh giá</label>
@@ -92,7 +93,7 @@
 </div>
 @endsection
 @section('page_js')
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     if ($('#frmEdit').length) {
         $('#frmEdit').submit(function() {
             let options = {
@@ -124,5 +125,5 @@
             return false;
         });
     }
-</script>
+</script> --}}
 @endSection
