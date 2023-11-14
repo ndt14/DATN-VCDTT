@@ -19,6 +19,7 @@ import {
 import { AiFillEye } from "react-icons/ai";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
+import ReactPaginate from "react-paginate";
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
@@ -261,6 +262,17 @@ const TourDetail = () => {
   };
 
   const averageRating = calculateAverageRating();
+   //phân trang đánh giá
+   const [currentPage, setCurrentPage] = useState<number>(0);
+   const handlePageChange = (selectedPage: { selected: number }) => {
+     setCurrentPage(selectedPage.selected);
+   };
+   const itemsPerPage = 3;
+   const pageCount = Math.ceil(tour?.data.listRatings.length / itemsPerPage);
+   const currentData: Rating[] = (tour?.data.listRatings.slice(
+     currentPage * itemsPerPage,
+     (currentPage + 1) * itemsPerPage
+   ) || []) as Rating[];
   //end đánh giá
   const isLoggedIn = user != "";
   //map
@@ -511,7 +523,7 @@ const TourDetail = () => {
                             Có {tour?.data.listRatings.length} đánh giá
                           </h3>
                           <div className="comment-area-inner">
-                            {tour?.data.listRatings.map(
+                          {currentData.map(
                               ({
                                 id,
                                 user_name,
@@ -529,7 +541,7 @@ const TourDetail = () => {
                                       <li>
                                         <div className="comment-content">
                                           <div className="comment-header">
-                                            <h5 className="author-name">
+                                            <h5 className="author-name strong">
                                               {user_name}
                                             </h5>
                                             <span className="post-on">
@@ -555,7 +567,7 @@ const TourDetail = () => {
                                             <li>
                                               <div className="comment-content">
                                                 <div className="comment-header">
-                                                  <h5 className="author-name">
+                                                  <h5 className="author-name strong">
                                                     Admin
                                                   </h5>
                                                 </div>
@@ -570,6 +582,15 @@ const TourDetail = () => {
                                 );
                               }
                             )}
+                            <ReactPaginate
+                  previousLabel={"<-"}
+                  nextLabel={"->"}
+                  breakLabel={"..."}
+                  pageCount={pageCount}
+                  onPageChange={handlePageChange}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                />
                           </div>
                           <div className="comment-form-wrap">
                             <h3 className="comment-title">Đánh giá của bạn</h3>
