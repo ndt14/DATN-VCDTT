@@ -128,3 +128,6 @@ Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon'])
 
 Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.delete');
 Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy'])->name('allocation.delete');
+
+
+Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
