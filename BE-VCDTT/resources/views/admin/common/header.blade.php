@@ -59,7 +59,7 @@
                             </svg>
                             @foreach ($user->unreadNotifications as $notification)
                                 @if ($notification)
-                                    <span class="badge bg-red"></span>
+                                    <span class="badge bg-red" id="notificationDot"></span>
                                 @endif
                             @endforeach
                         </a>
@@ -68,7 +68,8 @@
                                 <div class="card-header ">
                                     <h3 class="card-title">Thông báo</h3>
                                 </div>
-                                <div class="list-group list-group-flush list-group-hoverable notification">
+                                <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
+                                    style="max-height: 27rem">
                                     @if ($user->notifications)
                                         @foreach ($user->notifications as $notification)
                                             <div class="list-group-item">
@@ -77,17 +78,18 @@
                                                         @if ($notification)
                                                             @if ($notification->read_at == null)
                                                                 <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top"
-                                                                    data-bs-title="Chưa đọc"></span>
+                                                                    data-bs-placement="top" data-bs-title="Chưa đọc"
+                                                                    name="notification-read"
+                                                                    id="notification-{{ $notification->id }}"></span>
                                                             @else
                                                                 <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top"
-                                                                    data-bs-title="Đã đọc"></span>
+                                                                    data-bs-placement="top" data-bs-title="Đã đọc"
+                                                                    id="notification-{{ $notification->id }}"></span>
                                                             @endif
                                                         @endif
                                                     </div>
                                                     <div class="col text-truncate " style="width: 850px">
-                                                        <a onclick='{{ route('purchase_histories.mark_as_read', ['id' => $notification->id]) }}'
+                                                        <a onclick='markAsRead({{ $notification->id }})'
                                                             href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                             class="text-body d-block">
                                                             @if ($notification->data['purchase_method'] == 1)
@@ -105,7 +107,7 @@
                                                     <div class="col-auto">
                                                         <a data-bs-toggle="tooltip" data-bs-placement="right"
                                                             data-bs-title="Đánh dấu là đã đọc"
-                                                            href="{{ route('purchase_histories.mark_as_read', ['id' => $notification->id]) }}"><svg
+                                                            href="javascript: markAsRead('{{ $notification->id }}')"><svg
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-checks"
                                                                 width="30" height="24" viewBox="0 0 24 24"
@@ -115,7 +117,8 @@
                                                                 </path>
                                                                 <path d="M7 12l5 5l10 -10"></path>
                                                                 <path d="M2 12l5 5m5 -5l5 -5"></path>
-                                                            </svg></a>
+                                                            </svg>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -198,12 +201,12 @@
             <div class="list-group-item">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <span class="badge bg-danger" data-bs-toggle="tooltip"
+                        <span class="badge bg-danger" id="notification-` + id + `" data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         data-bs-title="Chưa đọc"></span>
                     </div>
                     <div class="col text-truncate " style="width: 850px">
-                        <a onclick='/purchase-history/mark-as-read/` + id + `'
+                        <a onclick='markAsRead('` + id + `')'
                             href="javascript: viewPurchaseHistoryDetail(${data.data.purchase_history_id});"
                             class="text-body d-block">
                             ` + purchaseMethodText + `
@@ -216,7 +219,7 @@
                     <div class="col-auto">
                         <a data-bs-toggle="tooltip" data-bs-placement="right"
                             data-bs-title="Đánh dấu là đã đọc"
-                            href="/purchase-history/mark-as-read/` + id + `"><svg
+                            href="javascript: markAsRead('` + id + `')"><svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 class="icon icon-tabler icon-tabler-checks"
                                 width="30" height="24" viewBox="0 0 24 24"
@@ -233,19 +236,31 @@
         `;
 
         var notificationPing = `
-            <span class="badge bg-red"></span>
+            <span class="badge bg-red" id="notificationDot"></span>
         `
 
         $('.notification').prepend(newNotificationHtml);
         $('#notificationPing').prepend(notificationPing);
     });
 
-    // let markAsRead = function(id) {
-    //     axios.get(`/purchase-history/mark-as-read/${id}`).then(function(response) {
-    //         var notificationPing = `
-    //             <span class="badge bg-green"></span>
-    //         `
-    //         $('#notificationPing').prepend(notificationPing);
-    //     });
-    // };
+    let markAsRead = function(id) {
+        axios.get(`/api/purchase-history/mark-as-read/${id}`)
+            .then(function(response) {
+                readNoti(id);
+                let checkNoti = document.getElementsByName('notification-read');
+                if (checkNoti.length == '0') {
+                    document.getElementById('notificationDot').remove();
+                }
+            })
+            // .catch(function(error) {
+            //     bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+            // })
+            .finally(function() {});
+
+    };
+
+    let readNoti = function(id) {
+        document.getElementById('notification-' + id).classList.remove('bg-danger');
+        document.getElementById('notification-' + id).classList.add('bg-success');
+    }
 </script>

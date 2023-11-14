@@ -303,7 +303,8 @@ class PurchaseHistoryController extends Controller
         $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
         $notification = $user->notifications->where('id', $id)->first();
         $notification->markAsRead();
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json(['message' => 'Đã đọc', 'status' => 200]);
     }
 
     //coupon
