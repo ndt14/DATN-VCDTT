@@ -277,10 +277,9 @@ class RatingController extends Controller
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/'.$request->id);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $id = $request->id;
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/rating-edit/' . $request->id, $data);
             if ($response->status() == 200) {
-                return redirect()->route('rating.list')->with('success', 'Cập nhật rating thành công');
+                return redirect()->route('rating.edit', ['id' => $request->id])->with('success', 'Cập nhật rating thành công');
             } else {
                 return redirect()->route('rating.edit', ['id' => $request->id])->with('fail', 'Đã xảy ra lỗi');
             }

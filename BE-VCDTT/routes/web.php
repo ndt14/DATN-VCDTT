@@ -118,7 +118,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);
-    Route::get('/rating/edit/{id}', [RatingController::class, 'ratingManagementEdit'])->name('rating.edit')->middleware(['permission:admin|reply review']);
+    Route::match(['GET', 'POST'],'/rating/edit/{id}', [RatingController::class, 'ratingManagementEdit'])->name('rating.edit')->middleware(['permission:admin|reply review']);
     Route::get('/rating/detail/{id}', [RatingController::class, 'ratingManagementDetail'])->name('rating.detail')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/trash/all', [RatingController::class, 'ratingManagementTrash'])->name('rating.trash')->middleware(['permission:admin|delete rating']);
     Route::get('rating/restore/{id}', [RatingController::class, 'ratingManagementRestore'])->name('rating.restore')->middleware(['permission:admin|delete rating']);
