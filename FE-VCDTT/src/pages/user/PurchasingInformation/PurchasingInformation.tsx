@@ -16,9 +16,11 @@ import { Link } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../../api/user";
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 
+import { Spin } from "antd";
+
 // type Props = {};
 
-const PurchasingInformation = (props: Props) => {
+const PurchasingInformation = () => {
   //validate
   interface FormValues {
     name: string;
@@ -32,7 +34,8 @@ const PurchasingInformation = (props: Props) => {
 
   //
   const [isChecked, setIsChecked] = useState(false);
-  // console.log(isChecked);
+  const [loading, setLoading] = useState(false);
+  console.log(loading);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -203,7 +206,9 @@ const PurchasingInformation = (props: Props) => {
   };
 
   //
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("0");
+  console.log(paymentMethod);
+
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
@@ -224,8 +229,9 @@ const PurchasingInformation = (props: Props) => {
     hideConfirmTourFormModal();
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     const variables = {
       name: formik.values.name,
@@ -257,35 +263,27 @@ const PurchasingInformation = (props: Props) => {
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
 
-    if (paymentMethod === "0") {
-      addBill(variables)
-        .then((response) => {
-          alert("Đặt tour thành công");
-          const billID = response?.data?.data?.purchase_history.id;
-          console.log(billID);
-          localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-          hideConfirmTourFormModal();
+    try {
+      const response = await addBill(variables);
+      const billID = response?.data?.data?.purchase_history.id;
+      console.log(billID);
+      localStorage.setItem("billIdSuccess", JSON.stringify(billID));
 
-          setShowPaymentModal(true);
-        })
-        .catch((error) => {
-          // Handle any errors here
-          console.error(error);
-        });
-    } else if (paymentMethod === "1") {
-      addBill(variables)
-        .then((response) => {
-          alert("Đặt tour thành công");
-          const billID = response?.data?.data?.purchase_history.id;
-          console.log(billID);
-          localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-          const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-          window.location.href = VnpayURL;
-        })
-        .catch((error) => {
-          // Handle any errors here
-          console.error(error);
-        });
+      if (paymentMethod === "0") {
+        setLoading(false);
+        alert("Đặt tour thành công");
+        hideConfirmTourFormModal();
+        setShowPaymentModal(true);
+      } else if (paymentMethod === "1") {
+        setLoading(false);
+        alert("Đặt tour thành công");
+        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        window.location.href = VnpayURL;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // console.log(".");
     }
   };
   const variables = {
@@ -358,6 +356,8 @@ const PurchasingInformation = (props: Props) => {
           <div className="inner-shape"></div>
         </section>
         {/* <!-- Inner Banner html end--> */}
+
+        {/*  */}
         <div className="checkout-section">
           <div className="container">
             <div className="row">
@@ -696,17 +696,21 @@ const PurchasingInformation = (props: Props) => {
                                     value="0"
                                     className="mr-2"
                                     onChange={handlePaymentMethodChange}
+                                    checked={paymentMethod === "0"}
                                   />
-                                  Chuyển khoản trực tiếp
+                                  Thanh toán online
                                 </div>
-                                <input
-                                  type="radio"
-                                  name="purchase_method"
-                                  value="1"
-                                  className="mr-2"
-                                  onChange={handlePaymentMethodChange}
-                                />
-                                Ngân hàng
+                                <div>
+                                  <input
+                                    type="radio"
+                                    name="purchase_method"
+                                    value="1"
+                                    className="mr-2"
+                                    onChange={handlePaymentMethodChange}
+                                    checked={paymentMethod === "1"}
+                                  />
+                                  VNPAY
+                                </div>
                               </div>
                               <input
                                 type="checkbox"
@@ -729,12 +733,20 @@ const PurchasingInformation = (props: Props) => {
                                   Xác nhận thanh toán
                                 </button>
                               ) : (
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary"
-                                >
-                                  Xác nhận thanh toán
-                                </button>
+                                <div>
+                                  <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    // disabled={loading}
+                                  >
+                                    Xác nhận thanh toán
+                                    {loading == true ? (
+                                      <Spin className="ml-2" />
+                                    ) : (
+                                      <span></span>
+                                    )}
+                                  </button>
+                                </div>
                               )}
                             </form>
                           </div>

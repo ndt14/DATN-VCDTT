@@ -14,6 +14,7 @@ import { DatePicker, Rate } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import moment, { Moment } from "moment";
 import { message } from "antd";
+import { Skeleton } from "antd";
 
 import "moment/locale/vi";
 dayjs.locale("vi");
@@ -22,7 +23,10 @@ moment.locale("vi");
 const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
-  const { data: userData } = useGetUserByIdQuery(userId || "");
+  const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
+  //
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
 
   // const userName = userData?.data?.user.name;
   // const userDateOfBirth = userData?.data?.user.date_of_birth;
@@ -185,7 +189,24 @@ const UserProfile = () => {
         <div className="row">
           <div className="col-4">
             <div className="border">
-              <div className="d-flex p-3">
+              {isLoading ? (
+                <Skeleton active />
+              ) : (
+                <div className="d-flex p-3">
+                  <div>
+                    <img
+                      style={{ width: "70px" }}
+                      src="../../../../assets/images/travel.png"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <h3>{userName} </h3>
+                    <p>{userEmail}</p>
+                  </div>
+                </div>
+              )}
+              {/* <div className="d-flex p-3">
                 <div>
                   <img
                     style={{ width: "70px" }}
@@ -197,208 +218,221 @@ const UserProfile = () => {
                   <h3>{userName} </h3>
                   <p>{userEmail}</p>
                 </div>
-              </div>
+              </div> */}
               <hr />
               {/* Left panel */}
-
-              <nav className="nav flex-column">
-                <Link
-                  className="nav-link text-white"
-                  style={{ backgroundColor: "#1677FF" }}
-                  to={"/user/profile"}
-                >
-                  Thông tin cá nhân
-                </Link>
-                <Link className="nav-link active" to={"/user/tours"}>
-                  Tour đã đặt
-                </Link>
-                <Link className="nav-link" to={"/user/favorite"}>
-                  Tour yêu thích
-                </Link>
-              </nav>
+              {isLoading ? (
+                <Skeleton active />
+              ) : (
+                <nav className="nav flex-column">
+                  <Link
+                    className="nav-link text-white"
+                    style={{ backgroundColor: "#1677FF" }}
+                    to={"/user/profile"}
+                  >
+                    Thông tin cá nhân
+                  </Link>
+                  <Link className="nav-link active" to={"/user/tours"}>
+                    Tour đã đặt
+                  </Link>
+                  <Link className="nav-link" to={"/user/favorite"}>
+                    Tour yêu thích
+                  </Link>
+                </nav>
+              )}
 
               {/* End left panel */}
             </div>
           </div>
+
           <div className="col-8">
             {/*  */}
-            <Tabs
-              defaultActiveKey="1"
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <TabPane tab="Thông tin của tôi" key="1" style={{ width: "50%" }}>
-                <p>
-                  Họ và tên: <span className="fw-bold">{userName}</span>
-                </p>
-                <p>
-                  Email: <span className="fw-bold">{userEmail}</span>
-                </p>
-                <p>
-                  Địa chỉ: <span className="fw-bold">{userAddress}</span>
-                </p>
-                <p>
-                  Số điện thoại: <span className="fw-bold">{phoneNumber}</span>
-                </p>
-                <p>
-                  Ngày tháng năm sinh:{" "}
-                  {/* <span className="fw-bold">{formattedDate}</span> */}
-                </p>
-                <p>
-                  Giới tính: <span className="fw-bold">{gender}</span>
-                </p>
-              </TabPane>
-              <TabPane tab="Chỉnh sửa thông tin" key="2">
-                <form onSubmit={handleUpdate}>
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label className="d-inline-flex">
-                          Họ tên <div className=" ml-1 text-danger">*</div>
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          className="input-border"
-                          value={formValues.name}
-                          onChange={handleInputChange}
-                        />
+            {isLoading ? (
+              <Skeleton active />
+            ) : (
+              <Tabs
+                defaultActiveKey="1"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <TabPane
+                  tab="Thông tin của tôi"
+                  key="1"
+                  style={{ width: "50%" }}
+                >
+                  <p>
+                    Họ và tên: <span className="fw-bold">{userName}</span>
+                  </p>
+                  <p>
+                    Email: <span className="fw-bold">{userEmail}</span>
+                  </p>
+                  <p>
+                    Địa chỉ: <span className="fw-bold">{userAddress}</span>
+                  </p>
+                  <p>
+                    Số điện thoại:{" "}
+                    <span className="fw-bold">{phoneNumber}</span>
+                  </p>
+                  <p>
+                    Ngày tháng năm sinh:{" "}
+                    {/* <span className="fw-bold">{formattedDate}</span> */}
+                  </p>
+                  <p>
+                    Giới tính: <span className="fw-bold">{gender}</span>
+                  </p>
+                </TabPane>
+                <TabPane tab="Chỉnh sửa thông tin" key="2">
+                  <form onSubmit={handleUpdate}>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Họ tên <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            className="input-border"
+                            value={formValues.name}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Email <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            name="email"
+                            className="input-border"
+                            value={formValues.email}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Số điện thoại{" "}
+                            <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            name="phone_number"
+                            className="input-border"
+                            value={formValues.phone_number}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex block">
+                            Ngày sinh <div className=" ml-1 text-danger">*</div>
+                          </label>{" "}
+                          <br />
+                          <DatePicker
+                            className="input-border"
+                            name="date_of_birth"
+                            value={
+                              formValues.date_of_birth
+                                ? dayjs(formValues.date_of_birth)
+                                : null
+                            }
+                            onChange={handleDateChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Giới tính <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          {/* <input
+                        type="text"
+                        name="phone_number"
+                        className=""
+                        value={formValues.phone_number}
+                        onChange={handleInputChange}
+                      /> */}
+                          <select
+                            name="gender"
+                            id=""
+                            className="input-border"
+                            value={formValues.gender}
+                            onChange={handleInputChange}
+                          >
+                            <option value="1">Nam</option>
+                            <option value="2">Nữ</option>
+                            <option value="3">Khác</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-sm-12">
+                        <div className="form-group">
+                          <label className="d-inline-flex">
+                            Địa chỉ <div className=" ml-1 text-danger">*</div>
+                          </label>
+                          <input
+                            type="text"
+                            name="address"
+                            className="input-border"
+                            value={formValues.address}
+                            onChange={handleInputChange}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label className="d-inline-flex">
-                          Email <div className=" ml-1 text-danger">*</div>
-                        </label>
-                        <input
-                          type="text"
-                          name="email"
-                          className="input-border"
-                          value={formValues.email}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label className="d-inline-flex">
-                          Số điện thoại{" "}
-                          <div className=" ml-1 text-danger">*</div>
-                        </label>
-                        <input
-                          type="text"
-                          name="phone_number"
-                          className="input-border"
-                          value={formValues.phone_number}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label className="d-inline-flex block">
-                          Ngày sinh <div className=" ml-1 text-danger">*</div>
-                        </label>{" "}
-                        <br />
-                        <DatePicker
-                          className="input-border"
-                          name="date_of_birth"
-                          value={
-                            formValues.date_of_birth
-                              ? dayjs(formValues.date_of_birth)
-                              : null
-                          }
-                          onChange={handleDateChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label className="d-inline-flex">
-                          Giới tính <div className=" ml-1 text-danger">*</div>
-                        </label>
-                        {/* <input
-                          type="text"
-                          name="phone_number"
-                          className=""
-                          value={formValues.phone_number}
-                          onChange={handleInputChange}
-                        /> */}
-                        <select
-                          name="gender"
-                          id=""
-                          className="input-border"
-                          value={formValues.gender}
-                          onChange={handleInputChange}
-                        >
-                          <option value="1">Nam</option>
-                          <option value="2">Nữ</option>
-                          <option value="3">Khác</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-sm-12">
-                      <div className="form-group">
-                        <label className="d-inline-flex">
-                          Địa chỉ <div className=" ml-1 text-danger">*</div>
-                        </label>
-                        <input
-                          type="text"
-                          name="address"
-                          className="input-border"
-                          value={formValues.address}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  <button type="submit" className="btn-continue">
-                    Chỉnh sửa
-                  </button>
-                </form>
-              </TabPane>
-              <TabPane tab="Thay đổi mật khẩu" key="3">
-                <form onSubmit={handlePasswordChange}>
-                  <div className="form-group">
-                    <label className="d-inline-flex">
-                      Mật khẩu cũ <div className=" ml-1 text-danger">*</div>
-                    </label>
-                    <input
-                      type="password"
-                      name="old_password"
-                      value={passwordFormValues.oldPassword}
-                      onChange={handlePasswordInputChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="d-inline-flex">
-                      Mật khẩu mới <div className=" ml-1 text-danger">*</div>
-                    </label>
-                    <input
-                      type="password"
-                      name="new_password"
-                      value={passwordFormValues.newPassword}
-                      onChange={handlePasswordInputChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="d-inline-flex">
-                      Xác nhận mật khẩu mới{" "}
-                      <div className=" ml-1 text-danger">*</div>
-                    </label>
-                    <input
-                      type="password"
-                      name="confirmNewPassword"
-                      value={passwordFormValues.confirmNewPassword}
-                      onChange={handlePasswordInputChange}
-                    />
-                  </div>
-                  <button type="submit" className="btn-continue">
-                    Đổi mật khẩu
-                  </button>
-                </form>
-              </TabPane>
-            </Tabs>
+                    <button type="submit" className="btn-continue">
+                      Chỉnh sửa
+                    </button>
+                  </form>
+                </TabPane>
+                <TabPane tab="Thay đổi mật khẩu" key="3">
+                  <form onSubmit={handlePasswordChange}>
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Mật khẩu cũ <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="password"
+                        name="old_password"
+                        value={passwordFormValues.oldPassword}
+                        onChange={handlePasswordInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Mật khẩu mới <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="password"
+                        name="new_password"
+                        value={passwordFormValues.newPassword}
+                        onChange={handlePasswordInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="d-inline-flex">
+                        Xác nhận mật khẩu mới{" "}
+                        <div className=" ml-1 text-danger">*</div>
+                      </label>
+                      <input
+                        type="password"
+                        name="confirmNewPassword"
+                        value={passwordFormValues.confirmNewPassword}
+                        onChange={handlePasswordInputChange}
+                      />
+                    </div>
+                    <button type="submit" className="btn-continue">
+                      Đổi mật khẩu
+                    </button>
+                  </form>
+                </TabPane>
+              </Tabs>
+            )}
           </div>
         </div>
       </section>
