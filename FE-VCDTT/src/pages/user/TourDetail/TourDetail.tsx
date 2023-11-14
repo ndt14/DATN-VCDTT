@@ -16,12 +16,15 @@ import {
   useAddRatingMutation,
   useGetRatingByIdQuery,
 } from "../../../api/rating";
+import { AiFillEye } from "react-icons/ai";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
+  const [idArray, setIdArray] = useState<number[]>([]);
+
   const [addRating] = useAddRatingMutation();
   const { id: idRating } = useParams<{ id: string }>();
   const { data: dataRating } = useGetRatingByIdQuery(idRating | "");
@@ -459,7 +462,13 @@ const TourDetail = () => {
                       >
                         {/* mô tả tour  */}
                         <div className="overview-content">
-                          {tourData?.data?.tour.details}
+                          <div
+                            className="mt-3"
+                            dangerouslySetInnerHTML={{
+                              __html: tourData?.data?.tour.details,
+                            }}
+                          ></div>
+                          {/* {tourData?.data?.tour.details} */}
                         </div>
                       </div>
                       <div
@@ -469,8 +478,9 @@ const TourDetail = () => {
                         aria-labelledby="program-tab"
                       >
                         {/* lịch trình */}
-
-                        {tourData?.data?.tour.pathway}
+                        <div className="mt-3">
+                          {tourData?.data?.tour.pathway}
+                        </div>
                       </div>
                       <div
                         className="tab-pane"
@@ -773,55 +783,143 @@ const TourDetail = () => {
                     main_img,
                     view_count,
                     adult_price,
+                    star,
                   }: Tour) => {
-                    return (
-                      <div className="col-lg-4 col-md-6" key={id}>
-                        <div className="package-wrap">
-                          <figure className="feature-image">
-                            <Link to={`/tours/${id}`}>
-                              <img className="w-full" src={main_img} alt="" />
-                            </Link>
-                          </figure>
-                          <div className="package-price">
-                            <h6>
-                              <span>VND {adult_price} </span> / mỗi người
-                            </h6>
-                          </div>
-                          <div className="package-content-wrap">
-                            {/* <div className="package-meta text-center"></div> */}
-                            <div className="package-content">
-                              <h3 className="margin-top-12">
-                                <Link className="mt-12" to={`/tours/${id}`}>
-                                  {name}
-                                </Link>
-                              </h3>
-                              <div className="review-area">
-                                <span className="review-text">
-                                  ({view_count} reviews)
-                                </span>
-                                <div
-                                  className="rating-start"
-                                  title="Rated 5 out of 5"
-                                >
-                                  <span className="w-3/5"></span>
+                    if (idArray.includes(id as number)) {
+                      return (
+                        <div className="col-lg-4 col-md-6" key={id}>
+                          <div className="package-wrap">
+                            <figure className="feature-image">
+                              <Link to={`/tours/${id}`}>
+                                <img
+                                  className="w-full img-fixed"
+                                  src={main_img}
+                                  alt=""
+                                />
+                              </Link>
+                            </figure>
+                            <div className="package-price">
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
+                              </h6>
+                            </div>
+                            <div className="package-content-wrap">
+                              {/* <div className="package-meta text-center"></div> */}
+                              <div className="package-content">
+                                <div className="text-container">
+                                  <h3 className="margin-top-12 text-content">
+                                    <Link className="mt-12" to={`/tours/${id}`}>
+                                      {name}
+                                    </Link>
+                                  </h3>
                                 </div>
-                              </div>
-                              <p>{details}</p>
-                              <div className="btn-wrap">
-                                <a href="#" className="button-text width-6">
-                                  Đặt ngay
-                                  <i className="fas fa-arrow-right"></i>
-                                </a>
-                                <a href="#" className="button-text width-6">
-                                  Thêm vào yêu thích
-                                  <i className="far fa-heart"></i>
-                                </a>
+                                <div className="review-area">
+                                  <div
+                                    className=""
+                                    title={`Rated ${star} out of 5`}
+                                  >
+                                    <span className="w-90">
+                                      <Rate allowHalf disabled value={star} />
+                                    </span>{" "}
+                                    <span className="review-text">
+                                      ({view_count} <AiFillEye size={25} />)
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-description">
+                                  <span
+                                    className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: details,
+                                    }}
+                                  ></span>
+                                </div>
+
+                                <div className="btn-wrap">
+                                  <a href="#" className="button-text width-6">
+                                    Đã thích
+                                    <i className="far fa-heart"></i>
+                                  </a>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
+                      );
+                    } else {
+                      return (
+                        <div className="col-lg-4 col-md-6" key={id}>
+                          <div className="package-wrap">
+                            <figure className="feature-image">
+                              <Link to={`/tours/${id}`}>
+                                <img
+                                  className="w-full img-fixed"
+                                  src={main_img}
+                                  alt=""
+                                />
+                              </Link>
+                            </figure>
+                            <div className="package-price">
+                              <h6 className="">
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(adult_price)}{" "}
+                                  / người
+                                </span>{" "}
+                              </h6>
+                            </div>
+                            <div className="package-content-wrap">
+                              {/* <div className="package-meta text-center"></div> */}
+                              <div className="package-content">
+                                <div className="text-container">
+                                  <h3 className="margin-top-12 text-content">
+                                    <Link className="mt-12" to={`/tours/${id}`}>
+                                      {name}
+                                    </Link>
+                                  </h3>
+                                </div>
+                                <div className="review-area">
+                                  <div
+                                    className=""
+                                    title={`Rated ${star} out of 5`}
+                                  >
+                                    <span className="w-90">
+                                      <Rate allowHalf disabled value={star} />
+                                    </span>{" "}
+                                    <span className="review-text">
+                                      ({view_count} <AiFillEye size={25} />)
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-description">
+                                  <span
+                                    className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: details,
+                                    }}
+                                  ></span>
+                                </div>
+
+                                <div className="btn-wrap">
+                                  <a href="#" className="button-text width-6">
+                                    Thêm vào yêu thích
+                                    <i className="far fa-heart"></i>
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
                   }
                 )}
               </div>

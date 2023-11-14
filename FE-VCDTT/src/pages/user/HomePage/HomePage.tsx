@@ -196,73 +196,7 @@ const HomePage = () => {
                               <figure className="feature-image">
                                 <Link to={`/tours/${id}`}>
                                   <img
-                                    className="w-full"
-                                    src={main_img}
-                                    alt=""
-                                  />
-                                </Link>
-                              </figure>
-                              <div className="">
-                                <h6>
-                                  <span>
-                                    {new Intl.NumberFormat("vi-VN", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    }).format(adult_price)}
-                                  </span>{" "}
-                                  / người
-                                </h6>
-                              </div>
-                              <div className="package-content-wrap">
-                                {/* <div className="package-meta text-center"></div> */}
-                                <div className="package-content">
-                                  <div className="text-container">
-                                    <h3 className="margin-top-12 text-content">
-                                      <Link
-                                        className="mt-12"
-                                        to={`/tours/${id}`}
-                                      >
-                                        {name}
-                                      </Link>
-                                    </h3>
-                                  </div>
-                                  <div className="review-area">
-                                    <div
-                                      className=""
-                                      title={`Rated ${star} out of 5`}
-                                    >
-                                      <span className="w-90">
-                                        s
-                                        <Rate allowHalf disabled value={star} />
-                                      </span>{" "}
-                                      <span className="review-text">
-                                        ({view_count} <AiFillEye size={25} />)
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="text-description">
-                                    <p className="text-content">{details}</p>
-                                  </div>
-
-                                  <div className="btn-wrap">
-                                    <a href="#" className="button-text width-6">
-                                      Đã thích
-                                      <i className="far fa-heart"></i>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      } else {
-                        return (
-                          <div className="col-lg-4 col-md-6" key={id}>
-                            <div className="package-wrap">
-                              <figure className="feature-image">
-                                <Link to={`/tours/${id}`}>
-                                  <img
-                                    className="w-full"
+                                    className="w-full img-fixed"
                                     src={main_img}
                                     alt=""
                                   />
@@ -292,7 +226,7 @@ const HomePage = () => {
                                       </Link>
                                     </h3>
                                   </div>
-                                  <div className="review-areab">
+                                  <div className="review-area">
                                     <div
                                       className=""
                                       title={`Rated ${star} out of 5`}
@@ -306,7 +240,82 @@ const HomePage = () => {
                                     </div>
                                   </div>
                                   <div className="text-description">
-                                    <p className="text-content">{details}</p>
+                                    <span
+                                      className=""
+                                      dangerouslySetInnerHTML={{
+                                        __html: details,
+                                      }}
+                                    ></span>
+                                  </div>
+
+                                  <div className="btn-wrap">
+                                    <a href="#" className="button-text width-6">
+                                      Đã thích
+                                      <i className="far fa-heart"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="col-lg-4 col-md-6" key={id}>
+                            <div className="package-wrap">
+                              <figure className="feature-image">
+                                <Link to={`/tours/${id}`}>
+                                  <img
+                                    className="w-full img-fixed"
+                                    src={main_img}
+                                    alt=""
+                                  />
+                                </Link>
+                              </figure>
+                              <div className="package-price">
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(adult_price)}{" "}
+                                    / người
+                                  </span>{" "}
+                                </h6>
+                              </div>
+                              <div className="package-content-wrap">
+                                {/* <div className="package-meta text-center"></div> */}
+                                <div className="package-content">
+                                  <div className="text-container">
+                                    <h3 className="margin-top-12 text-content">
+                                      <Link
+                                        className="mt-12"
+                                        to={`/tours/${id}`}
+                                      >
+                                        {name}
+                                      </Link>
+                                    </h3>
+                                  </div>
+                                  <div className="review-area">
+                                    <div
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="text-description">
+                                    <span
+                                      className=""
+                                      dangerouslySetInnerHTML={{
+                                        __html: details,
+                                      }}
+                                    ></span>
                                   </div>
 
                                   <div className="btn-wrap">
@@ -364,7 +373,7 @@ const HomePage = () => {
                               <figure className="feature-image">
                                 <Link to={`/tours/${id}`}>
                                   <img
-                                    className="w-full"
+                                    className="w-full img-fixed"
                                     src={main_img}
                                     alt=""
                                   />
@@ -408,7 +417,12 @@ const HomePage = () => {
                                     </div>
                                   </div>
                                   <div className="text-description">
-                                    <p className="text-content">{details}</p>
+                                    <span
+                                      className=""
+                                      dangerouslySetInnerHTML={{
+                                        __html: details,
+                                      }}
+                                    ></span>
                                   </div>
 
                                   <div className="btn-wrap">
@@ -429,7 +443,7 @@ const HomePage = () => {
                               <figure className="feature-image">
                                 <Link to={`/tours/${id}`}>
                                   <img
-                                    className="w-full"
+                                    className="w-full img-fixed"
                                     src={main_img}
                                     alt=""
                                   />
@@ -473,7 +487,12 @@ const HomePage = () => {
                                     </div>
                                   </div>
                                   <div className="text-description">
-                                    <p className="text-content">{details}</p>
+                                    <span
+                                      className=""
+                                      dangerouslySetInnerHTML={{
+                                        __html: details,
+                                      }}
+                                    ></span>
                                   </div>
 
                                   <div className="btn-wrap">
@@ -526,7 +545,11 @@ const HomePage = () => {
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
-                                <img className="w-full" src={main_img} alt="" />
+                                <img
+                                  className="w-full img-fixed"
+                                  src={main_img}
+                                  alt=""
+                                />
                               </Link>
                             </figure>
                             <div className="package-price">
@@ -562,7 +585,12 @@ const HomePage = () => {
                                   </div>
                                 </div>
                                 <div className="text-description">
-                                  <p className="text-content">{details}</p>
+                                  <span
+                                    className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: details,
+                                    }}
+                                  ></span>
                                 </div>
 
                                 <div className="btn-wrap">
@@ -585,7 +613,11 @@ const HomePage = () => {
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
-                                <img className="w-full" src={main_img} alt="" />
+                                <img
+                                  className="w-full img-fixed"
+                                  src={main_img}
+                                  alt=""
+                                />
                               </Link>
                             </figure>
                             <div className="package-price">
@@ -623,7 +655,12 @@ const HomePage = () => {
                                   </div>
                                 </div>
                                 <div className="text-description">
-                                  <p className="text-content">{details}</p>
+                                  <span
+                                    className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: details,
+                                    }}
+                                  ></span>
                                 </div>
 
                                 <div className="btn-wrap">

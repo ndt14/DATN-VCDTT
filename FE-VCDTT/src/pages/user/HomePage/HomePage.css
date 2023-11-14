@@ -40,7 +40,7 @@ img {
 }
 
 .text-description {
-    height: 56px;
+    height: 56px !important;
     overflow: hidden;
 }
 
@@ -50,4 +50,9 @@ img {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.img-fixed {
+    height: 250px;
+    width: 100%;
 }

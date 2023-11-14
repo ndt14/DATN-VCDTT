@@ -399,18 +399,22 @@ const UserTour = () => {
                                 <div></div>
                               )}
                               {purchase_status == 0 ? (
-                                <button
-                                  onClick={handleCancelTour}
-                                  className="btn-continue"
+                                <Popconfirm
+                                  title="Hủy tour chưa thanh toán"
+                                  description="Bạn có chắc muốn hủy tour?"
+                                  onConfirm={handleCancelTour}
+                                  onCancel={cancel}
+                                  okText="Đồng ý"
+                                  cancelText="Hủy bỏ"
                                 >
-                                  Hủy
-                                </button>
+                                  <button className="btn-continue">Hủy</button>
+                                </Popconfirm>
                               ) : (
                                 <span>
                                   {purchase_status == 1 ||
                                   purchase_status == 2 ? (
                                     <Popconfirm
-                                      title="Hủy tour"
+                                      title="Hủy tour đã thanh toán"
                                       description="Bạn có chắc muốn hủy tour?"
                                       onConfirm={handleCancelTourRefund}
                                       onCancel={cancel}

@@ -1,20 +1,54 @@
-.input-border{
+.input-border {
     border-radius: 8px !important;
     height: 48px !important;
 }
-.border{
+
+.border {
     border-radius: 8px !important;
 }
-.btn-continue{
+
+.btn-continue {
     height: 48px;
     border-radius: 8px !important;
     border: none;
-background-color: #FF5E1F;
-color: white;
-font-weight: bold;
-width: 100px;
+    background-color: #FF5E1F;
+    color: white;
+    font-weight: bold;
+    width: 100px;
 }
-.btn-continue:focus{
-background-color: #30C5F7;
 
+.btn-continue:focus {
+    background-color: #30C5F7;
+
+}
+
+.loading {
+    /* Styles to darken or lighten the screen when loading */
+    /* Example: Darken the screen */
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.loading-overlay {
+    /* Styles for the loading overlay */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    /* Styles for the loading spinner */
+    /* Add your own styles or use a library like Font Awesome or SpinKit */
+}
+
+.ant-spin-dot-item {
+    background-color: white !important
+}
+
+.ant-spin-text {
+    color: white;
 }
