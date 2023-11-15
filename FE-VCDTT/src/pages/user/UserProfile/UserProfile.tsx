@@ -15,7 +15,9 @@ import dayjs, { Dayjs } from "dayjs";
 import moment, { Moment } from "moment";
 import { message } from "antd";
 import { Skeleton } from "antd";
-
+import { IoPersonOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
+import { FaRegListAlt } from "react-icons/fa";
 import "moment/locale/vi";
 dayjs.locale("vi");
 moment.locale("vi");
@@ -230,13 +232,13 @@ const UserProfile = () => {
                     style={{ backgroundColor: "#1677FF" }}
                     to={"/user/profile"}
                   >
-                    Thông tin cá nhân
+                   <IoPersonOutline /> Thông tin cá nhân
                   </Link>
                   <Link className="nav-link active" to={"/user/tours"}>
-                    Tour đã đặt
+                  <FaRegListAlt />  Tour đã đặt
                   </Link>
                   <Link className="nav-link" to={"/user/favorite"}>
-                    Tour yêu thích
+                  <FaRegHeart />  Tour yêu thích
                   </Link>
                 </nav>
               )}

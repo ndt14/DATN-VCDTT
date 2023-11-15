@@ -9,6 +9,9 @@ import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 import { Tour } from "../../../interfaces/Tour";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
 import { Favorite } from "../../../interfaces/Favorite";
+import { IoPersonOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
+import { FaRegListAlt } from "react-icons/fa";
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -82,17 +85,17 @@ const UserTour = () => {
               <div className="shadow-lg">
                 <nav className="nav flex-column ">
                   <Link className="nav-link" to={"/user/profile"}>
-                    Thông tin cá nhân
+                  <IoPersonOutline />     Thông tin cá nhân
                   </Link>
                   <Link className="nav-link active" to={"/user/tours"}>
-                    Tour đã đặt
+                  <FaRegListAlt />    Tour đã đặt
                   </Link>
                   <Link
                     className="nav-link text-white"
                     style={{ backgroundColor: "#1677FF" }}
                     to={"/user/favorite"}
                   >
-                    Tour yêu thích
+                 <FaRegHeart />    Tour yêu thích
                   </Link>
                 </nav>
               </div>
