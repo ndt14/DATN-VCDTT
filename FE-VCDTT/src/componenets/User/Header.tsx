@@ -174,12 +174,14 @@ const Header = () => {
   });
 
   const userData = JSON.parse(localStorage.getItem("user"));
+console.log(userData);
 
   const userName = userData?.name;
-  // console.log(userName);
-
-  // const userData = JSON.parse(storedData);
-  // const  = userData?.user?.email;
+  const is_admin = userData?.is_admin;
+  
+  const openWindow = () => {
+    window.open("http://be-vcdtt.datn-vcdtt.test/", "_blank");
+  };
 
   return (
     <>
@@ -269,6 +271,15 @@ const Header = () => {
                               <li>
                                 <Link to="user/favorite">Tour yêu thích</Link>
                               </li>
+                              {is_admin==1 || is_admin==3?(
+                                <li>
+                              <Link
+                                 
+                                  onClick={openWindow}
+                                >Đăng nhập admin</Link>
+                              </li>
+                              ):null}
+                              
                               <li>
                                 <a onClick={handleSignOut} href="#">
                                   Đăng xuất

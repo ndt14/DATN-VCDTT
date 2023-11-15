@@ -59,13 +59,13 @@ const TourDetail = () => {
   //
   const { id } = useParams<{ id: string }>();
 
-  const { data: tourData } = useGetTourByIdQuery(id || "");
+  const { data: tourData ,isLoading} = useGetTourByIdQuery(id || "");
   console.log(tourData);
   const [tour, setTour] = useState(tourData);
 
   const tourId = parseInt(id);
   // console.log(typeof tourId);
-
+const main_img = tourData?.data?.tour.main_img;
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
@@ -301,7 +301,7 @@ const TourDetail = () => {
   }
   return (
     <>
-      <Loader />
+      {/* <Loader /> */}
       <main id="content" className="site-main">
         {/* <!-- Inner Banner html start--> */}
         <section className="inner-banner-wrap">
@@ -592,7 +592,10 @@ const TourDetail = () => {
                                               </div>
                                             </div>
                                           </div>
-                                          <p>{content}</p>
+                                          <p className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: content,
+                                    }}></p>
                                         </div>
                                       </li>
                                       {admin_answer && ( // Check if admin has responded
@@ -605,7 +608,11 @@ const TourDetail = () => {
                                                     Admin
                                                   </h5>
                                                 </div>
-                                                <p>{admin_answer}</p>
+                                                <p className=""
+                                    dangerouslySetInnerHTML={{
+                                      __html: admin_answer,
+                                    }}></p>
+                                               
                                               </div>
                                             </li>
                                           </ol>
@@ -805,6 +812,7 @@ const TourDetail = () => {
                                   tourId,
                                   exact_location,
                                   tourDuration,
+                                 main_img
                                 }}
                               >
                                 <input

@@ -25,6 +25,9 @@ import "./Search.css";
 import { Link, useLocation } from "react-router-dom";
 import { NoResultsBoundary } from "./Noresults";
 import { PriceSlider } from "./PriceSider";
+import { AiFillEye } from "react-icons/ai";
+import { Rate } from "antd";
+
 
 const searchClient = algoliasearch(
   "ZKNG517W50",
@@ -198,41 +201,68 @@ type HitProps = {
 function Hit({ hit }: HitProps) {
   return (
     // <article>
-    <div className=" " key={hit.objectID}>
-      <div className="package-wrap">
-        <figure className="feature-image">
-          <Link to={`/tours/${hit.objectID}`}>
-            <img className="w-full" src={hit.main_img} alt="" />
-          </Link>
-        </figure>
-        <div className="package-price">
-          <h6>
-            <span>{hit.adult_price} đ </span> / người
-          </h6>
-        </div>
-        <div className="package-content-wrap">
-          {/* <div className="package-meta text-center"></div> */}
-          <div className="package-content">
-            <div className="text-container">
-              <h3 className="margin-top-12 text-content">
-                <Link className="mt-12" to={`/tours/${hit.objectID}`}>
-                  {hit.name}
-                </Link>
-              </h3>
-            </div>
-            <div className="review-area">
-              <span className="review-text">({hit.view_count} reviews)</span>
-              <div className="rating-start" title="Rated 5 out of 5">
-                <span className="w-3/5"></span>
-              </div>
-            </div>
-            <div className="text-description">
-              <p className="text-content">{hit.details}</p>
+    <div className="" key={hit.objectID}>
+    <div className="package-wrap">
+      <figure className="feature-image">
+        <Link to={`/tours/${hit.objectID}`}>
+          <img
+            className="w-full img-fixed"
+            src={hit.main_img}
+            alt=""
+          />
+        </Link>
+      </figure>
+      <div className="package-price">
+        <h6 className="">
+          <span>
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(hit.adult_price)}{" "}
+            / người
+          </span>{" "}
+        </h6>
+      </div>
+      <div className="package-content-wrap">
+        {/* <div className="package-meta text-center"></div> */}
+        <div className="package-content">
+          <div className="text-container">
+            <h3 className="margin-top-12 text-content">
+              <Link
+                className="mt-12"
+                to={`/tours/${hit.objectID}`}
+              >
+                {hit.name}
+              </Link>
+            </h3>
+          </div>
+          <div className="review-area">
+            <div
+              className=""
+              title={`Rated ${hit.star} out of 5`}
+            >
+              <span className="w-90">
+                <Rate allowHalf disabled value={hit.star} />
+              </span>{" "}
+              <span className="review-text">
+                ({hit.view_count} <AiFillEye size={25} />)
+              </span>
             </div>
           </div>
+          <div className="text-description">
+            <span
+              className=""
+              dangerouslySetInnerHTML={{
+                __html: hit.details,
+              }}
+            ></span>
+          </div>
+
+        
         </div>
       </div>
     </div>
+  </div>
 
     // </article>
   );

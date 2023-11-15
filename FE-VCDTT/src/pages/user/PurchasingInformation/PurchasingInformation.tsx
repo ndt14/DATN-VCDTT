@@ -43,6 +43,7 @@ const PurchasingInformation = () => {
     tourId,
     exact_location,
     tourDuration,
+    main_img,
   } = location.state;
   console.log(tourDuration);
 
@@ -291,6 +292,7 @@ const PurchasingInformation = () => {
       tour_location: tourLocation,
       tour_child_price: tourChildPrice,
       tour_adult_price: tourPrice,
+      tour_image: main_img,
       email: formik.values.email,
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,

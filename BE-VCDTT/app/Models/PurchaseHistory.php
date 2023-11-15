@@ -44,6 +44,7 @@ class PurchaseHistory extends Model
         'refund_percentage',
         'tour_start_time',
         'tour_end_time',
+        'tour_image',
 
         'comfirm_click',
         'purchase_method',
