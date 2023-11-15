@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Hóa đơn</h3> 
+                            <h3 class="card-title">Hóa đơn</h3>
                             <a href="{{route('purchase_histories.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                         </div>
                         <div class="card-body border-bottom py-3">
@@ -251,13 +251,6 @@
 @endSection
 @section('page_js')
     <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
-        });
         let removeItem = function(id) {
             $.confirm({
                 theme: theme,

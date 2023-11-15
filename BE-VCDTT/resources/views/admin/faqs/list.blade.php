@@ -231,13 +231,6 @@
 @endSection
 @section('page_js')
     <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
-        });
 
         let viewDetail = function(id) {
         axios.get(`/faq/detail/${id}`)
