@@ -15,7 +15,8 @@ function CashPaymentModal(props) {
   const updateBill = () => {
     const data = {
       id: billId,
-      payment_status: 1,
+      payment_status: 2,
+      comfirm_click: 2,
     };
     updatePaymentStatus(data).then(() => {
       if (isLoggedIn && isLoggedIn == true) {
@@ -55,7 +56,10 @@ function CashPaymentModal(props) {
               Ngân hàng MB BANK <br />
             </span>
             {/* Hiển thị ảnh QR code */}
-            <img src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg" alt="QR Code" />
+            <img
+              src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg"
+              alt="QR Code"
+            />
           </div>
 
           <div className="text-center mt-3">

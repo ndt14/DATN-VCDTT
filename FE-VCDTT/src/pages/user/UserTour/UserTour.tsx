@@ -7,7 +7,7 @@ import {
 } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
-import { Button, message, Popconfirm } from "antd";
+import { Checkbox, Button, Popconfirm } from "antd";
 import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
@@ -26,24 +26,28 @@ const UserTour = () => {
     }
   }, [TourData]);
 
+  const [checked, setChecked] = useState(false);
+
   const userName = userData?.data?.user.name;
 
   const userEmail = userData?.data?.user.email;
   const TourList = TourData?.data?.purchase_history;
   console.log(TourList);
 
-//phân trang 
-const [currentPage, setCurrentPage] = useState<number>(0);
-const handlePageChange = (selectedPage: { selected: number }) => {
-  setCurrentPage(selectedPage.selected);
-};
-const itemsPerPage = 4;
-const pageCount = Math.ceil(TourData?.data?.purchase_history.length / itemsPerPage);
-const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
-  currentPage * itemsPerPage,
-  (currentPage + 1) * itemsPerPage
-) || []) as Bill[];
-//end phân trang
+  //phân trang
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  const itemsPerPage = 4;
+  const pageCount = Math.ceil(
+    TourData?.data?.purchase_history.length / itemsPerPage
+  );
+  const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  ) || []) as Bill[];
+  //end phân trang
 
   const formatNumber = (number: number) => {
     return Math.floor(number).toString(); // or parseInt(number.toString(), 10).toString()
@@ -69,7 +73,9 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
   //     [id]: false,
   //   }));
   // };
-
+  const openWindow = () => {
+    window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
+  };
   //
   const cancelTour = async (id: number) => {
     const data = {
@@ -82,15 +88,39 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
     });
   };
 
+  const confirmPayment = async (id: number) => {
+    const data = {
+      purchase_status: 2,
+      payment_status: 2,
+      comfirm_click: 2,
+      id: id,
+    };
+
+    await updateBill(data).then(() => {
+      alert(
+        "Chúng tôi đã nhận được xác nhận đã thanh toán của bạn. Admin sẽ xác nhận và cập nhật đơn hàng của bạn sớm nhất có thể"
+      );
+    });
+  };
+
   const cancelTourRefund = async (id: number) => {
     const data = {
-      purchase_status: 6,
+      purchase_status: 4,
+      payment_status: 4,
       id: id,
     };
 
     await updateBill(data).then(() => {
       alert("Bạn đã yêu cầu hủy tour. Đang đợi admin xác nhận");
     });
+  };
+
+  const handleCheckboxChange = (e) => {
+    setChecked(e.target.checked);
+  };
+
+  const handleButtonDisabledClick = (e) => {
+    e.stopPropagation(); // Prevent event propagation
   };
 
   const confirm = (e: React.MouseEvent<HTMLElement>) => {
@@ -142,17 +172,18 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
 
               <nav className="nav flex-column">
                 <Link className="nav-link" to={"/user/profile"}>
-                <IoPersonOutline />Thông tin cá nhân
+                  <IoPersonOutline />
+                  Thông tin cá nhân
                 </Link>
                 <Link
                   className="nav-link text-white"
                   style={{ backgroundColor: "#1677FF" }}
                   to={"/user/tours"}
                 >
-                 <FaRegListAlt />  Tour đã đặt
+                  <FaRegListAlt /> Tour đã đặt
                 </Link>
                 <Link className="nav-link" to={"/user/favorite"}>
-                <FaRegHeart />  Tour yêu thích
+                  <FaRegHeart /> Tour yêu thích
                 </Link>
               </nav>
 
@@ -182,6 +213,9 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                 purchase_method,
                 purchase_status,
                 phone_number,
+                tour_status,
+                main_img,
+                comfirm_click,
               }: Bill) => {
                 const handleGoToPayment = () => {
                   if (id) {
@@ -198,44 +232,46 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                     cancelTourRefund(id);
                   }
                 };
-                let tourStatus;
-                if (purchase_status === 0) {
-                  tourStatus = "Chờ thanh toán";
-                } else if (purchase_status === 1) {
-                  tourStatus = "Đang đợi Admin xác nhận";
+                const handleConfirmPayment = () => {
+                  if (id) {
+                    confirmPayment(id);
+                  }
+                };
+                let billStatus;
+                if (purchase_status === 1) {
+                  billStatus = "Tự động hủy do quá hạn";
                 } else if (purchase_status === 2) {
-                  tourStatus = "Admin đã xác nhận, chờ tới ngày đi tour";
+                  billStatus = "Chưa phê duyệt thanh toán";
                 } else if (purchase_status === 3) {
-                  tourStatus = "Còn 1 ngày tới ngày đi tour";
+                  billStatus = "Đã phê duyệt thanh toán";
                 } else if (purchase_status === 4) {
-                  tourStatus = "Tour đang diễn ra";
+                  billStatus = "Chưa phê duyệt hủy tour";
                 } else if (purchase_status === 5) {
-                  tourStatus = "Tour đã kết thúc";
+                  billStatus = "Đã phê duyệt hủy tour, chưa hoàn tiền";
                 } else if (purchase_status === 6) {
-                  tourStatus = "Yêu cầu hủy tour, chờ admin xác nhận";
+                  billStatus = "Đã hủy thành công (đã hoàn tiền)";
                 } else if (purchase_status === 7) {
-                  tourStatus = "Bạn đã hủy";
+                  billStatus = "Chuyển khoản thiếu";
                 } else if (purchase_status === 8) {
-                  tourStatus = "Admin đã hủy tour";
-                } else if (purchase_status === 9) {
-                  tourStatus = "Tự động đơn đặt hủy do quá hạn thanh toán";
-                } else if (purchase_status === 10) {
-                  tourStatus = "Đã hoàn tiền";
-                } else if (purchase_status === 11) {
-                  tourStatus = "Đã Đánh giá tour";
-                } else if (purchase_status === 12) {
-                  tourStatus = "Bạn chuyển khoản thiếu tiền";
-                } else if (purchase_status === 13) {
-                  tourStatus = "Bạn chuyển khoản thừa tiền";
+                  billStatus = "Chuyển khoản thừa";
                 }
 
                 let paymentStatus;
-                if (payment_status == 0) {
+                if (payment_status == 1) {
                   paymentStatus = "Chưa thanh toán";
-                } else if (payment_status == 1) {
+                } else if (payment_status == 2) {
                   paymentStatus = "Đã thanh toán";
                 }
-                console.log(coupon_fixed);
+
+                let tourStatus;
+                if (tour_status == 1) {
+                  tourStatus = "Chưa tới ngày đi";
+                } else if (tour_status == 2) {
+                  tourStatus = "Đang diễn ra";
+                } else if (tour_status == 3) {
+                  tourStatus = "Tour đã kết thúc";
+                }
+                // console.log(coupon_fixed);
 
                 const finalPrice = coupon_fixed
                   ? adult_count * tour_adult_price +
@@ -254,10 +290,16 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                       <p>
                         Mã đơn: <span className="fw-bold">{id}</span>
                       </p>
-                      <p>
-                        Mã giao dịch VNPAY:{" "}
-                        <span className="fw-bold">{transaction_id}</span>
-                      </p>
+                      <div>
+                        {purchase_method == 2 ? (
+                          <p>
+                            Mã giao dịch VNPAY:{" "}
+                            <span className="fw-bold">{transaction_id}</span>
+                          </p>
+                        ) : (
+                          <span></span>
+                        )}
+                      </div>
                       <p>
                         Tên tour: <span className="fw-bold">{tour_name}</span>
                       </p>
@@ -267,7 +309,7 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                       </p>
                       <p>
                         Phương thức thanh toán:{" "}
-                        {purchase_method == 0 ? (
+                        {purchase_method == 1 ? (
                           <span className="fw-bold">
                             Chuyển khoản ngân hàng
                           </span>
@@ -275,12 +317,16 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                           <span className="fw-bold">VNPAY</span>
                         )}
                       </p>
-                      {/* <p>
-                      Trạng thái thanh toán:{" "}
-                      <span className="fw-bold">{paymentStatus}</span>
-                    </p> */}
+                      <p>
+                        Trạng thái thanh toán:{" "}
+                        <span className="fw-bold">{paymentStatus}</span>
+                      </p>
                       <p>
                         Trạng thái đơn hàng:{" "}
+                        <span className="fw-bold">{billStatus}</span>
+                      </p>
+                      <p>
+                        Trạng thái tour:{" "}
                         <span className="fw-bold">{tourStatus}</span>
                       </p>
 
@@ -292,6 +338,24 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                       >
                         Chi tiết
                       </button>
+
+                      {payment_status == 1 &&
+                      purchase_status == 2 &&
+                      purchase_method == 1 &&
+                      comfirm_click == 1 ? (
+                        <button
+                          // onClick={}
+                          className="btn btn-success ml-3 rounded-md"
+                          style={{ height: "48px", borderRadius: "8px" }}
+                          onClick={handleConfirmPayment}
+                        >
+                          Xác nhận đã chuyển khoản
+                        </button>
+                      ) : (
+                        <div></div>
+                      )}
+
+                      {/* Modal chi tiết đơn hàng */}
                       <div
                         className="modal fade"
                         id={`bill-${id}`}
@@ -403,10 +467,10 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                               <p>
                                 Trạng thái đơn hàng:{" "}
                                 <span className="fw-bold text-danger">
-                                  {tourStatus}
+                                  {billStatus}
                                 </span>
                               </p>
-                              {payment_status == 0 && purchase_method == 1 ? (
+                              {payment_status == 1 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
@@ -416,7 +480,7 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                               ) : (
                                 <div></div>
                               )}
-                              {purchase_status == 0 ? (
+                              {purchase_status == 2 ? (
                                 <Popconfirm
                                   title="Hủy tour chưa thanh toán"
                                   description="Bạn có chắc muốn hủy tour?"
@@ -429,20 +493,49 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                                 </Popconfirm>
                               ) : (
                                 <span>
-                                  {purchase_status == 1 ||
-                                  purchase_status == 2 ? (
-                                    <Popconfirm
-                                      title="Hủy tour đã thanh toán"
-                                      description="Bạn có chắc muốn hủy tour?"
-                                      onConfirm={handleCancelTourRefund}
-                                      onCancel={cancel}
-                                      okText="Đồng ý"
-                                      cancelText="Hủy bỏ"
-                                    >
-                                      <button className="btn-continue">
-                                        Hủy tour
-                                      </button>
-                                    </Popconfirm>
+                                  {purchase_status == 3 ? (
+                                    <div>
+                                      {tour_status == 1 ? (
+                                        <div>
+                                          <Popconfirm
+                                            title="Hủy tour đã thanh toán"
+                                            description="Bạn có chắc muốn hủy tour? Bạn sẽ không thể thay đổi khi ấn Đồng ý"
+                                            onConfirm={handleCancelTourRefund}
+                                            onCancel={cancel}
+                                            okText="Đồng ý"
+                                            cancelText="Hủy bỏ"
+                                          >
+                                            {checked ? (
+                                              <Button
+                                                className="btn-continue"
+                                                onClick={
+                                                  handleButtonDisabledClick
+                                                }
+                                              >
+                                                Hủy tour
+                                              </Button>
+                                            ) : (
+                                              <div></div>
+                                            )}
+                                          </Popconfirm>
+                                          <Checkbox
+                                            checked={checked}
+                                            onChange={handleCheckboxChange}
+                                          >
+                                            Đọc kỹ{" "}
+                                            <a
+                                              className="text-primary"
+                                              onClick={openWindow}
+                                            >
+                                              chính sách hoàn tiền
+                                            </a>{" "}
+                                            của chúng tôi nếu bạn muốn hủy tour.
+                                          </Checkbox>
+                                        </div>
+                                      ) : (
+                                        <div></div>
+                                      )}
+                                    </div>
                                   ) : (
                                     <div></div>
                                   )}
@@ -476,24 +569,21 @@ const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
                     )} */}
                     </div>
                     <div className="col-4">
-                      <img
-                        src="https://via.placeholder.com/640x480.png/000044?text=dolorem"
-                        alt=""
-                      />
+                      <img src={main_img} alt="" />
                     </div>
                   </div>
                 );
               }
             )}
-             <ReactPaginate
-                  previousLabel={"<-"}
-                  nextLabel={"->"}
-                  breakLabel={"..."}
-                  pageCount={pageCount}
-                  onPageChange={handlePageChange}
-                  containerClassName={"pagination"}
-                  activeClassName={"active"}
-                />
+            <ReactPaginate
+              previousLabel={"<-"}
+              nextLabel={"->"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
           </div>
         </div>
       </section>

@@ -29,14 +29,14 @@ const TourDetail = () => {
   const [addRating] = useAddRatingMutation();
   const { id: idRating } = useParams<{ id: string }>();
   const { data: dataRating } = useGetRatingByIdQuery(idRating | "");
-  console.log(dataRating);
+  // console.log(dataRating);
 
   const user = JSON.parse(localStorage.getItem("user")) || "";
   // console.log(user);
 
   const userId = user?.id;
   const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
-  console.log(TourHistoryData);
+  // console.log(TourHistoryData);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
@@ -64,13 +64,18 @@ const TourDetail = () => {
   const [tour, setTour] = useState(tourData);
 
   const tourId = parseInt(id);
-  console.log(typeof tourId);
+  // console.log(typeof tourId);
 
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
   const tourChildPrice = tourData?.data?.tour.child_price;
   const exact_location = tourData?.data?.tour.exact_location;
+  const tourDuration = tourData?.data?.tour.duration;
+  const imageGallery = tourData?.data?.images;
+  console.log(imageGallery);
+
+  console.log(tourDuration);
 
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -107,7 +112,7 @@ const TourDetail = () => {
   }, [tourPrice]);
 
   const tourSameCategory = tourData?.data?.toursSameCate;
-  // console.log(tourSameCategory);
+  console.log(tourSameCategory);
 
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -152,7 +157,7 @@ const TourDetail = () => {
   };
 
   const [selectedStar, setSelectedStar] = useState(5);
-  console.log(selectedStar);
+  // console.log(selectedStar);
 
   const [ratingData, setRatingData] = useState({
     star: selectedStar,
@@ -262,17 +267,17 @@ const TourDetail = () => {
   };
 
   const averageRating = calculateAverageRating();
-   //phân trang đánh giá
-   const [currentPage, setCurrentPage] = useState<number>(0);
-   const handlePageChange = (selectedPage: { selected: number }) => {
-     setCurrentPage(selectedPage.selected);
-   };
-   const itemsPerPage = 3;
-   const pageCount = Math.ceil(tour?.data.listRatings.length / itemsPerPage);
-   const currentData: Rating[] = (tour?.data.listRatings.slice(
-     currentPage * itemsPerPage,
-     (currentPage + 1) * itemsPerPage
-   ) || []) as Rating[];
+  //phân trang đánh giá
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  const itemsPerPage = 3;
+  const pageCount = Math.ceil(tour?.data.listRatings.length / itemsPerPage);
+  const currentData: Rating[] = (tour?.data.listRatings.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  ) || []) as Rating[];
   //end đánh giá
   const isLoggedIn = user != "";
   //map
@@ -326,12 +331,12 @@ const TourDetail = () => {
                       <div className="carousel-inner" role="listbox">
                         <div className="carousel-item active">
                           <img
-                            className="d-block w-100"
-                            src="https://i.ibb.co/VgLF55D/slider-1.jpg"
+                            className="d-block img-tour-detail"
+                            src={tourData?.data?.tour.main_img}
                             alt="First slide"
                           />
                         </div>
-                        <div className="carousel-item">
+                        {/* <div className="carousel-item">
                           <img
                             className="d-block w-100"
                             src="https://i.ibb.co/9p3Cnk9/slider-2.jpg"
@@ -344,7 +349,18 @@ const TourDetail = () => {
                             src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
                             alt="Third slide"
                           />
-                        </div>
+                        </div> */}
+                        {imageGallery?.map(({ url }) => {
+                          return (
+                            <div className="carousel-item ">
+                              <img
+                                className="d-block img-tour-detail"
+                                src={url}
+                                alt="First slide"
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
 
                       <a
@@ -380,11 +396,11 @@ const TourDetail = () => {
                           style={{ width: "80px" }}
                         >
                           <img
-                            className="d-block img-fluid"
-                            src="https://i.ibb.co/VgLF55D/slider-1.jpg"
+                            className="d-block img-fluid img-tour-detail-small"
+                            src={tourData?.data?.tour.main_img}
                           />
                         </li>
-                        <li
+                        {/* <li
                           data-target="#carousel-thumb"
                           data-slide-to="1"
                           style={{ width: "80px" }}
@@ -405,7 +421,25 @@ const TourDetail = () => {
                             className="d-block w-100 img-fluid"
                             src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
                           />
-                        </li>
+                        </li> */}
+                        {imageGallery?.map((image, index) => {
+                          const { url } = image;
+                          return (
+                            <li
+                              data-target="#carousel-thumb"
+                              data-slide-to={index + 1}
+                              className="mx-1"
+                              style={{ width: "80px" }}
+                              key={index}
+                            >
+                              <img
+                                className="d-block img-fluid img-tour-detail-small"
+                                src={url}
+                                alt={`Image ${index}`}
+                              />
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   </div>
@@ -523,7 +557,7 @@ const TourDetail = () => {
                             Có {tour?.data.listRatings.length} đánh giá
                           </h3>
                           <div className="comment-area-inner">
-                          {currentData.map(
+                            {currentData.map(
                               ({
                                 id,
                                 user_name,
@@ -583,14 +617,14 @@ const TourDetail = () => {
                               }
                             )}
                             <ReactPaginate
-                  previousLabel={"<-"}
-                  nextLabel={"->"}
-                  breakLabel={"..."}
-                  pageCount={pageCount}
-                  onPageChange={handlePageChange}
-                  containerClassName={"pagination"}
-                  activeClassName={"active"}
-                />
+                              previousLabel={"<-"}
+                              nextLabel={"->"}
+                              breakLabel={"..."}
+                              pageCount={pageCount}
+                              onPageChange={handlePageChange}
+                              containerClassName={"pagination"}
+                              activeClassName={"active"}
+                            />
                           </div>
                           <div className="comment-form-wrap">
                             <h3 className="comment-title">Đánh giá của bạn</h3>
@@ -770,6 +804,7 @@ const TourDetail = () => {
                                   tourChildPrice,
                                   tourId,
                                   exact_location,
+                                  tourDuration,
                                 }}
                               >
                                 <input
