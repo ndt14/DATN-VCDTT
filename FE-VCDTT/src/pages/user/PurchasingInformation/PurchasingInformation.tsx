@@ -15,12 +15,77 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../../api/user";
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
+import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
 import { Spin } from "antd";
 
 // type Props = {};
 
 const PurchasingInformation = () => {
+  // dữ liệu lừ localStorage
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userId = userData?.id;
+  // console.log(tourId);
+  //dữ liệu từ tourDetail
+  const location = useLocation();
+  const {
+    tourData,
+    productNumber,
+    productChildNumber,
+    price,
+    childPrice,
+    formattedResultPrice,
+    dateTour,
+    tourName,
+    tourLocation,
+    tourPrice,
+    tourChildPrice,
+    tourId,
+    exact_location,
+    tourDuration,
+  } = location.state;
+  console.log(tourDuration);
+
+  // xử lý lấy tour_end_date
+  const parts = dateTour.split("-");
+  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  console.log(formattedDate);
+
+  const duration = parseInt(tourDuration);
+  console.log(typeof duration);
+
+  const [day, month, year] = formattedDate.split("-");
+  const startDateObject = new Date(`${year}-${month}-${day}`);
+  const endDateObject = new Date(
+    startDateObject.getTime() + duration * 24 * 60 * 60 * 1000
+  );
+  const endDate = endDateObject.toLocaleDateString("en-GB");
+  const parts2 = endDate.split("/");
+  const formattedEndDate = `${parts2[0]}-${parts2[1]}-${parts2[2]}`;
+  console.log(formattedEndDate);
+
+  //
+
+  // Check số tour người dùng đã đặt
+  const { data: TourData } = useGetBillsWithUserIDQuery(userId | "");
+  const [idArray, setIdArray] = useState<number[]>([]);
+  useEffect(() => {
+    if (TourData) {
+      const tourIdPurchased = TourData.data.purchase_history;
+
+      const array = tourIdPurchased.map((item) => item.tour_id);
+      setIdArray(array);
+    }
+  }, []);
+  console.log(idArray);
+  const count = idArray.reduce((accumulator, currentValue) => {
+    if (currentValue === tourId) {
+      return accumulator + 1;
+    }
+    return accumulator;
+  }, 0);
+  console.log(count);
+
   //validate
   interface FormValues {
     name: string;
@@ -51,26 +116,7 @@ const PurchasingInformation = () => {
 
   const [checkCoupon] = useCheckCouponMutation();
   const [addBill] = useAddBillMutation();
-  const location = useLocation();
-  const {
-    tourData,
-    productNumber,
-    productChildNumber,
-    price,
-    childPrice,
-    formattedResultPrice,
-    dateTour,
-    tourName,
-    tourLocation,
-    tourPrice,
-    tourChildPrice,
-    tourId,
-    exact_location,
-  } = location.state;
-  const parts = dateTour.split("-");
-  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const userId = userData?.id;
+
   // console.log(userId);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
@@ -206,7 +252,7 @@ const PurchasingInformation = () => {
   };
 
   //
-  const [paymentMethod, setPaymentMethod] = useState("0");
+  const [paymentMethod, setPaymentMethod] = useState("1");
   console.log(paymentMethod);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -241,6 +287,7 @@ const PurchasingInformation = () => {
       child_count: productChildNumber,
       adult_count: productNumber,
       tour_start_time: formattedDate,
+      tour_end_time: formattedEndDate,
       tour_location: tourLocation,
       tour_child_price: tourChildPrice,
       tour_adult_price: tourPrice,
@@ -255,9 +302,10 @@ const PurchasingInformation = () => {
       coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
       tour_sale_percentage: 0,
       address: formik.values.address,
-      purchase_status: 0,
-      payment_status: 0,
+      purchase_status: 2,
+      payment_status: 1,
       purchase_method: parseInt(paymentMethod),
+      tour_duration: tourDuration,
     };
     console.log(variables);
     localStorage.setItem("tempUser", JSON.stringify(variables));
@@ -269,12 +317,13 @@ const PurchasingInformation = () => {
       console.log(billID);
       localStorage.setItem("billIdSuccess", JSON.stringify(billID));
 
-      if (paymentMethod === "0") {
+      if (paymentMethod === "1") {
         setLoading(false);
         alert("Đặt tour thành công");
         hideConfirmTourFormModal();
+        setTimeout(() => {}, 1000);
         setShowPaymentModal(true);
-      } else if (paymentMethod === "1") {
+      } else if (paymentMethod === "2") {
         setLoading(false);
         alert("Đặt tour thành công");
         const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
@@ -313,6 +362,7 @@ const PurchasingInformation = () => {
   };
   // console.log(onChange);
 
+  // Xử ký format giá tiền
   const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -568,14 +618,33 @@ const PurchasingInformation = () => {
                       </div>
                     ) : (
                       <div>
-                        <button
-                          type="button"
-                          data-toggle="modal"
-                          data-target="#confirmTourForm"
-                          className="btn-continue"
-                        >
-                          Tiếp tục
-                        </button>
+                        {count >= 5 ? (
+                          <div>
+                            <button
+                              type="button"
+                              data-toggle="modal"
+                              data-target="#confirmTourForm"
+                              className="btn-continue"
+                              disabled
+                            >
+                              Tiếp tục
+                            </button>
+                            <p className="text-danger mt-2">
+                              Bạn đã vượt quá giới hạn số lần đặt tour này
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <button
+                              type="button"
+                              data-toggle="modal"
+                              data-target="#confirmTourForm"
+                              className="btn-continue"
+                            >
+                              Tiếp tục
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
                   </form>
@@ -644,6 +713,26 @@ const PurchasingInformation = () => {
                                   />
                                 </div>
                                 <div className="form-group col-6">
+                                  <label htmlFor="">
+                                    Ngày kết thúc tour (dự kiến)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="tour_start_time"
+                                    value={formattedEndDate}
+                                    disabled
+                                  />
+                                </div>
+                                <div className="form-group col-6">
+                                  <label htmlFor="">Giá tour</label>
+                                  <input
+                                    type="text"
+                                    name="created_at"
+                                    value={formattedResultPrice}
+                                    disabled
+                                  />
+                                </div>
+                                <div className="form-group col-6">
                                   <label htmlFor="">Số lượng trẻ em</label>
                                   <input
                                     type="text"
@@ -662,15 +751,7 @@ const PurchasingInformation = () => {
                                   />
                                 </div>
                               </div>
-                              <div className="form-group">
-                                <label htmlFor="">Giá tour</label>
-                                <input
-                                  type="text"
-                                  name="created_at"
-                                  value={formattedResultPrice}
-                                  disabled
-                                />
-                              </div>
+
                               {formattedResultPrice == formattedFinalPrice ? (
                                 <div></div>
                               ) : (
@@ -693,21 +774,21 @@ const PurchasingInformation = () => {
                                   <input
                                     type="radio"
                                     name="purchase_method"
-                                    value="0"
+                                    value="1"
                                     className="mr-2"
                                     onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === "0"}
+                                    checked={paymentMethod === "1"}
                                   />
-                                  Thanh toán online
+                                  Thanh toán online (chuyển khoản ngân hàng)
                                 </div>
                                 <div>
                                   <input
                                     type="radio"
                                     name="purchase_method"
-                                    value="1"
+                                    value="2"
                                     className="mr-2"
                                     onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === "1"}
+                                    checked={paymentMethod === "2"}
                                   />
                                   VNPAY
                                 </div>
@@ -791,6 +872,13 @@ const PurchasingInformation = () => {
 
                       <div className="col-sm-6">
                         <p>{formattedDate}</p>
+                      </div>
+                      <div className="col-sm-6">
+                        <p>Ngày kết thúc tour(dự kiến)</p>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <p>{formattedEndDate}</p>
                       </div>
 
                       <div className="col-sm-6">

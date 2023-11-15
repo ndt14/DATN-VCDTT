@@ -140,3 +140,12 @@ table thead tr {
 .carousel-dark .carousel-caption {
   color: #000000;
 }
+
+.img-tour-detail {
+  height: 400px !important;
+  width: 100%;
+}
+
+.img-tour-detail-small {
+  height: 50px !important;
+}
