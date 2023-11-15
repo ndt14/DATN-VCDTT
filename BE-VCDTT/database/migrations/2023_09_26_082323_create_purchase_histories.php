@@ -47,7 +47,6 @@ return new class extends Migration
             $table->tinyInteger('purchase_method')->default(1);
             $table->tinyInteger('payment_status')->default(1);
             $table->tinyInteger('purchase_status')->default(1);
-            $table->tinyInteger('tour_status')->default(1);
             $table->timestamps();
         });
     }
