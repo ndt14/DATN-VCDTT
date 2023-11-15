@@ -26,7 +26,7 @@ class PurchaseHistorySeeder extends Seeder
                 'email' => $faker->email(),
                 'address' => $faker->address(),
                 'phone_number' => $faker->phoneNumber(),
-                'gender' => $faker->numberBetween(1,3),
+                'gender' => $faker->numberBetween(1, 3),
                 'transaction_id' => $faker->randomNumber(8, true),
                 'suggestion' => $faker->sentence(20),
                 'tour_id' => $faker->numberBetween(1, 20),
@@ -46,7 +46,10 @@ class PurchaseHistorySeeder extends Seeder
                 'coupon_fixed' => $faker->randomNumber(5, true),
                 'tour_start_time' => $faker->dateTimeBetween('- 1 year', 'now'),
                 'tour_end_time' => $faker->dateTimeBetween('now', '+ 1 year'),
-                'purchase_method' => $faker->numberBetween(0, 1),
+                'purchase_method' => $faker->numberBetween(1, 2),
+                'payment_status' => $faker->numberBetween(1, 4),
+                'purchase_status' => $faker->numberBetween(1, 8),
+                'tour_status' => $faker->numberBetween(1, 3),
             ]);
         }
     }
