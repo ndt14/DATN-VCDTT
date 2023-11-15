@@ -1,5 +1,5 @@
 import "./HomePage.css";
-import { Carousel, Rate } from "antd";
+import { Carousel, Rate, Skeleton } from "antd";
 import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
@@ -22,7 +22,7 @@ const HomePage = () => {
 
   //
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const { data } = useGetToursQuery();
+  const { data,isLoading } = useGetToursQuery();
   console.log(data);
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
@@ -178,6 +178,9 @@ const HomePage = () => {
             </div>
             <div className="package-inner">
               <div className="row">
+              {isLoading ? (
+                <Skeleton active />
+              ) : (
                 <TinySlider settings={settings2}>
                   {featuredTours?.map(
                     ({
@@ -336,6 +339,7 @@ const HomePage = () => {
                     }
                   )}
                 </TinySlider>
+              )}
               </div>
             </div>
           </div>
@@ -355,6 +359,9 @@ const HomePage = () => {
             </div>
             <div className="special-inner">
               <div className="row">
+              {isLoading ? (
+                <Skeleton active />
+              ) : (
                 <TinySlider settings={settings2}>
                   {saleTours?.map(
                     ({
@@ -510,6 +517,7 @@ const HomePage = () => {
                     }
                   )}
                 </TinySlider>
+              )}
               </div>
             </div>
           </div>
@@ -529,6 +537,7 @@ const HomePage = () => {
             </div>
             <div className="package-inner">
               <div className="row">
+             
                 {currentData?.map(
                   ({
                     id,
@@ -680,6 +689,7 @@ const HomePage = () => {
                     }
                   }
                 )}
+              
                 <ReactPaginate
                   previousLabel={"Back"}
                   nextLabel={"Next"}

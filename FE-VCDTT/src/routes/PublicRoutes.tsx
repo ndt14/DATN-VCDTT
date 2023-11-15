@@ -22,9 +22,23 @@ import UserTour from "../pages/user/UserTour/UserTour";
 import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
 import SearchBar from "../componenets/User/SearchBar";
 import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
+function ScrollToTopOnNavigation() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 const PublicRoutes = () => {
   return (
+  <>
+ 
+    <ScrollToTopOnNavigation/>
     <Routes>
       <Route path="/" element={<LayOutClient />}>
         <Route index element={<HomePage />} />
@@ -62,6 +76,7 @@ const PublicRoutes = () => {
       <Route path="*" element={<NotFoundPage />}></Route>
       
     </Routes>
+    </>
   );
 };
 

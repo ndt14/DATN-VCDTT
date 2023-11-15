@@ -214,7 +214,7 @@ const UserTour = () => {
                 purchase_status,
                 phone_number,
                 tour_status,
-                main_img,
+                tour_image,
                 comfirm_click,
               }: Bill) => {
                 const handleGoToPayment = () => {
@@ -421,7 +421,7 @@ const UserTour = () => {
                               </p>
                               <p>
                                 Phương thức thanh toán:{" "}
-                                {purchase_method == 0 ? (
+                                {purchase_method == 1 ? (
                                   <span className="fw-bold">
                                     Chuyển khoản ngân hàng
                                   </span>
@@ -470,7 +470,7 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
-                              {payment_status == 1 ? (
+                              {payment_status == 2 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
@@ -481,6 +481,7 @@ const UserTour = () => {
                                 <div></div>
                               )}
                               {purchase_status == 2 ? (
+                                <div>
                                 <Popconfirm
                                   title="Hủy tour chưa thanh toán"
                                   description="Bạn có chắc muốn hủy tour?"
@@ -489,8 +490,31 @@ const UserTour = () => {
                                   okText="Đồng ý"
                                   cancelText="Hủy bỏ"
                                 >
-                                  <button className="btn-continue">Hủy</button>
+                                  {/* <button className="btn-continue">Hủy</button> */}
+                                  {checked ? (
+                                              <Button
+                                                className="btn-continue"
+                                              >
+                                                Hủy tour
+                                              </Button>
+                                            ) : (
+                                              <div></div>
+                                            )}
                                 </Popconfirm>
+                                <Checkbox
+                                checked={checked}
+                                onChange={handleCheckboxChange}
+                              >
+                                Đọc kỹ{" "}
+                                <a
+                                  className="text-primary"
+                                  onClick={openWindow}
+                                >
+                                  chính sách
+                                </a>{" "}
+                                của chúng tôi nếu bạn muốn hủy tour.
+                              </Checkbox>
+                              </div>
                               ) : (
                                 <span>
                                   {purchase_status == 3 ? (
@@ -569,7 +593,7 @@ const UserTour = () => {
                     )} */}
                     </div>
                     <div className="col-4">
-                      <img src={main_img} alt="" />
+                      <img src={tour_image} alt="" />
                     </div>
                   </div>
                 );
