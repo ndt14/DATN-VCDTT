@@ -4,7 +4,7 @@
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
-            <!-- <div class="col-12 ">
+            <div class="col-12 ">
                 @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
                     {{ Session::get('success') }}
@@ -12,12 +12,12 @@
                 </div>
                 @endif
                 @if (Session::has('fail'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="notiError">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
                     {{ Session::get('fail') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
-            </div> -->
+            </div>
             <div class="col">
                 <!-- Page pre-title -->
                 <!-- <div class="page-pretitle">
