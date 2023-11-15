@@ -115,6 +115,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
     Route::get('/faq/trash', [FAQController::class, 'faqManagementTrash'])->name('faq.trash')->middleware(['permission:admin|delete faq']);
     Route::get('faq/restore/{id}', [FAQController::class, 'faqManagementRestore'])->name('faq.restore')->middleware(['permission:admin|delete faq']);
+
     Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);

@@ -89,7 +89,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="col text-truncate " style="width: 850px">
-                                                        <a onclick='markAsRead({{ $notification->id }})'
+                                                        <a onclick="markAsRead('{{ $notification->id }}')"
                                                             href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                             class="text-body d-block">
                                                             @if ($notification->data['purchase_method'] == 1)
@@ -248,7 +248,7 @@
             .then(function(response) {
                 readNoti(id);
                 let checkNoti = document.getElementsByName('notification-read');
-                if (checkNoti.length == '0') {
+                if (checkNoti.length == '0' && document.getElementById('notificationDot')) {
                     document.getElementById('notificationDot').remove();
                 }
             })

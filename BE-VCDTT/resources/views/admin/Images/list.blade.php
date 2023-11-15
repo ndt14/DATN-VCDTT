@@ -174,7 +174,7 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
-                                
+
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->previousPageUrl()}}" tabindex="-1" aria-disabled="true">
@@ -235,8 +235,6 @@
 <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
     <script type="text/javascript">
-
-        let modalContainer;
         $(document).ready(function() {
             modalContainer = new bootstrap.Modal('#modalContainer', {
                 keyboard: true,

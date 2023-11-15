@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3> 
+                            <h3 class="card-title">Faq</h3>
                             @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
                             <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                             @endif
@@ -203,14 +203,6 @@
 @endSection
 @section('page_js')
     <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
-        });
-
         let viewDetail = function(id) {
         axios.get(`/faq/detail/${id}`)
             .then(function(response) {
