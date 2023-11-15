@@ -8,6 +8,10 @@ import {
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
 import { Button, message, Popconfirm } from "antd";
+import ReactPaginate from "react-paginate";
+import { IoPersonOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
+import { FaRegListAlt } from "react-icons/fa";
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -27,6 +31,20 @@ const UserTour = () => {
   const userEmail = userData?.data?.user.email;
   const TourList = TourData?.data?.purchase_history;
   console.log(TourList);
+
+//phân trang 
+const [currentPage, setCurrentPage] = useState<number>(0);
+const handlePageChange = (selectedPage: { selected: number }) => {
+  setCurrentPage(selectedPage.selected);
+};
+const itemsPerPage = 4;
+const pageCount = Math.ceil(TourData?.data?.purchase_history.length / itemsPerPage);
+const currentData: Bill[] = (TourData?.data?.purchase_history.slice(
+  currentPage * itemsPerPage,
+  (currentPage + 1) * itemsPerPage
+) || []) as Bill[];
+//end phân trang
+
   const formatNumber = (number: number) => {
     return Math.floor(number).toString(); // or parseInt(number.toString(), 10).toString()
   };
@@ -124,17 +142,17 @@ const UserTour = () => {
 
               <nav className="nav flex-column">
                 <Link className="nav-link" to={"/user/profile"}>
-                  Thông tin cá nhân
+                <IoPersonOutline />Thông tin cá nhân
                 </Link>
                 <Link
                   className="nav-link text-white"
                   style={{ backgroundColor: "#1677FF" }}
                   to={"/user/tours"}
                 >
-                  Tour đã đặt
+                 <FaRegListAlt />  Tour đã đặt
                 </Link>
                 <Link className="nav-link" to={"/user/favorite"}>
-                  Tour yêu thích
+                <FaRegHeart />  Tour yêu thích
                 </Link>
               </nav>
 
@@ -145,7 +163,7 @@ const UserTour = () => {
             {/*  */}
 
             <h3>Danh sách tour</h3>
-            {TourList?.map(
+            {currentData?.map(
               ({
                 id,
                 name,
@@ -467,6 +485,15 @@ const UserTour = () => {
                 );
               }
             )}
+             <ReactPaginate
+                  previousLabel={"<-"}
+                  nextLabel={"->"}
+                  breakLabel={"..."}
+                  pageCount={pageCount}
+                  onPageChange={handlePageChange}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                />
           </div>
         </div>
       </section>
