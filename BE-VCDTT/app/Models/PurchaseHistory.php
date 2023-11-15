@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,8 +44,10 @@ class PurchaseHistory extends Model
         'refund_percentage',
         'tour_start_time',
         'tour_end_time',
-        'payment_status',
+
         'purchase_method',
+        'payment_status',
         'purchase_status',
+        'tour_status',
     ];
 }

@@ -43,6 +43,7 @@ return new class extends Migration
             $table->integer('coupon_fixed')->nullable();
             $table->string('tour_start_time')->nullable();
             $table->string('tour_end_time')->nullable();
+
             $table->tinyInteger('purchase_method')->default(1);
             $table->tinyInteger('payment_status')->default(1);
             $table->tinyInteger('purchase_status')->default(1);
