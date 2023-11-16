@@ -94,7 +94,7 @@
                             <div class="row">
                                 <div class="mb-3 col-4">
                                     <label class="form-label">Email</label>
-                                    <input type="email" name="main_img" class="form-control"
+                                    <input type="email" name="email" class="form-control"
                                         placeholder="Email người đặt tour" value="{{ $items['email'] }}">
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('email')

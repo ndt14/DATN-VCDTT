@@ -81,6 +81,7 @@ class PurchaseHistoryController extends Controller
 
         //Gửi thông báo cho admin
         $user->notify(new PurchaseNotificationAdmin($purchaseHistory));
+        // config_pusher()->trigger('PurchaseNotificationAdmin', 'datn-vcdtt-development', new PurchaseNotificationAdmin($purchaseHistory)->toArray());
 
         //Bắn thông báo lên Pusher
         // $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
@@ -169,14 +170,16 @@ class PurchaseHistoryController extends Controller
         if ($purchaseHistory->save()) {
             //Gửi mail khi admin cập nhật trạng thái đơn hàng
             if ($updateAdmin) {
-                $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
-                if($purchaseHistory->purchase_status == 6){
+                if ($purchaseHistory->purchase_status != 2 && $purchaseHistory->purchase_status != 4 && $purchaseHistory->purchase_status != 1) {
+                    $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
+                }
+                if ($purchaseHistory->purchase_status == 6) {
                     foreach ($users as $user) {
                         $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory));
                     }
                 }
             } else {
-                switch($purchaseHistory->purchase_status){
+                switch ($purchaseHistory->purchase_status) {
                     case '2':
                         $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory->purchase_status));
                         foreach ($users as $user) {

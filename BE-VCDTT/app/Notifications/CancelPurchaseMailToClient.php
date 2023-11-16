@@ -4,14 +4,18 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\HtmlString;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class CancelPurchaseMailToClient extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $tour_name;
     protected $purchase_status_noti;
 
