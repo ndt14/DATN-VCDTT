@@ -11,6 +11,7 @@ const PDFDocument = ({ data }) => {
     
 
     // Sử dụng font 'Arial Unicode MS' cho tài liệu
+    doc.addFont('https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxP.ttf', 'Roboto', 'normal');
     doc.setFont('Roboto');
 
     // Thêm nội dung vào tài liệu
