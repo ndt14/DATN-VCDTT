@@ -63,7 +63,7 @@ const PublicRoutes = () => {
         <Route path="user/profile" element={<UserProfile />} />
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />
-        <Route path="privacy_policy" element={<PrivacyPolicy />} />
+    
         <Route path="/search" element={<Search/>}></Route>
         
         <Route path="*" element={<NotFoundPage />} />
@@ -74,7 +74,7 @@ const PublicRoutes = () => {
       </Route>
       <Route path="reset-password/:token" element={<ResetPasswordModal/>} />
       <Route path="*" element={<NotFoundPage />}></Route>
-      
+      <Route path="privacy_policy" element={<PrivacyPolicy />} />
     </Routes>
     </>
   );

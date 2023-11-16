@@ -16,6 +16,8 @@ import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 import { number } from "yup";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
 import { AiFillEye } from "react-icons/ai";
+import { useGetBlogsQuery } from "../../../api/blogs";
+import { Blog } from "../../../interfaces/Blog";
 
 const HomePage = () => {
   //
@@ -33,23 +35,6 @@ const HomePage = () => {
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   ) || []) as Tour[];
-  // console.log(currentData);
-  // const slider = tns({
-  //   container: ".my-slider",
-  //   items: 3,
-  //   slideBy: "page",
-  //   autoplay: true,
-  // });
-
-  // const settings1 = {
-  //   lazyload: false,
-  //   nav: false,
-  //   mouseDrag: true,
-  //   items: 3,
-  //   autoplay: true,
-  //   autoplayButtonOutput: false,
-  // };
-
   const settings2 = {
     lazyload: false,
     nav: false,
@@ -111,6 +96,16 @@ const HomePage = () => {
   if (titleElement) {
     titleElement.innerText = "Trang chủ - VCDTT";
   }
+
+  //blog
+  const {data:dataBlog}=useGetBlogsQuery();
+console.log(dataBlog);
+const sortedDiscountedBlogs = _.orderBy(
+  dataBlog?.data.blogs,
+  ["id"],
+);
+const newBlogs = sortedDiscountedBlogs.slice(0, 3);
+
   return (
     <>
       <Loader />
@@ -721,14 +716,14 @@ const HomePage = () => {
             <div className="section-heading text-center">
               <div className="row">
                 <div className="col-lg-8 offset-lg-2">
-                  <h5 className="dash-style">TRAVEL BY ACTIVITY</h5>
+                  <h5 className="dash-style">Du lịch theo hoạt động</h5>
                   <h2>LÝ DO NÊN ĐẶT TOUR VỚI VCDTT</h2>
-                  <p>
+                  {/* <p>
                     Mollit voluptatem perspiciatis convallis elementum corporis
                     quo veritatis aliquid blandit, blandit torquent, odit
                     placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
                     maxime curae placeat.
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -743,9 +738,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Adventure</a>
+                      <a href="#">Cuộc phiêu lưu</a>
                     </h4>
-                    <p>15 Destination</p>
+                    {/* <p>15 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -758,9 +753,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Trekking</a>
+                      <a href="#">Đi bộ xuyên rừng</a>
                     </h4>
-                    <p>12 Destination</p>
+                    {/* <p>12 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -773,9 +768,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Camp Fire</a>
+                      <a href="#">Lửa trại</a>
                     </h4>
-                    <p>7 Destination</p>
+                    {/* <p>7 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -788,9 +783,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Off Road</a>
+                      <a href="#">Đường địa hình</a>
                     </h4>
-                    <p>15 Destination</p>
+                    {/* <p>15 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -803,9 +798,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Camping</a>
+                      <a href="#">Cắm trại</a>
                     </h4>
-                    <p>13 Destination</p>
+                    {/* <p>13 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -818,9 +813,9 @@ const HomePage = () => {
                   </div>
                   <div className="activity-content">
                     <h4>
-                      <a href="#">Exploring</a>
+                      <a href="#">Khám phá</a>
                     </h4>
-                    <p>25 Destination</p>
+                    {/* <p>25 Destination</p> */}
                   </div>
                 </div>
               </div>
@@ -840,101 +835,56 @@ const HomePage = () => {
             <div className="section-heading text-center">
               <div className="row">
                 <div className="col-lg-8 offset-lg-2">
-                  <h5 className="dash-style">BLOG CỦA VCDTT</h5>
+                  <h5 className="dash-style">Bài viết CỦA VCDTT</h5>
                   <h2>CÁC BÀI VIẾT MỚI NHẤT</h2>
-                  <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p>
+                  
                 </div>
               </div>
             </div>
             <div className="row">
-              <div className="col-md-6 col-lg-4">
+              {newBlogs?.map(({id,title,short_desc,main_img}:Blog)  =>{
+            
+               return(
+                <div className="col-md-6 col-lg-4" key={id}>
                 <article className="post">
                   <figure className="feature-image">
-                    <a href="#">
-                      <img src="../../../../assets/images/img17.jpg" alt="" />
-                    </a>
+                  <Link to={`blogs/${id}`}>
+                      <img src={main_img} alt="" />
+                      </Link>
+
                   </figure>
                   <div className="entry-content">
                     <h3>
-                      <a href="#">
-                        Life is a beautiful journey not a destination
-                      </a>
+                      <Link to={`blogs/${id}`}>
+                      {title}
+                      </Link>
+                      
+                      
                     </h3>
                     <div className="entry-meta">
                       <span className="byline">
-                        <a href="#">Demoteam</a>
+                       {short_desc}
                       </span>
-                      <span className="posted-on">
+                      {/* <span className="posted-on">
                         <a href="#">August 17, 2021</a>
                       </span>
                       <span className="comments-link">
                         <a href="#">No Comments</a>
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 </article>
               </div>
-              <div className="col-md-6 col-lg-4">
-                <article className="post">
-                  <figure className="feature-image">
-                    <a href="#">
-                      <img src="../../../../assets/images/img18.jpg" alt="" />
-                    </a>
-                  </figure>
-                  <div className="entry-content">
-                    <h3>
-                      <a href="#">Take only memories, leave only footprints</a>
-                    </h3>
-                    <div className="entry-meta">
-                      <span className="byline">
-                        <a href="#">Demoteam</a>
-                      </span>
-                      <span className="posted-on">
-                        <a href="#">August 17, 2021</a>
-                      </span>
-                      <span className="comments-link">
-                        <a href="#">No Comments</a>
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </div>
-              <div className="col-md-6 col-lg-4">
-                <article className="post">
-                  <figure className="feature-image">
-                    <a href="#">
-                      <img src="../../../../assets/images/img19.jpg" alt="" />
-                    </a>
-                  </figure>
-                  <div className="entry-content">
-                    <h3>
-                      <a href="#">Journeys are best measured in new friends</a>
-                    </h3>
-                    <div className="entry-meta">
-                      <span className="byline">
-                        <a href="#">Demoteam</a>
-                      </span>
-                      <span className="posted-on">
-                        <a href="#">August 17, 2021</a>
-                      </span>
-                      <span className="comments-link">
-                        <a href="#">No Comments</a>
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </div>
+               )
+              }
+              )}
+              
             </div>
           </div>
         </section>
         {/* <!-- blog html end -->
              <!-- Home testimonial section html start --> */}
-        <section className="best-section">
+        {/* <section className="best-section">
           <div className="container">
             <div className="row">
               <div className="col-lg-5">
@@ -975,7 +925,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
         {/* <!-- testimonial html end -->
             <!-- Home contact details section html start --> */}
 
