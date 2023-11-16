@@ -96,7 +96,7 @@
                                                                 Mã giao dịch VN Pay:
                                                                 {{ $notification->data['transaction_id'] }}
                                                             @else
-                                                                Khách hàng chuyển khoản trực tiếp:
+                                                                Khách hàng chuyển khoản online:
                                                             @endif
                                                         </a>
                                                         <div class="d-block text-secondary mt-n1">
@@ -194,7 +194,7 @@
         if (data.data.purchase_method == 1) {
             var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.data.transaction_id;
         } else {
-            var purchaseMethodText = 'Khách hàng chuyển khoản trực tiếp:';
+            var purchaseMethodText = 'Khách hàng chuyển khoản online:';
         }
 
         var newNotificationHtml = `

@@ -13,7 +13,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PurchaseNotification extends Notification implements ShouldQueue
+class PurchaseNotificationAdmin extends Notification implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
 

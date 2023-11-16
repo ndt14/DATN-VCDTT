@@ -13,17 +13,18 @@ use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Notifications\ComfirmPayment;
 use App\Http\Resources\CouponResource;
-use App\Notifications\SendMailToClient;
-use App\Notifications\CancelNotification;
-use App\Notifications\PurchaseNotification;
-use Illuminate\Support\Facades\Notification;
-use App\Http\Resources\PurchaseHistoryResource;
-use Illuminate\Pagination\LengthAwarePaginator;
-use App\Models\Notification as NotificationModel;
-use App\Notifications\CancelPurchaseNotification;
 use Illuminate\Support\Facades\Schema;
+use App\Notifications\ComfirmPaymentAdmin;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CancelNotificationAdmin;
+use App\Http\Resources\PurchaseHistoryResource;
+use App\Notifications\SendMailToClientWhenPaid;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Notifications\PurchaseNotificationAdmin;
+use App\Models\Notification as NotificationModel;
+use App\Notifications\CancelPurchaseMailToClient;
+use App\Notifications\RefundRemindingNotificationAdmin;
 
 
 class PurchaseHistoryController extends Controller
@@ -79,11 +80,11 @@ class PurchaseHistoryController extends Controller
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
 
         //Gửi thông báo cho admin
-        Notification::send($user, new PurchaseNotification($purchaseHistory));
+        $user->notify(new PurchaseNotificationAdmin($purchaseHistory));
 
         //Bắn thông báo lên Pusher
-        $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
-        config_pusher()->trigger('PurchaseNotification', 'datn-vcdtt-development', $newNotification);
+        // $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
+        // config_pusher()->trigger('PurchaseNotificationAdmin', 'datn-vcdtt-development', $newNotification);
 
         if ($purchaseHistory->id) {
             return response()->json([
@@ -155,6 +156,7 @@ class PurchaseHistoryController extends Controller
         //
         $input = $request->except('update_admin');
         $updateAdmin = $request->only('update_admin');
+        $users = User::where('is_admin', 1)->get();
 
         $purchaseHistory = PurchaseHistory::find($id);
 
@@ -167,21 +169,27 @@ class PurchaseHistoryController extends Controller
         if ($purchaseHistory->save()) {
             //Gửi mail khi admin cập nhật trạng thái đơn hàng
             if ($updateAdmin) {
-                $purchaseHistory->notify(new SendMailToClient($purchaseHistory->purchase_status));
-            } elseif (!$updateAdmin && ($purchaseHistory->purchase_status == 6 || $purchaseHistory->purchase_status == 7)) {
-                $users = User::where('is_admin', 1)->get();
-                foreach ($users as $user) {
-                    $user->notify(new CancelNotification($purchaseHistory));
+                $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
+                if($purchaseHistory->purchase_status == 6){
+                    foreach ($users as $user) {
+                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory));
+                    }
                 }
-
-                $purchaseHistory->notify(new CancelPurchaseNotification($purchaseHistory));
-            } elseif (!$updateAdmin && $purchaseHistory->payment_status == 1 && $purchaseHistory->purchase_status != 6 && $purchaseHistory->payment_method == 0) {
-                $users = User::where('is_admin', 1)->get();
-                foreach ($users as $user) {
-                    $user->notify(new ComfirmPayment($purchaseHistory));
-                }
-                if ($purchaseHistory->payment_status == 1) {
-                    $purchaseHistory->notify(new ComfirmPayment($purchaseHistory));
+            } else {
+                switch($purchaseHistory->purchase_status){
+                    case '2':
+                        $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory->purchase_status));
+                        foreach ($users as $user) {
+                            $users->notify(new ComfirmPaymentAdmin($purchaseHistory));
+                        }
+                        break;
+                    case '4':
+                        $purchaseHistory->notify(new CancelPurchaseMailToClient($purchaseHistory));
+                        foreach ($users as $user) {
+                            $users->notify(new CancelNotificationAdmin($purchaseHistory));
+                        }
+                    default:
+                        break;
                 }
             }
 
@@ -276,10 +284,18 @@ class PurchaseHistoryController extends Controller
         return view('admin.purchase_histories.list', compact('data'));
     }
 
-    public function purchaseHistoryManagementEdit(Request $request)
+    public function purchaseHistoryManagementEdit(Request $request, string $id)
     {
         $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        // dd($items);
+        if ($request->isMethod('POST')) {
+            $data = $request->except('_token', 'btnSubmit');
+            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-edit/' . $id, $data);
+            if ($response->status() == 200) {
+                return redirect()->route('purchase_histories.edit', ['id' => $id])->with('success', 'Cập nhật hóa đơn thành công');
+            } else {
+                return redirect()->route('purchase_histories.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+            }
+        }
         return view('admin.purchase_histories.edit', compact('items'));
     }
 

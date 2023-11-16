@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CancelPurchaseNotification extends Notification
+class CancelPurchaseMailToClient extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $tour_name;
@@ -22,9 +22,9 @@ class CancelPurchaseNotification extends Notification
     {
         //
         $this->tour_name = $purchaseHistory->tour_name;
-        if ($purchaseHistory->purchase_status == 6) {
+        if ($purchaseHistory->payment_status == 1) {
             $this->purchase_status_noti =  '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền';
-        } elseif ($purchaseHistory->purchase_status == 7) {
+        } elseif ($purchaseHistory->purchase_status == 2) {
             $this->purchase_status_noti =  '';
         }
     }
