@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('term_and_privacy', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
-            $table->longText('url')->nullable();
             $table->string('type')->nullable()->comment('1: term, 2: privacy, 3: other');
             $table->longText('content')->nullable();
             $table->tinyInteger('status')->default(2)->comment('1: active, 2: unActive');

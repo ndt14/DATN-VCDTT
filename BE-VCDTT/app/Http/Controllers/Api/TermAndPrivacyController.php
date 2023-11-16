@@ -21,7 +21,26 @@ class TermAndPrivacyController extends Controller
      */
     public function index(Request $request)
     {
-
+        $existingTerm = TermAndPrivacy::where('type', 1)->first();
+        if (!$existingTerm) {
+            $dataTerm = [
+                'title'=> 'Điều khoản và dịch vụ bản mẫu',
+                'content'=> 'Nội dung điều khoản bản mẫu',
+                'type'=> '1',
+                'status' => '2',
+            ]; 
+            TermAndPrivacy::create($dataTerm);
+        }
+        $existingPrivacy = TermAndPrivacy::where('type', 2)->first();
+        if (!$existingPrivacy) {
+            $dataPrivacy = [
+                'title'=> 'Điều khoản bảo mật thông tin bản mẫu',
+                'content'=> 'Nội dung điều khoản bảo mật thông tin bản mẫu',
+                'type'=> '2',
+                'status' => '2',
+            ]; 
+            TermAndPrivacy::create($dataPrivacy);
+        }
         $keyword = $request->keyword ? trim($request->keyword) : '';
         if(!$request->searchCol){
             $page = TermAndPrivacy::where(function($query) use ($keyword) {
@@ -34,10 +53,14 @@ class TermAndPrivacyController extends Controller
             $page = TermAndPrivacy::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
         }
         $term = TermAndPrivacy::where('type', '=','1')->get();
+        $privacy = TermAndPrivacy::where('type', '=','2')->get();
         return response()->json(
             [
                 'data' => [
                     'pages' => TermAndPrivacyResource::collection($page),
+                    'term'=> TermAndPrivacyResource::collection($term),
+                    'privacy'=> TermAndPrivacyResource::collection($privacy),
+
 
                 ],
                 'message' => 'OK',
@@ -50,8 +73,10 @@ class TermAndPrivacyController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
+        
         $newPage = TermAndPrivacy::create($request->all());
+
         if($newPage->id) {
             return response()->json(
                 [

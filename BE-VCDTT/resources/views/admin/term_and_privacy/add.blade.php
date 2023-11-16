@@ -64,24 +64,44 @@ Thêm mới Trang
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Câu hỏi</label>
-                            <input type="text" name="question" class="form-control" placeholder="Nhập câu hỏi" value="">
+                            <label class="form-label">Tiêu đề</label>
+                            <input type="text" name="title" class="form-control" placeholder="Nhập câu hỏi" value="">
                             <span class="text-danger d-flex justify-content-start">
-                                @error('question')
+                                @error('title')
                                 {{ $message }}
                                 @enderror
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Câu trả lời</label>
-                            <textarea name="answer" class="form-control ckeditor"id="" cols="30" rows="10"></textarea>
+                            <label class="form-label">Nội dung</label>
+                            <textarea name="content" class="form-control ckeditor"id="" cols="30" rows="10"></textarea>
                             <span class="text-danger d-flex justify-content-start">
-                                @error('answer')
+                                @error('content')
                                 {{ $message }}
                                 @enderror
                             </span>
                         </div>
-
+                        <input type="hidden" name="type" value="3">
+                        <div class="mb-3">
+                            <div class="form-label">Trạng thái</div>
+                            <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input" name="status" checked=""
+                                        value="1">
+                                    <span class="custom-control-label">Active</span>
+                                </label>
+                                <label class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" name="status"
+                                        value="0">
+                                    <span class="custom-control-label">Unactive</span>
+                                </label>
+                                <span class="text-danger d-flex justify-content-start">
+                                    @error('status')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer text-right">
                         <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>

@@ -92,7 +92,7 @@
                                 <thead>
                                     <tr>
                                         <th class="">Ảnh</th>
-                                        <th class="w-1">Tên Tour</th>
+                                        <th class="w-1">Áp dụng cho</th>
                                         <th>Tên Ảnh</th>
                                         <th>Định dạng</th>
                                         <th>Đường dẫn</th>

@@ -65,8 +65,9 @@
                                             $tableCols = [
                                                 'title' => 'Tiêu đề',
                                                 'content' => 'Nội dung',
+                                                'type' => 'Thể loại',
+                                                'status' => 'Kích hoạt',
                                                 'created_at' => 'Ngày tạo',
-                                                'updated_at' => 'Ngày sửa',
                                             ];
                                         @endphp
                                         <div class="col-auto">
@@ -121,19 +122,22 @@
                                                 <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->title, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ $item->type == 0 ? 'Term of service' :($item->type == 1 ? 'Privacy policy' : 'Other')  }}
-                                                </td>
-                                                <td>
                                                     {{ string_truncate($item->content, 70) }}
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->url, 70) }}
+                                                    {{ $item->type == 1 ? 'Điều khoản ' :($item->type == 2 ? 'Điều khoản bảo mật' : 'Khác')  }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($item->status == 1)
+                                                        <span class="badge bg-success" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                    @else
+                                                        <span class="badge bg-red" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
                                                     <a class="btn btn-icon btn-outline-green" href="{{ route('page.edit', ['id' => $item->id]) }}">

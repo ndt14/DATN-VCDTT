@@ -24,8 +24,8 @@
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                   Quản lý Pages
-                </h2>
+                   Quản lý Trang
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -59,28 +59,48 @@
             <div class="col-sm-12 col-md-8 offset-md-2">
                 <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " action="{{ route('page.edit', ['id' => $response->id])}}" method="POST">
                     @csrf
-
-                    <input type="hidden" name="id" value="{{$response->id}}">
                     <div class="card-body">
+                        <input type="hidden" name="id" value="{{$response->id}}">
                         <div class="mb-3">
-                            <label class="form-label">Câu hỏi</label>
-                            <input type="text" name="question" class="form-control" placeholder="Nhập câu hỏi" value="{{$response->question}}">
+                            <label class="form-label">Tiêu đề</label>
+                            <input type="text" name="title" class="form-control" placeholder="Nhập câu hỏi" value="{{$response->title}}">
                             <span class="text-danger d-flex justify-content-start">
-                                @error('question')
+                                @error('title')
                                 {{ $message }}
                                 @enderror
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Câu trả lời</label>
-                            <textarea name="answer" class="form-control ckeditor" placeholder="" id="" cols="30" rows="10">{{$response->answer}}</textarea>
+                            <label class="form-label">Nội dung</label>
+                            <textarea name="content" class="form-control ckeditor"id="" cols="30" rows="10">{{$response->content}}</textarea>
                             <span class="text-danger d-flex justify-content-start">
-                                @error('answer')
+                                @error('content')
                                 {{ $message }}
                                 @enderror
                             </span>
                         </div>
-
+                        <div class="mb-3">
+                            <div class="form-label">Trạng thái</div>
+                            <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio custom-control-inline me-2">
+                                    <input type="radio" class="custom-control-input"
+                                        @if ($response->status  == '1') checked @endif name="status"
+                                        checked="" value="1">
+                                    <span class="custom-control-label">Kích hoạt</span>
+                                </label>
+                                <label class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input"
+                                        @if ($response->status  == '2') checked @endif name="status"
+                                        value="2">
+                                    <span class="custom-control-label">Vô hiệu hóa</span>
+                                </label>
+                                <span class="text-danger d-flex justify-content-start">
+                                    @error('status')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer text-right">
                         <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Cập nhật</button>

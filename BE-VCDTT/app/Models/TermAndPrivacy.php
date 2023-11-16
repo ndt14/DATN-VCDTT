@@ -17,9 +17,9 @@ class TermAndPrivacy extends Model
 
     protected $fillable = [
         'title',
-        'url',
-        'type',
         'content',
+        'type',
         'status',
     ];
+
 }
