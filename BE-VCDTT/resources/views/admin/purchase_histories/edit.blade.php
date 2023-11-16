@@ -4,24 +4,24 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col-12 ">
-                    <!-- @if (Session::has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                                                                {{ Session::get('success') }}
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                                </div>
-    @endif
-                                                            @if (Session::has('fail'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                                                                {{ Session::get('fail') }}
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                                </div>
-    @endif -->
+                    @if (Session::has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                            {{ Session::get('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    @if (Session::has('fail'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                            {{ Session::get('fail') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                 </div>
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                            Overview
-                                                        </div> -->
+                                                                                    Overview
+                                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý hóa đơn
                     </h1>
@@ -60,14 +60,13 @@
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
                     <form id="frmEdit" class="card border-0 shadow-lg rounded-4 "
-                        action="{{ route('api.purchase_histories.edit', ['id' => $items['id']]) }}" method="POST">
+                        action="{{ route('purchase_histories.edit', ['id' => $items['id']]) }}" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Edit {{ $items['name'] }}
                             </h2>
                         </div>
                         @csrf
-                        @method('PUT')
                         <div class="card-body">
                             <input type="hidden" name="update_admin" value="1">
                             <div class="row">
@@ -330,13 +329,13 @@
                                     <div class="custom-controls-stacked">
                                         <label class="custom-control custom-radio custom-control-inline me-2">
                                             <input type="radio" class="custom-control-input"
-                                                @if ($items['purchase_method'] == '1') checked @endif name="purchase_method"
+                                                @if ($items['purchase_method'] == '2') checked @endif name="purchase_method"
                                                 value="1" disabled>
                                             <span class="custom-control-label">VN Pay</span>
                                         </label>
                                         <label class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" class="custom-control-input"
-                                                @if ($items['purchase_method'] == '2') checked @endif name="purchase_method"
+                                                @if ($items['purchase_method'] == '1') checked @endif name="purchase_method"
                                                 value="0" disabled>
                                             <span class="custom-control-label">Chuyển khoản trực tiếp</span>
                                         </label>
@@ -361,15 +360,6 @@
                                             dùng đã
                                             thanh toán
                                         </option>
-                                        <option @if ($items['payment_status'] == 3 && $items['tour_status'] == 1) selected @endif value="3">Người
-                                            dùng
-                                            chưa
-                                            thanh toán, đã hủy tour
-                                        </option>
-                                        <option @if ($items['payment_status'] == 4) selected @endif value="4">Người
-                                            dùng
-                                            đã thanh toán, đang muốn hủy tour
-                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -380,122 +370,80 @@
                                     <select name="purchase_status" class="form-select"
                                         aria-label="Default select example">
                                         <option>-----Trạng thái đơn hàng-----</option>
-                                        @switch($items['payment_status'])
-                                            @case(1)
-                                                <option @if ($items['purchase_status'] == 1) selected @endif value="1">
-                                                    Đã hủy thanh toán do quá hạn
-                                                </option>
-                                            @break
 
-                                            @case(2)
-                                                <option @if ($items['purchase_status'] == 2) selected @endif value="2">
-                                                    Đã thanh toán, chưa phê duyệt
-                                                </option>
+                                        <option @if ($items['purchase_status'] == 1) selected @endif value="1">
+                                            Đã hủy thanh toán do quá hạn
+                                        </option>
 
-                                                <option @if ($items['purchase_status'] == 3) selected @endif value="3">
-                                                    Đã phê duyệt đơn hàng
-                                                </option>
-                                            @break
+                                        <option @if ($items['purchase_status'] == 2) selected @endif value="2">
+                                            Đã thanh toán, chưa phê duyệt
+                                        </option>
 
-                                            @case(3)
-                                            @break
+                                        <option @if ($items['purchase_status'] == 3) selected @endif value="3">
+                                            Đã phê duyệt đơn hàng
+                                        </option>
 
-                                            @case(4)
-                                                <option @if ($items['purchase_status'] == 4) selected @endif value="4">
-                                                    Đang đợi phê duyệt hủy đơn hàng
-                                                </option>
+                                        <option @if ($items['purchase_status'] == 4) selected @endif value="4">
+                                            Đang đợi phê duyệt hủy đơn hàng
+                                        </option>
 
-                                                <option @if ($items['purchase_status'] == 5) selected @endif value="5">
-                                                    Đã phê duyệt hủy đơn hàng, đang đợi hoàn tiền
-                                                </option>
+                                        <option @if ($items['purchase_status'] == 5) selected @endif value="5">
+                                            Đã phê duyệt hủy đơn hàng, đang đợi hoàn tiền
+                                        </option>
 
-                                                <option @if ($items['purchase_status'] == 6) selected @endif value="6">
-                                                    Đã hủy đơn thành công! (đã hoàn tiền)
-                                                </option>
+                                        <option @if ($items['purchase_status'] == 6) selected @endif value="6">
+                                            Đã hủy đơn thành công! @if ($items['payment_status'] == 2)
+                                                (đã hoàn tiền)
+                                            @endif
+                                        </option>
 
-                                                @if ($items['payment_status'] == 7)
-                                                    <option @if ($items['purchase_status'] == 7) selected @endif value="7">
-                                                        Khách hàng chuyển khoản thiếu, vui lòng liên hệ với khách hàng
-                                                    </option>
+                                        <option @if ($items['purchase_status'] == 7) selected @endif value="7">
+                                            Khách hàng chuyển khoản thiếu, vui lòng liên hệ với khách hàng
+                                        </option>
 
-                                                    <option @if ($items['purchase_status'] == 8) selected @endif value="8">
-                                                        Khách hàng chuyển khoản thừa, vui lòng liên hệ với khách hàng
-                                                    </option>
-                                                @endif
-                                            @break
-                                        @endswitch
-                                    </select>
-                                </div>
+                                        <option @if ($items['purchase_status'] == 8) selected @endif value="8">
+                                            Khách hàng chuyển khoản thừa, vui lòng liên hệ với khách hàng
+                                        </option>
 
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Trạng thái tour</div>
-                                    <select name="tour_status" class="form-select" aria-label="Default select example">
-                                        <option>-----Trạng thái tour-----</option>
-                                        @if ($items['purchase_status'] == 3)
-                                            <option @if ($items['tour_status'] == 1) selected @endif value="1">Chưa
-                                                tới
-                                                ngày đi
-                                            </option>
-                                            <option @if ($items['tour_status'] == 2) selected @endif value="2">Đang
-                                                diễn ra
-                                            </option>
-                                            <option @if ($items['tour_status'] == 3) selected @endif value="3">Đã
-                                                kết
-                                                thúc
-                                            </option>
-                                        @endif
-                                    </select>
-                                </div>
-
-                            </div>
+                            </select>
                         </div>
 
-                        <div class="mb-3">
-                            <div class="card-footer text-center">
-                                <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Sửa</button>
-                            </div>
+                        <div class="mb-3 col-6">
+                            <div class="form-label">Trạng thái tour</div>
+                            <select name="tour_status" class="form-select" aria-label="Default select example"
+                                disabled>
+                                <option>-----Trạng thái tour-----</option>
+
+                                <option @if ($items['tour_status'] == 1) selected @endif value="1">Chưa
+                                    tới
+                                    ngày đi
+                                </option>
+                                <option @if ($items['tour_status'] == 2) selected @endif value="2">Đang
+                                    diễn ra
+                                </option>
+                                <option @if ($items['tour_status'] == 3) selected @endif value="3">Đã
+                                    kết
+                                    thúc
+                                </option>
+                                <option @if ($items['tour_status'] == 4) selected @endif value="4">Còn
+                                    1 ngày đến ngày đi tour
+                                </option>
+
+                            </select>
                         </div>
-                    </form>
+
+                    </div>
                 </div>
-            </div>
+
+                <div class="mb-3">
+                    <div class="card-footer text-center">
+                        <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Sửa</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+</div>
 @endsection
-@section('page_js')
-    <script type="text/javascript">
-        if ($('#frmEdit').length) {
-            $('#frmEdit').submit(function() {
-                let options = {
-                    beforeSubmit: function(formData, jqForm, options) {
-                        $('#btnSubmitEdit').addClass('btn-loading');
-                        $('#btnSubmitEdit').addClass("disabled");
-                    },
-                    success: function(response, statusText, xhr, $form) {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
-                        if (response.status == 404) {
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible =
-                                true);
-                        }
-                        if (response.status == 200) {
-                            $('#btnSubmitEdit').removeClass("disabled");
-                            bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible =
-                                true);
-                        }
-                    },
-                    error: function() {
-                        $('#btnSubmitEdit').removeClass('btn-loading');
-                        $('#btnSubmitEdit').removeClass("disabled");
-                        bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000,
-                            dismissible = true);
-                    },
-                    dataType: 'json',
-                    clearForm: false,
-                    resetForm: false
-                };
-                $(this).ajaxSubmit(options);
-                return false;
-            });
-        }
-    </script>
-@endSection
+

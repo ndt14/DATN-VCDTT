@@ -1,5 +1,5 @@
 <?php
-//Thông báo mua hàng gửi cho bên admin
+//Thông báo cho admin khi khách hàng xác nhận thanh toán
 
 namespace App\Notifications;
 
@@ -13,11 +13,9 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PurchaseNotification extends Notification
+class ComfirmPaymentAdmin extends Notification implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
-
-    protected $payment_status;
     protected $purchaseHistoryID;
     protected $transaction_id;
     protected $tour_name;
@@ -34,7 +32,6 @@ class PurchaseNotification extends Notification
         $this->transaction_id = $purchaseHistory->transaction_id;
         $this->tour_name = $purchaseHistory->tour_name;
         $this->name = $purchaseHistory->name;
-        $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
     }
 
@@ -51,13 +48,13 @@ class PurchaseNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable)
+    public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->greeting('Xin chào!')
-            ->line('Bạn có đơn đặt hàng mới từ khách hàng ' . $this->name)
-            ->line('Vui lòng kiểm tra trong đơn hàng của bạn')
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+                    ->subject('Khách hàng thanh toán đơn hàng')
+                    ->greeting('Xin chào Admin!')
+                    ->line('Khách hàng ' . $this->name . ' vừa thanh toán đơn hàng của họ. Mã hóa đơn: ' . $this->transaction_id . ' .Vui lòng kiểm tra tài khoản của bạn và phê duyệt cho khách hàng')
+                    ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
     /**
@@ -68,8 +65,9 @@ class PurchaseNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            //
             'purchase_history_id' => $this->purchaseHistoryID,
-            'data' => 'Khách hàng ' . $this->name . ' đã đặt tour ' . $this->tour_name,
+            'data' => 'Khách hàng ' . $this->name . ' đã thanh toán tour ' . $this->tour_name . ' .Vui lòng kiểm tra và phê duyệt!',
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];

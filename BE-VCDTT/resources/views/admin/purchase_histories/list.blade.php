@@ -43,12 +43,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                                    Show
-                                                    <div class="mx-2 d-inline-block">
-                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                                    </div>
-                                                    entries
-                                                </div>-->
+                                                                                    Show
+                                                                                    <div class="mx-2 d-inline-block">
+                                                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                                                    </div>
+                                                                                    entries
+                                                                                </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -61,7 +61,7 @@
                                                 @endif
                                                 <option {{ request()->query('payment_status') == 1 ? 'selected' : '' }}
                                                     value="1">Đã thanh toán</option>
-                                                <option {{ request()->query('payment_status') == "0" ? 'selected' : '' }}
+                                                <option {{ request()->query('payment_status') == '0' ? 'selected' : '' }}
                                                     value="0">Chưa thanh toán</option>
                                             </select>
                                         </div>
@@ -69,21 +69,22 @@
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             @php
                                                 $purchaseStatus = [
-                                                0=>'Chưa thanh toán',
-                                                1=>'Đang đợi xác nhận',
-                                                2=>'Chưa tới ngày đi',
-                                                3=>'Còn một ngày tới ngày đi',
-                                                4=>'Đang diễn ra',
-                                                5=>'Đã kết thúc',
-                                                6=>'Đang đợi xác nhận hủy tour',
-                                                7=>'Khách đã hủy',
-                                                8=>'Admin đã hủy',
-                                                9=>'Tự động hủy do quá hạn',
-                                                10=>'Đã hoàn tiền',
-                                                11=>'Đã kết thúc',
-                                                12=>'khách đã đánh giá',
-                                                13=>'Chuyển khoản thiếu',
-                                                14=>'Chuyển khoản thừa'];
+                                                    0 => 'Chưa thanh toán',
+                                                    1 => 'Đang đợi xác nhận',
+                                                    2 => 'Chưa tới ngày đi',
+                                                    3 => 'Còn một ngày tới ngày đi',
+                                                    4 => 'Đang diễn ra',
+                                                    5 => 'Đã kết thúc',
+                                                    6 => 'Đang đợi xác nhận hủy tour',
+                                                    7 => 'Khách đã hủy',
+                                                    8 => 'Admin đã hủy',
+                                                    9 => 'Tự động hủy do quá hạn',
+                                                    10 => 'Đã hoàn tiền',
+                                                    11 => 'Đã kết thúc',
+                                                    12 => 'khách đã đánh giá',
+                                                    13 => 'Chuyển khoản thiếu',
+                                                    14 => 'Chuyển khoản thừa',
+                                                ];
                                             @endphp
                                             <select class="form-select" name="purchase_status">
                                                 @if (!request()->query('purchase_status'))
@@ -92,14 +93,16 @@
                                                     <option value="">Mặc định</option>
                                                 @endif
                                                 @foreach ($purchaseStatus as $key => $value)
-                                                <option {{ request()->query('purchase_status') === "$key" ? 'selected' : '' }} value="{{ $key }}">{{ $value }}</option>
+                                                    <option
+                                                        {{ request()->query('purchase_status') === "$key" ? 'selected' : '' }}
+                                                        value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         @php
                                             $tableCols = [
                                                 'name' => 'Tên',
-                                                'email' => 'Tác giả',
+                                                'email' => 'Email',
                                                 'transaction_id' => 'Mã giao dịch',
                                                 'tour_name' => 'Tên Tour',
                                                 'created_at' => 'Ngày tạo',
@@ -113,7 +116,8 @@
                                                 @else
                                                     <option value="">Mặc định</option>
                                                 @endif
-                                                <option {{ request()->query('searchCol') == 'id' ? 'selected' : '' }} value="id">ID</option>
+                                                <option {{ request()->query('searchCol') == 'id' ? 'selected' : '' }}
+                                                    value="id">ID</option>
                                                 @foreach ($tableCols as $key => $value)
                                                     <option {{ request()->query('searchCol') == $key ? 'selected' : '' }}
                                                         value="{{ $key }}">{{ $value }}</option>
@@ -138,10 +142,11 @@
                                     <tr>
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
-                                        <th>@sortablelink($key, $value)</th>
+                                            <th>@sortablelink($key, $value)</th>
                                         @endforeach
                                         <th class="text-center">Trạng thái thanh toán</th>
                                         <th class="text-center">Trạng thái đơn</th>
+                                        <th class="text-center">Trạng thái tour</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -164,7 +169,11 @@
                                                     {{ string_truncate($item->email, 15) }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->transaction_id }}
+                                                    @if ($item->purchase_method == 1)
+                                                        Chuyển khoản online
+                                                    @else
+                                                        Mã giao dịch:{{ $item->transaction_id }}
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ string_truncate($item->tour_name, 25) }}
@@ -174,7 +183,9 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($item->payment_status == 1)
-                                                        <span class="badge bg-green rounded-circle p-1 text-green-fg">
+                                                        <span class="badge bg-green rounded-circle p-1 text-green-fg"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            data-bs-title="Đã thanh toán">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-check m-0"
                                                                 width="24" height="24" viewBox="0 0 24 24"
@@ -185,8 +196,10 @@
                                                                 <path d="M5 12l5 5l10 -10"></path>
                                                             </svg>
                                                         </span>
-                                                    @else
-                                                        <span class="badge bg-danger rounded-circle p-1 text-danger-fg">
+                                                    @elseif ($item->payment_status == 2)
+                                                        <span class="badge bg-danger rounded-circle p-1 text-danger-fg"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            data-bs-title="Chưa thanh toán">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-x m-0" width="24"
                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -202,60 +215,59 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @switch($item->purchase_status)
-                                                        @case(0)
-                                                            <span class="badge bg-red-lt">Chưa thanh toán</span>
-                                                        @break
-
                                                         @case(1)
-                                                            <span class="badge bg-orange-lt">Đang đợi xác nhận</span>
-                                                        @break
-
-                                                        @case(2)
-                                                            <span class="badge bg-green-lt">Chưa tới ngày đi</span>
-                                                        @break
-
-                                                        @case(3)
-                                                            <span class="badge bg-green-lt">Còn một ngày tới ngày đi</span>
-                                                        @break
-
-                                                        @case(4)
-                                                            <span class="badge bg-muted-lt">Đang diễn ra</span>
-                                                        @break
-
-                                                        @case(5)
-                                                            <span class="badge bg-muted-lt">Đã kết thúc</span>
-                                                        @break
-
-                                                        @case(6)
-                                                            <span class="badge bg-muted-lt">Đang đợi xác nhận hủy tour</span>
-                                                        @break
-
-                                                        @case(7)
-                                                            <span class="badge bg-muted-lt">Khách đã hủy</span>
-                                                        @break
-
-                                                        @case(8)
-                                                            <span class="badge bg-muted-lt">Admin đã hủy</span>
-                                                        @break
-
-                                                        @case(9)
                                                             <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
                                                         @break
 
-                                                        @case(10)
-                                                            <span class="badge bg-muted-lt">Đã hoàn tiền</span>
+                                                        @case(2)
+                                                            <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
                                                         @break
 
-                                                        @case(11)
-                                                            <span class="badge bg-muted-lt">Đã kết thúc, khách đã đánh giá</span>
+                                                        @case(3)
+                                                            <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
                                                         @break
 
-                                                        @case(12)
-                                                            <span class="badge bg-muted-lt">Chuyển khoản thiếu</span>
+                                                        @case(4)
+                                                            <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
                                                         @break
 
-                                                        @case(13)
-                                                            <span class="badge bg-muted-lt">Chuyển khoản thừa</span>
+                                                        @case(5)
+                                                            <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
+                                                                tiền</span>
+                                                        @break
+
+                                                        @case(6)
+                                                            <span class="badge bg-green-lt">Đã hủy thành công @if($item->payment_status == 1) (đã hoàn tiền) @endif </span>
+                                                        @break
+
+                                                        @case(7)
+                                                            <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
+                                                        @break
+
+                                                        @case(8)
+                                                            <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
+                                                        @break
+
+                                                        @default
+                                                        @break
+                                                    @endswitch
+                                                </td>
+                                                <td class="text-center">
+                                                    @switch($item->tour_status)
+                                                        @case(1)
+                                                            <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
+                                                        @break
+
+                                                        @case(2)
+                                                            <span class="badge bg-green-lt">Đang diễn ra</span>
+                                                        @break
+
+                                                        @case(3)
+                                                            <span class="badge bg-light-lt">Đã kết thúc</span>
+                                                        @break
+
+                                                        @case(4)
+                                                            <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi tour</span>
                                                         @break
 
                                                         @default

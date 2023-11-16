@@ -136,78 +136,83 @@
             </div>
             <hr>
             <div class="row">
-                <div class="mb-3 col-6">
+                <div class="mb-3 col-4">
                     <div class="form-label">Trạng thái thanh toán</div>
                     <div class="custom-controls-stacked">
-                        @switch ($item['purchase_status'])
-                            @case(0)
+                        @switch ($item['payment_status'])
+                            @case(1)
                                 <span class="badge bg-red-lt">Chưa thanh toán</span>
                             @break
 
-                            @case(1)
+                            @case(2)
                                 <span class="badge bg-green-lt">Đã thanh toán</span>
                             @break
                         @endswitch
                     </div>
                 </div>
 
-                <div class="mb-3 col-6">
-                    <div class="form-label">Trạng thái mua hàng</div>
-                    @switch($item['purchase_status'])
-                        @case(0)
-                            <span class="badge bg-red-lt">Chưa thanh toán</span>
-                        @break
-
+                <div class="mb-3 col-4">
+                    <div class="form-label">Trạng thái dơn hàng</div>
+                    @switch($item->purchase_status)
                         @case(1)
-                            <span class="badge bg-orange-lt">Đang đợi xác nhận</span>
-                        @break
-
-                        @case(2)
-                            <span class="badge bg-green-lt">Chưa tới ngày đi</span>
-                        @break
-
-                        @case(3)
-                            <span class="badge bg-green-lt">Còn một ngày tới ngày đi</span>
-                        @break
-
-                        @case(4)
-                            <span class="badge bg-muted-lt">Đang diễn ra</span>
-                        @break
-
-                        @case(5)
-                            <span class="badge bg-muted-lt">Đã kết thúc</span>
-                        @break
-
-                        @case(6)
-                            <span class="badge bg-muted-lt">Đang đợi xác nhận hủy tour</span>
-                        @break
-
-                        @case(7)
-                            <span class="badge bg-muted-lt">Khách đã hủy</span>
-                        @break
-
-                        @case(8)
-                            <span class="badge bg-muted-lt">Admin đã hủy</span>
-                        @break
-
-                        @case(9)
                             <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
                         @break
 
-                        @case(10)
-                            <span class="badge bg-muted-lt">Đã hoàn tiền</span>
+                        @case(2)
+                            <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
                         @break
 
-                        @case(11)
-                            <span class="badge bg-muted-lt">Đã kết thúc, khách đã đánh giá</span>
+                        @case(3)
+                            <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
                         @break
 
-                        @case(12)
-                            <span class="badge bg-muted-lt">Chuyển khoản thiếu</span>
+                        @case(4)
+                            <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
                         @break
 
-                        @case(13)
-                            <span class="badge bg-muted-lt">Chuyển khoản thừa</span>
+                        @case(5)
+                            <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
+                                tiền</span>
+                        @break
+
+                        @case(6)
+                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item->payment_status == 1)
+                                    (đã hoàn tiền)
+                                @endif </span>
+                        @break
+
+                        @case(7)
+                            <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
+                        @break
+
+                        @case(8)
+                            <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
+                        @break
+
+                        @default
+                        @break
+
+                    @endswitch
+                </div>
+            </div>
+            <div class="mb-3 col-4">
+                <div class="form-label">Trạng thái tour</div>
+                <div class="custom-controls-stacked">
+                    @switch($item->tour_status)
+                        @case(1)
+                            <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
+                        @break
+
+                        @case(2)
+                            <span class="badge bg-green-lt">Đang diễn ra</span>
+                        @break
+
+                        @case(3)
+                            <span class="badge bg-light-lt">Đã kết thúc</span>
+                        @break
+
+                        @case(4)
+                            <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi tour</span>
                         @break
 
                         @default

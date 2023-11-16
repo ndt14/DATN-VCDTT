@@ -7,10 +7,11 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Notification;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CancelNotification extends Notification
+class CancelNotificationAdmin extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $payment_status;
@@ -20,6 +21,7 @@ class CancelNotification extends Notification
     protected $name;
     protected $purchase_method;
     protected $paid;
+    protected $refund;
 
     /**
      * Create a new notification instance.
@@ -33,7 +35,8 @@ class CancelNotification extends Notification
         $this->name = $purchaseHistory->name;
         $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
-        $this->paid = ($this->payment_status == 1) ? 'đã thanh toán' : 'chưa thanh toán';
+        $this->paid = ($this->payment_status == 2) ? ' sau khi đã thanh toán. ' : '.';
+        $this->refund = ($this->payment_status == 2) ? ' và liên hệ với khách hàng.' : '.';
     }
 
     /**
@@ -52,9 +55,9 @@ class CancelNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Khách Hàng ' . $this->name . ' Đã Hủy Tour ' . $this->tour_name)
+            ->subject('Khách Hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name)
             ->greeting('Xin chào!')
-            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '(khách hàng ' . $this->paid . '). Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
+            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . $this->paid . 'Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
             ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
             ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
@@ -69,9 +72,14 @@ class CancelNotification extends Notification
         return [
             //
             'purchase_history_id' => $this->purchaseHistoryID,
-            'data' => 'Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '. Vui lòng kiểm tra trong mục quản lý đơn hàng',
+            'data' => 'Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . '. Vui lòng kiểm tra trong mục quản lý đơn hàng ' . $this->refund,
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel('datn-vcdtt-development');
     }
 }

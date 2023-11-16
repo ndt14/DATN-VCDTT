@@ -1,17 +1,23 @@
 <?php
-//Thông báo cho admin khi khách hàng xác nhận thanh toán
+//Thông báo mua hàng gửi cho bên admin
 
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
-use PhpCsFixer\Cache\Signature;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Messages\MailMessage;
 
-class ComfirmPayment extends Notification
+class PurchaseNotificationAdmin extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
+
+    protected $payment_status;
     protected $purchaseHistoryID;
     protected $transaction_id;
     protected $tour_name;
@@ -28,6 +34,7 @@ class ComfirmPayment extends Notification
         $this->transaction_id = $purchaseHistory->transaction_id;
         $this->tour_name = $purchaseHistory->tour_name;
         $this->name = $purchaseHistory->name;
+        $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
     }
 
@@ -44,12 +51,14 @@ class ComfirmPayment extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable)
     {
         return (new MailMessage)
-                    ->greeting('Xin chào Admin!')
-                    ->line('Khách hàng ' . $this->name . ' vừa chuyển tiền! Vui lòng kiểm tra tài khoản của bạn');
-
+            ->subject('Thông báo đặt hàng')
+            ->greeting('Xin chào!')
+            ->line('Bạn có đơn đặt hàng mới từ khách hàng ' . $this->name)
+            ->line('Vui lòng kiểm tra trong đơn hàng của bạn')
+            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
     /**
@@ -60,11 +69,15 @@ class ComfirmPayment extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
             'purchase_history_id' => $this->purchaseHistoryID,
-            'data' => 'Khách hàng ' . $this->name . ' đã thanh toán tour ' . $this->tour_name,
+            'data' => 'Khách hàng ' . $this->name . ' đã đặt tour ' . $this->tour_name,
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel('datn-vcdtt-development');
     }
 }
