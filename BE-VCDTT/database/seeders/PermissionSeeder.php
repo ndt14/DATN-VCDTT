@@ -232,7 +232,13 @@ class PermissionSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
-            
+            31 => [
+                'id' => 32,
+                'name' => 'admin',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ];
 
         DB::table('permissions')->insert($data);

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TermAndPrivacyController;
 use App\Http\Middleware\checkIsAdmin;
 use App\Models\Allocation;
 use App\Models\Rating;
@@ -115,6 +116,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/faq/detail/{id}', [FaqController::class, 'faqManagementDetail'])->name('faq.detail')->middleware(['permission:admin|access faq|add faq|edit faq|delete faq']);
     Route::get('/faq/trash', [FAQController::class, 'faqManagementTrash'])->name('faq.trash')->middleware(['permission:admin|delete faq']);
     Route::get('faq/restore/{id}', [FAQController::class, 'faqManagementRestore'])->name('faq.restore')->middleware(['permission:admin|delete faq']);
+
     Route::get('/rating', [RatingController::class, 'allRatingManagementList'])->name('all.rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/{id}', [RatingController::class, 'ratingManagementList'])->name('rating.list')->middleware(['permission:admin|access review|reply review|delete review']);
     Route::get('/rating/add', [RatingController::class, 'ratingManagementAdd'])->name('rating.add')->middleware(['permission:admin|reply review']);
@@ -142,7 +144,12 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store')->middleware(['permission:admin|add category']);
     Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit')->middleware(['permission:admin|edit category']);
 
-
+    Route::get('/page', [TermAndPrivacyController::class, 'pageManagementList'])->name('page.list');
+    Route::match(['GET', 'POST'], '/page/add', [TermAndPrivacyController::class, 'pageManagementAdd'])->name('page.add');
+    Route::match(['GET', 'POST'], '/page/edit/{id}', [TermAndPrivacyController::class, 'pageManagementEdit'])->name('page.edit');
+    Route::get('/page/detail/{id}', [TermAndPrivacyController::class, 'pageManagementDetail'])->name('page.detail');
+    Route::get('/page/trash', [TermAndPrivacyController::class, 'pageManagementTrash'])->name('page.trash');
+    Route::get('page/restore/{id}', [TermAndPrivacyController::class, 'pageManagementRestore'])->name('page.restore');
 
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
