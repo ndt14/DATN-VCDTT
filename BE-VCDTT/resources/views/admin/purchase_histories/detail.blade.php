@@ -153,7 +153,7 @@
 
                 <div class="mb-3 col-4">
                     <div class="form-label">Trạng thái dơn hàng</div>
-                    @switch($item->purchase_status)
+                    @switch($item['purchase_status'])
                         @case(1)
                             <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
                         @break
@@ -176,7 +176,7 @@
                         @break
 
                         @case(6)
-                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item->payment_status == 1)
+                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item['payment_status'] == 1)
                                     (đã hoàn tiền)
                                 @endif </span>
                         @break
@@ -198,7 +198,7 @@
             <div class="mb-3 col-4">
                 <div class="form-label">Trạng thái tour</div>
                 <div class="custom-controls-stacked">
-                    @switch($item->tour_status)
+                    @switch($item['tour_status'])
                         @case(1)
                             <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
                         @break
