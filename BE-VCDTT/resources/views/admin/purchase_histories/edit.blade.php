@@ -369,7 +369,7 @@
                                     <div class="form-label">Trạng thái đơn hàng</div>
                                     <select name="purchase_status" class="form-select"
                                         aria-label="Default select example">
-                                        <option>-----Trạng thái đơn hàng-----</option>
+                                        <option @if ($items['purchase_status'] == 9) selected @endif value="9">-----Trạng thái đơn hàng-----</option>
 
                                         <option @if ($items['purchase_status'] == 1) selected @endif value="1">
                                             Đã hủy thanh toán do quá hạn
@@ -411,7 +411,7 @@
                         <div class="mb-3 col-6">
                             <div class="form-label">Trạng thái tour</div>
                             <select name="tour_status" class="form-select" aria-label="Default select example">
-                                <option>-----Trạng thái tour-----</option>
+                                <option @if ($items['tour_status'] == 5) selected @endif value="5">-----Trạng thái tour-----</option>
 
                                 <option @if ($items['tour_status'] == 1) selected @endif value="1">Chưa
                                     tới
