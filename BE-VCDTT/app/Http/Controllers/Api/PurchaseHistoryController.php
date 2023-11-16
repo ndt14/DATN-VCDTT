@@ -75,20 +75,13 @@ class PurchaseHistoryController extends Controller
 
         $data = $request->except('coupon_code', '_token');
 
-        // if (!$data['transaction_id']) {
-        //     $data['payment_status'] = 0;
-        //     $data['purchase_status'] = 0;
-        // } else {
-        //     $data['payment_status'] = 1;
-        //     $data['purchase_status'] = 1;
-        // }
-
         $purchaseHistory = PurchaseHistory::create($data);
-
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
+
+        //Gửi thông báo cho admin
         Notification::send($user, new PurchaseNotification($purchaseHistory));
 
-        // không xóa, đây là code bắn dữ liệu thông báo lên pusher
+        //Bắn thông báo lên Pusher
         $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
         config_pusher()->trigger('PurchaseNotification', 'datn-vcdtt-development', $newNotification);
 
@@ -172,7 +165,7 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-
+            //Gửi mail khi admin cập nhật trạng thái đơn hàng
             if ($updateAdmin) {
                 $purchaseHistory->notify(new SendMailToClient($purchaseHistory->purchase_status));
             } elseif (!$updateAdmin && ($purchaseHistory->purchase_status == 6 || $purchaseHistory->purchase_status == 7)) {

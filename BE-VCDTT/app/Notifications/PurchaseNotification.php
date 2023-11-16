@@ -13,7 +13,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PurchaseNotification extends Notification
+class PurchaseNotification extends Notification implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -54,6 +54,7 @@ class PurchaseNotification extends Notification
     public function toMail(object $notifiable)
     {
         return (new MailMessage)
+            ->subject('Thông báo đặt hàng')
             ->greeting('Xin chào!')
             ->line('Bạn có đơn đặt hàng mới từ khách hàng ' . $this->name)
             ->line('Vui lòng kiểm tra trong đơn hàng của bạn')

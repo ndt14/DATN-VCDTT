@@ -48,7 +48,7 @@ class PurchaseHistorySeeder extends Seeder
                 'tour_end_time' => $faker->dateTimeBetween('now', '+ 1 year'),
                 'comfirm_click' => $faker->numberBetween(1, 2),
                 'purchase_method' => $faker->numberBetween(1, 2),
-                'payment_status' => $faker->numberBetween(1, 4),
+                'payment_status' => $faker->numberBetween(1, 2),
                 'purchase_status' => $faker->numberBetween(1, 8),
                 'tour_status' => $faker->numberBetween(1, 3),
             ]);
