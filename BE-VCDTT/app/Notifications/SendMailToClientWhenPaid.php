@@ -70,6 +70,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     {
 
         return (new MailMessage)
+            ->subject('Cập nhật trạng thái đơn hàng')
             ->greeting('Xin chào!')
             ->line($this->status)
             ->action('Kiểm tra đơn hàng của bạn ', url('http://datn-vcdtt.test:5173/user/tours')) //link đến trang đơn hàng của khách
