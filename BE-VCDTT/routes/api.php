@@ -133,10 +133,13 @@ Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy
 
 Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
 
-//FAQ
+//Page
 Route::get('/page', [TermAndPrivacyController::class, 'index']);
 Route::post('/page-store', [TermAndPrivacyController::class, 'store']);
 Route::get('/page-show/{id}', [TermAndPrivacyController::class, 'show']);
 Route::put('/page-edit/{id}', [TermAndPrivacyController::class, 'update'])->name('api.page.edit');
 Route::delete('/page-destroy/{id}', [TermAndPrivacyController::class, 'destroy']);
 Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'destroyForever']);
+
+Route::get('/keyvalue',[PurchaseHistoryController::class,'index']);
+Route::get('/keyvalue-edit-all',[PurchaseHistoryController::class,'keyvalueManagementEditAll']);

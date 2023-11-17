@@ -234,7 +234,7 @@ class PermissionSeeder extends Seeder
             ],
             31 => [
                 'id' => 32,
-                'name' => 'admin',
+                'name' => 'access settings',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
