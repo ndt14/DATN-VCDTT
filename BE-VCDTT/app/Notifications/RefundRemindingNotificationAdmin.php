@@ -53,7 +53,7 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
             ->subject('Nhắc nhở hoàn tiền')
             ->greeting('Xin chào!')
             ->line('Bạn vừa phê duyệt hủy tour ' . $this->tour_name)
-            ->line('Vui lòng hoàn tiền cho khách hàng' . $this->name)
+            ->line('Vui lòng hoàn tiền cho khách hàng ' . $this->name)
             ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 

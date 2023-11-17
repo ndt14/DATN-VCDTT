@@ -191,7 +191,7 @@
     var channel = pusher.subscribe('PurchaseNotification');
     channel.bind('datn-vcdtt-development', function(data) {
         var id = data.id;
-        if (data.data.purchase_method == 1) {
+        if (data.data.purchase_method == 2) {
             var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.data.transaction_id;
         } else {
             var purchaseMethodText = 'Khách hàng chuyển khoản online:';
