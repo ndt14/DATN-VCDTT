@@ -1,6 +1,4 @@
 <?php
-
-use Pusher\Pusher;
 function string_truncate($string, $length = 30) {
     //length = number of charater
     //suffix
