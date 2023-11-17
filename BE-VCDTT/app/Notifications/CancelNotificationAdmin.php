@@ -5,16 +5,18 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CancelNotificationAdmin extends Notification implements ShouldQueue
+class CancelNotificationAdmin extends Notification implements ShouldQueue,ShouldBroadcast
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $payment_status;
@@ -49,7 +51,7 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', 'broadcast'];
     }
 
     /**
@@ -83,6 +85,6 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue
 
     public function broadcastOn()
     {
-        return new PrivateChannel('datn-vcdtt-development');
+        return new Channel('datn-vcdtt-development');
     }
 }
