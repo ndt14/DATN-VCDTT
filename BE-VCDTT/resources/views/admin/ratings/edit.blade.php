@@ -1,4 +1,5 @@
 @extends('admin.common.layout')
+Chỉnh sửa đánh giá
 @section('content')
 
 <div class="page-header d-print-none">

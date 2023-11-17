@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Thêm mới tour
+@endSection
 @section('content')
 
 <div class="page-header d-print-none">

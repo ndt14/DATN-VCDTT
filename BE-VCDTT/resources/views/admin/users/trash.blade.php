@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Người dùng đã xoá
+@endSection
 @section('content')
 <div class="page-header d-print-none">
     <div class="container-xl">

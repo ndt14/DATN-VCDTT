@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Thêm mới ảnh
+@endSection
 @section('content')
 
 <div class="page-header d-print-none">
@@ -10,7 +13,7 @@
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Quản lý ảnh
+                    Thêm mới ảnh
                 </h2>
             </div>
             <div class="top-0" style="z-index: 100; position: fixed;">

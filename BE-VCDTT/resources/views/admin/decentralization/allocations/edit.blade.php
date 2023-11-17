@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Chỉnh sửa phần quyền
+@endSection
 @section('content')
 
 <div class="page-header d-print-none">

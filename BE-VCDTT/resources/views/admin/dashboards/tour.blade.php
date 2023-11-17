@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Thống kê tour
+@endSection
 @section('content')
     <div class="page-body">
         <div class="container-xl">
