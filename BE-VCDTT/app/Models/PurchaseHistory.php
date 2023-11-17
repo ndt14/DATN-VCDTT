@@ -45,6 +45,8 @@ class PurchaseHistory extends Model
         'tour_start_time',
         'tour_end_time',
         'tour_image',
+        'payment_term',
+        'payment_privacy',
 
         'comfirm_click',
         'purchase_method',

@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body row row-deck row-cards">
     <div class="col-sm-12 col-md-12 px-6">
-        <div class="card-body">
+        <div class="card-body card-body-scrollable">
             <div class="row">
                 <div class="mb-3 col-9">
                     <label class="form-label">Tên người dùng</label>
@@ -136,14 +136,16 @@
             </div>
             <hr>
             <div class="row">
-                <div class="mb-3">
+                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
                     <div class="form-label">Chính sách và điều khoản đã đồng ý</div>
-                    <textarea id="editor" rows="5" class="form-control text-editor ckeditor" name="details"
-                        placeholder="Nhập nội dung mô tả">{{ $item['payment_term']  }}</textarea>
+                    <div>
+                    {!! $item['payment_term']  !!}
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <textarea id="editor" rows="5" class="form-control text-editor ckeditor" name="details"
-                        placeholder="Nhập nội dung mô tả">{{ $item['payment_privacy']  }}</textarea>
+                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
+                    <div class="markdown">
+                        {!! $item['payment_privacy']  !!}
+                    </div>
                 </div>
             </div>
             <hr>

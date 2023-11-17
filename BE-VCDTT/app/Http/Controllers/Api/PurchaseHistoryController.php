@@ -77,7 +77,6 @@ class PurchaseHistoryController extends Controller
         $user = User::where('is_admin', 1)->first();
 
         $data = $request->except('coupon_code', '_token');
-
         // if (!$data['transaction_id']) {
         //     $data['payment_status'] = 0;
         //     $data['purchase_status'] = 0;
@@ -85,14 +84,16 @@ class PurchaseHistoryController extends Controller
         //     $data['payment_status'] = 1;
         //     $data['purchase_status'] = 1;
         // }
-        $term = TermAndPrivacy::where('type','=', 1)->where('status','=', 1)->first()->content;
-        $privacy = TermAndPrivacy::where('type','=', 2)->where('status','=', 1)->first()->content;
-        if(!$term){
-            $data['payment_term'] = $term;
+        $term = TermAndPrivacy::where('type','=', 1)->where('status','=', 1)->first();
+        $privacy = TermAndPrivacy::where('type','=', 2)->where('status','=', 1)->first();
+        if($term){
+            $data['payment_term'] = $term->content;
+
         }
-        if(!$term){
-            $data['payment_privacy'] = $privacy;
+        if($privacy){
+            $data['payment_privacy'] = $privacy->content;
         }
+
         $purchaseHistory = PurchaseHistory::create($data);
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
 
