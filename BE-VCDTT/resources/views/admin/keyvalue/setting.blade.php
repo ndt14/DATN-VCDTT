@@ -91,8 +91,7 @@
                         <div class="mb-3 row">
                             <label class="form-label">{{ $item->name }}</label>
                             <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
-                            <br>
-                            <div class="row"><img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="100%" alt="{{ $item->value }}"></div>
+                            <div class="row mt-1"><img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="100%" alt="{{ $item->value }}"></div>
                         </div>
                         @endif
                         @endforeach
