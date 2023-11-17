@@ -50,26 +50,22 @@ class KeyValueController extends Controller
      */
     public function update(KeyValueRequest $request, string $id)
     {
-        $input = $request->only('value');
-
-        $keyvalue = KeyValue::find($id);
-        if (!$keyvalue) {
-            return response()->json(['message' => "Edit fail, can't find your keyvalues ", 'status' => 500]);
-        }
-
-        $keyvalue->fill($input);
-
-        if ($keyvalue->save()) {
-            $updatedKeyValue = KeyValue::find($id);
-            return response()->json(['message' => 'Edit success', 'status' => 200, 'object' => $updatedKeyValue]);
-        } else {
-            return response()->json(['message' => 'Edit fail', 'status' => 500]);
-        }
+//
     }
 
     public function updateAll(KeyValueRequest $request)
     {
-        //
+        $data = $request->all();
+        if ($data!=[]) {
+            if (!empty($data)) {
+                foreach ($data as $key => $value) {
+                    KeyValue::where('key', $key)->update(['value' => $value]);
+                }
+            }
+            return response()->json(['message' => 'Edit success', 'status' => 200]);
+        } else {
+            return response()->json(['message' => 'Edit fail', 'status' => 500]);
+        }
     }
 
     /**
@@ -84,11 +80,11 @@ class KeyValueController extends Controller
 
     public function keyvalueManagementEditAll(KeyValueRequest $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/keyvalue' . $request->id);
-        $data = json_decode(json_encode($response->json()['data']), false);
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/keyvalue');
+        $data = json_decode(json_encode($response->json()['data']['keyvalues']), false);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/keyvalue-edit-all' . $data);
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/keyvalue-edit-all', $data);
             if ($response->status() == 200) {
                 return redirect()->route('settings')->with('success', 'Cập nhật thành công');
             } else {

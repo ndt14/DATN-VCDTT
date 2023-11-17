@@ -44,56 +44,60 @@
             @csrf
                 <div class="card-body">
                     <div class="row">
+                        @foreach ($data as $item)
+                        @if($item->key=='logo' || $item->key=='favicon' )
                         <div class="mb-3 col-6">
-                            <label class="form-label">Ảnh logo chính</label>
-                            <input type="file" name="main_img" class="form-control" placeholder="Image" value="">
+                            <label class="form-label">{{ $item->name }}</label>
+                            <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
                             <br>
-                            <img src="https://tse3.mm.bing.net/th?id=OIP.JJ4ZxNkVDMO5U1c5-m2rzAHaFd&pid=Api&P=0&h=220" width="200px" alt="">
+                            <input type="hidden" name="{{ $item->key }}" value="{{ $item->value }}" >
+                            <img src="{{ $item->value }}" width="200px" alt="{{ $item->value }}">
                         </div>
+                        @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @foreach ($data as $item)
+                        @if($item->key=='webTitle' || $item->key=='email' || $item->key=='address' )
+                        <div class="mb-3 col-4">
+                            <label class="form-label">{{ $item->name }}</label>
+                            <input type="text" name="{{ $item->key }}" class="form-control"  value="{{ $item->value }}" >
+                        </div>
+                        @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @foreach ($data as $item)
+                        @if($item->key=='webPhoneNumber1' || $item->key=='webPhoneNumber2' )
                         <div class="mb-3 col-6">
-                            <label class="form-label">Ảnh logo favicon</label>
-                            <input type="file" name="m" class="form-control" placeholder="Image" value="">
+                            <label class="form-label">{{ $item->name }}</label>
+                            <input type="text" name="{{ $item->key }}" class="form-control"  value="{{ $item->value }}" >
+                        </div>
+                        @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @foreach ($data as $item)
+                        @if($item->key=='bankName' || $item->key=='bankAccountName' || $item->key=='bankAccountNumber' )
+                        <div class="mb-3 col-4">
+                            <label class="form-label">{{ $item->name }}</label>
+                            <input type="text" name="{{ $item->key }}" class="form-control"  value="{{ $item->value }}" >
+                        </div>
+                        @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @foreach ($data as $item)
+                        @if($item->key=='banner' )
+                        <div class="mb-3 row">
+                            <label class="form-label">{{ $item->name }}</label>
+                            <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
                             <br>
-                            <img src="https://tse3.mm.bing.net/th?id=OIP.JJ4ZxNkVDMO5U1c5-m2rzAHaFd&pid=Api&P=0&h=220" width="200px" alt="">
+                            <input type="hidden" name="{{ $item->key }}" value="{{ $item->value }}" >
+                            <div class="row"><img src="{{ $item->value }}" width="100%" alt="{{ $item->value }}"></div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3 col-4">
-                            <label class="form-label">Tên website</label>
-                            <input type="text" name="webTitle" class="form-control" placeholder="VCDTT" value="" >
-                        </div>
-                        <div class="mb-3 col-4">
-                            <label class="form-label">Email đại diện/liên hệ</label>
-                            <input type="text" name="email" class="form-control" placeholder="vidu@gmail.com" value="">
-                        </div>
-                        <div class="mb-3 col-4">
-                            <div class="form-label">Địa chỉ trụ sở</div>
-                            <input type="text" name="adress" class="form-control" placeholder="Thành phố/Tỉnh, huyện, đường,..." value="">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3 col-6">
-                            <div class="form-label">Số điện thoại liên hệ</div>
-                            <input type="text" name="webPhoneNumber1" class="form-control" placeholder="Số điện thoại để khách liên hệ" value="">
-                        </div>
-                        <div class="mb-3 col-6">
-                            <div class="form-label">Số điện thoại liên hệ khác</div>
-                            <input type="text" name="webPhoneNumber2" class="form-control" placeholder="Số điện thoại để khách liên hệ" value="">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3 col-4">
-                            <div class="form-label">Tên ngân hàng sử dụng</div>
-                            <input type="text" name="bankName" class="form-control" placeholder="MBBank, Viettel Pay,..." value="">
-                        </div>
-                        <div class="mb-3 col-4">
-                            <div class="form-label">Tên tài khoản ngân hàng</div>
-                            <input type="text" name="bankAccountName" class="form-control" placeholder="Tên tài khoản. Ví dụ:NGUYEN VAN A" value="">
-                        </div>
-                        <div class="mb-3 col-4">
-                            <div class="form-label">Số tài khoản ngân hàng</div>
-                            <input type="text" name="bankAccountNumber" class="form-control" placeholder="Số tài khoản" value="">
-                        </div>
+                        @endif
+                        @endforeach
                     </div>
                 </div>
                     <div class="card-footer text-right">

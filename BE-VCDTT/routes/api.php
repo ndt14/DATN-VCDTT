@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\AllocationController;
+use App\Http\Controllers\Api\KeyValueController;
 use App\Http\Controllers\Api\TermAndPrivacyController;
 use App\Http\Controllers\Api\TourToCategoryController;
 use App\Http\Controllers\Api\WishListController;
@@ -141,5 +142,5 @@ Route::put('/page-edit/{id}', [TermAndPrivacyController::class, 'update'])->name
 Route::delete('/page-destroy/{id}', [TermAndPrivacyController::class, 'destroy']);
 Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'destroyForever']);
 
-Route::get('/keyvalue',[PurchaseHistoryController::class,'index']);
-Route::get('/keyvalue-edit-all',[PurchaseHistoryController::class,'keyvalueManagementEditAll']);
+Route::get('/keyvalue',[KeyValueController::class,'index']);
+Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);

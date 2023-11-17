@@ -15,19 +15,19 @@ class KeyValueSeeder extends Seeder
     {
         $fixedItems = [
             [
-                'name' => 'Tên website',
-                'key' => 'webTitle',
-                'value' => 'VCDTT'
+                'name' => 'Ảnh logo chính',
+                'key' => 'logo',
+                'value' => 'img_url'
             ],
             [
-                'name' => 'Logo bé',
+                'name' => 'Ảnh logo favicon',
                 'key' => 'favicon',
                 'value' => 'img_url'
             ],
             [
-                'name' => 'Logo chính',
-                'key' => 'logo',
-                'value' => 'img_url'
+                'name' => 'Tên website',
+                'key' => 'webTitle',
+                'value' => 'VCDTT'
             ],
             [
                 'name' => 'Email website',
@@ -65,29 +65,34 @@ class KeyValueSeeder extends Seeder
                 'value' => '942342523'
             ],
             [
+                'name' => 'Ảnh banner',
+                'key' => 'banner',
+                'value' => 'img_url'
+            ],
+            [
                 'name' => 'Tiêu đề meta (Meta title)',
                 'key' => 'metaTitle',
-                'value' => 'img_url'
+                'value' => ''
             ],
             [
                 'name' => 'Tác giả meta (Meta author)',
                 'key' => 'metaAuthor',
-                'value' => 'admin@gmail.com'
+                'value' => ''
             ],
             [
                 'name' => 'Mô tả meta (Meta description)',
                 'key' => 'metaDescription',
-                'value' => 'admin@gmail.com'
+                'value' => ''
             ],
             [
                 'name' => 'Từ khóa meta (Meta keyword)',
                 'key' => 'metaKeyword',
-                'value' => 'admin@gmail.com'
+                'value' => ''
             ],
             [
                 'name' => 'Phân tích của Google',
                 'key' => 'metaAnalytic',
-                'value' => 'admin@gmail.com'
+                'value' => ''
             ],
         ];
             DB::table('key_value')->insert($fixedItems);
