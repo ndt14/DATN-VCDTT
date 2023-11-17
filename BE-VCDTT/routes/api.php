@@ -143,4 +143,5 @@ Route::delete('/page-destroy/{id}', [TermAndPrivacyController::class, 'destroy']
 Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'destroyForever']);
 
 Route::get('/keyvalue',[KeyValueController::class,'index']);
+Route::get('/keyvalue/{key}',[KeyValueController::class,'show']);
 Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);

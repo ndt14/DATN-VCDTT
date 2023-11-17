@@ -41,9 +41,16 @@ class KeyValueController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($key)
     {
-        //
+        $keyvalue = KeyValue::where('key',$key)->get();
+        return response()->json([
+            'data' => [
+                'keyvalue' => KeyValueResource::collection($keyvalue),
+            ],
+            'message' => 'OK',
+            'status' => 200
+        ],);
     }
 
     /**
