@@ -73,31 +73,12 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $url = url('http://datn-vcdtt.test:5173/tours/' . $this->tour_id);
-
-        if ($this->purchase_history->user_id == null) {
-            return (new MailMessage)
-                ->subject('Cập nhật trạng thái đơn hàng')
-                ->greeting('Xin chào!')
-                ->line($this->status)
-                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-        } elseif ($this->purchase_status == 3) {
-            return (new MailMessage)
-                ->subject('Cập nhật trạng thái đơn hàng')
-                ->greeting('Xin chào!')
-                ->line($this->status)
-                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-
-        } else {
-            return (new MailMessage)
-                ->subject('Cập nhật trạng thái đơn hàng')
-                ->greeting('Xin chào!')
-                ->line($this->status)
-                ->action('Kiểm tra đơn hàng của bạn ', url('http://datn-vcdtt.test:5173/user/tours')) //link đến trang đơn hàng của khách
-                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-        }
+        return (new MailMessage)
+            ->greeting('Xin chào!')
+            ->line($this->status)
+            ->action('Kiểm tra đơn hàng của bạn ', url('http://datn-vcdtt.test:5173/user/tours')) //link đến trang đơn hàng của khách
+            ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
+            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
     /**
