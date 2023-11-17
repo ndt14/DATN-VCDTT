@@ -136,7 +136,19 @@
             </div>
             <hr>
             <div class="row">
-                <div class="mb-3 col-4">
+                <div class="mb-3">
+                    <div class="form-label">Chính sách và điều khoản đã đồng ý</div>
+                    <textarea id="editor" rows="5" class="form-control text-editor ckeditor" name="details"
+                        placeholder="Nhập nội dung mô tả">{{ $item['payment_term']  }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <textarea id="editor" rows="5" class="form-control text-editor ckeditor" name="details"
+                        placeholder="Nhập nội dung mô tả">{{ $item['payment_privacy']  }}</textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="mb-3 col-6">
                     <div class="form-label">Trạng thái thanh toán</div>
                     <div class="custom-controls-stacked">
                         @switch ($item['payment_status'])

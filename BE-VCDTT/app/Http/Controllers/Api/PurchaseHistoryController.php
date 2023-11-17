@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\CouponResource;
-use Illuminate\Support\Facades\Schema;
 use App\Notifications\ComfirmPaymentAdmin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CancelNotificationAdmin;
@@ -24,7 +23,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Notifications\PurchaseNotificationAdmin;
 use App\Models\Notification as NotificationModel;
 use App\Notifications\CancelPurchaseMailToClient;
+use App\Notifications\CancelPurchaseNotification;
 use App\Notifications\RefundRemindingNotificationAdmin;
+use Illuminate\Support\Facades\Schema;
 
 
 class PurchaseHistoryController extends Controller
@@ -75,6 +76,14 @@ class PurchaseHistoryController extends Controller
         $user = User::where('is_admin', 1)->first();
 
         $data = $request->except('coupon_code', '_token');
+
+        // if (!$data['transaction_id']) {
+        //     $data['payment_status'] = 0;
+        //     $data['purchase_status'] = 0;
+        // } else {
+        //     $data['payment_status'] = 1;
+        //     $data['purchase_status'] = 1;
+        // }
 
         $purchaseHistory = PurchaseHistory::create($data);
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
