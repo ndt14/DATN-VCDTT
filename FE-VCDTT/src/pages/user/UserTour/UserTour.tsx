@@ -270,6 +270,8 @@ const UserTour = () => {
                   tourStatus = "Đang diễn ra";
                 } else if (tour_status == 3) {
                   tourStatus = "Tour đã kết thúc";
+                } else if (tour_status == 4) {
+                  tourStatus = "Còn 1 ngày trước ngày đi tour";
                 }
                 // console.log(coupon_fixed);
 
@@ -470,7 +472,7 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
-                              {payment_status == 2 ? (
+                              {payment_status == 1 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}

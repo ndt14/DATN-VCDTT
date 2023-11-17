@@ -62,7 +62,7 @@ const BillSuccess = () => {
           const updatedBillData: Bill = {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
-            payment_status: 1,
+            payment_status: 2,
             purchase_status: 1,
           };
           await updateBill(updatedBillData);
@@ -70,7 +70,7 @@ const BillSuccess = () => {
           const updatedBillData: Bill = {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
-            payment_status: 0,
+            payment_status: 1,
           };
           await updateBill(updatedBillData);
         }
