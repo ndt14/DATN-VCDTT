@@ -24,7 +24,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     protected $email;
     protected $phone_number;
     protected $address;
-    protected $payment_method;
+    protected $purchase_method;
     protected $transaction_id;
     protected $updated_at;
     protected $table;
@@ -44,15 +44,15 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         $this->address = $purchase_history->address;
         $this->user_id = $purchase_history->user_id;
 
-        if ($purchase_history->payment_method == 1) {
-            $this->payment_method = 'Chuyển khoản online';
+        if ($purchase_history->purchase_method == 1) {
+            $this->purchase_method = 'Chuyển khoản online';
             $this->transaction_id = '';
         } else {
-            $this->payment_method = 'Thanh toán VNPAY';
+            $this->purchase_method = 'Thanh toán VNPAY';
             $this->transaction_id = $purchase_history->transaction_id;
         };
         $this->updated_at = $purchase_history->updated_at;
-        switch ($purchase_history->purchase_status) {
+        switch ($this->purchase_history->purchase_status) {
             case '1':
                 $this->status = 'Đơn hàng của bạn mới bị hủy do hết hạn thanh toán';
                 break;
@@ -109,7 +109,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                     'email' => $this->email,
                     'phone_number' => $this->phone_number,
                     'address' => $this->address,
-                    'payment_method' => $this->payment_method,
+                    'purchase_method' => $this->purchase_method,
                     'transaction_id' => $this->transaction_id,
                     'updated_at' => $this->updated_at,
                 ]);

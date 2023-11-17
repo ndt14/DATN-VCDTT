@@ -33,6 +33,11 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
+        if ($purchaseHistory->purchase_method == 1){
+            $this->transaction_id = '';
+        } else {
+            $this->transaction_id = 'Mã hóa đơn: ' . $purchaseHistory->transaction_id;
+        }
         $this->transaction_id = $purchaseHistory->transaction_id;
         $this->tour_name = $purchaseHistory->tour_name;
         $this->name = $purchaseHistory->name;
@@ -57,7 +62,7 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
         return (new MailMessage)
                     ->subject('Khách hàng thanh toán đơn hàng')
                     ->greeting('Xin chào Admin!')
-                    ->line('Khách hàng ' . $this->name . ' vừa thanh toán đơn hàng của họ. Mã hóa đơn: ' . $this->transaction_id . ' .Vui lòng kiểm tra tài khoản của bạn và phê duyệt cho khách hàng')
+                    ->line('Khách hàng ' . $this->name . ' vừa thanh toán đơn hàng của họ. ' . $this->transaction_id . ' .Vui lòng kiểm tra tài khoản của bạn và phê duyệt cho khách hàng')
                     ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
