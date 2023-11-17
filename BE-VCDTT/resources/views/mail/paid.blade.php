@@ -132,7 +132,7 @@
                                         <th>Phương thức vận chuyển</th>
                                     </tr>
                                     <tr>
-                                        <td>{{ $payment_method }}</td>
+                                        <td>{{ $purchase_method }}</td>
                                         <td>Giao hàng tận nơi</td>
                                     </tr>
                                     <tr>
