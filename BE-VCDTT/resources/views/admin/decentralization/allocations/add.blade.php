@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Thêm mới phân quyền
+@endSection
 @section('content')
 @section('select2_css')
 <link rel="stylesheet" href="{{asset('css/plugins/select2/select2.min.css')}}"> 

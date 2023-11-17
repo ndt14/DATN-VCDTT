@@ -1,7 +1,6 @@
 <!-- Tabler Core -->
 <script src="{{ asset('admin/assets/js/tabler.min.js') }}" defer></script>
 <script src="{{ asset('admin/assets/js/demo.min.js') }}" defer></script>
-<script src="{{ asset('ckedit_js/main.js') }}" type="text/javascript"></script>
 <!-- Jquery -->
 <script src="{{ asset('admin/assets/js/vendors/jquery-3.6.3.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/Bs5Utils.js') }}"></script>

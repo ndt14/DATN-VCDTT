@@ -1,4 +1,7 @@
 @extends('admin.common.layout')
+@section('meta_title')
+Dánh sách đánh giá {{ $data->tour->name ?? 'test' }}
+@endSection
 @section('content')
     <div class="page-header d-print-none">
         <div class="container-xl">
