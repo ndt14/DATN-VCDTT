@@ -18,6 +18,8 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $purchase_status;
     protected $status;
+    protected $tour_id;
+    protected $purchase_history;
 
     /**
      * Create a new notification instance.
@@ -25,7 +27,9 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     public function __construct($purchase_history)
     {
         //
+        $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
+        $this->tour_id = $purchase_history->tour_id;
         switch ($purchase_history->purchase_status) {
             case '1':
                 $this->status = 'Đơn hàng của bạn mới bị hủy do hết hạn thanh toán';
@@ -68,14 +72,32 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $url = url('http://datn-vcdtt.test:5173/tours/' . $this->tour_id);
 
-        return (new MailMessage)
-            ->subject('Cập nhật trạng thái đơn hàng')
-            ->greeting('Xin chào!')
-            ->line($this->status)
-            ->action('Kiểm tra đơn hàng của bạn ', url('http://datn-vcdtt.test:5173/user/tours')) //link đến trang đơn hàng của khách
-            ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+        if ($this->purchase_history->user_id == null) {
+            return (new MailMessage)
+                ->subject('Cập nhật trạng thái đơn hàng')
+                ->greeting('Xin chào!')
+                ->line($this->status)
+                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+        } elseif ($this->purchase_status == 3) {
+            return (new MailMessage)
+                ->subject('Cập nhật trạng thái đơn hàng')
+                ->greeting('Xin chào!')
+                ->line($this->status)
+                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+
+        } else {
+            return (new MailMessage)
+                ->subject('Cập nhật trạng thái đơn hàng')
+                ->greeting('Xin chào!')
+                ->line($this->status)
+                ->action('Kiểm tra đơn hàng của bạn ', url('http://datn-vcdtt.test:5173/user/tours')) //link đến trang đơn hàng của khách
+                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
+                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+        }
     }
 
     /**

@@ -176,9 +176,11 @@ class PurchaseHistoryController extends Controller
             } else {
                 switch ($purchaseHistory->purchase_status) {
                     case '2':
-                        $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory->purchase_status));
-                        foreach ($users as $user) {
-                            $users->notify(new ComfirmPaymentAdmin($purchaseHistory));
+                        if ($purchaseHistory->comfirm_click == 2) {
+                            $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory->purchase_status));
+                            foreach ($users as $user) {
+                                $users->notify(new ComfirmPaymentAdmin($purchaseHistory));
+                            }
                         }
                         break;
                     case '4':
@@ -225,11 +227,6 @@ class PurchaseHistoryController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
-
-    // public function sendNotiComfirm(Request $request)
-    // {
-    //     $data = $request->except('_token');
-    // }
 
     public function destroyForever(string $id)
     {
