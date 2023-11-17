@@ -128,13 +128,19 @@ const BillSuccess = () => {
     phone: "Số điện thoại:",
   };
 
+  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
+
+  const containerStyle = {
+    background: `url(${backgroundImageUrl})`,
+    backgroundSize: "cover",
+  };
+
   return (
     <div>
       <section className="inner-banner-wrap">
-        <div className="inner-baner-container">
+        <div className="inner-baner-container" style={containerStyle}>
           <div className="container">
             <div className="inner-banner-content">
-              <h1 className="inner-title">Thanh toán</h1>
               <h1 className="inner-title">Tình trạng thanh toán</h1>
             </div>
           </div>
@@ -155,9 +161,18 @@ const BillSuccess = () => {
                 <div className="d-flex justify-content-between">
                   <div>
                     <h3>Đơn vị mua hàng</h3>
-                    <h4>Họ và tên: {userName}</h4>
-                    <p>Email: {userEmail}</p>
-                    <p>Số điện thoại: {phoneNumber}</p>
+                    <p>
+                      Họ và tên:{" "}
+                      <span className="font-weight-bold">{userName}</span>
+                    </p>
+                    <p>
+                      Email:{" "}
+                      <span className="font-weight-bold">{userEmail}</span>
+                    </p>
+                    <p>
+                      Số điện thoại:{" "}
+                      <span className="font-weight-bold">{phoneNumber}</span>
+                    </p>
                   </div>
                   <div>
                     <h3>Đơn vị bán hàng</h3>
@@ -171,7 +186,12 @@ const BillSuccess = () => {
                   </div>
                 </div>
                 <div className="mt-5">
-                  Tên tour: {billData?.data.purchase_history.tour_name}
+                  <p>
+                    Tên tour:{" "}
+                    <span className="font-weight-bold fs-4">
+                      {billData?.data.purchase_history.tour_name}
+                    </span>
+                  </p>
                   <div className="d-flex justify-content-between"></div>
                   <table className="table">
                     <thead>
@@ -187,22 +207,45 @@ const BillSuccess = () => {
                         <th scope="row">Người lớn</th>
                         <td>{billData?.data.purchase_history.adult_count}</td>
                         <td>
-                          {billData?.data.purchase_history.tour_adult_price}
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data.purchase_history.tour_adult_price
+                          )}
                         </td>
-                        <td>{totalAdultPrice}</td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(totalAdultPrice)}
+                        </td>
                       </tr>
                       <tr>
                         <th scope="row">Trẻ em</th>
                         <td>{billData?.data.purchase_history.child_count}</td>
                         <td>
-                          {billData?.data.purchase_history.tour_child_price}
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data.purchase_history.tour_child_price
+                          )}
                         </td>
-                        <td>{totalChildPrice}</td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(totalChildPrice)}
+                        </td>
                       </tr>
                       <tr>
                         <th scope="row">Tổng</th>
                         <td className="text-end" colSpan={3}>
-                          {totalPrice}
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(totalPrice)}
                         </td>
                       </tr>
                       <tr>
@@ -233,12 +276,18 @@ const BillSuccess = () => {
                 </div>
               </div>
             </div>
-            <button className="button ">
-              <Link to={"/"}>Trở về trang chủ</Link>
-            </button>
-            <button className="button" onClick={handlePrintPDF}>
-              In đơn hàng của bạn
-            </button>
+            <div className="">
+              <button className="btn-continue text-light mr-3">
+                <Link className="text-light" to={"/"}>
+                  Trở về trang chủ
+                </Link>
+              </button>
+
+              <button className="btn-continue" onClick={handlePrintPDF}>
+                In đơn hàng của bạn
+              </button>
+            </div>
+
             {isPrinting && (
               <div id="your-element-id">
                 <PDFDocument data={apiData} />
@@ -248,10 +297,12 @@ const BillSuccess = () => {
           </div>
         ) : (
           <div>
-            <div className="mt-10" style={{ height: "200px" }}></div>
+            <div className="mt-10"></div>
             <h2 className="text-danger">Thanh toán thất bại</h2>
-            <button className="rounded text-white bg-primary">
-              <Link to={"/"}>Trở về trang chủ</Link>
+            <button className="btn-continue text-light mr-3">
+              <Link className="text-light" to={"/"}>
+                Trở về trang chủ
+              </Link>
             </button>
           </div>
         )}

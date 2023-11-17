@@ -487,7 +487,7 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
-                              {payment_status == 1 && purchase_status != 6 ? (
+                              {purchase_method == 2 && purchase_status != 6 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}

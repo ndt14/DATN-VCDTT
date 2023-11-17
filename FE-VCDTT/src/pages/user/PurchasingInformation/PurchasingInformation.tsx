@@ -400,16 +400,22 @@ const PurchasingInformation = () => {
     titleElement.innerText = "Xác nhận thông tin";
   }
   //
+  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
+
+  const containerStyle = {
+    background: `url(${backgroundImageUrl})`,
+    backgroundSize: "cover",
+  };
 
   return (
     <>
       <main id="content" className="site-main">
         {/* <!-- Inner Banner html start--> */}
         <section className="inner-banner-wrap">
-          <div className="inner-baner-container">
+          <div className="inner-baner-container" style={containerStyle}>
             <div className="container">
               <div className="inner-banner-content">
-                <h1 className="inner-title">Checkout</h1>
+                <h1 className="inner-title">Thanh toán</h1>
               </div>
             </div>
           </div>
@@ -653,7 +659,7 @@ const PurchasingInformation = () => {
                   </form>
                   {/* Modal xác nhận thông tin */}
 
-                  <div className="">
+                  {/* <div className="">
                     <div
                       className="modal fade"
                       id="confirmTourForm"
@@ -848,7 +854,7 @@ const PurchasingInformation = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
