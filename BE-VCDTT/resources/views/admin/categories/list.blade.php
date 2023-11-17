@@ -111,7 +111,13 @@
                                     <tr>
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
-                                        <th {{ $key=='child'? "class=w-1":'' }} >@sortablelink($key, $value)</th>
+                                        <th {{ $key=='child'? "class=w-1":'' }} >
+                                            @if($key!='child')
+                                            @sortablelink($key, $value)
+                                            @else
+                                            {{ $value }}
+                                            @endif
+                                        </th>
                                         @endforeach
                                         <th></th>
                                     </tr>

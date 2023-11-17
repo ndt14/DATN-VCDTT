@@ -46,15 +46,16 @@ class PurchaseHistoryController extends Controller
                     foreach ($columns as $column) {
                         $query->orWhere($column, 'like', '%' . $keyword . '%');
                     }
-                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
-                    ->where('purchase_status', $request->purchase_status)->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+                })->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')
+                ->where('purchase_status', 'LIKE', '%' . $request->purchase_status??'' . '%')
+                ->where('tour_status', 'LIKE', '%' . $request->tour_status??'' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
             }
         } else {
-            if (!$request->purchase_status) {
-                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            } else {
-                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')->where('purchase_status', $request->purchase_status)->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            }
+                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
+                ->where('payment_status', '%' . $request->payment_status??'' . '%')
+                ->where('purchase_status',  '%' . $request->purchase_status??'' . '%')
+                ->where('tour_status', '%' . $request->tour_status??'' . '%')
+                ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
             [
@@ -251,11 +252,12 @@ class PurchaseHistoryController extends Controller
     {
         $data['payment_status'] = $payment_status = $request->payment_status ?? '';
         $data['purchase_status'] = $purchase_status = $request->purchase_status ?? '';
+        $data['tour_status'] = $tour_status = $request->tour_status ?? '';
         $data['sortField'] = $sortField = $request->sort ?? '';
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
@@ -267,8 +269,9 @@ class PurchaseHistoryController extends Controller
             $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
             $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
             $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
-            $request->status ? $data->setPath(request()->url())->appends(['payment_status' => $payment_status]) : '';
-            $request->status ? $data->setPath(request()->url())->appends(['purchase_status' => $purchase_status]) : '';
+            $request->payment_status ? $data->setPath(request()->url())->appends(['payment_status' => $payment_status]) : '';
+            $request->purchase_status ? $data->setPath(request()->url())->appends(['purchase_status' => $purchase_status]) : '';
+            $request->tour_status ? $data->setPath(request()->url())->appends(['tour_status' => $tour_status]) : '';
             $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
             if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));

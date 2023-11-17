@@ -69,22 +69,21 @@
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             @php
                                                 $purchaseStatus = [
-                                                    0 => 'Chưa thanh toán',
-                                                    1 => 'Đang đợi xác nhận',
-                                                    2 => 'Chưa tới ngày đi',
-                                                    3 => 'Còn một ngày tới ngày đi',
-                                                    4 => 'Đang diễn ra',
-                                                    5 => 'Đã kết thúc',
-                                                    6 => 'Đang đợi xác nhận hủy tour',
-                                                    7 => 'Khách đã hủy',
-                                                    8 => 'Admin đã hủy',
-                                                    9 => 'Tự động hủy do quá hạn',
-                                                    10 => 'Đã hoàn tiền',
-                                                    11 => 'Đã kết thúc',
-                                                    12 => 'khách đã đánh giá',
-                                                    13 => 'Chuyển khoản thiếu',
-                                                    14 => 'Chuyển khoản thừa',
+                                                    1 => "Tự động hủy do quá hạn",
+                                                    2 => "Chưa phê duyệt thanh toán",
+                                                    3 => "Đã phê duyệt thanh toán",
+                                                    4 => "Đang muốn hủy tour",
+                                                    5 => "Đã phê duyệt hủy tour",
+                                                    6 => "Đã hủy thành công",
+                                                    7 => "Chuyển khoản thiếu",
+                                                    8 => "Chuyển khoản thừa"
                                                 ];
+                                                $tourStatus=[
+                                                    1 => "Chưa tới ngày đi",
+                                                    2 => "Đang diễn ra",
+                                                    3 => "Đã kết thúc",
+                                                    4 => "Còn 1 ngày tới ngày đi tour"
+                                                ]
                                             @endphp
                                             <select class="form-select" name="purchase_status">
                                                 @if (!request()->query('purchase_status'))
@@ -96,6 +95,20 @@
                                                     <option
                                                         {{ request()->query('purchase_status') === "$key" ? 'selected' : '' }}
                                                         value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-auto">
+                                            <select class="form-select" name="tour_status">
+                                                @if (!request()->query('tour_status'))
+                                                    <option value="">Chọn trạng thái tour</option>
+                                                @else
+                                                    <option value="">Mặc định</option>
+                                                @endif
+                                                @foreach ($tourStatus as $key => $value)
+                                                    <option
+                                                    {{ request()->query('tour_status') === "$key" ? 'selected' : '' }}
+                                                    value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
