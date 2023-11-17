@@ -59,13 +59,13 @@ const TourDetail = () => {
   //
   const { id } = useParams<{ id: string }>();
 
-  const { data: tourData ,isLoading} = useGetTourByIdQuery(id || "");
+  const { data: tourData, isLoading } = useGetTourByIdQuery(id || "");
   console.log(tourData);
   const [tour, setTour] = useState(tourData);
 
   const tourId = parseInt(id);
   // console.log(typeof tourId);
-const main_img = tourData?.data?.tour.main_img;
+  const main_img = tourData?.data?.tour.main_img;
   const tourName = tourData?.data?.tour.name;
   const tourLocation = tourData?.data?.tour.name;
   const tourPrice = tourData?.data?.tour.adult_price;
@@ -73,6 +73,9 @@ const main_img = tourData?.data?.tour.main_img;
   const exact_location = tourData?.data?.tour.exact_location;
   const tourDuration = tourData?.data?.tour.duration;
   const imageGallery = tourData?.data?.images;
+  const tourLimit = tourData?.data?.tour.tourist_count;
+  console.log(tourLimit);
+
   console.log(imageGallery);
 
   console.log(tourDuration);
@@ -579,7 +582,9 @@ const main_img = tourData?.data?.tour.main_img;
                                               {user_name}
                                             </h5>
                                             <span className="post-on">
-                                              {moment(created_at).format('DD/MM/YYYY')}
+                                              {moment(created_at).format(
+                                                "DD/MM/YYYY"
+                                              )}
                                             </span>
                                             <div className="rating-wrap">
                                               <div
@@ -592,10 +597,12 @@ const main_img = tourData?.data?.tour.main_img;
                                               </div>
                                             </div>
                                           </div>
-                                          <p className=""
-                                    dangerouslySetInnerHTML={{
-                                      __html: content,
-                                    }}></p>
+                                          <p
+                                            className=""
+                                            dangerouslySetInnerHTML={{
+                                              __html: content,
+                                            }}
+                                          ></p>
                                         </div>
                                       </li>
                                       {admin_answer && ( // Check if admin has responded
@@ -608,11 +615,12 @@ const main_img = tourData?.data?.tour.main_img;
                                                     Admin
                                                   </h5>
                                                 </div>
-                                                <p className=""
-                                    dangerouslySetInnerHTML={{
-                                      __html: admin_answer,
-                                    }}></p>
-                                               
+                                                <p
+                                                  className=""
+                                                  dangerouslySetInnerHTML={{
+                                                    __html: admin_answer,
+                                                  }}
+                                                ></p>
                                               </div>
                                             </li>
                                           </ol>
@@ -751,15 +759,17 @@ const main_img = tourData?.data?.tour.main_img;
                             <i className="fa fa-minus"></i>
                           </a> */}
                           <input
-                            className="quantity"
+                            className="quantity-form"
                             onChange={handleProductNumberChange}
                             type="number"
                             value={productNumber}
                           />
                           <br />
                           <input
-                            className="quantity"
-                            style={{ marginTop: "36px" }}
+                            className="quantity-form"
+                            style={{
+                              marginTop: "36px",
+                            }}
                             type="number"
                             // min={0}
                             onChange={handleProductChildNumberChange}
@@ -779,6 +789,18 @@ const main_img = tourData?.data?.tour.main_img;
                             onChange={onChange}
                             disabledDate={disabledDate}
                           />
+                        </div>
+
+                        <div className="col-sm-12">
+                          {productNumber + productChildNumber > tourLimit ? (
+                            <p style={{ color: "red" }} className="mt-2">
+                              Số lượng vượt quá giới hạn tour. Nếu bạn thực sự
+                              muốn đặt tour với số lượng lớn, hãy liên hệ trực
+                              tiếp với chúng tôi
+                            </p>
+                          ) : (
+                            <div></div>
+                          )}
                         </div>
 
                         <div className="col-sm-12 mt-2">
@@ -812,15 +834,21 @@ const main_img = tourData?.data?.tour.main_img;
                                   tourId,
                                   exact_location,
                                   tourDuration,
-                                 main_img
+                                  main_img,
                                 }}
                               >
-                                <input
+                                <button
                                   type="submit"
                                   name="submit"
                                   value="Đặt tour"
-                                  disabled={!isDateSelected}
-                                />
+                                  disabled={
+                                    productNumber + productChildNumber >
+                                    tourLimit
+                                  }
+                                  className="btn-continue"
+                                >
+                                  Đặt tour
+                                </button>
                               </Link>
                             </div>
                           ) : (

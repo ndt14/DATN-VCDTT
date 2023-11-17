@@ -63,7 +63,8 @@ const BillSuccess = () => {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
             payment_status: 2,
-            purchase_status: 1,
+            purchase_status: 2,
+            comfirm_click: 2,
           };
           await updateBill(updatedBillData);
         } else {

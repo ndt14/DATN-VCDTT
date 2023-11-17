@@ -18,6 +18,9 @@ import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
 import { Spin } from "antd";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+// import { setTimeout } from "timers/promises";
 
 // type Props = {};
 
@@ -257,6 +260,12 @@ const PurchasingInformation = () => {
   console.log(paymentMethod);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
   };
@@ -264,10 +273,7 @@ const PurchasingInformation = () => {
 
   // Khi bạn tắt modal CashPaymentModal, đặt showConfirmTourFormModal thành false
   const hideConfirmTourFormModal = () => {
-    const confirmTourFormModal = document.getElementById("confirmTourForm"); // Lấy modal confirmTourForm bằng id
-    if (confirmTourFormModal) {
-      confirmTourFormModal.classList.remove("show"); // Ẩn modal
-    }
+    setShow(false);
   };
 
   // Trong hàm handleCashPaymentModalClose, sau khi bạn đã đặt showPaymentModal thành false, gọi hàm hideConfirmTourFormModal để ẩn modal confirmTourForm
@@ -323,7 +329,7 @@ const PurchasingInformation = () => {
         setLoading(false);
         alert("Đặt tour thành công");
         hideConfirmTourFormModal();
-        setTimeout(() => {}, 1000);
+
         setShowPaymentModal(true);
       } else if (paymentMethod === "2") {
         setLoading(false);
@@ -393,6 +399,8 @@ const PurchasingInformation = () => {
   if (titleElement) {
     titleElement.innerText = "Xác nhận thông tin";
   }
+  //
+
   return (
     <>
       <main id="content" className="site-main">
@@ -620,31 +628,24 @@ const PurchasingInformation = () => {
                       </div>
                     ) : (
                       <div>
-                        {count >= 5 ? (
+                        {count >= 100 ? (
                           <div>
-                            <button
-                              type="button"
-                              data-toggle="modal"
-                              data-target="#confirmTourForm"
-                              className="btn-continue"
+                            <Button
+                              variant="primary"
+                              onClick={handleShow}
                               disabled
                             >
                               Tiếp tục
-                            </button>
+                            </Button>
                             <p className="text-danger mt-2">
                               Bạn đã vượt quá giới hạn số lần đặt tour này
                             </p>
                           </div>
                         ) : (
                           <div>
-                            <button
-                              type="button"
-                              data-toggle="modal"
-                              data-target="#confirmTourForm"
-                              className="btn-continue"
-                            >
+                            <Button variant="primary" onClick={handleShow}>
                               Tiếp tục
-                            </button>
+                            </Button>
                           </div>
                         )}
                       </div>
@@ -848,6 +849,175 @@ const PurchasingInformation = () => {
                       </div>
                     </div>
                   </div>
+
+                  <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Xác nhận thanh toán</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <form onSubmit={handleSubmit}>
+                        <div className="row">
+                          <div className="form-group col-6">
+                            <label htmlFor="">Họ và tên</label>
+                            <input
+                              type="text"
+                              name="name"
+                              value={formik.values.name}
+                              disabled
+                            />{" "}
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Số điện thoại</label>
+                            <input
+                              type="text"
+                              name="phone_number"
+                              value={formik.values.phone_number}
+                              disabled
+                            />{" "}
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Email</label>
+                            <input
+                              type="email"
+                              name="email"
+                              value={formik.values.email}
+                              disabled
+                            />
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Ngày đặt tour</label>
+                            <input
+                              type="text"
+                              name="tour_start_time"
+                              value={formattedDate}
+                              disabled
+                            />
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">
+                              Ngày kết thúc tour (dự kiến)
+                            </label>
+                            <input
+                              type="text"
+                              name="tour_start_time"
+                              value={formattedEndDate}
+                              disabled
+                            />
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Giá tour</label>
+                            <input
+                              type="text"
+                              name="created_at"
+                              value={formattedResultPrice}
+                              disabled
+                            />
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Số lượng trẻ em</label>
+                            <input
+                              type="text"
+                              name="child_count"
+                              value={productChildNumber}
+                              disabled
+                            />
+                          </div>
+                          <div className="form-group col-6">
+                            <label htmlFor="">Số lượng người lớn</label>
+                            <input
+                              type="text"
+                              name="adult_count"
+                              value={productNumber}
+                              disabled
+                            />
+                          </div>
+                        </div>
+
+                        {formattedResultPrice == formattedFinalPrice ? (
+                          <div></div>
+                        ) : (
+                          <div className="form-group">
+                            <label htmlFor="">
+                              Giá tour sau khi nhập coupon
+                            </label>
+                            <input
+                              type="text"
+                              name="created_at"
+                              value={formattedFinalPrice}
+                              disabled
+                            />
+                          </div>
+                        )}
+
+                        <div className="form-group">
+                          <label htmlFor="">Phương thức thanh toán</label>
+                          <div className="mr-3">
+                            <input
+                              type="radio"
+                              name="purchase_method"
+                              value="1"
+                              className="mr-2"
+                              onChange={handlePaymentMethodChange}
+                              checked={paymentMethod === "1"}
+                            />
+                            Thanh toán online (chuyển khoản ngân hàng)
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              name="purchase_method"
+                              value="2"
+                              className="mr-2"
+                              onChange={handlePaymentMethodChange}
+                              checked={paymentMethod === "2"}
+                            />
+                            VNPAY
+                          </div>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={handleCheckboxChange}
+                        />
+                        <span className="ml-2">
+                          Tôi đồng ý với{" "}
+                          <Link to={"/privacy_policy"}>Chính sách</Link> của
+                          trang
+                        </span>
+                        <br />
+                        <br />
+                        {!isChecked ? (
+                          <button
+                            type="submit"
+                            disabled
+                            className="btn btn-primary"
+                          >
+                            Xác nhận thanh toán
+                          </button>
+                        ) : (
+                          <div>
+                            <button
+                              type="submit"
+                              className="btn btn-primary"
+                              // disabled={loading}
+                            >
+                              Xác nhận thanh toán
+                              {loading == true ? (
+                                <Spin className="ml-2" />
+                              ) : (
+                                <span></span>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
 
                   {showPaymentModal ? (
                     <CashPaymentModal

@@ -79,7 +79,8 @@ const UserTour = () => {
   //
   const cancelTour = async (id: number) => {
     const data = {
-      purchase_status: 7,
+      purchase_status: 6,
+      payment_status: 1,
       id: id,
     };
 
@@ -106,7 +107,7 @@ const UserTour = () => {
   const cancelTourRefund = async (id: number) => {
     const data = {
       purchase_status: 4,
-      payment_status: 4,
+      payment_status: 2,
       id: id,
     };
 
@@ -133,6 +134,7 @@ const UserTour = () => {
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
+
   return (
     <div>
       <section className="inner-banner-wrap">
@@ -237,6 +239,8 @@ const UserTour = () => {
                     confirmPayment(id);
                   }
                 };
+                console.log(coupon_fixed);
+                console.log(coupon_percentage);
                 let billStatus;
                 if (purchase_status === 1) {
                   billStatus = "Tự động hủy do quá hạn";
@@ -249,7 +253,7 @@ const UserTour = () => {
                 } else if (purchase_status === 5) {
                   billStatus = "Đã phê duyệt hủy tour, chưa hoàn tiền";
                 } else if (purchase_status === 6) {
-                  billStatus = "Đã hủy thành công (đã hoàn tiền)";
+                  billStatus = "Đã hủy thành công";
                 } else if (purchase_status === 7) {
                   billStatus = "Chuyển khoản thiếu";
                 } else if (purchase_status === 8) {
@@ -441,20 +445,31 @@ const UserTour = () => {
                                   <span className="fw-bold">{adult_count}</span>
                                 </div>
                               </div>
-                              {coupon_fixed ? (
-                                <p>
-                                  Coupon:{" "}
-                                  <span className="fw-bold">
-                                    Giảm {coupon_fixed}đ
-                                  </span>
-                                </p>
+                              {coupon_fixed != 0 && coupon_fixed != null ? (
+                                <div>
+                                  <p>
+                                    Coupon:{" "}
+                                    <span className="fw-bold">
+                                      Giảm {coupon_fixed}đ
+                                    </span>
+                                  </p>
+                                </div>
                               ) : (
-                                <p>
-                                  Coupon:{" "}
-                                  <span className="fw-bold">
-                                    Giảm {coupon_percentage}%
-                                  </span>
-                                </p>
+                                <div>
+                                  {coupon_percentage != null ? (
+                                    <p>
+                                      Coupon:{" "}
+                                      <span className="fw-bold">
+                                        Giảm {coupon_percentage}%
+                                      </span>
+                                    </p>
+                                  ) : (
+                                    <p>
+                                      Coupon:{" "}
+                                      <span className="fw-bold">Không có</span>
+                                    </p>
+                                  )}
+                                </div>
                               )}
 
                               <p>
@@ -472,7 +487,7 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
-                              {payment_status == 1 ? (
+                              {payment_status == 1 && purchase_status != 6 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
@@ -480,43 +495,47 @@ const UserTour = () => {
                                   Thanh toán
                                 </button>
                               ) : (
-                                <div></div>
-                              )}
-                              {purchase_status == 2 ? (
                                 <div>
-                                <Popconfirm
-                                  title="Hủy tour chưa thanh toán"
-                                  description="Bạn có chắc muốn hủy tour?"
-                                  onConfirm={handleCancelTour}
-                                  onCancel={cancel}
-                                  okText="Đồng ý"
-                                  cancelText="Hủy bỏ"
-                                >
-                                  {/* <button className="btn-continue">Hủy</button> */}
-                                  {checked ? (
-                                              <Button
-                                                className="btn-continue"
-                                              >
-                                                Hủy tour
-                                              </Button>
-                                            ) : (
-                                              <div></div>
-                                            )}
-                                </Popconfirm>
-                                <Checkbox
-                                checked={checked}
-                                onChange={handleCheckboxChange}
-                              >
-                                Đọc kỹ{" "}
-                                <a
-                                  className="text-primary"
-                                  onClick={openWindow}
-                                >
-                                  chính sách
-                                </a>{" "}
-                                của chúng tôi nếu bạn muốn hủy tour.
-                              </Checkbox>
-                              </div>
+                                  {purchase_status == 6 ? (
+                                    <div></div>
+                                  ) : (
+                                    <div></div>
+                                  )}
+                                </div>
+                              )}
+                              {purchase_status == 2 && tour_status == 1 ? (
+                                <div>
+                                  <Popconfirm
+                                    title="Hủy tour chưa thanh toán"
+                                    description="Bạn có chắc muốn hủy tour?"
+                                    onConfirm={handleCancelTour}
+                                    onCancel={cancel}
+                                    okText="Đồng ý"
+                                    cancelText="Hủy bỏ"
+                                  >
+                                    {/* <button className="btn-continue">Hủy</button> */}
+                                    {checked ? (
+                                      <Button className="btn-continue">
+                                        Hủy tour
+                                      </Button>
+                                    ) : (
+                                      <div></div>
+                                    )}
+                                  </Popconfirm>
+                                  <Checkbox
+                                    checked={checked}
+                                    onChange={handleCheckboxChange}
+                                  >
+                                    Đọc kỹ{" "}
+                                    <a
+                                      className="text-primary"
+                                      onClick={openWindow}
+                                    >
+                                      chính sách
+                                    </a>{" "}
+                                    của chúng tôi nếu bạn muốn hủy tour.
+                                  </Checkbox>
+                                </div>
                               ) : (
                                 <span>
                                   {purchase_status == 3 ? (
