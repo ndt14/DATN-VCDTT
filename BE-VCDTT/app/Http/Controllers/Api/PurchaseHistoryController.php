@@ -22,6 +22,7 @@ use App\Notifications\SendMailToClientWhenPaid;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Notifications\PurchaseNotificationAdmin;
 use App\Models\Notification as NotificationModel;
+use App\Models\TermAndPrivacy;
 use App\Notifications\CancelPurchaseMailToClient;
 use App\Notifications\CancelPurchaseNotification;
 use App\Notifications\RefundRemindingNotificationAdmin;
@@ -84,7 +85,14 @@ class PurchaseHistoryController extends Controller
         //     $data['payment_status'] = 1;
         //     $data['purchase_status'] = 1;
         // }
-
+        $term = TermAndPrivacy::where('type','=', 1)->where('status','=', 1)->first()->content;
+        $privacy = TermAndPrivacy::where('type','=', 2)->where('status','=', 1)->first()->content;
+        if(!$term){
+            $data['payment_term'] = $term;
+        }
+        if(!$term){
+            $data['payment_privacy'] = $privacy;
+        }
         $purchaseHistory = PurchaseHistory::create($data);
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
 
