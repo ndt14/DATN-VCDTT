@@ -188,11 +188,11 @@
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1"
     });
-    var channel = pusher.subscribe('datn-vcdtt-development');
-    channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+    var channel = pusher.subscribe('PurchaseNotification');
+    channel.bind('datn-vcdtt-development', function(data) {
         var id = data.id;
-        if (data.purchase_method == 1) {
-            var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.transaction_id;
+        if (data.data.purchase_method == 2) {
+            var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.data.transaction_id;
         } else {
             var purchaseMethodText = 'Khách hàng chuyển khoản online:';
         }
@@ -207,13 +207,13 @@
                     </div>
                     <div class="col text-truncate " style="width: 850px">
                         <a onclick='markAsRead('` + id + `')'
-                            href="javascript: viewPurchaseHistoryDetail(${data.purchase_history_id});"
+                            href="javascript: viewPurchaseHistoryDetail(${data.data.purchase_history_id});"
                             class="text-body d-block">
                             ` + purchaseMethodText + `
                         </a>
                         <div class="d-block text-secondary mt-n1">
                             <span
-                                class="text-wrap">${data.data}</span>
+                                class="text-wrap">${data.data.data}</span>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -248,7 +248,7 @@
             .then(function(response) {
                 readNoti(id);
                 let checkNoti = document.getElementsByName('notification-read');
-                if (checkNoti.length == 0 && document.getElementById('notificationDot')) {
+                if (checkNoti.length == '0' && document.getElementById('notificationDot')) {
                     document.getElementById('notificationDot').remove();
                 }
             })

@@ -20,6 +20,15 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     protected $status;
     protected $tour_id;
     protected $purchase_history;
+    protected $name;
+    protected $email;
+    protected $phone_number;
+    protected $address;
+    protected $payment_method;
+    protected $transaction_id;
+    protected $updated_at;
+    protected $table;
+    protected $user_id;
 
     /**
      * Create a new notification instance.
@@ -29,7 +38,20 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         //
         $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
-        $this->tour_id = $purchase_history->tour_id;
+        $this->name = $purchase_history->name;
+        $this->email = $purchase_history->email;
+        $this->phone_number = $purchase_history->phone_number;
+        $this->address = $purchase_history->address;
+        $this->user_id = $purchase_history->user_id;
+
+        if ($purchase_history->payment_method == 1) {
+            $this->payment_method = 'Chuyển khoản online';
+            $this->transaction_id = '';
+        } else {
+            $this->payment_method = 'Thanh toán VNPAY';
+            $this->transaction_id = $purchase_history->transaction_id;
+        };
+        $this->updated_at = $purchase_history->updated_at;
         switch ($purchase_history->purchase_status) {
             case '1':
                 $this->status = 'Đơn hàng của bạn mới bị hủy do hết hạn thanh toán';
@@ -72,24 +94,27 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = url('http://datn-vcdtt.test:5173/tours/' . $this->tour_id);
-
-        if ($this->purchase_history->user_id == null) {
+        if ($this->user_id == 0){
             return (new MailMessage)
                 ->subject('Cập nhật trạng thái đơn hàng')
                 ->greeting('Xin chào!')
                 ->line($this->status)
                 ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
                 ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-        } elseif ($this->purchase_status == 3) {
+        } elseif ($this->user_id != 0 && $this->purchase_status == 3) {
             return (new MailMessage)
                 ->subject('Cập nhật trạng thái đơn hàng')
-                ->greeting('Xin chào!')
-                ->line($this->status)
-                ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+                ->view('mail.paid', [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'phone_number' => $this->phone_number,
+                    'address' => $this->address,
+                    'payment_method' => $this->payment_method,
+                    'transaction_id' => $this->transaction_id,
+                    'updated_at' => $this->updated_at,
+                ]);
 
-        } else {
+        } elseif ($this->user_id != 0) {
             return (new MailMessage)
                 ->subject('Cập nhật trạng thái đơn hàng')
                 ->greeting('Xin chào!')

@@ -3,18 +3,16 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\HtmlString;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue,ShouldBroadcast
+class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $purchaseHistoryID;
@@ -55,7 +53,7 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
             ->subject('Nhắc nhở hoàn tiền')
             ->greeting('Xin chào!')
             ->line('Bạn vừa phê duyệt hủy tour ' . $this->tour_name)
-            ->line('Vui lòng hoàn tiền cho khách hàng' . $this->name)
+            ->line('Vui lòng hoàn tiền cho khách hàng ' . $this->name)
             ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
     }
 
@@ -73,10 +71,5 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];
-    }
-
-    public function broadcastOn()
-    {
-        return new Channel('datn-vcdtt-development');
     }
 }
