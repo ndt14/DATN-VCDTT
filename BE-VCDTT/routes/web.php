@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FAQController;
 use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\Api\KeyValueController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
@@ -170,6 +171,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/purchase-history/trash', [PurchaseHistoryController::class, 'purchaseHistoryManagementTrash'])->name('purchase_histories.trash')->middleware(['permission:admin|delete bill']);
     Route::get('purchase-history/restore/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementRestore'])->name('purchase_histories.restore')->middleware(['permission:admin|delete bill']);
 
+    Route::match(['GET', 'POST'],'/settings',[KeyValueController::class,'keyvalueManagementEditAll'])->name('settings');
+
     Route::middleware('isAdmin')->group(function(){
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
     Route::match(['GET', 'POST'], '/role/add', [RoleController::class, 'roleManagementAdd'])->name('role.add');
@@ -181,8 +184,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     });
     Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarnDashboard'])->name('dashboard.tour');
     Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
-    Route::match(['GET', 'POST'],'/dashboard/settings',[DashboardController::class,'webSetting'])->name('dashboard.settings');
 });
+
 
 
 
