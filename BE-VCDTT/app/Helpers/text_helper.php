@@ -18,18 +18,3 @@ function money_format($number)
     return $formattedNumber . 'VNĐ';
 }
 
-function config_pusher(){
-    $options = array(
-        'cluster' => 'ap1',
-        'encrypted' => true
-    );
-
-    $pusher = new Pusher(
-        env('PUSHER_APP_KEY'),
-        env('PUSHER_APP_SECRET'),
-        env('PUSHER_APP_ID'),
-        $options
-    );
-
-    return $pusher;
-}

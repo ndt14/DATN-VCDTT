@@ -82,11 +82,6 @@ class PurchaseHistoryController extends Controller
 
         //Gửi thông báo cho admin
         $user->notify(new PurchaseNotificationAdmin($purchaseHistory));
-        // config_pusher()->trigger('PurchaseNotificationAdmin', 'datn-vcdtt-development', new PurchaseNotificationAdmin($purchaseHistory)->toArray());
-
-        //Bắn thông báo lên Pusher
-        // $newNotification = NotificationModel::orderBy('created_at', 'desc')->first();
-        // config_pusher()->trigger('PurchaseNotificationAdmin', 'datn-vcdtt-development', $newNotification);
 
         if ($purchaseHistory->id) {
             return response()->json([

@@ -3,16 +3,18 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Notification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Support\HtmlString;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue
+class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue,ShouldBroadcast
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $purchaseHistoryID;
@@ -41,7 +43,7 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
      */
     public function via(object $notifiable): array
     {
-        return ['mail','database'];
+        return ['mail','database','broadcast'];
     }
 
     /**
@@ -71,5 +73,10 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
             'transaction_id' => $this->transaction_id,
             'purchase_method' => $this->purchase_method
         ];
+    }
+
+    public function broadcastOn()
+    {
+        return new Channel('datn-vcdtt-development');
     }
 }
