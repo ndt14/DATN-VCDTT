@@ -73,7 +73,7 @@ class PurchaseHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $users = User::where('is_admin', 1)->get();
+        $users = User::where('is_admin', 1)->first();
 
         $data = $request->except('coupon_code', '_token');
 
@@ -81,10 +81,8 @@ class PurchaseHistoryController extends Controller
         $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
 
         //Gửi thông báo cho admin
-        foreach ($users as $user){
-            $user->notify(new PurchaseNotificationAdmin($purchaseHistory));
-        }
 
+            $users->notify(new PurchaseNotificationAdmin($purchaseHistory));
 
         if ($purchaseHistory->id) {
             return response()->json([
@@ -156,7 +154,7 @@ class PurchaseHistoryController extends Controller
         //
         $input = $request->except('update_admin');
         $updateAdmin = $request->only('update_admin');
-        $users = User::where('is_admin', 1)->get();
+        $users = User::where('is_admin', 1)->first();
 
         $purchaseHistory = PurchaseHistory::find($id);
 
@@ -173,25 +171,25 @@ class PurchaseHistoryController extends Controller
                     $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
                 }
                 if ($purchaseHistory->purchase_status == 6) {
-                    foreach ($users as $user) {
-                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory));
-                    }
+
+                        $users->notify(new RefundRemindingNotificationAdmin($purchaseHistory));
+
                 }
             } else {
                 switch ($purchaseHistory->purchase_status) {
                     case '2':
                         if ($purchaseHistory->comfirm_click == 2) {
                             $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
-                            foreach ($users as $user) {
-                                $user->notify(new ComfirmPaymentAdmin($purchaseHistory));
-                            }
+
+                                $users->notify(new ComfirmPaymentAdmin($purchaseHistory));
+
                         }
                         break;
                     case '4':
                         $purchaseHistory->notify(new CancelPurchaseMailToClient($purchaseHistory));
-                        foreach ($users as $user) {
-                            $user->notify(new CancelNotificationAdmin($purchaseHistory));
-                        }
+
+                            $users->notify(new CancelNotificationAdmin($purchaseHistory));
+
                     default:
                         break;
                 }

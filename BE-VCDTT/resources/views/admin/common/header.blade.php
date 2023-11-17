@@ -92,7 +92,7 @@
                                                         <a onclick="markAsRead('{{ $notification->id }}')"
                                                             href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                             class="text-body d-block">
-                                                            @if ($notification->data['purchase_method'] == 1)
+                                                            @if ($notification->data['purchase_method'] == 2)
                                                                 Mã giao dịch VN Pay:
                                                                 {{ $notification->data['transaction_id'] }}
                                                             @else
