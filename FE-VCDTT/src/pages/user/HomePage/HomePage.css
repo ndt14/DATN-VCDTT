@@ -56,3 +56,7 @@ img {
     height: 250px;
     width: 100%;
 }
+
+.quantity-form {
+    width: 80px !important;
+}

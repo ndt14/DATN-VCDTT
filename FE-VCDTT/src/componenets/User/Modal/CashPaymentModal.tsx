@@ -35,6 +35,13 @@ function CashPaymentModal(props) {
     });
   };
 
+  // const closeBackdrop = () => {
+  //   const backdrop = document.getElementsByClassName("modal-backdrop")[0];
+  //   if (backdrop && backdrop.parentNode === document.body) {
+  //     backdrop.parentNode.removeChild(backdrop);
+  //   }
+  // };
+
   return (
     <Modal
       show={props.show}
