@@ -25,7 +25,7 @@
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Hệ thống
-                </h2>
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -38,7 +38,7 @@
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12">
-            <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " action="{{ route('settings',)}}" method="POST">
+            <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " action="{{ route('settings',)}}" method="POST" enctype="multipart/form-data">
             <div class="card-header">
             </div>
             @csrf
@@ -50,8 +50,7 @@
                             <label class="form-label">{{ $item->name }}</label>
                             <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
                             <br>
-                            <input type="hidden" name="{{ $item->key }}" value="{{ $item->value }}" >
-                            <img src="{{ $item->value }}" width="200px" alt="{{ $item->value }}">
+                            <img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="200px" alt="{{ $item->value }}">
                         </div>
                         @endif
                         @endforeach
@@ -93,8 +92,7 @@
                             <label class="form-label">{{ $item->name }}</label>
                             <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
                             <br>
-                            <input type="hidden" name="{{ $item->key }}" value="{{ $item->value }}" >
-                            <div class="row"><img src="{{ $item->value }}" width="100%" alt="{{ $item->value }}"></div>
+                            <div class="row"><img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="100%" alt="{{ $item->value }}"></div>
                         </div>
                         @endif
                         @endforeach

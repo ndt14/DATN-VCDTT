@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class KeyValueController extends Controller
 {
@@ -82,9 +83,24 @@ class KeyValueController extends Controller
     {
         $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/keyvalue');
         $data = json_decode(json_encode($response->json()['data']['keyvalues']), false);
+        $images=[];
+        foreach ($data as $item){
+            $item->key=='logo'?$images['logo'] = $item->value:'';
+            $item->key=='favicon'?$images['favicon'] = $item->value:'';
+            $item->key=='banner'?$images['banner'] = $item->value:'';
+        }
         if ($request->isMethod('POST')) {
-            $data = $request->except('_token', 'btnSubmit');
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/keyvalue-edit-all', $data);
+            $dataInsert = $request->except('_token', 'btnSubmit');
+            foreach($images as $key => $value ){
+                if($request->hasFile($key) && $request->file($key)->isValid()){
+                    $value!=''?Storage::delete('/public/'. $value ):'';
+                    $dataInsert[$key] = upLoadFile('images',$request->file($key));
+                }else{
+                    $dataInsert[$key] =  $value;
+                }
+            }
+
+            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/keyvalue-edit-all', $dataInsert);
             if ($response->status() == 200) {
                 return redirect()->route('settings')->with('success', 'Cập nhật thành công');
             } else {

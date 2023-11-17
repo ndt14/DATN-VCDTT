@@ -17,12 +17,12 @@ class KeyValueSeeder extends Seeder
             [
                 'name' => 'Ảnh logo chính',
                 'key' => 'logo',
-                'value' => 'img_url'
+                'value' => 'images/1700220530_logo.jpg'
             ],
             [
                 'name' => 'Ảnh logo favicon',
                 'key' => 'favicon',
-                'value' => 'img_url'
+                'value' => 'images/1700220530_logo-vcdtt-removebg.png'
             ],
             [
                 'name' => 'Tên website',
@@ -67,7 +67,7 @@ class KeyValueSeeder extends Seeder
             [
                 'name' => 'Ảnh banner',
                 'key' => 'banner',
-                'value' => 'img_url'
+                'value' => 'images/1700220530_admin.jpg'
             ],
             [
                 'name' => 'Tiêu đề meta (Meta title)',
