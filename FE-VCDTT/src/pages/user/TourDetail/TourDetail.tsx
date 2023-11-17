@@ -579,7 +579,7 @@ const main_img = tourData?.data?.tour.main_img;
                                               {user_name}
                                             </h5>
                                             <span className="post-on">
-                                              {created_at}
+                                              {moment(created_at).format('DD/MM/YYYY')}
                                             </span>
                                             <div className="rating-wrap">
                                               <div
