@@ -198,7 +198,7 @@ Danh sách đơn đặt
                                                     {{ time_format($item->created_at) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->payment_status == 1)
+                                                    @if ($item->payment_status == 2)
                                                         <span class="badge bg-green rounded-circle p-1 text-green-fg"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                             data-bs-title="Đã thanh toán">
@@ -212,7 +212,7 @@ Danh sách đơn đặt
                                                                 <path d="M5 12l5 5l10 -10"></path>
                                                             </svg>
                                                         </span>
-                                                    @elseif ($item->payment_status == 2)
+                                                    @elseif ($item->payment_status == 1)
                                                         <span class="badge bg-danger rounded-circle p-1 text-danger-fg"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                             data-bs-title="Chưa thanh toán">
