@@ -25,6 +25,27 @@ trang đã xoá
                     </div>
                     @endif
                 </div>
+                <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                    <a href="{{route('page.list')}}" class="btn btn-default d-none d-sm-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                        Quay lại
+                    </a>
+                    <a href="{{url('/page')}}" class="btn btn-default d-sm-none btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l14 0"></path>
+                            <path d="M5 12l4 4"></path>
+                            <path d="M5 12l4 -4"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -76,30 +97,29 @@ trang đã xoá
                                 <thead>
                                     <tr>
                                         <th class="w-1">ID</th>
-                                        <th>Câu hỏi</th>
-                                        <th>Câu trả lời</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Nội dung</th>
+                                        <th>Thể loại</th>
                                         <th>Ngày tạo</th>
-                                        <th>Ngày sửa</th>
                                         <th></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($data)
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td><span class="text-muted">{{ $item->id }}</span></td>
+                                            <td><span class="text-muted">{{ $item->id }}</span></td>
                                                 <td>
-                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->question, 70) }}</a>
+                                                <a href="javascript: viewDetail({{$item->id}});" title="Show Detail">{{ string_truncate($item->title, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->answer, 70) }}
+                                                    {{ string_truncate($item->content, 70) }}
                                                 </td>
+                                                <td>
+                                                    {{ $item->type == 1 ? 'Điều khoản ' :($item->type == 2 ? 'Điều khoản bảo mật' : 'Khác')  }}
+                                                </td>   
                                                 <td>
                                                     {{ time_format($item->created_at) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
                                                     @if(auth()->user()->can('delete page') || auth()->user()->is_admin == 1)
@@ -206,13 +226,6 @@ trang đã xoá
 @endSection
 @section('page_js')
     <script type="text/javascript">
-        let modalContainer;
-        $(document).ready(function() {
-            modalContainer = new bootstrap.Modal('#modalContainer', {
-                keyboard: true,
-                backdrop: 'static'
-            });
-        });
 
         let viewDetail = function(id) {
         axios.get(`/page/detail/${id}`)

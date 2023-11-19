@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body row row-deck row-cards">
     <div class="col-sm-12 col-md-12 px-6">
-        <div class="card-body">
+        <div class="card-body card-body-scrollable">
             <div class="row">
                 <div class="mb-3 col-9">
                     <label class="form-label">Tên người dùng</label>
@@ -136,7 +136,21 @@
             </div>
             <hr>
             <div class="row">
-                <div class="mb-3 col-4">
+                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
+                    <div class="form-label">Chính sách và điều khoản đã đồng ý</div>
+                    <div>
+                    {!! $item['payment_term']  !!}
+                    </div>
+                </div>
+                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
+                    <div class="markdown">
+                        {!! $item['payment_privacy']  !!}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="mb-3 col-6">
                     <div class="form-label">Trạng thái thanh toán</div>
                     <div class="custom-controls-stacked">
                         @switch ($item['payment_status'])

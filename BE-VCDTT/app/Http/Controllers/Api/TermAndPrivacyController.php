@@ -241,11 +241,42 @@ class TermAndPrivacyController extends Controller
         if($id) {
             $data = TermAndPrivacy::withTrashed()->find($id);
             if($data) {
-                $data->restore();
+                if($data->type == 1 || $data->type == 2){
+                    $item = TermAndPrivacy::where('deleted_at', null)->where('type',$data->type)->first();
+                    if($item){
+                        $update = $data->toArray();
+                        $item->update($update);
+                        $this->destroyForever($id);
+                    }
+                    else{
+                        $data->restore();
+                    }
+                }
+                else{
+                    $data->restore();
+                }
             }
             return redirect()->route('page.trash')->with('success', 'Khôi phục page thành công');
         }
         return redirect()->route('page.trash');
     }
-    
+
+    public function destroyForever(string $id)
+    {
+        $term = TermAndPrivacy::withTrashed()->find($id);
+        if ($term) {
+            $delete_term =  $term->forceDelete();
+            if ($delete_term) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
+    }
+
 }
