@@ -204,7 +204,7 @@ class TourController extends Controller
         if (!$tour) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         } else {
-
+            Tour::where('id', $id)->update(['view_count' => DB::raw('view_count + 1')]);
             return response()->json(
                 [
                     'data' => [

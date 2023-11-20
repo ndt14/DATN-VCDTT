@@ -27,8 +27,8 @@ Chỉnh sửa bài viết
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Chỉnh sửa bài viết
-                </h2>
+                    Quản lý bài viết
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
