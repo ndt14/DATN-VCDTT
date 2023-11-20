@@ -185,10 +185,19 @@
 </div>
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
+    let backendBaseUrl = "http://be-vcdtt.datn-vcdtt.test";
+    var user = <?php echo $user ; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-        cluster: "ap1"
+        cluster: "ap1",
+        authEndpoint: `${backendBaseUrl}/broadcasting/auth`,
+        auth: {
+            headers: {
+                "Authorization": "Bearer " 
+            }
+        },
+        encrypted: true
     });
-    var channel = pusher.subscribe('datn-vcdtt-development');
+    var channel = pusher.subscribe('private-datn-vcdtt-development.' + user.id);
     channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
         var id = data.id;
         if (data.purchase_method == 2) {
