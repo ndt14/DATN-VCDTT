@@ -27,8 +27,8 @@ Chỉnh sửa tour
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Tours management
-                </h2>
+                    Quản lý tour
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">

@@ -8,8 +8,8 @@ Danh sách bài viết
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý Blog
-                        </h2>
+                        Quản lý bài viết
+                    </h1>
                 </div>
                 <div class="col-12 ">
                     @if (Session::has('success'))

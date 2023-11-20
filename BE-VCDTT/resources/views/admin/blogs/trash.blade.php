@@ -7,9 +7,9 @@ Bài viết bị xoá
     <div class="container-xl">
         <div class="row g-2 align-items-center">
             <div class="col">
-                <h1 class="text-primary mb-4" style="font-size: 36px;">
-                    Quản lý Blog
-                </h2>
+                <h1 class="text-indigo mb-4" style="font-size: 36px;">
+                    Quản lý bài viết
+                </h1>
             </div>
             <div class="col-12 ">
                 @if (Session::has('success'))

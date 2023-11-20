@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\KeyValueController;
 use App\Http\Controllers\Api\TermAndPrivacyController;
 use App\Http\Controllers\Api\TourToCategoryController;
 use App\Http\Controllers\Api\WishListController;
+use App\Models\Coupon;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +128,8 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
+Route::post('/list-coupon/{id}', [CouponController::class, 'listCouponUserId']);
+
 
 Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.delete');
 Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy'])->name('allocation.delete');

@@ -14,7 +14,7 @@ Thêm mới danh mục
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Quản lý danh mục
-                </h2>
+                </h1>
             </div>
             <div class="top-0" style="z-index: 100; position: fixed;">
                 @if (Session::has('success'))

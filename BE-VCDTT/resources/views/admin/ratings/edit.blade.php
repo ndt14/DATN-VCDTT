@@ -25,8 +25,8 @@ Chỉnh sửa đánh giá
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Ratings management
-                </h2>
+                    Quản lý đánh giá
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">

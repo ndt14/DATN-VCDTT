@@ -28,22 +28,22 @@ Chỉnh sửa danh mục
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Quản lý danh mục
-                </h2>
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                   
-                      
+
+
                         <a href="{{route('category.list')}}" class="btn btn-default d-none d-sm-inline-block">
-                          
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M5 12l14 0"></path>
                                 <path d="M5 12l4 4"></path>
                                 <path d="M5 12l4 -4"></path>
                             </svg>
-                            Back
+                            Quay lại
                         </a>
                         <a href="{{url('/category')}}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -83,7 +83,7 @@ Chỉnh sửa danh mục
                                @foreach($listCateParent as $item)
                                <option value="{{$item->id}}" {{$data->parent_id == $item->id ? 'selected' : ''}}>{{$item->name}}</option>
                                @endforeach
-                               
+
                             </select>
                         </div>
 

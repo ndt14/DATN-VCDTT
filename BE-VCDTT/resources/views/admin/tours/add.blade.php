@@ -28,7 +28,7 @@ Thêm mới tour
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
                     Quản lý tour
-                </h2>
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -453,13 +453,13 @@ $(document).ready(function() {
             display: block;
             margin-top: 30px;
         }
-        
+
         ul.multi-file_attach_view {
             list-style: none;
             margin: 0;
             padding: 0;
         }
-        
+
         ul.multi-file_attach_view li {
             float: left;
             width: 14%;
@@ -469,11 +469,11 @@ $(document).ready(function() {
             overflow: inherit;
             clear: none;
         }
-        
+
         ul.multi-file_attach_view .img-wrap {
             position: relative;
         }
-        
+
         ul.multi-file_attach_view .img-wrap .close {
             position: absolute;
             right: -10px;
@@ -492,7 +492,7 @@ $(document).ready(function() {
             opacity: 1!important;
             text-shadow: none;
         }
-        
+
         ul.multi-file_attach_view li.li_file_hide {
             opacity: 0;
             visibility: visible;
@@ -501,7 +501,7 @@ $(document).ready(function() {
             overflow: hidden;
             margin: 0!important;
         }
-        
+
         ul.multi-file_attach_view .img-wrap-box {
             position: relative;
             overflow: hidden;
@@ -510,7 +510,7 @@ $(document).ready(function() {
             background-position: 50% 50%;
             background-size: cover;
         }
-        
+
         .img-wrap-box img {
             right: 0;
             border-radius: 10px;
@@ -527,7 +527,7 @@ $(document).ready(function() {
             -webkit-transition: all .5s linear;
             -ms-transition: all .5s linear;
         }
-        
+
         .list_attach span.multi-file_insert_attach {
             width: 80px;
             height: 80px;
@@ -540,29 +540,29 @@ $(document).ready(function() {
             display: none;
             cursor: pointer;
         }
-        
+
         ul.multi-file_attach_view {
             list-style: none;
             margin: 0;
             padding: 0;
         }
-        
+
         ul.multi-file_attach_view .img-wrap {
             position: relative;
         }
-        
+
         .list_attach.show-btn span.multi-file_insert_attach {
             display: block;
             margin: 0 0 20px!important;
         }
-        
+
         i.multi-file-plus {
             font-style: normal;
             font-weight: 900;
             font-size: 35px;
             line-height: 1;
         }
-        
+
         ul.multi-file_attach_view li input {
             display: none;
         }

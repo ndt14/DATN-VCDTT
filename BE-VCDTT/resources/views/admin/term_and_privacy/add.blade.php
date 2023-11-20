@@ -27,8 +27,8 @@ Thêm mới Trang
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                Thêm mới Trang
-                </h2>
+                    Quản lý Trang
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">

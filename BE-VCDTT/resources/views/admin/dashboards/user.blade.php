@@ -33,19 +33,13 @@ Thống kê người dùng
                                 <div class="row">
                                     <div class="col">
                                         <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người dùng</h3>
+                                            <h3>Số người dùng đã đăng ký tài khoản</h3>
                                             {{ $data->userCount }}
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người dùng bị cấm</h3>
-                                            {{ $data->userBannedCount }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người đã sử dụng dịch vụ chưa đăng ký</h3>
+                                            <h3>Số người đã sử dụng dịch vụ chưa đăng ký tài khoản</h3>
                                             {{ $data->notRegCount }}
                                         </div>
                                     </div>

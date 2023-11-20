@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Thêm mới bài viết
+    Thêm mới bài viết
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -23,10 +23,10 @@ Thêm mới bài viết
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                Overview
-                            </div> -->
+                                    Overview
+                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Blogs management
+                        Quản lý bài viết
                     </h1>
                 </div>
                 <!-- Page title actions -->
@@ -64,7 +64,8 @@ Thêm mới bài viết
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('blog.add') }}" method="POST">
+                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('blog.add') }}"
+                        method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Thêm blog mới

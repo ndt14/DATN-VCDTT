@@ -27,8 +27,8 @@ Chỉnh sửa mã giảm giá
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                    Coupons management
-                </h2>
+                    Quản lý mã giảm giá
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
@@ -40,7 +40,7 @@ Chỉnh sửa mã giảm giá
                             <path d="M5 12l4 4"></path>
                             <path d="M5 12l4 -4"></path>
                         </svg>
-                        Back
+                        Quay lại
                     </a>
                     <a href="{{url('/coupon')}}" class="btn btn-default d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
