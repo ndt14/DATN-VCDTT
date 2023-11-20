@@ -645,7 +645,7 @@ const TourDetail = () => {
                             <h3 className="comment-title">Đánh giá của bạn</h3>
                             {isLoggedIn ? (
                               tour === tourData &&
-                              foundPurchase?.purchase_status == 5 ? (
+                              foundPurchase?.purchase_status == 3 ? (
                                 <form className="comment-form">
                                   <div className="full-width rate-wrap">
                                     <label>Chọn sao</label>
