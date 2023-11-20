@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             TourToCategorySeeder::class,
             RatingSeeder::class,
             PermissionSeeder::class,
-            KeyValueSeeder::class
+            KeyValueSeeder::class,
         ]);
     }
 }

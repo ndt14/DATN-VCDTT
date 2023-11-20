@@ -26,11 +26,12 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
     protected $tour_name;
     protected $name;
     protected $purchase_method;
+    protected $admin_id;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory)
+    public function __construct($purchaseHistory,$admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
@@ -39,6 +40,7 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
         $this->name = $purchaseHistory->name;
         $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
+        $this->admin_id = $admin_id;
     }
 
     /**
@@ -81,6 +83,6 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
 
     public function broadcastOn()
     {
-        return new Channel('datn-vcdtt-development');
+        return new PrivateChannel('datn-vcdtt-development.'.$this->admin_id);
     }
 }
