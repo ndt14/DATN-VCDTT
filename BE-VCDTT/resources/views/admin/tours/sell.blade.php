@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Tours management
+                        Quản lý tour
                     </h1>
                 </div>
                 <!-- <div class="col-12 ">

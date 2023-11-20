@@ -8,7 +8,7 @@ Tour đã xoá
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                       Quản lý Tours
+                        Quản lý tour
                     </h1>
                 </div>
                 <div class="col-12 ">
@@ -60,7 +60,7 @@ Tour đã xoá
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Tour</h3> 
+                            <h3 class="card-title">Tour</h3>
                             @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete faq'))
                             <a href="{{route('faq.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                             @endif

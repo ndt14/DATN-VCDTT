@@ -7,8 +7,8 @@ trang đã xoá
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h1 class="text-primary mb-4" style="font-size: 36px;">
-                        Quản lý Pages
+                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
+                        Quản lý Trang
                     </h1>
                 </div>
                 <div class="col-12 ">
@@ -56,7 +56,7 @@ trang đã xoá
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Page</h3> 
+                            <h3 class="card-title">Page</h3>
                             @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete page'))
                             <a href="{{route('page.trash')}}" style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span style="color: black;">|</span> Thùng rác</a>
                             @endif
@@ -117,7 +117,7 @@ trang đã xoá
                                                 </td>
                                                 <td>
                                                     {{ $item->type == 1 ? 'Điều khoản ' :($item->type == 2 ? 'Điều khoản bảo mật' : 'Khác')  }}
-                                                </td>   
+                                                </td>
                                                 <td>
                                                     {{ time_format($item->created_at) }}
                                                 </td>

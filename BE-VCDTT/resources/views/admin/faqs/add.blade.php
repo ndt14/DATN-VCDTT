@@ -3,7 +3,6 @@
 Thêm mới câu hỏi & trả lời
 @endSection
 @section('content')
-
 <div class="page-header d-print-none">
     <div class="container-xl">
         <div class="row g-2 align-items-center">
@@ -27,8 +26,8 @@ Thêm mới câu hỏi & trả lời
                     Overview
                 </div> -->
                 <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                   Quản lý Faqs
-                </h2>
+                    Quản lý câu hỏi thường gặp
+                </h1>
             </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">

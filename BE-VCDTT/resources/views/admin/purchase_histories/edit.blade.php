@@ -23,10 +23,10 @@ Chỉnh sửa đơn đặt
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                    Overview
-                                                                                </div> -->
+                    Overview
+                    </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý hóa đơn
+                        Quản lý đơn đặt
                     </h1>
                 </div>
                 <!-- Page title actions -->

@@ -1,11 +1,11 @@
 @extends('admin.common.layout')
-Mã giảm giã đã hoá
+Mã giảm giã bị xoá
 @section('content')
     <div class="page-header d-print-none">
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h1 class="text-primary mb-4" style="font-size: 36px;">
+                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý mã giảm giá
                     </h1>
                 </div>
