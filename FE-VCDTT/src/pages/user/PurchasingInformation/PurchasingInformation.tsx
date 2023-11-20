@@ -406,7 +406,9 @@ const PurchasingInformation = () => {
     background: `url(${backgroundImageUrl})`,
     backgroundSize: "cover",
   };
-
+  const openWindow = () => {
+    window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
+  };
   return (
     <>
       <main id="content" className="site-main">
@@ -553,7 +555,7 @@ const PurchasingInformation = () => {
                       </div>
                     </div>
 
-                    <h3>Thông tin địa điểm</h3>
+                    {/* <h3>Thông tin địa điểm</h3>
                     <iframe
                       ref={iframeRef}
                       width="600"
@@ -561,7 +563,7 @@ const PurchasingInformation = () => {
                       style={{ border: 0 }}
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
+                    ></iframe> */}
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
@@ -656,6 +658,15 @@ const PurchasingInformation = () => {
                         )}
                       </div>
                     )}
+                     <h3 className="mt-4">Thông tin địa điểm</h3>
+                    <iframe
+                      ref={iframeRef}
+                      width="600"
+                      height="450"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
                   </form>
                   {/* Modal xác nhận thông tin */}
 
@@ -966,7 +977,7 @@ const PurchasingInformation = () => {
                               onChange={handlePaymentMethodChange}
                               checked={paymentMethod === "1"}
                             />
-                            Thanh toán online (chuyển khoản ngân hàng)
+                            Chuyển khoản trực tiếp
                           </div>
                           <div>
                             <input
@@ -987,7 +998,12 @@ const PurchasingInformation = () => {
                         />
                         <span className="ml-2">
                           Tôi đồng ý với{" "}
-                          <Link to={"/privacy_policy"}>Chính sách</Link> của
+                          <a
+                                      className="text-primary"
+                                      onClick={openWindow}
+                                    >
+                                      chính sách
+                                    </a> của
                           trang
                         </span>
                         <br />
