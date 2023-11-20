@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
 use App\Http\Requests\TourRequest;
 use App\Http\Resources\CouponResource;
+use App\Models\UsedCoupon;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -236,6 +237,18 @@ class CouponController extends Controller
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 500]);
         }
+    }
+
+    public function listCouponUserId(Request $request){
+        $counponsUser = UsedCoupon::select('coupon_code')->where('user_id',$request->id)->get();
+        $coupons = Coupon::whereNotIn('code',$counponsUser)->get();
+        return response()->json([
+            'data' => [
+                'coupons' =>  CouponResource::collection($coupons),
+            ],
+            'message' => 'OK',
+            'status' => 200
+        ]);
     }
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
