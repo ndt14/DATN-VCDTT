@@ -146,8 +146,12 @@ Danh sách mã giảm giá
                                     <tr>
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
-                                            @if ($key == 'code_type')
+                                            @if ($key == 'code_type' || $key == 'amount')
+                                                @if(($key == 'amount' && request('code_type') == '1')||($key == 'amount' && request('code_type') == '2'))
+                                                <th>@sortablelink($key, $value)</th>
+                                                @else
                                                 <th>{{ $value }}</th>
+                                                @endif
                                             @else
                                                 <th>@sortablelink($key, $value)</th>
                                             @endif

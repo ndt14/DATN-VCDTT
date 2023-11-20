@@ -21,6 +21,8 @@ class CouponController extends Controller
     {
         $keyword = $request->keyword ? trim($request->keyword) : '';
         $code_type = $request->code_type=='1'?'percentage_price':($request->code_type=='2'?'fixed_price':'name');
+        $sortCol = $request->sort??'created_at';
+        $request->code_type && $request->sort=='amount'? $sortCol = $code_type:'';
         if(!$request->searchCol){
             $coupons = Coupon::where(function($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Coupon())->getTable());
@@ -35,7 +37,7 @@ class CouponController extends Controller
                 $query->wherenotNull('percentage_price');
             }
             })
-            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            ->orderBy($sortCol,$request->direction??'desc')->get();
         }elseif($request->searchCol=='amount'){
             $coupons = Coupon::where('percentage_price', 'LIKE', '%' . $keyword . '%')->orWhere('fixed_price', 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
             ->where(function ($query) use ($code_type) {
@@ -45,7 +47,7 @@ class CouponController extends Controller
                     $query->wherenotNull('percentage_price');
                 }
                 })
-            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            ->orderBy($sortCol,$request->direction??'desc')->get();
         }else{
             $coupons = Coupon::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
             ->where(function ($query) use ($code_type) {
@@ -55,7 +57,7 @@ class CouponController extends Controller
                     $query->wherenotNull('percentage_price');
                 }
                 })
-            ->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            ->orderBy($sortCol,$request->direction??'desc')->get();
         }
         return response()->json([
             'data' => [

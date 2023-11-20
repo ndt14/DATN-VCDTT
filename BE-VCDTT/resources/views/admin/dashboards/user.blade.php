@@ -45,8 +45,8 @@ Thống kê người dùng
                                     </div>
                                     <div class="col">
                                         <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người dùng chưa đăng ký</h3>
-                                            {{ $data->notRegisteredCount }}
+                                            <h3>Số người đã sử dụng dịch vụ chưa đăng ký</h3>
+                                            {{ $data->notRegCount }}
                                         </div>
                                     </div>
                                 </div>
