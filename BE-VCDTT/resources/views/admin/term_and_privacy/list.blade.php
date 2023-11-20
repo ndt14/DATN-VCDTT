@@ -1,32 +1,34 @@
 @extends('admin.common.layout')
+@section('meta_title')
 Danh sách trang
+@endSection
 @section('content')
-    <div class="page-header d-print-none">
-        <div class="container-xl">
-            <div class="row g-2 align-items-center">
-                <div class="col">
-                    <h1 class="text-indigo mb-4" style="font-size: 36px;">
-                        Quản lý Trang
-                    </h1>
-                </div>
-                <div class="col-12 ">
-                    @if (Session::has('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                        {{ Session::get('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @endif
-                    @if (Session::has('fail'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                        {{ Session::get('fail') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @endif
-                </div>
-
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <h1 class="text-indigo mb-4" style="font-size: 36px;">
+                    Quản lý Trang
+                </h1>
             </div>
+            <div class="col-12 ">
+                @if (Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+                @if (Session::has('fail'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                    {{ Session::get('fail') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+            </div>
+
         </div>
     </div>
+</div>
     <!-- Page body -->
     <div class="page-body">
         <div class="container-xl">
@@ -222,12 +224,6 @@ Danh sách trang
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
             </div>
         </div>
     </div>
