@@ -46,12 +46,12 @@ Danh sách đơn đặt
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                                                                    Show
-                                                                                    <div class="mx-2 d-inline-block">
-                                                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                                                                    </div>
-                                                                                    entries
-                                                                                </div>-->
+                                    Show
+                                    <div class="mx-2 d-inline-block">
+                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                    </div>
+                                    entries
+                                    </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -63,9 +63,9 @@ Danh sách đơn đặt
                                                     <option value="">Mặc định</option>
                                                 @endif
                                                 <option {{ request()->query('payment_status') == 1 ? 'selected' : '' }}
-                                                    value="1">Đã thanh toán</option>
-                                                <option {{ request()->query('payment_status') == '0' ? 'selected' : '' }}
-                                                    value="0">Chưa thanh toán</option>
+                                                    value="1">Chưa thanh toán</option>
+                                                <option {{ request()->query('payment_status') == 2 ? 'selected' : '' }}
+                                                    value="2">Đã thanh toán</option>
                                             </select>
                                         </div>
                                         <div class="col-auto">

@@ -18,12 +18,12 @@ class DashboardController extends Controller
     }
     public function totalEarnDashboard(Request $request){
         $data = [];
-        $purchaseHistory = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
+        $purchaseHistory = PurchaseHistory::where('payment_status',2)->where('purchase_status',3)->get();
 
         $total=[];
         foreach($purchaseHistory as $purchaseHistory){
             $final['price'] = $purchaseHistory->tour_child_price * $purchaseHistory->child_count + $purchaseHistory->tour_adult_price * $purchaseHistory->adult_count;
-            $final['price'] = $final['price']- ($final['price']/ 100 * ($purchaseHistory->coupon_percentage ?? 0 + $purchaseHistory->tour_sale_percentage ?? 0) - $purchaseHistory->coupon_fixed ?? 0);
+            $final['price'] = $final['price']- ($final['price']/ 100 * ($purchaseHistory->coupon_percentage ?? 0 + $purchaseHistory->tour_sale_percentage ?? 0) - $purchaseHistory->coupon_percentage == null ? ($purchaseHistory->coupon_fixed ?? 0) : 0);
             $final['time'] =  date("d-m-Y",strtotime($purchaseHistory->created_at));
             array_push($total, $final);
         }
@@ -45,9 +45,9 @@ class DashboardController extends Controller
         }
         }
 
-        $data['UVCount'] = Count(PurchaseHistory::where('payment_status',1)->where('purchase_status',1)->get());
+        $data['UVCount'] = Count(PurchaseHistory::where('payment_status',2)->where('purchase_status',1)->get());
         //
-        $paidPurchase = PurchaseHistory::where('payment_status',1)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
+        $paidPurchase = PurchaseHistory::where('payment_status',2)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
 
         $data['PPCToday']=0;$data['PPCWeek']=0;$data['PPCMonth']=0;$data['PPCYear']=0;
         foreach ($paidPurchase as $PP){
@@ -111,10 +111,12 @@ class DashboardController extends Controller
     public function userDashboard(Request $request){
         //
         $data['userCount'] = Count(User::where('is_admin',2)->get());
-
+        //
         $data['userBannedCount'] =  Count(User::where('is_admin',2)->where('status',3)->get());
         // chua dang ky
-        $data['notRegisteredCount'] = 0;
+        $data['notRegCount'] = PurchaseHistory::select('email')
+        ->whereNotIn('email', User::select('email'))
+        ->count();
 
         $maleCount = User::where('is_admin', 2)->where('gender', 1)->count();
         $femaleCount = User::where('is_admin', 2)->where('gender', 2)->count();

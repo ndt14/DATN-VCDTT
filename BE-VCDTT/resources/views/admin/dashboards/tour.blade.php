@@ -6,6 +6,23 @@ Thống kê tour
     <div class="page-body">
         <div class="container-xl">
             <div class="row">
+                @if($data->UVCount && $data->UVCount>0)
+                <div class="row">
+                    <div class="card border-0 bg-yellow shadow-lg  rounded-4 p-1 pt-3 mb-3">
+                        <a class="nav-link text-center text-white" href="/purchase-history?purchase_status=2">
+                        <h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 9v4" />
+                            <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                        Có {{ $data->UVCount }} đơn chờ duyệt
+                        </h3>
+                        </a>
+                    </div>
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs" role="tablist">
@@ -43,12 +60,6 @@ Thống kê tour
                                             {{ $data->PPCToday }}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-weekly-5" role="tabpanel">
@@ -63,12 +74,6 @@ Thống kê tour
                                         <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCWeek }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
                                         </div>
                                     </div>
                                 </div>
@@ -87,12 +92,6 @@ Thống kê tour
                                             {{ $data->PPCMonth }}
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-yearly-5" role="tabpanel">
@@ -107,12 +106,6 @@ Thống kê tour
                                         <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCYear }}
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Tổng số đơn chờ duyệt</h3>
-                                            {{ $data->UVCount }}
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +156,7 @@ Thống kê tour
         var options = {
             series: viewCountList,
             chart: {
-                width: 500,
+                width: 600,
                 type: 'pie',
             },
             labels: nameList,
@@ -193,7 +186,7 @@ Thống kê tour
         var options2 = {
             series: ratingList,
             chart: {
-                width: 610,
+                width: 600,
                 type: 'pie',
             },
             labels: nameList2,
