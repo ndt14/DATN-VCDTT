@@ -4,7 +4,7 @@ import "../../../assets/js/modal.js";
 import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { BsGoogle, BsFacebook } from "react-icons/bs";
+import { BsGoogle} from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
@@ -25,13 +25,9 @@ const Header = () => {
   const { data: dataCate } = useGetCategoriesQuery();
   // console.log(dataCate?.data.categoriesParent)
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerPhone, setRegisterPhone] = useState("");
-  const [registerName, setRegisterName] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [registerPassword] = useState("");
+  const [confirmPassword] = useState("");
 
   // Thêm các trường thông tin cần thiết khác nếu cần
 
@@ -85,7 +81,7 @@ const Header = () => {
   const handleSignIn = async () => {
     // event.preventDefault();
     try {
-      const { data } = await login({
+      const { data }:any = await login({
         email: loginFormik.values.email, // Access email value from Formik
         password: loginFormik.values.password, // Access password value from Formik
       });
@@ -134,11 +130,11 @@ const Header = () => {
     register(variables)
       .then((response) => {
         // Handle the response here
-        if (response && response?.data.user) {
+        if (response && response?.data?.user) {
           setIsLoggedIn(true);
           setShowSignIn(false);
 
-          const userName = response?.data.user;
+          const userName = response?.data?.user;
           localStorage.setItem("user", JSON.stringify(userName));
           // localStorage.setItem("accessToken", response.token);
           alert("đăng ký thành công");

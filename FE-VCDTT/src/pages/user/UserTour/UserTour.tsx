@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,9 +15,9 @@ import { FaRegListAlt } from "react-icons/fa";
 import Modal from "react-bootstrap/Modal";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user")||"");
   const userId = user?.id;
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId | "");
+  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
   const [updateBill] = useUpdateBillMutation();
 
@@ -50,9 +50,6 @@ const UserTour = () => {
   ) || []) as Bill[];
   //end phân trang
 
-  const formatNumber = (number: number) => {
-    return Math.floor(number).toString(); // or parseInt(number.toString(), 10).toString()
-  };
 
   const goToPayment = (id: number) => {
     const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${id}`;
@@ -84,20 +81,20 @@ const UserTour = () => {
     window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
   };
   //
-  const cancelTour = async (id: number) => {
-    const data = {
-      purchase_status: 6,
-      payment_status: 1,
-      id: id,
-    };
+  // const cancelTour = async (id: number) => {
+  //   const data:any = {
+  //     purchase_status: 6,
+  //     payment_status: 1,
+  //     id: id,
+  //   };
 
-    await updateBill(data).then(() => {
-      alert("Hủy tour thành công");
-    });
-  };
+  //   await updateBill(data).then(() => {
+  //     alert("Hủy tour thành công");
+  //   });
+  // };
 
   const confirmPayment = async (id: number) => {
-    const data = {
+    const data:any = {
       purchase_status: 2,
       payment_status: 2,
       comfirm_click: 2,
@@ -112,7 +109,7 @@ const UserTour = () => {
   };
 
   const cancelTourRefund = async (id: number) => {
-    const data = {
+    const data:any = {
       purchase_status: 4,
       payment_status: 2,
       id: id,
@@ -123,19 +120,16 @@ const UserTour = () => {
     });
   };
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = ({e}:any) => {
     setChecked(e.target.checked);
   };
 
-  const handleButtonDisabledClick = (e) => {
+  const handleButtonDisabledClick = ({e}:any) => {
     e.stopPropagation(); // Prevent event propagation
   };
 
-  const confirm = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
-  };
 
-  const cancel = (e: React.MouseEvent<HTMLElement>) => {};
+  const cancel = () => {};
 
   const titleElement = document.querySelector("title");
   if (titleElement) {
@@ -231,11 +225,11 @@ const UserTour = () => {
                     goToPayment(id);
                   }
                 };
-                const handleCancelTour = () => {
-                  if (id) {
-                    cancelTour(id);
-                  }
-                };
+                // const handleCancelTour = () => {
+                //   if (id) {
+                //     cancelTour(id);
+                //   }
+                // };
                 const handleCancelTourRefund = () => {
                   if (id) {
                     cancelTourRefund(id);

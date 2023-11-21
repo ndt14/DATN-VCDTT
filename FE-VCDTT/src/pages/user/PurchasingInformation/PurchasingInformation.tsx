@@ -12,8 +12,7 @@ import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useGetUserByIdQuery } from "../../../api/user";
+
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 
@@ -71,7 +70,7 @@ const PurchasingInformation = () => {
   //
 
   // Check số tour người dùng đã đặt
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId | "");
+  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
   const [idArray, setIdArray] = useState<number[]>([]);
   useEffect(() => {
     if (TourData) {

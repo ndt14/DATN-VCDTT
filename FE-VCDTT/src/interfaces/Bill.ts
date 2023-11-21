@@ -26,7 +26,8 @@ export interface Bill {
     payment_status?:number;
     purchase_status?:number;
     purchase_method?:number;
-    tour_status?:number
-    tour_image?:string
-    comfirm_click?:number
+    tour_status?:number;
+    tour_image?:string;
+    comfirm_click?:number;
+    data:any
 }

@@ -7,11 +7,11 @@ import {
 } from 'react-instantsearch-dom';
 import './css/SearchBar.css';
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-type Props = {};
+
 
 const searchClient = algoliasearch(
   "ZKNG517W50",
@@ -20,7 +20,7 @@ const searchClient = algoliasearch(
 
 const indexName = 'tours';
 
-const SearchBar = (props: Props) => {
+const SearchBar = () => {
   const [inputValue, setInputValue] = useState('');
   const history = useNavigate();
   // ...
@@ -50,7 +50,7 @@ const SearchBar = (props: Props) => {
         <div className='my-2'>Tìm kiếm tour:</div>
       {/* <br /> */}
         <SearchBox
-         placeholder="Tìm kiếm..."
+        //  placeholder="Tìm kiếm..."
           onChange={handleInputChange}
           value={inputValue}
           onFocus={handleInputFocus} 

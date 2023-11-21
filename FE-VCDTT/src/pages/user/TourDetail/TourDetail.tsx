@@ -1,12 +1,11 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
-import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
 import { DatePicker, Rate, Skeleton } from "antd";
 import type { DatePickerProps } from "antd";
 import moment from "moment";
-import TinySlider from "tiny-slider-react";
+// import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
@@ -14,10 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import {
   useAddRatingMutation,
-  useGetRatingByIdQuery,
+ 
 } from "../../../api/rating";
 import { AiFillEye } from "react-icons/ai";
-import { useGetUserByIdQuery } from "../../../api/user";
+// import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 import ReactPaginate from "react-paginate";
 
@@ -27,15 +26,15 @@ const TourDetail = () => {
   const [idArray, setIdArray] = useState<number[]>([]);
 
   const [addRating] = useAddRatingMutation();
-  const { id: idRating } = useParams<{ id: string }>();
-  const { data: dataRating } = useGetRatingByIdQuery(idRating | "");
+  // const { id: idRating } = useParams<{ id: string }>();
+  // const { data: dataRating } = useGetRatingByIdQuery(idRating || "");
   // console.log(dataRating);
 
-  const user = JSON.parse(localStorage.getItem("user")) || "";
+  const user = JSON.parse(localStorage.getItem("user") || "");
   // console.log(user);
 
   const userId = user?.id;
-  const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
+  const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId || "");
   // console.log(TourHistoryData);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");

@@ -8,5 +8,5 @@ export interface Coupon {
     start_date:number,
     expiration_date:number,
     percentage_price: number,
-
+data:any
 }

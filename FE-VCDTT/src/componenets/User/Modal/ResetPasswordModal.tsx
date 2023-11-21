@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResetPasswordWithTokenMutation } from '../../../api/auth';
 
 const ResetPasswordModal = () => {
-  const [resetPasswordWithToken, { isLoading: resetPasswordWithTokenLoading }] = useResetPasswordWithTokenMutation();
+  const [resetPasswordWithToken] = useResetPasswordWithTokenMutation();
   const { token } = useParams();
   const [show, setShow] = useState(true); // Show the modal initially
   const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ const navigate = useNavigate()
         navigate('/')
       } else {
         // Handle password reset request error
-        console.error('Password reset request failed:', response.error);
+        console.error('Password reset request failed:');
         // You can display an error message to the user.
       }
     } catch (error) {

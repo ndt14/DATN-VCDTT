@@ -4,16 +4,15 @@ import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
 
-import { SearchBar, TourPreview } from "../../../componenets";
+import { SearchBar} from "../../../componenets";
 import { useGetToursQuery } from "../../../api/tours";
 import { Tour } from "../../../interfaces/Tour";
 import { Link } from "react-router-dom";
 import Loader from "../../../componenets/User/Loader";
-import { useState, useRef, useEffect } from "react";
+import { useState,useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import _ from "lodash";
 import { useGetTourFavoriteByIdQuery } from "../../../api/user";
-import { number } from "yup";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
 import { AiFillEye } from "react-icons/ai";
 import { useGetBlogsQuery } from "../../../api/blogs";
@@ -61,7 +60,7 @@ const HomePage = () => {
   //
   const [idArray, setIdArray] = useState<number[]>([]);
 
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const userData = JSON.parse(localStorage.getItem("user") || "");
   const userId = userData && userData.id ? userData.id : null;
   const { data: favoriteData } = useGetTourFavoriteByIdQuery(userId || "");
   useEffect(() => {

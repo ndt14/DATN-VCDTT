@@ -1,5 +1,3 @@
-import React from "react";
-import { useState, useEffect } from "react";
 import {
  
   useGetUserByIdQuery,
@@ -14,10 +12,9 @@ import { FaRegListAlt } from "react-icons/fa";
 import { useGetCouponByUserQuery } from "../../../api/coupon";
 import { Coupon } from "../../../interfaces/Coupon";
 
-type Props = {}
 
-const UserCoupon = (props: Props) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+const UserCoupon = () => {
+  const user = JSON.parse(localStorage.getItem("user")||"");
   const userId = user?.id;
   const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
   const {data: couponData} = useGetCouponByUserQuery(userId || "");

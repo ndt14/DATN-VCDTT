@@ -1,11 +1,10 @@
-import React from "react";
 import { useGetPrivacyQuery } from "../../../api/privacy";
-import { Privacy } from "../../../interfaces/privacy";
+import { Privacy } from "../../../interfaces/Privacy";
 import { useGetBankNameQuery, useGetLogoQuery } from "../../../api/setting";
 
-type Props = {};
 
-const PrivacyPolicy = (props: Props) => {
+
+const PrivacyPolicy = () => {
   const {data} = useGetPrivacyQuery();
   console.log(data);
   const privacy = data?.data.privacy;
@@ -18,7 +17,7 @@ const PrivacyPolicy = (props: Props) => {
   <div className="container">
     <h3 className="text-center">Chính sách & Điều khoản </h3>
 {
-  privacy?.map(({id,title,type,content,status}:Privacy)=>{
+  privacy?.map(({content}:Privacy)=>{
     return(
       <>
       <div>

@@ -8,4 +8,5 @@ export interface Rating {
     star:number;
     tour_id:number;
     created_at:string;
+    data:any
 }

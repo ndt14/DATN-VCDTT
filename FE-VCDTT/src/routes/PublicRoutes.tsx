@@ -21,7 +21,6 @@ import UserProfile from "../pages/user/UserProfile/UserProfile";
 import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
 import UserTour from "../pages/user/UserTour/UserTour";
 import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
-import SearchBar from "../componenets/User/SearchBar";
 import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

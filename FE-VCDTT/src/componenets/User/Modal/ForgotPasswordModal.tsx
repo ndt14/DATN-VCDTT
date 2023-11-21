@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useResetPasswordMutation } from '../../../api/auth';
-import { useNavigate } from 'react-router-dom';
 
 type Props = {
   show: boolean;
@@ -12,18 +11,17 @@ type Props = {
 const ForgotPasswordModal = ({ show, onClose }: Props) => {
     const [email, setEmail] = useState('');
     const [resetPassword, { isLoading: resetPasswordLoading }] = useResetPasswordMutation();
-    const navigate = useNavigate();
     const handleResetPassword = async () => {
         try {
             const response = await resetPassword({ email });
             if (response.data) {
                 // Handle successful password reset request
-                console.log('Password reset request successful:', response.data);
+                // console.log('Password reset request successful:', response.data);
                 alert("Nhập email thành công.Vui lòng kiểu tra email của bạn");
         
             } else {
                 // Handle password reset request error
-                console.error('Password reset request failed:', response.error);
+                console.error('Password reset request failed:');
             }
         } catch (error) {
             // Handle network or other errors

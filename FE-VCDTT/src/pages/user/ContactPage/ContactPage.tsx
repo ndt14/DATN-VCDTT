@@ -1,9 +1,8 @@
-import React from 'react'
+
 import Loader from '../../../componenets/User/Loader';
 
-type Props = {}
 
-const ContactPage = (props: Props) => {
+const ContactPage = () => {
     const backgroundImageUrl = 'assets/images/inner-banner.jpg'; 
 
     const containerStyle = {
