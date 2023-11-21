@@ -66,12 +66,86 @@ Chỉnh sửa đơn đặt
                         action="{{ route('purchase_histories.edit', ['id' => $items['id']]) }}" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
-                                Edit {{ $items['name'] }}
+                                Chỉnh sửa đơn đặt: {{ $items['name'] }}
                             </h2>
+                            <button id="btnSubmitEdit" type="submit" class="btn btn-indigo ms-auto">Sửa</button>
                         </div>
                         @csrf
                         <div class="card-body">
                             <input type="hidden" name="update_admin" value="1">
+                            <div class="hr-text fs-2">Cập nhật trạng thái</div>
+                            <div class="row">
+                                <div class="mb-3 col-4">
+                                    <div class="form-label">Trạng thái thanh toán</div>
+                                    <select name="payment_status" class="form-select"
+                                        aria-label="Default select example">
+                                        <option>-----Trạng thái thanh toán-----</option>
+                                        <option @if ($items['payment_status'] == 1) selected @endif value="1">Người dùng
+                                            chưa thanh toán
+                                        </option>
+                                        <option @if ($items['payment_status'] == 2) selected @endif value="2">Người
+                                            dùng đã
+                                            thanh toán
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <div class="form-label">Trạng thái đơn hàng</div>
+                                    <select name="purchase_status" class="form-select"
+                                        aria-label="Default select example">
+                                        <option @if ($items['purchase_status'] == 9) selected @endif value="9">-----Trạng thái đơn hàng-----</option>
+                                        <option @if ($items['purchase_status'] == 1) selected @endif value="1">
+                                            Đã hủy thanh toán do quá hạn
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 2) selected @endif value="2">
+                                            Đã thanh toán, chưa phê duyệt
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 3) selected @endif value="3">
+                                            Đã phê duyệt đơn hàng
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 4) selected @endif value="4">
+                                            Đang đợi phê duyệt hủy đơn hàng
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 5) selected @endif value="5">
+                                            Đã phê duyệt hủy đơn hàng, đang đợi hoàn tiền
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 6) selected @endif value="6">
+                                            Đã hủy đơn thành công! @if ($items['payment_status'] == 2)
+                                                (đã hoàn tiền)
+                                            @endif
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 7) selected @endif value="7">
+                                            Khách hàng chuyển khoản thiếu, vui lòng liên hệ với khách hàng
+                                        </option>
+                                        <option @if ($items['purchase_status'] == 8) selected @endif value="8">
+                                            Khách hàng chuyển khoản thừa, vui lòng liên hệ với khách hàng
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <div class="form-label">Trạng thái tour</div>
+                                    <select name="tour_status" class="form-select" aria-label="Default select example">
+                                        <option @if ($items['tour_status'] == 5) selected @endif value="5">-----Trạng thái tour-----</option>
+
+                                        <option @if ($items['tour_status'] == 1) selected @endif value="1">Chưa
+                                            tới
+                                            ngày đi
+                                        </option>
+                                        <option @if ($items['tour_status'] == 2) selected @endif value="2">Đang
+                                            diễn ra
+                                        </option>
+                                        <option @if ($items['tour_status'] == 3) selected @endif value="3">Đã
+                                            kết
+                                            thúc
+                                        </option>
+                                        <option @if ($items['tour_status'] == 4) selected @endif value="4">Còn
+                                            1 ngày đến ngày đi tour
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-text fs-2">Chỉnh sửa thông tin</div>
                             <div class="row">
                                 <div class="mb-3 col-9">
                                     <label class="form-label">Tên người dùng</label>
@@ -325,9 +399,8 @@ Chỉnh sửa đơn đặt
                                     </span>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3">
                                     <div class="form-label">Phương thức thanh toán</div>
                                     <div class="custom-controls-stacked">
                                         <label class="custom-control custom-radio custom-control-inline me-2">
@@ -350,98 +423,14 @@ Chỉnh sửa đơn đặt
                                         </span>
                                     </div>
                                 </div>
-
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Trạng thái thanh toán</div>
-                                    <select name="payment_status" class="form-select"
-                                        aria-label="Default select example">
-                                        <option>-----Trạng thái thanh toán-----</option>
-                                        <option @if ($items['payment_status'] == 1) selected @endif value="1">Người dùng
-                                            chưa thanh toán
-                                        </option>
-                                        <option @if ($items['payment_status'] == 2) selected @endif value="2">Người
-                                            dùng đã
-                                            thanh toán
-                                        </option>
-                                    </select>
-                                </div>
                             </div>
-
-                            <div class="row">
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Trạng thái đơn hàng</div>
-                                    <select name="purchase_status" class="form-select"
-                                        aria-label="Default select example">
-                                        <option @if ($items['purchase_status'] == 9) selected @endif value="9">-----Trạng thái đơn hàng-----</option>
-
-                                        <option @if ($items['purchase_status'] == 1) selected @endif value="1">
-                                            Đã hủy thanh toán do quá hạn
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 2) selected @endif value="2">
-                                            Đã thanh toán, chưa phê duyệt
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 3) selected @endif value="3">
-                                            Đã phê duyệt đơn hàng
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 4) selected @endif value="4">
-                                            Đang đợi phê duyệt hủy đơn hàng
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 5) selected @endif value="5">
-                                            Đã phê duyệt hủy đơn hàng, đang đợi hoàn tiền
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 6) selected @endif value="6">
-                                            Đã hủy đơn thành công! @if ($items['payment_status'] == 2)
-                                                (đã hoàn tiền)
-                                            @endif
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 7) selected @endif value="7">
-                                            Khách hàng chuyển khoản thiếu, vui lòng liên hệ với khách hàng
-                                        </option>
-
-                                        <option @if ($items['purchase_status'] == 8) selected @endif value="8">
-                                            Khách hàng chuyển khoản thừa, vui lòng liên hệ với khách hàng
-                                        </option>
-
-                            </select>
                         </div>
+                    <div class="card-footer text-end">
+                        <div class="mb-3">
 
-                        <div class="mb-3 col-6">
-                            <div class="form-label">Trạng thái tour</div>
-                            <select name="tour_status" class="form-select" aria-label="Default select example">
-                                <option @if ($items['tour_status'] == 5) selected @endif value="5">-----Trạng thái tour-----</option>
-
-                                <option @if ($items['tour_status'] == 1) selected @endif value="1">Chưa
-                                    tới
-                                    ngày đi
-                                </option>
-                                <option @if ($items['tour_status'] == 2) selected @endif value="2">Đang
-                                    diễn ra
-                                </option>
-                                <option @if ($items['tour_status'] == 3) selected @endif value="3">Đã
-                                    kết
-                                    thúc
-                                </option>
-                                <option @if ($items['tour_status'] == 4) selected @endif value="4">Còn
-                                    1 ngày đến ngày đi tour
-                                </option>
-
-                            </select>
+                            <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Sửa</button>
                         </div>
-
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="card-footer text-center">
-                        <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Sửa</button>
-                    </div>
-                </div>
             </form>
         </div>
     </div>

@@ -3,30 +3,30 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body row row-deck row-cards">
-    <div class="col-sm-12 col-md-12 px-6">
-        <div class="card-body card-body-scrollable">
+    <div class="col-sm-12 col-md-12" style="height: 50rem;">
+        <div class="card-body card-body-scrollable" >
             <div class="row">
-                <div class="mb-3 col-9">
+                <div class="col-9">
                     <label class="form-label">Tên người dùng</label>
                     <h3>{{ $item['name'] }}</h3>
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <label class="form-label">ID người dùng</label>
                     {{ $item['user_id'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-4">
+                <div class="col-4">
                     <label class="form-label">Email</label>
                     {{ $item['email'] }}
                 </div>
-                <div class="mb-3 col-4">
+                <div class="col-4">
                     <label class="form-label">Số điện thoại</label>
                     {{ $item['phone_number'] }}
 
                 </div>
-                <div class="mb-3 col-4">
+                <div class="col-4">
                     <div class="form-label">Giới tính</div>
                     @switch ($item['gender'])
                         @case(0)
@@ -43,114 +43,114 @@
                     @endswitch
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-9">
+                <div class="col-9">
                     <div class="form-label">Tên tour</div>
                     {{ $item['tour_name'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Độ dài tour</div>
                     {{ $item['tour_duration'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Số trẻ em</div>
                     {{ $item['child_count'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Giá trẻ em</div>
                     {{ $item['tour_child_price'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Số người lớn</div>
                     {{ $item['adult_count'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Giá người lớn</div>
                     {{ $item['tour_adult_price'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-6">
+                <div class="col-6">
                     <div class="form-label">Điểm bắt đầu</div>
                     {{ $item['tour_start_destination'] }}
                 </div>
-                <div class="mb-3 col-6">
+                <div class="col-6">
                     <div class="form-label">Điểm kết thúc</div>
                     {{ $item['tour_end_destination'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 ">
+                <div class="">
                     <div class="form-label">Vị trí tour</div>
                     {{ $item['tour_location'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Tour giảm giá (%)</div>
                     {{ $item['tour_sale_percentage'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Mã giảm giá</div>
                     {{ $item['coupon_name'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Phần trăm giảm giá</div>
                     {{ $item['coupon_percentage'] }}
                 </div>
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Số tiền giảm trực tiếp</div>
                     {{ $item['coupon_fixed'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-3">
+                <div class="col-3">
                     <div class="form-label">Phần trăm hoàn tiền</div>
                     {{ $item['refund_percentage'] }}
                 </div>
 
 
-                <div class="mb-3 col-9">
+                <div class="col-9">
                     <div class="form-label">Góp ý của khách hàng</div>
                     {{ $item['suggestion'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-6">
+                <div class="col-6">
                     <div class="form-label">Thời gian bắt đầu</div>
                     {{ $item['tour_start_time'] }}
                 </div>
-                <div class="mb-3 col-6">
+                <div class="col-6">
                     <div class="form-label">Thời gian kết thúc</div>
                     {{ $item['tour_end_time'] }}
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
+                <div class="card-body-scrollable" style="max-height: 20rem;">
                     <div class="form-label">Chính sách và điều khoản đã đồng ý</div>
                     <div>
                     {!! $item['payment_term']  !!}
                     </div>
                 </div>
-                <div class="mb-3 card-body-scrollable" style="max-height: 20rem;">
+                <div class="card-body-scrollable" style="max-height: 20rem;">
                     <div class="markdown">
                         {!! $item['payment_privacy']  !!}
                     </div>
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div class="row">
-                <div class="mb-3 col-6">
+                <div class="col-6 mb-3">
                     <div class="form-label">Trạng thái thanh toán</div>
                     <div class="custom-controls-stacked">
                         @switch ($item['payment_status'])
@@ -165,7 +165,7 @@
                     </div>
                 </div>
 
-                <div class="mb-3 col-4">
+                <div class="col-4 mb-3">
                     <div class="form-label">Trạng thái dơn hàng</div>
                     @switch($item['purchase_status'])
                         @case(1)
@@ -209,7 +209,7 @@
                     @endswitch
                 </div>
             </div>
-            <div class="mb-3 col-4">
+            <div class="col-4 mb-3">
                 <div class="form-label">Trạng thái tour</div>
                 <div class="custom-controls-stacked">
                     @switch($item['tour_status'])
@@ -234,9 +234,7 @@
                     @endswitch
                 </div>
             </div>
-            <hr>
-            <a class="button btn btn-indigo"
-                href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
+            <a class="button btn btn-indigo mt-5" ef=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
 
         </div>
     </div>
