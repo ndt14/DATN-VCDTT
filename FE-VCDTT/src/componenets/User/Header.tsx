@@ -174,11 +174,11 @@ const Header = () => {
   });
 
   const userData = JSON.parse(localStorage.getItem("user"));
-console.log(userData);
+  console.log(userData);
 
   const userName = userData?.name;
   const is_admin = userData?.is_admin;
-  
+
   const openWindow = () => {
     window.open("http://be-vcdtt.datn-vcdtt.test/", "_blank");
   };
@@ -271,15 +271,14 @@ console.log(userData);
                               <li>
                                 <Link to="user/favorite">Tour yêu thích</Link>
                               </li>
-                              {is_admin==1 || is_admin==3?(
+                              {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                              <Link
-                                 
-                                  onClick={openWindow}
-                                >Đăng nhập admin</Link>
-                              </li>
-                              ):null}
-                              
+                                  <Link onClick={openWindow}>
+                                    Đăng nhập admin
+                                  </Link>
+                                </li>
+                              ) : null}
+
                               <li>
                                 <a onClick={handleSignOut} href="#">
                                   Đăng xuất
@@ -323,39 +322,42 @@ console.log(userData);
                       {showSignInForm && (
                         <div>
                           <form onSubmit={loginFormik.handleSubmit}>
-                            <label htmlFor="" className="fw-bold">
-                              Tài khoản <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="email"
-                              placeholder="Email"
-                              name="email"
-                              value={loginFormik.values.email}
-                              onChange={loginFormik.handleChange}
-                              onBlur={loginFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Tài khoản <span className="text-danger">*</span>
+                              </label>
+
+                              <input
+                                className="w-100 my-2 input-border"
+                                type="email"
+                                placeholder="Email"
+                                name="email"
+                                value={loginFormik.values.email}
+                                onChange={loginFormik.handleChange}
+                                onBlur={loginFormik.handleBlur}
+                              />
+                            </div>
                             {loginFormik.touched.email &&
                               loginFormik.errors.email && (
                                 <div className="text-danger">
                                   {loginFormik.errors.email}
                                 </div>
                               )}
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Mật khẩu <span className="text-danger">*</span>
+                              </label>
 
-                            <label htmlFor="" className="fw-bold">
-                              Mật khẩu <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="password"
-                              placeholder="Password"
-                              name="password"
-                              value={loginFormik.values.password}
-                              onChange={loginFormik.handleChange}
-                              onBlur={loginFormik.handleBlur}
-                            />
+                              <input
+                                className="w-100 my-2 input-border"
+                                type="password"
+                                placeholder="Password"
+                                name="password"
+                                value={loginFormik.values.password}
+                                onChange={loginFormik.handleChange}
+                                onBlur={loginFormik.handleBlur}
+                              />
+                            </div>
                             {loginFormik.touched.password &&
                               loginFormik.errors.password && (
                                 <div className="text-danger">
@@ -387,108 +389,112 @@ console.log(userData);
                             <BsGoogle />
                             <span className="mx-2">Đăng nhập với Google</span>
                           </button>
-                          <button className="p-2 w-100 border-0 my-2 bg-primary text-white rounded py-3">
-                            <BsFacebook />
-                            <span className="mx-2">Đăng nhập với Facebook</span>
-                          </button>
                         </div>
                       )}
                       {showSignUpForm && (
                         <div>
                           <form onSubmit={registrationFormik.handleSubmit}>
-                            <label htmlFor="" className="fw-bold">
-                              Tên tài khoản{" "}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="text"
-                              placeholder="Tên tài khoản"
-                              name="name"
-                              value={registrationFormik.values.name}
-                              onChange={registrationFormik.handleChange}
-                              onBlur={registrationFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Tên tài khoản{" "}
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <input
+                                className="w-100 input-border"
+                                type="text"
+                                placeholder="Tên tài khoản"
+                                name="name"
+                                value={registrationFormik.values.name}
+                                onChange={registrationFormik.handleChange}
+                                onBlur={registrationFormik.handleBlur}
+                              />
+                            </div>
                             {registrationFormik.touched.name &&
                               registrationFormik.errors.name && (
                                 <div className="text-danger">
                                   {registrationFormik.errors.name}
                                 </div>
                               )}
-                            <label htmlFor="" className="fw-bold">
-                              Email <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="text"
-                              placeholder="Email"
-                              name="email"
-                              value={registrationFormik.values.email}
-                              onChange={registrationFormik.handleChange}
-                              onBlur={registrationFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Email <span className="text-danger">*</span>
+                              </label>
+                              <input
+                                className="w-100 input-border"
+                                type="text"
+                                placeholder="Email"
+                                name="email"
+                                value={registrationFormik.values.email}
+                                onChange={registrationFormik.handleChange}
+                                onBlur={registrationFormik.handleBlur}
+                              />
+                            </div>
                             {registrationFormik.touched.email &&
                               registrationFormik.errors.email && (
                                 <div className="text-danger">
                                   {registrationFormik.errors.email}
                                 </div>
                               )}
-                            <label htmlFor="" className="fw-bold">
-                              Số điện thoại{" "}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="text"
-                              min={0}
-                              placeholder="Số điện thoại"
-                              name="phone_number"
-                              value={registrationFormik.values.phone_number}
-                              onChange={registrationFormik.handleChange}
-                              onBlur={registrationFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Số điện thoại{" "}
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <input
+                                className="w-100 input-border"
+                                type="text"
+                                min={0}
+                                placeholder="Số điện thoại"
+                                name="phone_number"
+                                value={registrationFormik.values.phone_number}
+                                onChange={registrationFormik.handleChange}
+                                onBlur={registrationFormik.handleBlur}
+                              />
+                            </div>
                             {registrationFormik.touched.phone_number &&
                               registrationFormik.errors.phone_number && (
                                 <div className="text-danger">
                                   {registrationFormik.errors.phone_number}
                                 </div>
                               )}
-                            <label htmlFor="" className="fw-bold">
-                              Mật khẩu <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="password"
-                              placeholder="Nhập mật khẩu"
-                              name="password"
-                              value={registrationFormik.values.password}
-                              onChange={registrationFormik.handleChange}
-                              onBlur={registrationFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Mật khẩu <span className="text-danger">*</span>
+                              </label>
+                              <input
+                                className="w-100 input-border"
+                                type="password"
+                                placeholder="Nhập mật khẩu"
+                                name="password"
+                                value={registrationFormik.values.password}
+                                onChange={registrationFormik.handleChange}
+                                onBlur={registrationFormik.handleBlur}
+                              />
+                            </div>
                             {registrationFormik.touched.password &&
                               registrationFormik.errors.password && (
                                 <div className="text-danger">
                                   {registrationFormik.errors.password}
                                 </div>
                               )}
-                            <label htmlFor="" className="fw-bold">
-                              Nhập lại mật khẩu{" "}
-                              <span className="text-danger">*</span>
-                            </label>
-                            <br />
-                            <input
-                              className="w-100 my-2"
-                              type="password"
-                              placeholder="Nhập lại mật khẩu"
-                              name="c_password"
-                              value={registrationFormik.values.c_password}
-                              onChange={registrationFormik.handleChange}
-                              onBlur={registrationFormik.handleBlur}
-                            />
+                            <div className="form-group">
+                              <label htmlFor="" className="fw-bold">
+                                Nhập lại mật khẩu{" "}
+                                <span className="text-danger">*</span>
+                              </label>
+
+                              <input
+                                className="w-100 input-border"
+                                type="password"
+                                placeholder="Nhập lại mật khẩu"
+                                name="c_password"
+                                value={registrationFormik.values.c_password}
+                                onChange={registrationFormik.handleChange}
+                                onBlur={registrationFormik.handleBlur}
+                              />
+                            </div>
                             {registrationFormik.touched.c_password &&
                               registrationFormik.errors.c_password && (
                                 <div className="text-danger">
@@ -520,14 +526,9 @@ console.log(userData);
                             <BsGoogle />
                             <span className="mx-2">Đăng ký với Google</span>
                           </button>
-                          <button className="p-2 w-100 border-0 my-2 bg-primary text-white rounded py-3">
-                            <BsFacebook />
-                            <span className="mx-2">Đăng ký với Facebook</span>
-                          </button>
                         </div>
                       )}
                     </Modal.Body>
-                    <Modal.Footer></Modal.Footer>
                   </Modal>
                   {showForgotPasswordModal && (
                     <ForgotPasswordModal
