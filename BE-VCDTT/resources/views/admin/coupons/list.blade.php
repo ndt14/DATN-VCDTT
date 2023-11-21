@@ -211,7 +211,7 @@ Danh sách mã giảm giá
                                                         <span class="badge bg-secondary" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                                     @else
-                                                    <span class="badge bg-danger" data-bs-toggle="tooltip"
+                                                    <span class="badge bg-red" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" data-bs-title="Hết hạn"></span>
                                                     @endif
                                                 </td>

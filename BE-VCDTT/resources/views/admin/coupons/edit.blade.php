@@ -119,31 +119,8 @@ Chỉnh sửa mã giảm giá
                                 @enderror
                             </span>
                         </div>
-                        <div class="mb-3">
-                            <div class="form-label">Trạng thái</div>
-                            <div class="custom-controls-stacked">
-                                <label class="custom-control custom-radio custom-control-inline me-2">
-                                    <input type="radio" class="custom-control-input"
-                                        @if (old('status') == '1') checked @endif name="status"
-                                        checked="" value="1">
-                                    <span class="custom-control-label">Hoạt động</span>
-                                </label>
-                                <label class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input"
-                                        @if (old('status') == '0') checked @endif name="status"
-                                        value="0">
-                                    <span class="custom-control-label">Không hoạt động</span>
-                                </label>
-
-                                <span class="text-danger d-flex justify-content-start">
-                                    @error('status')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
+                            <input type="hidden" name="status"checked="" value="1">
                         {{-- Cho danh muc - tour --}}
-
                     </div>
                     <div class="card-footer text-right">
                         <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Gửi</button>

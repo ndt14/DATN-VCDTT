@@ -172,7 +172,7 @@ Danh sách bài viết
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status == 1)
+                                                    @if ($item->status == 2)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Activated"></span>
                                                     @else

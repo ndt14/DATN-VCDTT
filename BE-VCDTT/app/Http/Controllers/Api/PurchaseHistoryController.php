@@ -344,7 +344,10 @@ class PurchaseHistoryController extends Controller
                     if (UsedCoupon::select()->where('user_id', $request->user_id)->where('coupon_code', $code)->exists()) {
                         return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
-                        $coupon = Coupon::select()->where('code', $code)->first();
+                        $coupon = Coupon::where('code', $code)->first();
+                        if($coupon->status == 3){
+                            return response()->json(['message' => 'Mã này đã hết hạn', 'status' => 500]);
+                        }
                         return response()->json([
                             'coupon' => new CouponResource($coupon),
                             'message' => 'Mã giảm giá hợp lệ',
