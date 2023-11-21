@@ -126,10 +126,9 @@ Chỉnh sửa bài viết
                                 <span class="custom-control-label">Có</span>
                             </label>
                             <label class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" name="status" value="0" >
+                                <input type="radio" class="custom-control-input" name="status" value="2" >
                                 <span class="custom-control-label">Không</span>
                             </label>
-
                             <span class="text-danger d-flex justify-content-start">
                             @error('status')
                                 {{ $message }}
