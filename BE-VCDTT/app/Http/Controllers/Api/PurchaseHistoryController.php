@@ -48,15 +48,15 @@ class PurchaseHistoryController extends Controller
                     foreach ($columns as $column) {
                         $query->orWhere($column, 'like', '%' . $keyword . '%');
                     }
-                })->where('payment_status', 'LIKE', '%' . $request->payment_status??'' . '%')
-                ->where('purchase_status', 'LIKE', '%' . $request->purchase_status??'' . '%')
-                ->where('tour_status', 'LIKE', '%' . $request->tour_status??'' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
+                    ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
+                    ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
             }
         } else {
-                $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
-                ->where('payment_status', '%' . $request->payment_status??'' . '%')
-                ->where('purchase_status',  '%' . $request->purchase_status??'' . '%')
-                ->where('tour_status', '%' . $request->tour_status??'' . '%')
+            $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
+                ->where('payment_status', '%' . $request->payment_status ?? '' . '%')
+                ->where('purchase_status',  '%' . $request->purchase_status ?? '' . '%')
+                ->where('tour_status', '%' . $request->tour_status ?? '' . '%')
                 ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
@@ -85,22 +85,23 @@ class PurchaseHistoryController extends Controller
         //     $data['payment_status'] = 1;
         //     $data['purchase_status'] = 1;
         // }
-        $term = TermAndPrivacy::where('type','=', 1)->where('status','=', 1)->first();
-        $privacy = TermAndPrivacy::where('type','=', 2)->where('status','=', 1)->first();
-        if($term){
+        $term = TermAndPrivacy::where('type', '=', 1)->where('status', '=', 1)->first();
+        $privacy = TermAndPrivacy::where('type', '=', 2)->where('status', '=', 1)->first();
+        if ($term) {
             $data['payment_term'] = $term->content;
-
         }
-        if($privacy){
+        if ($privacy) {
             $data['payment_privacy'] = $privacy->content;
         }
 
         $purchaseHistory = PurchaseHistory::create($data);
-        $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
+        if ($request->only('coupon_code') != null) {
+            $coupon = UsedCoupon::create($request->only(['user_id', 'coupon_code']));
+        }
 
         //Gửi thông báo cho admin
-        foreach ($users as $user){
-            $user->notify(new PurchaseNotificationAdmin($purchaseHistory,$user->id));
+        foreach ($users as $user) {
+            $user->notify(new PurchaseNotificationAdmin($purchaseHistory, $user->id));
         }
         if ($purchaseHistory->id) {
             return response()->json([
@@ -189,8 +190,8 @@ class PurchaseHistoryController extends Controller
                     $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
                 }
                 if ($purchaseHistory->purchase_status == 6) {
-                    foreach ($users as $user){
-                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory,$user->id));
+                    foreach ($users as $user) {
+                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory, $user->id));
                     }
                 }
             } else {
@@ -198,15 +199,15 @@ class PurchaseHistoryController extends Controller
                     case '2':
                         if ($purchaseHistory->comfirm_click == 2) {
                             $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
-                            foreach ($users as $user){
-                                $user->notify(new ComfirmPaymentAdmin($purchaseHistory,$user->id));
+                            foreach ($users as $user) {
+                                $user->notify(new ComfirmPaymentAdmin($purchaseHistory, $user->id));
                             }
                         }
                         break;
                     case '4':
                         $purchaseHistory->notify(new CancelPurchaseMailToClient($purchaseHistory));
-                        foreach ($users as $user){
-                            $user->notify(new CancelNotificationAdmin($purchaseHistory,$user->id));
+                        foreach ($users as $user) {
+                            $user->notify(new CancelNotificationAdmin($purchaseHistory, $user->id));
                         }
                     default:
                         break;
@@ -345,7 +346,7 @@ class PurchaseHistoryController extends Controller
                         return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::where('code', $code)->first();
-                        if($coupon->status == 3){
+                        if ($coupon->status == 3) {
                             return response()->json(['message' => 'Mã này đã hết hạn', 'status' => 500]);
                         }
                         return response()->json([

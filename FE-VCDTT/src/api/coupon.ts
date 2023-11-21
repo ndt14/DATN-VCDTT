@@ -3,6 +3,7 @@ import { Coupon } from '../interfaces/Coupon';
 
 const CouponApi = createApi({
     reducerPath: 'check-coupon',
+    
     baseQuery: fetchBaseQuery({
         baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
     }),
@@ -14,10 +15,13 @@ const CouponApi = createApi({
                 body: coupon,
             }),
         }),
+        getCouponByUser: builder.query<Coupon,number|string >({
+            query: (user_id) => `/list-coupon/${user_id}`,
+        })
     }),
 });
 
-export const { useCheckCouponMutation } = CouponApi;
+export const { useCheckCouponMutation,useGetCouponByUserQuery } = CouponApi;
 
 export const couponReducer = CouponApi.reducer;
 export default CouponApi;
