@@ -12,6 +12,7 @@ import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
+import Modal from "react-bootstrap/Modal";
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -73,6 +74,12 @@ const UserTour = () => {
   //     [id]: false,
   //   }));
   // };
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const openWindow = () => {
     window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
   };
@@ -487,7 +494,9 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
-                              {purchase_method == 2 && purchase_status != 6 ? (
+                              {purchase_method == 2 &&
+                              payment_status == 1 &&
+                              tour_status == 1 ? (
                                 <button
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
@@ -503,39 +512,43 @@ const UserTour = () => {
                                   )}
                                 </div>
                               )}
-                              {purchase_status == 2 && tour_status == 1 ? (
-                                <div>
-                                  <Popconfirm
-                                    title="Hủy tour chưa thanh toán"
-                                    description="Bạn có chắc muốn hủy tour?"
-                                    onConfirm={handleCancelTour}
-                                    onCancel={cancel}
-                                    okText="Đồng ý"
-                                    cancelText="Hủy bỏ"
-                                  >
-                                    {/* <button className="btn-continue">Hủy</button> */}
-                                    {checked ? (
-                                      <Button className="btn-continue">
-                                        Hủy tour
-                                      </Button>
-                                    ) : (
-                                      <div></div>
-                                    )}
-                                  </Popconfirm>
-                                  <Checkbox
-                                    checked={checked}
-                                    onChange={handleCheckboxChange}
-                                  >
-                                    Đọc kỹ{" "}
-                                    <a
-                                      className="text-primary"
-                                      onClick={openWindow}
-                                    >
-                                      chính sách
-                                    </a>{" "}
-                                    của chúng tôi nếu bạn muốn hủy tour.
-                                  </Checkbox>
-                                </div>
+                              {payment_status == 1 && tour_status == 1 ? (
+                                // <div>
+                                //   <Popconfirm
+                                //     title="Hủy tour chưa thanh toán"
+                                //     description="Bạn có chắc muốn hủy tour?"
+                                //     onConfirm={handleCancelTour}
+                                //     onCancel={cancel}
+                                //     okText="Đồng ý"
+                                //     cancelText="Hủy bỏ"
+                                //   >
+                                //     {/* <button className="btn-continue">Hủy</button> */}
+                                //     {checked ? (
+                                //       <Button className="btn-continue">
+                                //         Hủy tour
+                                //       </Button>
+                                //     ) : (
+                                //       <div></div>
+                                //     )}
+                                //   </Popconfirm>
+                                //   <Checkbox
+                                //     checked={checked}
+                                //     onChange={handleCheckboxChange}
+                                //   >
+                                //     Đọc kỹ{" "}
+                                //     <a
+                                //       className="text-primary"
+                                //       onClick={openWindow}
+                                //     >
+                                //       chính sách
+                                //     </a>{" "}
+                                //     của chúng tôi nếu bạn muốn hủy tour.
+                                //   </Checkbox>
+                                // </div>
+                                <p className="text-danger">
+                                  Đơn hàng sẽ tự động hủy sau 48 tiếng nếu bạn
+                                  không thanh toán
+                                </p>
                               ) : (
                                 <span>
                                   {purchase_status == 3 ? (
@@ -620,6 +633,80 @@ const UserTour = () => {
                 );
               }
             )}
+            <Button variant="primary" onClick={handleShow}>
+              Launch demo modal
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Form xác nhận hoàn tiền</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Họ tên <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          className="input-border"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Số điện thoại{" "}
+                          <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          className="input-border"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Số tài khoản{" "}
+                          <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          className="input-border"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <div className="form-group">
+                        <label className="d-inline-flex">
+                          Lý do muốn hủy tour{" "}
+                          <div className=" ml-1 text-danger">*</div>
+                        </label>
+                        <input
+                          type="text"
+                          name="email"
+                          className="input-border"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={handleClose}>
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+            </Modal>
             <ReactPaginate
               previousLabel={"<-"}
               nextLabel={"->"}
