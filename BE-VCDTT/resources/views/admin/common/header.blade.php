@@ -65,8 +65,13 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
                             <div class="card border-0 shadow-lg rounded-4 ">
-                                <div class="card-header ">
-                                    <h3 class="card-title">Thông báo</h3>
+                                <div class="card-header row">
+                                    <div class="col-md-6">
+                                        <h3 class="ms-auto">Thông báo</h3>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="ms-auto float-end" href="">Đánh dấu tất cả là đã đọc</a>
+                                    </div>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
                                     style="max-height: 27rem">
@@ -186,13 +191,13 @@
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
     let backendBaseUrl = "http://be-vcdtt.datn-vcdtt.test";
-    var user = <?php echo $user ; ?>;
+    var user = <?php echo $user; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1",
         authEndpoint: `${backendBaseUrl}/broadcasting/auth`,
         auth: {
             headers: {
-                "Authorization": "Bearer " 
+                "Authorization": "Bearer "
             }
         },
         encrypted: true

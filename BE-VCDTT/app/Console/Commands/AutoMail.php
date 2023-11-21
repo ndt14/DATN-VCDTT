@@ -30,7 +30,7 @@ class AutoMail extends Command
     public function handle()
     {
         //send mail when bill is outdated
-        $purchaseHistoriesOutdated = PurchaseHistory::where('payment_status', '=', 1)->where('updated_at', '=', Carbon::now()->subDays(1))->get();
+        $purchaseHistoriesOutdated = PurchaseHistory::where('payment_status', '=', 1)->where('created_at', '=', Carbon::now()->subDays(1))->get();
 
         if ($purchaseHistoriesOutdated) {
             foreach ($purchaseHistoriesOutdated as $purchaseHistory) {
