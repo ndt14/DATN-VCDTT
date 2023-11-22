@@ -21,44 +21,44 @@ class CouponController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        $code_type = $request->code_type=='1'?'percentage_price':($request->code_type=='2'?'fixed_price':'name');
-        $sortCol = $request->sort??'created_at';
-        $request->code_type && $request->sort=='amount'? $sortCol = $code_type:'';
-        if(!$request->searchCol){
-            $coupons = Coupon::where(function($query) use ($keyword) {
+        $code_type = $request->code_type == '1' ? 'percentage_price' : ($request->code_type == '2' ? 'fixed_price' : 'name');
+        $sortCol = $request->sort ?? 'created_at';
+        $request->code_type && $request->sort == 'amount' ? $sortCol = $code_type : '';
+        if (!$request->searchCol) {
+            $coupons = Coupon::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Coupon())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->where('status', 'LIKE', '%' . $request->status??'' . '%')
-            ->where(function ($query) use ($code_type) {
-            if ($code_type === 'fixed_price') {
-                $query->whereNull('percentage_price');
-            } elseif ($code_type === 'percentage_price') {
-                $query->wherenotNull('percentage_price');
-            }
-            })
-            ->orderBy($sortCol,$request->direction??'desc')->get();
-        }elseif($request->searchCol=='amount'){
-            $coupons = Coupon::where('percentage_price', 'LIKE', '%' . $keyword . '%')->orWhere('fixed_price', 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
-            ->where(function ($query) use ($code_type) {
-                if ($code_type === 'fixed_price') {
-                    $query->whereNull('percentage_price');
-                } elseif ($code_type === 'percentage_price') {
-                    $query->wherenotNull('percentage_price');
-                }
+            })->where('status', 'LIKE', '%' . $request->status ?? '' . '%')
+                ->where(function ($query) use ($code_type) {
+                    if ($code_type === 'fixed_price') {
+                        $query->whereNull('percentage_price');
+                    } elseif ($code_type === 'percentage_price') {
+                        $query->wherenotNull('percentage_price');
+                    }
                 })
-            ->orderBy($sortCol,$request->direction??'desc')->get();
-        }else{
-            $coupons = Coupon::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')
-            ->where(function ($query) use ($code_type) {
-                if ($code_type === 'fixed_price') {
-                    $query->whereNull('percentage_price');
-                } elseif ($code_type === 'percentage_price') {
-                    $query->wherenotNull('percentage_price');
-                }
+                ->orderBy($sortCol, $request->direction ?? 'desc')->get();
+        } elseif ($request->searchCol == 'amount') {
+            $coupons = Coupon::where('percentage_price', 'LIKE', '%' . $keyword . '%')->orWhere('fixed_price', 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status ?? '' . '%')
+                ->where(function ($query) use ($code_type) {
+                    if ($code_type === 'fixed_price') {
+                        $query->whereNull('percentage_price');
+                    } elseif ($code_type === 'percentage_price') {
+                        $query->wherenotNull('percentage_price');
+                    }
                 })
-            ->orderBy($sortCol,$request->direction??'desc')->get();
+                ->orderBy($sortCol, $request->direction ?? 'desc')->get();
+        } else {
+            $coupons = Coupon::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status ?? '' . '%')
+                ->where(function ($query) use ($code_type) {
+                    if ($code_type === 'fixed_price') {
+                        $query->whereNull('percentage_price');
+                    } elseif ($code_type === 'percentage_price') {
+                        $query->wherenotNull('percentage_price');
+                    }
+                })
+                ->orderBy($sortCol, $request->direction ?? 'desc')->get();
         }
         return response()->json([
             'data' => [
@@ -74,18 +74,18 @@ class CouponController extends Controller
      */
     public function store(CouponRequest $request)
     {
-        $coupon = $request->except('_token','type','price');
+        $coupon = $request->except('_token', 'type', 'price');
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
         $coupon['code'] = Str::upper($coupon['code']);
-        if($request->type != 1){
-            $coupon['fixed_price']= $request->price;
-        }else{
+        if ($request->type != 1) {
+            $coupon['fixed_price'] = $request->price;
+        } else {
             $coupon['percentage_price'] = $request->price;
         }
         $coupon = Coupon::create($coupon);
 
-        if($coupon->id) {
+        if ($coupon->id) {
             return response()->json([
                 'data' => [
                     'coupon' => new CouponResource($coupon),
@@ -93,7 +93,7 @@ class CouponController extends Controller
                 'message' => 'Add success',
                 'status' => 200
             ]);
-        }else {
+        } else {
             return response()->json(
                 [
                     'message' => 'internal server error',
@@ -111,7 +111,7 @@ class CouponController extends Controller
         //
 
         $coupon = Coupon::withTrashed()->find($id);
-        if($coupon) {
+        if ($coupon) {
             return response()->json([
                 'data' => [
                     'coupon' => new CouponResource($coupon),
@@ -119,7 +119,7 @@ class CouponController extends Controller
                 'message' => 'OK',
                 'status' => 200
             ]);
-        }else {
+        } else {
             return response()->json([
                 'message' => '404 Not found',
                 'status' => 404
@@ -129,12 +129,13 @@ class CouponController extends Controller
 
     // search coupon theo mã
 
-    public function search_coupon(Request $request) {
+    public function search_coupon(Request $request)
+    {
 
         $name = $request->query('name');
-        $result = Coupon::where('name','LIKE',"%$name%")->get();
+        $result = Coupon::where('name', 'LIKE', "%$name%")->get();
 
-        if(count($result) > 0) {
+        if (count($result) > 0) {
 
             return response()->json(
                 [
@@ -145,7 +146,7 @@ class CouponController extends Controller
                     'status' => 200
                 ]
             );
-        }else {
+        } else {
             return response()->json([
                 'message' => '404 Not found',
                 'status' => 404
@@ -158,15 +159,15 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request, string $id)
     {
-        $input = $request->except('_token','type','price','_method');
+        $input = $request->except('_token', 'type', 'price', '_method');
 
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
         $input['code'] = Str::upper($input['code']);
-        if($request->type != 1){
+        if ($request->type != 1) {
             $input['percentage_price'] = null;
             $input['fixed_price'] = $request->price;
-        }else{
+        } else {
             $input['fixed_price'] = null;
             $input['percentage_price'] = $request->price;
         }
@@ -181,7 +182,6 @@ class CouponController extends Controller
                 'status' => 200,
             ]);
         }
-
     }
 
     /**
@@ -192,32 +192,31 @@ class CouponController extends Controller
         //
 
         $coupon = Coupon::find($id);
-        if($coupon) {
+        if ($coupon) {
             $delete_coupon =  $coupon->delete();
 
-            if($delete_coupon) {
+            if ($delete_coupon) {
                 return response()->json([
                     'data' => [
                         'coupon' => new CouponResource($coupon),
                     ],
                     'message' => "OK",
-                        'status' => 200
+                    'status' => 200
                 ]);
-            }else {
+            } else {
 
                 return response()->json([
                     'message' => 'internal server error',
                     'status' => 500
                 ]);
             }
-        }else {
+        } else {
 
             return response()->json([
                 'message' => '404 Not found',
                 'status' => 404
             ]);
         }
-
     }
 
 
@@ -239,9 +238,9 @@ class CouponController extends Controller
         }
     }
 
-    public function listCouponUserId(Request $request){
-        $counponsUser = UsedCoupon::select('coupon_code')->where('user_id',$request->id)->get();
-        $coupons = Coupon::whereNotIn('code',$counponsUser)->get();
+    public function listCouponUserId(Request $request, string $id)
+    {
+        $coupons = Coupon::whereNotIn('code', UsedCoupon::select('coupon_code')->where('user_id', $id)->get())->get();
         return response()->json([
             'data' => [
                 'coupons' =>  CouponResource::collection($coupons),
@@ -253,43 +252,45 @@ class CouponController extends Controller
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function couponManagementList(Request $request) {
-        $data['status']=$status = $request->status??'';
-        $data['code_type']=$code_type = $request->code_type??'';
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
+    public function couponManagementList(Request $request)
+    {
+        $data['status'] = $status = $request->status ?? '';
+        $data['code_type'] = $code_type = $request->code_type ?? '';
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
         $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['coupons']), false);
 
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
-            $request->code_type?$data->setPath(request()->url())->appends(['code_type'=>$code_type]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->status ? $data->setPath(request()->url())->appends(['status' => $status]) : '';
+            $request->code_type ? $data->setPath(request()->url())->appends(['code_type' => $code_type]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.coupons.list', compact('data'));
     }
 
-    public function couponManagementAdd(CouponRequest $request) {
-        if ($request->isMethod('POST')){
+    public function couponManagementAdd(CouponRequest $request)
+    {
+        if ($request->isMethod('POST')) {
             $data = $request->except('_token');
             $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/coupon-store', $data);
-            if($response->status() == 200) {
+            if ($response->status() == 200) {
                 return redirect()->route('coupon.list')->with('success', 'Thêm mới mã giảm giá thành công');
             } else {
                 return redirect()->route('coupon.add')->with('fail', 'Đã xảy ra lỗi');
@@ -298,7 +299,8 @@ class CouponController extends Controller
         return view('admin.coupons.add');
     }
 
-    public function couponManagementEdit(Request $request, $id) {
+    public function couponManagementEdit(Request $request, $id)
+    {
         $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $id)['data']['coupon']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
@@ -313,19 +315,21 @@ class CouponController extends Controller
     }
 
 
-    public function couponManagementDetail(Request $request) {
+    public function couponManagementDetail(Request $request)
+    {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/'.$request->id);
-        if($response->status() == 200) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $request->id);
+        if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['coupon']), false);
             $html = view('admin.coupons.detail', compact('item'))->render();
             return response()->json(['html' => $html, 'status' => 200]);
         }
     }
 
-    public function couponManagementTrash(Request $request) {
+    public function couponManagementTrash(Request $request)
+    {
         $data = Coupon::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -336,17 +340,16 @@ class CouponController extends Controller
 
     // khôi phục bản ghi bị xóa mềm
 
-    public function couponManagementRestore($id) {
+    public function couponManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = Coupon::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
             }
             return redirect()->route('coupon.trash')->with('success', 'Khôi phục coupon thành công');
         }
         return redirect()->route('coupon.trash');
     }
-
 }
-
