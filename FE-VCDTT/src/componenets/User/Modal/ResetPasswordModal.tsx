@@ -14,9 +14,9 @@ const navigate = useNavigate()
     try {
       const newPassword = password; // Get the new password from the state
       const response = await resetPasswordWithToken({ token, newPassword });
-      if (response.data) {
+      if (response) {
         // Handle successful password reset
-        console.log('Password reset successful:', response.data);
+        // console.log('Password reset successful:', response.data);
         // You can redirect the user to a success page or perform other actions
         // For example, you can close the modal and show a success message.
         alert("đổi mật khẩu thành công")

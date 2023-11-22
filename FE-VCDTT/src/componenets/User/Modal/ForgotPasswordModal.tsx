@@ -14,7 +14,7 @@ const ForgotPasswordModal = ({ show, onClose }: Props) => {
     const handleResetPassword = async () => {
         try {
             const response = await resetPassword({ email });
-            if (response.data) {
+            if (response) {
                 // Handle successful password reset request
                 // console.log('Password reset request successful:', response.data);
                 alert("Nhập email thành công.Vui lòng kiểu tra email của bạn");

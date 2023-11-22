@@ -15,7 +15,7 @@ const BlogApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getBlogs: builder.query<Blog[], void>({
+        getBlogs: builder.query<Blog, void>({
             query: () => `/blog`,
             providesTags: ['Blog']
         }),

@@ -15,7 +15,7 @@ const FaqApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getFaqs: builder.query<Faq[], void>({
+        getFaqs: builder.query<Faq, void>({
             query: () => `/faq`,
             providesTags: ['Faq']
         }),

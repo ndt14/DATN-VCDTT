@@ -15,7 +15,7 @@ const BillApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getBills: builder.query<Bill[], void>({
+        getBills: builder.query<Bill, void>({
             query: () => `/bill`,
             providesTags: ['Bill']
         }),

@@ -4,5 +4,6 @@ export interface Privacy {
     type: string;
     content:string;
     status:number;
-    data:any[]
+    data:any;
+    // privacy:any;
 }

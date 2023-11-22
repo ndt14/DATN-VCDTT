@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import "./TourDetail.css";
 import { DatePicker, Rate, Skeleton } from "antd";
@@ -244,7 +244,7 @@ const TourDetail = () => {
   const purchase_history = TourHistoryData?.data?.purchase_history;
   if (purchase_history) {
     var foundPurchase = purchase_history.find(
-      (purchase) => purchase.tour_id === Number(id)
+      (purchase: { tour_id: number; }) => purchase.tour_id === Number(id)
     );
 
     // console.log(foundPurchase.purchase_status);
@@ -265,7 +265,7 @@ const TourDetail = () => {
   const calculateAverageRating = () => {
     let totalRating = 0;
     if (tourData?.data?.listRatings) {
-      tourData.data.listRatings.forEach((rating) => {
+      tourData.data.listRatings.forEach((rating: { star: string; }) => {
         totalRating += parseInt(rating.star);
       });
       return totalRating / tourData.data.listRatings.length;
@@ -459,7 +459,7 @@ const TourDetail = () => {
                             src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
                           />
                         </li> */}
-                          {imageGallery?.map((image, index) => {
+                          {imageGallery?.map((image: { url: any; }, index: Key | null | undefined) => {
                             const { url } = image;
                             return (
                               <li

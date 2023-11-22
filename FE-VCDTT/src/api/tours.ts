@@ -15,7 +15,7 @@ const TourApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getTours: builder.query<Tour[], void>({
+        getTours: builder.query<Tour, void>({
             query: () => `/tour`,
             providesTags: ['Tour']
         }),

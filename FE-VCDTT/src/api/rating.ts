@@ -15,7 +15,7 @@ const RatingApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getRatings: builder.query<Rating[], void>({
+        getRatings: builder.query<Rating, void>({
             query: () => `/rating`,
             providesTags: ['Rating']
         }),

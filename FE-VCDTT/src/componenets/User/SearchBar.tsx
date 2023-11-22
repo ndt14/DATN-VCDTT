@@ -32,12 +32,12 @@ const SearchBar = () => {
     // Sau khi gửi yêu cầu tìm kiếm, điều hướng đến trang tìm kiếm và truyền giá trị tìm kiếm trong URL
     history(`/search?tours%5Bquery%5D=${inputValue}`);
   };
-  const handleInputFocus = () => {
-    setInputValue(''); // Clear the input value to trigger suggestions
-  };
+  // const handleInputFocus = () => {
+  //   setInputValue(''); // Clear the input value to trigger suggestions
+  // };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+  const handleChangeSynthetic = (event: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    const value = (event.target as HTMLInputElement).value;
     setInputValue(value);
   };
 
@@ -51,9 +51,9 @@ const SearchBar = () => {
       {/* <br /> */}
         <SearchBox
         //  placeholder="Tìm kiếm..."
-          onChange={handleInputChange}
-          value={inputValue}
-          onFocus={handleInputFocus} 
+          onChange={handleChangeSynthetic}
+          // value={inputValue}
+          // onFocus={handleInputFocus} 
           onSubmit={handleSearch}
           className='input-search'
         />

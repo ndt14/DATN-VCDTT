@@ -16,7 +16,7 @@ const PrivacyApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getPrivacy: builder.query<Privacy[], void>({
+        getPrivacy: builder.query<Privacy, void>({
             query: () => `/page`,
             providesTags: ['Page']
         }),

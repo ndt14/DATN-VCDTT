@@ -28,7 +28,7 @@ const AuthApi = createApi({
                 body: { email },
             }),
         }),
-        resetPasswordWithToken: builder.mutation<{ message: string }, { token: string, newPassword: string }>({
+        resetPasswordWithToken: builder.mutation<{ message: string }, { token: string|undefined, newPassword: string }>({
             query: ({ token, newPassword }) => ({
                 url: `/reset-password/${token}`, // Use the correct URL based on your backend
                 method: 'PUT', // Use the correct HTTP method for resetting the password
