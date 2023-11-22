@@ -1,7 +1,7 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { pause } from '../utils/util';
-import { Privacy } from '../interfaces/privacy';
+import { Privacy } from '../interfaces/Privacy';
 
 
 
