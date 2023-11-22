@@ -233,7 +233,7 @@
                                     <td style="font-size: 15px; line-height: 20px; color: #222222;">
                                         <div
                                             style="margin: 0 0 10px; font-size: 32px; line-height: 30px; color: #222222; font-weight: normal;">
-                                            Xin chào! <span style="color: #0D6EFD;">{{ $name }},</span></div>
+                                            Xin chào! <span style="color: #0D6EFD;">[Name],</span></div>
                                     </td>
                                 </tr>
                             </table>
@@ -285,11 +285,11 @@
                                                 <th style="padding: 20px;" colspan="2">Thông tin đơn hàng</th>
                                             </tr>
                                             <tr colspan="2">
-                                                @if ($transaction_id  != null) <td style="padding: 20px;">
+                                                @if {{ $transaction_id }} != null <td style="padding: 20px;">
                                                     {{ $transaction_id }}</td>
                                                 @endif
                                                 @if ($payment_status == 2)
-                                                    <div style="padding: 20px"> Đã thanh toán lúc </div><td style="padding: 20px;">{{ $updated_at }}
+                                                    Đã thanh toán lúc <td style="padding: 20px;">{{ $updated_at }}
                                                     </td>
                                                 @endif
                                             </tr>

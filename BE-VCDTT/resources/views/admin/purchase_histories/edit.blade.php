@@ -77,8 +77,8 @@
                             <div class="row">
                                 <div class="mb-3 col-4">
                                     <div class="form-label">Trạng thái thanh toán</div>
-                                    <select name="payment_status" class="form-select" aria-label="Default select example" @if ($items['purchase_method'] == 2)
-                                        disabled @endif>
+                                    <select name="payment_status" class="form-select" aria-label="Default select example"
+                                        disabled>
                                         @if ($items['payment_status'] == 1)
                                             <option>-----Trạng thái thanh toán-----</option>
                                         @endif
@@ -122,15 +122,12 @@
                                                             Khách chuyển thừa
                                                         </option>
                                                     @endif
-                                                @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5 || $items['purchase_status'] == 6)
+                                                @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5)
                                                     <option @if ($items['purchase_status'] == 4) selected @endif value="4">Đang
                                                         đợi phê duyệt hủy tour
                                                     </option>
                                                     <option @if ($items['purchase_status'] == 5) selected @endif value="5">Đã
                                                         phê duyệt, chưa hoàn tiền
-                                                    </option>
-                                                    <option @if ($items['purchase_status'] == 6) selected @endif value="6">Đã
-                                                        hủy tour thành công
                                                     </option>
                                                 @endif
                                             @case(1)
@@ -141,6 +138,9 @@
                                                 @endif
 
                                             @default
+                                                <option @if ($items['purchase_status'] == 6) selected @endif value="6">Đã
+                                                    hủy đơn hàng
+                                                </option>
                                         @endswitch
                                         </select>
                                     </div>
