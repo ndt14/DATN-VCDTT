@@ -186,7 +186,7 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            //Gửi mail khi admin cập nhật trạng thái đơn hàng
+            //Gửi mail khi client cập nhật
             if (!$updateAdmin){
                 switch ($purchaseHistory->purchase_status) {
                     case '2':
@@ -301,9 +301,10 @@ class PurchaseHistoryController extends Controller
         if ($request->isMethod('POST')) {
             $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-edit/' . $id, $data);
-            if ($data->purchase_status != $items['purchase_status']) {
+            if ( isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
                 $users = User::where('is_admin', 1)->get();
                 $responseData = json_decode(json_encode($response['data']['purchase_history']));
+
                 $purchaseHistory = PurchaseHistory::find($responseData->id);
 
                 if ($purchaseHistory->purchase_status != 2 && $purchaseHistory->purchase_status != 4 && $purchaseHistory->purchase_status != 1) {
@@ -314,7 +315,7 @@ class PurchaseHistoryController extends Controller
                         $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory,$user->id));
                     }
                 }
-            }
+            } 
 
             if ($response->status() == 200) {
                 return redirect()->route('purchase_histories.edit', ['id' => $id])->with('success', 'Cập nhật hóa đơn thành công');
