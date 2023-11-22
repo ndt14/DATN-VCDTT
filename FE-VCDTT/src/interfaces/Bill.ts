@@ -29,5 +29,5 @@ export interface Bill {
     tour_status?:number;
     tour_image?:string;
     comfirm_click?:number;
-    data:any
+    // data:any
 }

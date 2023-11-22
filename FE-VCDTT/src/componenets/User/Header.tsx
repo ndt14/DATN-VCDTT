@@ -4,7 +4,7 @@ import "../../../assets/js/modal.js";
 import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { BsGoogle} from "react-icons/bs";
+import { BsGoogle } from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
@@ -24,7 +24,6 @@ const Header = () => {
   const [register] = useRegisterMutation();
   const { data: dataCate } = useGetCategoriesQuery();
   // console.log(dataCate?.data.categoriesParent)
-
 
   const [registerPassword] = useState("");
   const [confirmPassword] = useState("");
@@ -81,7 +80,7 @@ const Header = () => {
   const handleSignIn = async () => {
     // event.preventDefault();
     try {
-      const { data }:any = await login({
+      const { data }: any = await login({
         email: loginFormik.values.email, // Access email value from Formik
         password: loginFormik.values.password, // Access password value from Formik
       });
@@ -169,7 +168,7 @@ const Header = () => {
     onSubmit: handleRegister, // Your handleRegister function
   });
 
-  const userData = JSON.parse(localStorage.getItem("user")||"");
+  const userData = JSON.parse(localStorage.getItem("user"));
   console.log(userData);
 
   const userName = userData?.name;

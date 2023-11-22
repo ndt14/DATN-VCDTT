@@ -9,9 +9,9 @@ import {
 } from "../../../api/user";
 import { Link } from "react-router-dom";
 
-import { DatePicker} from "antd";
+import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import moment, { Moment } from "moment";
+import moment from "moment";
 import { message } from "antd";
 import { Skeleton } from "antd";
 import { IoPersonOutline } from "react-icons/io5";
@@ -22,11 +22,10 @@ dayjs.locale("vi");
 moment.locale("vi");
 
 const UserProfile = () => {
-  const user = JSON.parse(localStorage.getItem("user")||"");
+  const user = JSON.parse(localStorage.getItem("user") || "");
   const userId = user?.id;
   const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
   //
-  
 
   // const userName = userData?.data?.user.name;
   // const userDateOfBirth = userData?.data?.user.date_of_birth;
@@ -56,7 +55,7 @@ const UserProfile = () => {
     phone_number: "",
     date_of_birth: "",
     gender: "",
-  }as any);
+  });
 
   useEffect(() => {
     if (userData) {
@@ -75,7 +74,7 @@ const UserProfile = () => {
   }, [userData]);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormValues(({prevValues}:any) => ({
+    setFormValues(({ prevValues }) => ({
       ...prevValues,
       [name]: value,
     }));
@@ -94,7 +93,7 @@ const UserProfile = () => {
   };
   const handleDateChange = (date: moment.Moment | null) => {
     const newDateOfBirth = date ? date.format("YYYY-MM-DD") : null;
-    setFormValues(({prevValues}:any) => ({
+    setFormValues(({ prevValues }) => ({
       ...prevValues,
       date_of_birth: newDateOfBirth,
     }));
@@ -127,7 +126,7 @@ const UserProfile = () => {
       return;
     }
 
-    const updatedPassword:any= {
+    const updatedPassword = {
       id: userId || "",
       old_password: passwordFormValues.old_password,
       new_password: passwordFormValues.new_password,
@@ -230,16 +229,16 @@ const UserProfile = () => {
                     style={{ backgroundColor: "#1677FF" }}
                     to={"/user/profile"}
                   >
-                   <IoPersonOutline /> Thông tin cá nhân
+                    <IoPersonOutline /> Thông tin cá nhân
                   </Link>
                   <Link className="nav-link active" to={"/user/tours"}>
-                  <FaRegListAlt />  Tour đã đặt
+                    <FaRegListAlt /> Tour đã đặt
                   </Link>
                   <Link className="nav-link" to={"/user/favorite"}>
-                  <FaRegHeart />  Tour yêu thích
+                    <FaRegHeart /> Tour yêu thích
                   </Link>
                   <Link className="nav-link" to={"/user/coupon"}>
-                  <FaRegListAlt />  Mã Giảm giá
+                    <FaRegListAlt /> Mã Giảm giá
                   </Link>
                 </nav>
               )}

@@ -1,16 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  FormEvent,
-  useRef,
-} from "react";
+import React, { useState, useEffect, FormEvent, useRef } from "react";
 import "./PurchasingInformation.css";
 import { useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
 import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
@@ -24,7 +19,7 @@ import Modal from "react-bootstrap/Modal";
 
 const PurchasingInformation = () => {
   // dữ liệu lừ localStorage
-  const userData = JSON.parse(localStorage.getItem("user")||"");
+  const userData = JSON.parse(localStorage.getItem("user") || "");
   const userId = userData?.id;
   // console.log(tourId);
   //dữ liệu từ tourDetail
@@ -75,7 +70,9 @@ const PurchasingInformation = () => {
     if (TourData) {
       const tourIdPurchased = TourData.data.purchase_history;
 
-      const array = tourIdPurchased.map((item: { tour_id: any; }) => item.tour_id);
+      const array = tourIdPurchased.map(
+        (item: { tour_id: number }) => item.tour_id
+      );
       setIdArray(array);
     }
   }, []);
@@ -114,7 +111,7 @@ const PurchasingInformation = () => {
   }, []);
 
   //
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [checkCoupon] = useCheckCouponMutation();
   const [addBill] = useAddBillMutation();
@@ -258,7 +255,7 @@ const PurchasingInformation = () => {
   console.log(paymentMethod);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
+  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -656,7 +653,7 @@ const PurchasingInformation = () => {
                         )}
                       </div>
                     )}
-                     <h3 className="mt-4">Thông tin địa điểm</h3>
+                    <h3 className="mt-4">Thông tin địa điểm</h3>
                     <iframe
                       ref={iframeRef}
                       width="600"
@@ -996,13 +993,10 @@ const PurchasingInformation = () => {
                         />
                         <span className="ml-2">
                           Tôi đồng ý với{" "}
-                          <a
-                                      className="text-primary"
-                                      onClick={openWindow}
-                                    >
-                                      chính sách
-                                    </a> của
-                          trang
+                          <a className="text-primary" onClick={openWindow}>
+                            chính sách
+                          </a>{" "}
+                          của trang
                         </span>
                         <br />
                         <br />

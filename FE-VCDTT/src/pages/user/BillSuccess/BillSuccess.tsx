@@ -4,14 +4,13 @@ import { useState, useEffect } from "react";
 import { Bill } from "../../../interfaces/Bill";
 import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
 
-
 const BillSuccess = () => {
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const transactionStatus = searchParams.get("vnp_TransactionStatus");
   const transactionId = searchParams.get("vnp_TransactionNo");
   console.log(transactionId);
-  const billId = JSON.parse(localStorage.getItem("billIdSuccess") ||"");
+  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "");
   const userData = JSON.parse(localStorage.getItem("user") || "");
   const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "");
   const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "");
@@ -61,7 +60,7 @@ const BillSuccess = () => {
             payment_status: 2,
             purchase_status: 2,
             comfirm_click: 2,
-            data: undefined
+            // data: undefined
           };
           await updateBill(updatedBillData);
         } else {
@@ -69,7 +68,7 @@ const BillSuccess = () => {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
             payment_status: 1,
-            data: undefined
+            // data: undefined
           };
           await updateBill(updatedBillData);
         }

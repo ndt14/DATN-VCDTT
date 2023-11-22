@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -13,9 +12,11 @@ import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import Modal from "react-bootstrap/Modal";
+import { ChangeEvent, MouseEvent } from "react";
+// import { CheckboxChangeEvent } from "antd";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user")||"");
+  const user = JSON.parse(localStorage.getItem("user") || "");
   const userId = user?.id;
   const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
@@ -49,7 +50,6 @@ const UserTour = () => {
     (currentPage + 1) * itemsPerPage
   ) || []) as Bill[];
   //end phân trang
-
 
   const goToPayment = (id: number) => {
     const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${id}`;
@@ -92,9 +92,15 @@ const UserTour = () => {
   //     alert("Hủy tour thành công");
   //   });
   // };
+  // interface PurchaseData {
+  //   purchase_status: number;
+  //   payment_status: number;
+  //   comfirm_click: number;
+  //   id: number;
+  // }
 
   const confirmPayment = async (id: number) => {
-    const data:any = {
+    const data: Bill = {
       purchase_status: 2,
       payment_status: 2,
       comfirm_click: 2,
@@ -109,7 +115,7 @@ const UserTour = () => {
   };
 
   const cancelTourRefund = async (id: number) => {
-    const data:any = {
+    const data: Bill = {
       purchase_status: 4,
       payment_status: 2,
       id: id,
@@ -120,14 +126,13 @@ const UserTour = () => {
     });
   };
 
-  const handleCheckboxChange = ({e}:any) => {
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
 
-  const handleButtonDisabledClick = ({e}:any) => {
+  const handleButtonDisabledClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent event propagation
   };
-
 
   const cancel = () => {};
 
@@ -281,16 +286,17 @@ const UserTour = () => {
                 // console.log(coupon_fixed);
 
                 const finalPrice = coupon_fixed
-                  ? adult_count * tour_adult_price +
-                    child_count * tour_child_price -
+                  ? (adult_count ?? 0) * (tour_adult_price ?? 0) +
+                    (child_count ?? 0) * (tour_child_price ?? 0) -
                     coupon_fixed
-                  : (adult_count * tour_adult_price +
-                      child_count * tour_child_price) *
-                    (1 - coupon_percentage / 100);
+                  : ((adult_count ?? 0) * (tour_adult_price ?? 0) +
+                      (child_count ?? 0) * (tour_child_price ?? 0)) *
+                    (1 - (coupon_percentage ?? 0) / 100);
                 const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 }).format(finalPrice);
+
                 return (
                   <div className="p-3 my-3 shadow row" key={id}>
                     <div className="col-8">
@@ -627,9 +633,7 @@ const UserTour = () => {
                 );
               }
             )}
-            <Button variant="primary" onClick={handleShow}>
-              Launch demo modal
-            </Button>
+            <Button onClick={handleShow}>Launch demo modal</Button>
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
@@ -693,12 +697,8 @@ const UserTour = () => {
                 </form>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
-                </Button>
+                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>Save Changes</Button>
               </Modal.Footer>
             </Modal>
             <ReactPaginate
