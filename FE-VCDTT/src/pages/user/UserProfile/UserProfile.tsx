@@ -240,9 +240,6 @@ const UserProfile = () => {
                   <Link className="nav-link" to={"/user/favorite"}>
                   <FaRegHeart />  Tour yêu thích
                   </Link>
-                  <Link className="nav-link" to={"/user/coupon"}>
-                  <FaRegListAlt />  Mã Giảm giá
-                  </Link>
                 </nav>
               )}
 

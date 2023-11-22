@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
-import { DatePicker, Rate, Skeleton } from "antd";
+import { DatePicker, Rate } from "antd";
 import type { DatePickerProps } from "antd";
 import moment from "moment";
 import TinySlider from "tiny-slider-react";
@@ -322,15 +322,9 @@ const TourDetail = () => {
           <div className="container">
             <div className="row">
               <div className="col-lg-7">
-                
                 <div className="single-tour-inner">
-                {isLoading ? (
-                <Skeleton active />
-              ) : (
-                  <div>
                   {tourSale != 0 ? (
                     <div>
-                      
                       <h2>
                         {tourName}{" "}
                         <span className="badge bg-success">
@@ -341,8 +335,7 @@ const TourDetail = () => {
                   ) : (
                     <h2>{tourName}</h2>
                   )}
-</div>
-              )}
+
                   <div>
                     <div
                       id="carousel-thumb"
@@ -352,16 +345,11 @@ const TourDetail = () => {
                     >
                       <div className="carousel-inner" role="listbox">
                         <div className="carousel-item active">
-                        {isLoading ? (
-                            <Skeleton.Image active style={{ width: '800px', height: '400px',margin:'10px' }}/>
-
-                            ) : (
                           <img
                             className="d-block img-tour-detail"
                             src={tourData?.data?.tour.main_img}
                             alt="First slide"
                           />
-                            )}
                         </div>
                         {/* <div className="carousel-item">
                           <img
@@ -414,10 +402,7 @@ const TourDetail = () => {
                         ></span>
                         <span className="sr-only">Next</span>
                       </a>
-                      {isLoading ? (
-                         <Skeleton.Image active/>
 
-                            ) : (
                       <ul className="carousel-indicator">
                         <li
                           data-target="#carousel-thumb"
@@ -471,7 +456,6 @@ const TourDetail = () => {
                           );
                         })}
                       </ul>
-                            )}
                     </div>
                   </div>
 
@@ -751,9 +735,6 @@ const TourDetail = () => {
 
               <div className="col-lg-5">
                 <div className="sidebar">
-                {isLoading ? (
-                <Skeleton active />
-              ) : (
                   <div className="package-price">
                     <h5 className="price rounded-2">
                       <span className="text-decoration-line-through mr-3">
@@ -781,10 +762,6 @@ const TourDetail = () => {
                       </div>
                     </div>
                   </div>
-              )}
-               {isLoading ? (
-                <Skeleton active />
-              ) : (
                   <div className="widget-bg booking-form-wrap">
                     <h4 className="bg-title">Thông tin đặt tour</h4>
 
@@ -945,7 +922,6 @@ const TourDetail = () => {
                       </div>
                     </form>
                   </div>
-              )}
                 </div>
               </div>
             </div>

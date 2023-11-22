@@ -9,7 +9,7 @@ import PurchasingInformation from "./PurchasingInformation/PurchasingInformation
 import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy";
 import BillDetail from "./BillDetail/BillDetail";
 import { Search } from "./SearchAlgolia/Search";
-import UserCoupon from "./UserCoupon/UserCoupon";
+
 
 export { 
 HomePage,
@@ -22,6 +22,5 @@ TourDetail,
 PurchasingInformation,
 PrivacyPolicy,
 BillDetail,
-Search,
-UserCoupon
+Search
  };

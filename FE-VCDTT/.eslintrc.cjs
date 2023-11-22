@@ -5,7 +5,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
-    
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -15,6 +14,5 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    "react/react-in-jsx-scope": "off",
   },
 }

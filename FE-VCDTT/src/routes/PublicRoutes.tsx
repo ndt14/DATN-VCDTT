@@ -14,7 +14,6 @@ import {
   PurchasingInformation,
   PrivacyPolicy,
   Search,
-  UserCoupon,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
@@ -64,7 +63,6 @@ const PublicRoutes = () => {
         <Route path="user/profile" element={<UserProfile />} />
         <Route path="user/tours" element={<UserTour />} />
         <Route path="user/favorite" element={<UserFavorite />} />
-        <Route path="user/coupon" element={<UserCoupon />} />
     
         <Route path="/search" element={<Search/>}></Route>
         

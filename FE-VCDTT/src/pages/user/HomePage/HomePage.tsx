@@ -531,9 +531,6 @@ const newBlogs = sortedDiscountedBlogs.slice(0, 3);
               </div>
             </div>
             <div className="package-inner">
-            {isLoading ? (
-                            <Skeleton active/>
-                            ) : (
               <div className="row">
              
                 {currentData?.map(
@@ -705,7 +702,6 @@ const newBlogs = sortedDiscountedBlogs.slice(0, 3);
               <TourPreview></TourPreview>
               <TourPreview></TourPreview> */}
               </div>
-                            )}
               {/* <div className="btn-wrap text-center ">
               <a href="#" className="button-primary rounded">
                 XEM TẤT CẢ TOUR
