@@ -1,6 +1,5 @@
 import React, {
   useState,
-  ChangeEvent,
   useEffect,
   FormEvent,
   useRef,
@@ -25,7 +24,7 @@ import Modal from "react-bootstrap/Modal";
 
 const PurchasingInformation = () => {
   // dữ liệu lừ localStorage
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const userData = JSON.parse(localStorage.getItem("user")||"");
   const userId = userData?.id;
   // console.log(tourId);
   //dữ liệu từ tourDetail
@@ -76,7 +75,7 @@ const PurchasingInformation = () => {
     if (TourData) {
       const tourIdPurchased = TourData.data.purchase_history;
 
-      const array = tourIdPurchased.map((item) => item.tour_id);
+      const array = tourIdPurchased.map((item: { tour_id: any; }) => item.tour_id);
       setIdArray(array);
     }
   }, []);

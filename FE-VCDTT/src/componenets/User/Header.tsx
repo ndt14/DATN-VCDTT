@@ -169,7 +169,7 @@ const Header = () => {
     onSubmit: handleRegister, // Your handleRegister function
   });
 
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const userData = JSON.parse(localStorage.getItem("user")||"");
   console.log(userData);
 
   const userName = userData?.name;

@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
 import "./TourDetail.css";
@@ -23,7 +23,7 @@ import ReactPaginate from "react-paginate";
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
-  const [idArray, setIdArray] = useState<number[]>([]);
+  const [idArray] = useState<number[]>([]);
 
   const [addRating] = useAddRatingMutation();
   // const { id: idRating } = useParams<{ id: string }>();
@@ -40,20 +40,19 @@ const TourDetail = () => {
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
   const userName = user.name;
-  const location = useLocation();
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+  const onChange: DatePickerProps["onChange"] = (_date, dateString) => {
     setDateTour(dateString);
     setIsDateSelected(true);
     // localStorage.setItem("dateTour", dateString);
   };
-  const settings = {
-    lazyload: false,
-    nav: false,
-    mouseDrag: true,
-    items: 3,
-    autoplay: true,
-    autoplayButtonOutput: false,
-  };
+  // const settings = {
+  //   lazyload: false,
+  //   nav: false,
+  //   mouseDrag: true,
+  //   items: 3,
+  //   autoplay: true,
+  //   autoplayButtonOutput: false,
+  // };
 
   //
   const { id } = useParams<{ id: string }>();
