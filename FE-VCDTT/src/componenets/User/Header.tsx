@@ -79,42 +79,49 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  interface LoginResponse {
-    data: {
-      email: string;
-      password: string;
-      // id: string;
-      token: string;
-      // ...
-    };
-  }
+  // interface LoginResponse {
+  //   data: {
+  //     email: string;
+  //     password: string;
+  //     token: string;
+  //     // Other properties if necessary...
+  //   };
+  // }
+  
   const handleSignIn = async () => {
-    // event.preventDefault();
     try {
-      const { data }: LoginResponse = await login({
-        email: loginFormik.values.email, // Access email value from Formik
-        password: loginFormik.values.password, // Access password value from Formik
+      const response = await login({
+        email: loginFormik.values.email,
+        password: loginFormik.values.password,
       });
-      console.log(data);
-
-      if (data && data.user) {
-        // Login successful
-        setIsLoggedIn(true);
-        setShowSignIn(false);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("accessToken", data.token);
-        localStorage.removeItem("tempUser");
-        alert("Đăng nhập thành công!");
-        navigate("/");
+  
+      // Checking if 'data' exists in the response
+      if ('data' in response) {
+        const responseData = response.data; // narrowing down the response to 'data' object
+  
+        if (responseData.user) {
+          setIsLoggedIn(true);
+          setShowSignIn(false);
+          localStorage.setItem("user", JSON.stringify(responseData.user));
+          localStorage.setItem("accessToken", responseData.accessToken);
+          localStorage.removeItem("tempUser");
+          alert("Đăng nhập thành công!");
+          navigate("/");
+        } else {
+          alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+        }
       } else {
-        // Invalid credentials or other login error
-        alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+        // Handling the case where 'data' doesn't exist in the response
+        console.error('Error in API response:', response.error);
+        alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
       }
     } catch (error) {
       console.error("Lỗi đăng nhập: ", error);
       alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
     }
   };
+  
+  
 
   const handleSignOut = () => {
     alert("Đăng xuất thành công");
@@ -132,32 +139,37 @@ const Header = () => {
       phone_number: registrationFormik.values.phone_number,
       c_password: registrationFormik.values.c_password,
     };
+  
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-    // console.log(variables);
-    register(variables)
-      .then((response) => {
-        // Handle the response here
-        if (response && response?.data?.user) {
+  
+    try {
+      const response = await register(variables);
+  
+      // Type guard to differentiate between success and error responses
+      if ('data' in response) {
+        const userData = response.data.user;
+  
+        if (userData) {
           setIsLoggedIn(true);
           setShowSignIn(false);
-
-          const userName = response?.data?.user;
-          localStorage.setItem("user", JSON.stringify(userName));
-          // localStorage.setItem("accessToken", response.token);
-          alert("đăng ký thành công");
-          // console.log(userName);
+          localStorage.setItem("user", JSON.stringify(userData));
+          alert("Đăng ký thành công");
         } else {
-          alert("đăng ký thất bại");
+          alert("Đăng ký thất bại");
         }
-      })
-      .catch((error) => {
-        // Handle any errors here
-        console.error(error);
-      });
+      } else {
+        // Handle error response
+        console.error('Error in API response:');
+      }
+    } catch (error) {
+      // Handle any errors here
+      console.error(error);
+    }
   };
+  
   //validate
   const loginFormik = useFormik({
     initialValues: {
@@ -192,7 +204,7 @@ const Header = () => {
   const is_admin = userData?.is_admin;
 
   const openWindow = () => {
-    window.open("http://be-vcdtt.datn-vcdtt.test/", "_blank");
+    window.open("https://admin.vcdtt.online", "_blank");
   };
 
   return (

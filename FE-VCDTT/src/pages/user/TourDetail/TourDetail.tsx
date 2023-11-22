@@ -11,18 +11,20 @@ import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { useAddRatingMutation } from "../../../api/rating";
+// import { useAddRatingMutation } from "../../../api/rating";
 import { AiFillEye } from "react-icons/ai";
 // import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 import ReactPaginate from "react-paginate";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/en";
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
   const [idArray] = useState<number[]>([]);
 
-  const [addRating] = useAddRatingMutation();
+  // const [addRating] = useAddRatingMutation();
   // const { id: idRating } = useParams<{ id: string }>();
   // const { data: dataRating } = useGetRatingByIdQuery(idRating || "");
   // console.log(dataRating);
@@ -94,8 +96,8 @@ const TourDetail = () => {
   }).format(tourChildPrice);
 
   //validate date
-  const disabledDate = (current: moment.Moment | null) => {
-    return current && current < moment().startOf("day");
+  const disabledDate = (current: Dayjs | null): boolean => {
+    return current ? current.isBefore(dayjs().startOf("day")) : false;
   };
 
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
@@ -189,50 +191,50 @@ const TourDetail = () => {
     setRatingData({ ...ratingData, content: event.target.value });
   };
 
-  const handleSubmitRating = async () => {
-    if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
-      try {
-        const response = await addRating(ratingData);
+  // const handleSubmitRating = async () => {
+  //   if (ratingData.star > 0 && ratingData.user_name && ratingData.content) {
+  //     try {
+  //       const response = await addRating(ratingData);
 
-        // Handle success, e.g., show a success message or update UI
-        console.log("Đánh giá thành công", response);
-        alert("Đánh giá thành công");
+  //       // Handle success, e.g., show a success message or update UI
+  //       console.log("Đánh giá thành công", response);
+  //       alert("Đánh giá thành công");
 
-        // After a successful rating submission, update the component's state
-        const newRating = {
-          id: response.data.id, // Use the actual ID received from the server
-          user_name: ratingData.user_name,
-          content: ratingData.content,
-          star: ratingData.star,
-          created_at: new Date().toLocaleString(), // You can format the date accordingly
-        };
+  //       // After a successful rating submission, update the component's state
+  //       const newRating = {
+  //         id: response.data.id, // Use the actual ID received from the server
+  //         user_name: ratingData.user_name,
+  //         content: ratingData.content,
+  //         star: ratingData.star,
+  //         created_at: new Date().toLocaleString(), // You can format the date accordingly
+  //       };
 
-        // Create a copy of the existing ratings and add the new rating
-        const updatedRatings = [...tourData.data.listRatings, newRating];
+  //       // Create a copy of the existing ratings and add the new rating
+  //       const updatedRatings = [...tourData.data.listRatings, newRating];
 
-        // Update the component's state with the new ratings
-        setTour({
-          ...tourData,
-          data: { ...tourData.data, listRatings: updatedRatings },
-        });
+  //       // Update the component's state with the new ratings
+  //       setTour({
+  //         ...tourData,
+  //         data: { ...tourData.data, listRatings: updatedRatings },
+  //       });
 
-        // Reset the rating form or clear the inputs
-        setRatingData({
-          star: 5, // Set the default rating or any other value you prefer
-          user_id: userId,
-          user_name: userName,
-          content: "",
-          tour_id: id, // Assuming 'id' is the tour ID
-        });
-      } catch (error) {
-        // Handle error, e.g., show an error message
-        console.error("Đánh giá thất bại", error);
-      }
-    } else {
-      // Handle incomplete rating data, e.g., show an error message
-      console.error("Please fill in all rating details");
-    }
-  };
+  //       // Reset the rating form or clear the inputs
+  //       setRatingData({
+  //         star: 5, // Set the default rating or any other value you prefer
+  //         user_id: userId,
+  //         user_name: userName,
+  //         content: "",
+  //         tour_id: id, // Assuming 'id' is the tour ID
+  //       });
+  //     } catch (error) {
+  //       // Handle error, e.g., show an error message
+  //       console.error("Đánh giá thất bại", error);
+  //     }
+  //   } else {
+  //     // Handle incomplete rating data, e.g., show an error message
+  //     console.error("Please fill in all rating details");
+  //   }
+  // };
   useEffect(() => {
     if (tourData) {
       setTour(tourData);
@@ -288,16 +290,17 @@ const TourDetail = () => {
   //end đánh giá
   const isLoggedIn = user != "";
   //map
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  useEffect(() => {
-    if (iframeRef.current) {
-      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
-        exact_location
-      )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
-      iframeRef.current.src = iframeSrc;
-    }
-  }, [exact_location]);
+useEffect(() => {
+  if (iframeRef.current) {
+    const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+      exact_location
+    )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+    iframeRef.current.src = iframeSrc;
+  }
+}, [exact_location]);
+
   //end map
 
   //SEO
@@ -385,7 +388,7 @@ const TourDetail = () => {
                             alt="Third slide"
                           />
                         </div> */}
-                        {imageGallery?.map(({ url }) => {
+                        {imageGallery?.map(({ url }:any) => {
                           return (
                             <div className="carousel-item ">
                               <img
@@ -468,7 +471,7 @@ const TourDetail = () => {
                               return (
                                 <li
                                   data-target="#carousel-thumb"
-                                  data-slide-to={index + 1}
+                                  data-slide-to={(index as  number) + 1}
                                   className="mx-1"
                                   style={{ width: "80px" }}
                                   key={index}
@@ -610,7 +613,7 @@ const TourDetail = () => {
                                 created_at,
                               }: Rating) => {
                                 // Chuyển đổi giá trị "start" thành số nguyên
-                                const starRating = parseInt(star);
+                                // const starRating = parseInt(star);
 
                                 return (
                                   <>
@@ -629,10 +632,10 @@ const TourDetail = () => {
                                             <div className="rating-wrap">
                                               <div
                                                 className=""
-                                                title={`Rated ${starRating} sao trên 5 sao tối đa`}
+                                                title={`Rated ${star} sao trên 5 sao tối đa`}
                                               >
                                                 <span className="w-90">
-                                                  {renderStarRating(starRating)}
+                                                  {renderStarRating(star as number)}
                                                 </span>
                                               </div>
                                             </div>
@@ -640,7 +643,7 @@ const TourDetail = () => {
                                           <p
                                             className=""
                                             dangerouslySetInnerHTML={{
-                                              __html: content,
+                                              __html: content||""
                                             }}
                                           ></p>
                                         </div>
@@ -719,7 +722,7 @@ const TourDetail = () => {
                                     <button
                                       className="btn-continue"
                                       type="button"
-                                      onClick={handleSubmitRating}
+                                      // onClick={handleSubmitRating}
                                     >
                                       Gửi đánh giá
                                     </button>

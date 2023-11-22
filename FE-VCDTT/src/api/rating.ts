@@ -8,7 +8,7 @@ const RatingApi = createApi({
     reducerPath: "rating",
     tagTypes: ['Rating'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "https://admin.vcdtt.online/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);

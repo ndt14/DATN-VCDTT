@@ -5,7 +5,7 @@ import { User } from '../interfaces/User';
 const AuthApi = createApi({
     reducerPath: 'auth',
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "https://admin.vcdtt.online/api",
     }),
     endpoints: (builder) => ({
         register: builder.mutation<{ message: string, accessToken: string, user: User }, AuthSignup>({

@@ -136,19 +136,21 @@ const UserProfile = () => {
     // Define the properties of the SerializedError object
   }
 
-  interface SuccessResponse {
-    status: number;
-    // Add other properties as needed
-  }
+  // interface SuccessResponse {
+  //   status: number;
+  //   // Add other properties as needed
+  // }
 
-  interface ErrorResponse {
-    status: number;
-    // Add other properties as needed
-  }
+  // interface ErrorResponse {
+  //   status: number;
+  //   // Add other properties as needed
+  // }
 
-  // Update the type according to the actual response structure
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  type UpdatePasswordResponse = SuccessResponse | ErrorResponse;
+  // // Update the type according to the actual response structure
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // type UpdatePasswordResponse = SuccessResponse | ErrorResponse;
+ 
+  
 
   // Update the type according to the actual response structure
   type UpdatePasswordResult =
