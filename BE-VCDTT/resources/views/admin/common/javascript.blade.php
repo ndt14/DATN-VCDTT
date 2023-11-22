@@ -82,4 +82,10 @@
             // })
             .finally(function() {});
     };
+    // $(document).ready(function() {
+    //     var notiBox = document.getElementById('notificationBox')
+    //     if ($(notiBox).scrollTop() == $(notiBox).height()) {
+            
+    //     }
+    // });
 </script>

@@ -25,6 +25,7 @@ use App\Models\Notification as NotificationModel;
 use App\Models\TermAndPrivacy;
 use App\Notifications\CancelPurchaseMailToClient;
 use App\Notifications\CancelPurchaseNotification;
+use App\Notifications\PurchaseNotificationToClient;
 use App\Notifications\RefundRemindingNotificationAdmin;
 use Illuminate\Support\Facades\Schema;
 
@@ -102,6 +103,8 @@ class PurchaseHistoryController extends Controller
         foreach ($users as $user){
             $user->notify(new PurchaseNotificationAdmin($purchaseHistory,$user->id));
         }
+        $purchaseHistory->notify(new PurchaseNotificationToClient($purchaseHistory));
+
         if ($purchaseHistory->id) {
             return response()->json([
                 'data' => [

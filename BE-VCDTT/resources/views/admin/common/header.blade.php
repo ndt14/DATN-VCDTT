@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
-                                    style="max-height: 27rem">
+                                    style="max-height: 27rem" id="notificationBox">
                                     @if ($user->notifications)
                                         @foreach ($user->notifications()->limit(10)->get() as $notification)
                                             <div class="list-group-item">
@@ -88,8 +88,9 @@
                                                                     name="notification-unread"
                                                                     id="notification-{{ $notification->id }}"></span>
                                                             @else
-                                                                <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top" data-bs-title="Đã đọc"
+                                                                <span class="badge bg-success"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    data-bs-title="Đã đọc"
                                                                     id="notification-{{ $notification->id }}"></span>
                                                             @endif
                                                         @endif
@@ -269,7 +270,7 @@
             .finally(function() {
                 let checkNoti = document.getElementsByName('notification-unread');
                 if (checkNoti.length == 0) {
-                    document.getElementById('notificationDot').remove();   
+                    document.getElementById('notificationDot').remove();
                 }
             });
 
@@ -279,7 +280,7 @@
         document.getElementById('notification-' + id).classList.remove('bg-danger');
         document.getElementById('notification-' + id).removeAttribute('name')
         document.getElementById('notification-' + id).classList.add('bg-success');
-    }
+    };
 
     let markAllAsRead = function() {
         axios.get(`/api/purchase-history/mark-all-as-read`)
@@ -293,7 +294,7 @@
                 );
             })
             .finally(function() {
-               document.getElementById('notificationDot').remove();   
+                document.getElementById('notificationDot').remove();
             });
-    }
+    };
 </script>
