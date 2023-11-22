@@ -339,6 +339,15 @@ class PurchaseHistoryController extends Controller
         return response()->json(['message' => 'Đã đọc', 'status' => 200]);
     }
 
+    public function purchaseHistoryMarkAllAsRead()
+    {
+        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        foreach ($user->unreadnotifications as $notification){
+            $notification->markAsRead();
+        }
+        return response()->json(['message' => 'Đã đọc', 'status' => 200]);
+    }
+
     //coupon
 
     public function check_coupon(Request $request)
@@ -366,6 +375,7 @@ class PurchaseHistoryController extends Controller
             }
         }
     }
+
 
 
     public function purchaseHistoryManagementTrash(Request $request)

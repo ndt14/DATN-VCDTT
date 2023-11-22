@@ -70,13 +70,14 @@
                                         <h3 class="ms-auto">Thông báo</h3>
                                     </div>
                                     <div class="col-md-6">
-                                        <a class="ms-auto float-end" href="">Đánh dấu tất cả là đã đọc</a>
+                                        <a class="ms-auto float-end" href="javascript: markAllAsRead()">Đánh dấu tất cả
+                                            là đã đọc</a>
                                     </div>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
                                     style="max-height: 27rem">
                                     @if ($user->notifications)
-                                        @foreach ($user->notifications as $notification)
+                                        @foreach ($user->notifications()->limit(10)->get() as $notification)
                                             <div class="list-group-item">
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
@@ -84,7 +85,7 @@
                                                             @if ($notification->read_at == null)
                                                                 <span class="badge bg-danger" data-bs-toggle="tooltip"
                                                                     data-bs-placement="top" data-bs-title="Chưa đọc"
-                                                                    name="notification-read"
+                                                                    name="notification-unread"
                                                                     id="notification-{{ $notification->id }}"></span>
                                                             @else
                                                                 <span class="badge bg-success" data-bs-toggle="tooltip"
@@ -215,7 +216,7 @@
             <div class="list-group-item">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <span class="badge bg-danger" id="notification-` + id + `" data-bs-toggle="tooltip"
+                        <span class="badge bg-danger" name="notification-unread" id="notification-` + id + `" data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         data-bs-title="Chưa đọc"></span>
                     </div>
@@ -261,20 +262,38 @@
         axios.get(`/api/purchase-history/mark-as-read/${id}`)
             .then(function(response) {
                 readNoti(id);
-                let checkNoti = document.getElementsByName('notification-read');
-                if (checkNoti.length == 0 && document.getElementById('notificationDot')) {
-                    document.getElementById('notificationDot').remove();
-                }
             })
             // .catch(function(error) {
             //     bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             // })
-            .finally(function() {});
+            .finally(function() {
+                let checkNoti = document.getElementsByName('notification-unread');
+                if (checkNoti.length == 0) {
+                    document.getElementById('notificationDot').remove();   
+                }
+            });
 
     };
 
     let readNoti = function(id) {
         document.getElementById('notification-' + id).classList.remove('bg-danger');
+        document.getElementById('notification-' + id).removeAttribute('name')
         document.getElementById('notification-' + id).classList.add('bg-success');
+    }
+
+    let markAllAsRead = function() {
+        axios.get(`/api/purchase-history/mark-all-as-read`)
+            .then(function(response) {
+                document.getElementsByName('notification-unread').forEach(
+                    (element) => {
+                        element.classList.remove('bg-danger');
+                        element.classList.add('bg-success');
+                    }
+
+                );
+            })
+            .finally(function() {
+               document.getElementById('notificationDot').remove();   
+            });
     }
 </script>
