@@ -18,6 +18,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+// import { AuthSignin } from "../../interfaces/Auth.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
@@ -77,10 +78,20 @@ const Header = () => {
   };
 
   const navigate = useNavigate();
+
+  interface LoginResponse {
+    data: {
+      email: string;
+      password: string;
+      // id: string;
+      token: string;
+      // ...
+    };
+  }
   const handleSignIn = async () => {
     // event.preventDefault();
     try {
-      const { data }: any = await login({
+      const { data }: LoginResponse = await login({
         email: loginFormik.values.email, // Access email value from Formik
         password: loginFormik.values.password, // Access password value from Formik
       });
@@ -168,10 +179,16 @@ const Header = () => {
     onSubmit: handleRegister, // Your handleRegister function
   });
 
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const preParseUserData = localStorage.getItem("user");
+  let userData: { id: string; name: string; is_admin: number } | null = null;
+  if (typeof preParseUserData === "string") {
+    userData = JSON.parse(preParseUserData);
+  }
   console.log(userData);
 
   const userName = userData?.name;
+  console.log(userName);
+
   const is_admin = userData?.is_admin;
 
   const openWindow = () => {
@@ -268,9 +285,7 @@ const Header = () => {
                               </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                                  <Link onClick={openWindow}>
-                                    Đăng nhập admin
-                                  </Link>
+                                  <a onClick={openWindow}>Đăng nhập admin</a>
                                 </li>
                               ) : null}
 

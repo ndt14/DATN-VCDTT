@@ -9,7 +9,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user")||"");
+  const user = JSON.parse(localStorage.getItem("user") || "");
   const userId = user?.id;
 
   const { data: userData } = useGetUserByIdQuery(userId || "");
@@ -80,17 +80,17 @@ const UserTour = () => {
               <div className="shadow-lg">
                 <nav className="nav flex-column ">
                   <Link className="nav-link" to={"/user/profile"}>
-                  <IoPersonOutline />     Thông tin cá nhân
+                    <IoPersonOutline /> Thông tin cá nhân
                   </Link>
                   <Link className="nav-link active" to={"/user/tours"}>
-                  <FaRegListAlt />    Tour đã đặt
+                    <FaRegListAlt /> Tour đã đặt
                   </Link>
                   <Link
                     className="nav-link text-white"
                     style={{ backgroundColor: "#1677FF" }}
                     to={"/user/favorite"}
                   >
-                 <FaRegHeart />    Tour yêu thích
+                    <FaRegHeart /> Tour yêu thích
                   </Link>
                 </nav>
               </div>
@@ -150,7 +150,7 @@ const UserTour = () => {
 
                             <div className="btn-wrap">
                               <a
-                                onClick={handleClick(id)}
+                                onClick={() => handleClick(id || 0)}
                                 href="#"
                                 className="button-text width-6"
                               >

@@ -56,6 +56,7 @@ const UserProfile = () => {
     phone_number: "",
     date_of_birth: "",
     gender: undefined,
+    data: undefined,
   });
   console.log(formValues);
 
@@ -104,7 +105,7 @@ const UserProfile = () => {
   // };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDateChange = (date: Dayjs | null, dateString: string) => {
+  const handleDateChange = (date: Dayjs | null, _dateString: string) => {
     const newDateOfBirth = date ? date.format("YYYY-MM-DD") : "";
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -170,6 +171,7 @@ const UserProfile = () => {
       id: userId || "",
       old_password: passwordFormValues.old_password,
       new_password: passwordFormValues.new_password,
+      data: undefined,
     };
 
     updatePassword(updatedPassword)

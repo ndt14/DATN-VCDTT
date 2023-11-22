@@ -41,6 +41,7 @@ const PurchasingInformation = () => {
     exact_location,
     tourDuration,
     main_img,
+    lastPrice,
   } = location.state;
   console.log(tourDuration);
 
@@ -186,7 +187,7 @@ const PurchasingInformation = () => {
   }>({
     percentage: null,
     fixed: null,
-    finalPrice: 0,
+    finalPrice: lastPrice,
     couponName: "",
     couponCode: "",
   });
@@ -239,7 +240,7 @@ const PurchasingInformation = () => {
             percentage: discountPercent ? discountPercent : null,
             fixed: discountFixed ? discountFixed : null,
             finalPrice: couponData.finalPrice,
-            couponName: coupon_name,
+            couponName: coupon_name !== undefined ? coupon_name : null,
             couponCode: formCoupon.coupon_code,
           });
         }
@@ -308,7 +309,8 @@ const PurchasingInformation = () => {
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,
       gender: formik.values.honorific.toString(),
-      coupon_name: couponData.couponName,
+      coupon_name:
+        couponData.couponName !== null ? couponData.couponName : undefined,
       coupon_code: couponData.couponCode,
       coupon_percentage:
         couponData.percentage && couponData.percentage > 0
@@ -324,6 +326,7 @@ const PurchasingInformation = () => {
       payment_status: 1,
       purchase_method: parseInt(paymentMethod),
       tour_duration: tourDuration,
+      data: undefined,
     };
     console.log(variables);
     localStorage.setItem("tempUser", JSON.stringify(variables));
@@ -398,10 +401,13 @@ const PurchasingInformation = () => {
     style: "currency",
     currency: "VND",
   }).format(childPrice);
-  const formattedFixedPrice = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(couponData.fixed);
+  const formattedFixedPrice =
+    couponData.fixed !== null
+      ? new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(couponData.fixed)
+      : "";
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -597,7 +603,7 @@ const PurchasingInformation = () => {
                       <div className="col-sm-6">
                         <p>Trẻ em({productChildNumber}x)</p>
                         <p>Người lớn({productNumber}x)</p>
-                        {formattedFinalPrice !== formattedResultPrice ? (
+                        {lastPrice !== couponData.finalPrice ? (
                           <p>Coupon giảm giá: </p>
                         ) : (
                           <span></span>
@@ -609,7 +615,8 @@ const PurchasingInformation = () => {
                         <p>{formattedTourPrice}</p>
                         {formattedFinalPrice !== formattedResultPrice ? (
                           <div>
-                            {couponData.percentage != null ? (
+                            {couponData.percentage != null &&
+                            couponData.fixed == null ? (
                               <div>
                                 <p>Giảm {couponData.percentage}%</p>
                               </div>
@@ -624,7 +631,7 @@ const PurchasingInformation = () => {
                       </div>
 
                       {userLogIn == "true" &&
-                      formattedFinalPrice !== formattedResultPrice ? (
+                      lastPrice !== couponData.finalPrice ? (
                         <div className="col-sm-6">
                           <p>
                             Giá sau khi nhập coupon:{" "}

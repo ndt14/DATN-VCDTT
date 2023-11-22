@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AuthSignin, AuthSignup } from '../interfaces/Auth';
+import { User } from '../interfaces/User';
 
 const AuthApi = createApi({
     reducerPath: 'auth',
@@ -7,14 +8,14 @@ const AuthApi = createApi({
         baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
     }),
     endpoints: (builder) => ({
-        register: builder.mutation<{ message: string, accessToken: string, user: {} }, AuthSignup>({
+        register: builder.mutation<{ message: string, accessToken: string, user: User }, AuthSignup>({
             query: (credentials) => ({
                 url: '/register',
                 method: 'POST',
                 body: credentials,
             }),
         }),
-        login: builder.mutation<{ message: string, accessToken: string, user: {} }, AuthSignin>({
+        login: builder.mutation<{ message: string, accessToken: string, user: User }, AuthSignin>({
             query: (credentials) => ({
                 url: '/login',
                 method: 'POST',

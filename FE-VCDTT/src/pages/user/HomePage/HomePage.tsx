@@ -61,12 +61,13 @@ const HomePage = () => {
   const [idArray, setIdArray] = useState<number[]>([]);
 
   const preParseUserData = localStorage.getItem("user");
-  let userData: string | null = null;
+  let userData: { id: string } | null = null;
   if (typeof preParseUserData === "string") {
     userData = JSON.parse(preParseUserData);
   }
-  // const userData = JSON.parse(localStorage.getItem("user"));
   const userId = userData && userData.id ? userData.id : null;
+  console.log(typeof userId);
+
   const { data: favoriteData } = useGetTourFavoriteByIdQuery(userId || "");
   useEffect(() => {
     if (favoriteData) {
@@ -82,7 +83,7 @@ const HomePage = () => {
   const [updateTourFavorite] = useUpdateFavoriteMutation();
   const handleFavorite = (id: number) => {
     const info = {
-      user_id: userId,
+      user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
     updateTourFavorite(info).then(() => {
@@ -91,11 +92,17 @@ const HomePage = () => {
   };
 
   const handleClick =
-    (id: number) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
-      handleFavorite(id);
+      if (typeof id === "number") {
+        handleFavorite(id);
+      } else {
+        // Handle the case when id is undefined
+        console.log("Invalid id");
+      }
     };
-  //SEO
+
+  // SEO
   const titleElement = document.querySelector("title");
   if (titleElement) {
     titleElement.innerText = "Trang chủ - VCDTT";
