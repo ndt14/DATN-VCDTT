@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { DatePicker } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import moment from "moment";
 import { message } from "antd";
 import { Skeleton } from "antd";
@@ -18,6 +18,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import "moment/locale/vi";
+import { User } from "../../../interfaces/User";
 dayjs.locale("vi");
 moment.locale("vi");
 
@@ -39,10 +40,10 @@ const UserProfile = () => {
     phone_number: phoneNumber,
     address: userAddress,
     gender: userGender,
-    // date_of_birth: userDateOfBirth,
+    date_of_birth: userDateOfBirth,
   } = userData?.data?.user ?? {};
-  // const parts = userDateOfBirth.split("-");
-  // const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  const parts = userDateOfBirth ? userDateOfBirth.split("-") : [];
+  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
   const { TabPane } = Tabs;
   const [editUser] = useUpdateUserMutation();
   const [updatePassword] = useUpdatePasswordMutation();
@@ -54,8 +55,9 @@ const UserProfile = () => {
     address: "",
     phone_number: "",
     date_of_birth: "",
-    gender: "",
+    gender: undefined,
   });
+  console.log(formValues);
 
   useEffect(() => {
     if (userData) {
@@ -72,9 +74,11 @@ const UserProfile = () => {
       });
     }
   }, [userData]);
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
-    setFormValues(({ prevValues }) => ({
+    setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
@@ -91,9 +95,18 @@ const UserProfile = () => {
         console.error(error);
       });
   };
-  const handleDateChange = (date: moment.Moment | null) => {
-    const newDateOfBirth = date ? date.format("YYYY-MM-DD") : null;
-    setFormValues(({ prevValues }) => ({
+  // const handleDateChange = (date: moment.Moment | null) => {
+  //   const newDateOfBirth = date ? date.format("YYYY-MM-DD") : null;
+  //   setFormValues((prevValues) => ({
+  //     ...prevValues,
+  //     date_of_birth: newDateOfBirth,
+  //   }));
+  // };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDateChange = (date: Dayjs | null, dateString: string) => {
+    const newDateOfBirth = date ? date.format("YYYY-MM-DD") : "";
+    setFormValues((prevValues) => ({
       ...prevValues,
       date_of_birth: newDateOfBirth,
     }));
@@ -113,6 +126,33 @@ const UserProfile = () => {
       [name]: value,
     }));
   };
+
+  interface FetchBaseQueryError {
+    // Define the properties of the FetchBaseQueryError object
+  }
+
+  interface SerializedError {
+    // Define the properties of the SerializedError object
+  }
+
+  interface SuccessResponse {
+    status: number;
+    // Add other properties as needed
+  }
+
+  interface ErrorResponse {
+    status: number;
+    // Add other properties as needed
+  }
+
+  // Update the type according to the actual response structure
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type UpdatePasswordResponse = SuccessResponse | ErrorResponse;
+
+  // Update the type according to the actual response structure
+  type UpdatePasswordResult =
+    | { data: User }
+    | { error: FetchBaseQueryError | SerializedError };
   const handlePasswordChange = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -133,10 +173,16 @@ const UserProfile = () => {
     };
 
     updatePassword(updatedPassword)
-      .then((response) => {
-        if (response?.data.status == 200) {
+      .then((response: UpdatePasswordResult) => {
+        if ("data" in response) {
+          // Handle success case
+          // const responseData = response.data;
+          // Process responseData
           message.success("Đổi mật khẩu thành công");
-        } else if (response.data.status == 404) {
+        } else if ("error" in response) {
+          // Handle error case
+          // const errorData = response.error;
+          // Process errorData
           message.warning("Sai mật khẩu");
         }
 
@@ -276,7 +322,7 @@ const UserProfile = () => {
                   </p>
                   <p>
                     Ngày tháng năm sinh:{" "}
-                    {/* <span className="fw-bold">{formattedDate}</span> */}
+                    <span className="fw-bold">{formattedDate}</span>
                   </p>
                   <p>
                     Giới tính: <span className="fw-bold">{gender}</span>
@@ -401,7 +447,7 @@ const UserProfile = () => {
                       <input
                         type="password"
                         name="old_password"
-                        value={passwordFormValues?.oldPassword}
+                        // value={passwordFormValues?.oldPassword}
                         onChange={handlePasswordInputChange}
                       />
                     </div>
@@ -412,7 +458,7 @@ const UserProfile = () => {
                       <input
                         type="password"
                         name="new_password"
-                        value={passwordFormValues?.newPassword}
+                        // value={passwordFormValues?.newPassword}
                         onChange={handlePasswordInputChange}
                       />
                     </div>

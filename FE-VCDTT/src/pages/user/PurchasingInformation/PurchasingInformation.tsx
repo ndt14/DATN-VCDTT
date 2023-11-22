@@ -5,6 +5,7 @@ import { useAddBillMutation } from "../../../api/bill";
 import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ChangeEvent } from "react";
 // import { useNavigate } from "react-router-dom";
 
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
@@ -176,14 +177,20 @@ const PurchasingInformation = () => {
   });
   const isSubmitDisabled = Object.keys(formik.errors).length > 0;
   // Coupon
-  const [couponData, setCouponData] = useState({
-    percentage: 0,
-    fixed: 0,
+  const [couponData, setCouponData] = useState<{
+    percentage: number | null;
+    fixed: number | null;
+    finalPrice: number;
+    couponName: string | null;
+    couponCode: string;
+  }>({
+    percentage: null,
+    fixed: null,
     finalPrice: 0,
     couponName: "",
     couponCode: "",
   });
-  // console.log(couponData);
+  console.log(couponData);
 
   const [formCoupon, setFormCoupon] = useState({
     user_id: userId ? userId : "",
@@ -192,13 +199,13 @@ const PurchasingInformation = () => {
 
   useEffect(() => {
     let FPrice = childPrice + price;
-    if (couponData.percentage > 0) {
+    if (couponData.percentage && couponData.percentage > 0) {
       FPrice = FPrice - (FPrice / 100) * couponData.percentage;
       setCouponData((prevData) => ({
         ...prevData,
         finalPrice: FPrice,
       }));
-    } else {
+    } else if (couponData.fixed !== null) {
       FPrice = FPrice - couponData.fixed;
       setCouponData((prevData) => ({
         ...prevData,
@@ -222,18 +229,21 @@ const PurchasingInformation = () => {
     console.log(formCoupon);
     checkCoupon(formCoupon)
       .then((response) => {
-        alert(response?.data?.message);
-        const discountPercent = response?.data?.coupon.percentage_price;
-        const discountFixed = response?.data?.coupon.fixed_price;
-        const coupon_name = response?.data?.coupon.name;
+        if ("data" in response) {
+          alert(response?.data?.message);
+
+          const discountPercent = response?.data?.coupon.percentage_price;
+          const discountFixed = response?.data?.coupon.fixed_price;
+          const coupon_name = response?.data?.coupon.name;
+          setCouponData({
+            percentage: discountPercent ? discountPercent : null,
+            fixed: discountFixed ? discountFixed : null,
+            finalPrice: couponData.finalPrice,
+            couponName: coupon_name,
+            couponCode: formCoupon.coupon_code,
+          });
+        }
         // console.log(coupon_name);
-        setCouponData({
-          percentage: discountPercent ? discountPercent : null,
-          fixed: discountFixed ? discountFixed : null,
-          finalPrice: couponData.finalPrice,
-          couponName: coupon_name,
-          couponCode: formCoupon.coupon_code,
-        });
       })
       .catch((error) => {
         // Handle any errors here
@@ -261,7 +271,7 @@ const PurchasingInformation = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handlePaymentMethodChange = (e) => {
+  const handlePaymentMethodChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPaymentMethod(e.target.value);
   };
   // console.log(paymentMethod);
@@ -297,12 +307,17 @@ const PurchasingInformation = () => {
       email: formik.values.email,
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,
-      gender: parseInt(formik.values.honorific),
+      gender: formik.values.honorific.toString(),
       coupon_name: couponData.couponName,
       coupon_code: couponData.couponCode,
       coupon_percentage:
-        couponData.percentage > 0 ? couponData.percentage : null,
-      coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
+        couponData.percentage && couponData.percentage > 0
+          ? couponData.percentage
+          : null,
+      coupon_fixed:
+        couponData.percentage && couponData.percentage > 0
+          ? null
+          : couponData.fixed,
       tour_sale_percentage: 0,
       address: formik.values.address,
       purchase_status: 2,
@@ -314,10 +329,13 @@ const PurchasingInformation = () => {
     localStorage.setItem("tempUser", JSON.stringify(variables));
     console.log(couponData.couponName);
 
+    let billID: number | undefined = undefined;
     try {
       const response = await addBill(variables);
-      const billID = response?.data?.data?.purchase_history.id;
-      console.log(billID);
+      if ("data" in response) {
+        billID = response.data.data.purchase_history.id;
+        // Continue handling the successful response
+      }
       localStorage.setItem("billIdSuccess", JSON.stringify(billID));
 
       if (paymentMethod === "1") {
@@ -352,11 +370,17 @@ const PurchasingInformation = () => {
     email: formik.values.email,
     phone_number: formik.values.phone_number,
     suggestion: formik.values.message,
-    gender: parseInt(formik.values.honorific),
+    gender: formik.values.honorific.toString(),
     coupon_name: couponData.couponName,
     coupon_code: couponData.couponCode,
-    coupon_percentage: couponData.percentage > 0 ? couponData.percentage : null,
-    coupon_fixed: couponData.percentage > 0 ? null : couponData.fixed,
+    coupon_percentage:
+      couponData.percentage && couponData.percentage > 0
+        ? couponData.percentage
+        : null,
+    coupon_fixed:
+      couponData.percentage && couponData.percentage > 0
+        ? null
+        : couponData.fixed,
     tour_sale_percentage: 0,
     address: formik.values.address,
     purchase_status: 0,
@@ -379,7 +403,7 @@ const PurchasingInformation = () => {
     currency: "VND",
   }).format(couponData.fixed);
 
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     if (iframeRef.current) {

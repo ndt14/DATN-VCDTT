@@ -53,12 +53,21 @@ const TourDetail = () => {
 
   //
   const { id } = useParams<{ id: string }>();
+  // const tourId = parseInt(id);
 
   const { data: tourData, isLoading } = useGetTourByIdQuery(id || "");
   console.log(tourData);
   const [tour, setTour] = useState(tourData);
 
-  const tourId = parseInt(id);
+  let tourId;
+  if (id) {
+    tourId = parseInt(id, 10);
+  }
+  if (tourId) {
+    // Use tourId in your logic
+    // For example:
+    // console.log(tourId);
+  }
   // console.log(typeof tourId);
   const main_img = tourData?.data?.tour.main_img;
   const tourName = tourData?.data?.tour.name;

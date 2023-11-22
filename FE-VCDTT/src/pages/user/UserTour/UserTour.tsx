@@ -6,7 +6,7 @@ import {
 } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
-import { Checkbox, Button, Popconfirm } from "antd";
+import { Button, Popconfirm } from "antd";
 import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
@@ -105,6 +105,7 @@ const UserTour = () => {
       payment_status: 2,
       comfirm_click: 2,
       id: id,
+      data: undefined,
     };
 
     await updateBill(data).then(() => {
@@ -119,6 +120,7 @@ const UserTour = () => {
       purchase_status: 4,
       payment_status: 2,
       id: id,
+      data: undefined,
     };
 
     await updateBill(data).then(() => {
@@ -576,10 +578,13 @@ const UserTour = () => {
                                               <div></div>
                                             )}
                                           </Popconfirm>
-                                          <Checkbox
-                                            checked={checked}
-                                            onChange={handleCheckboxChange}
-                                          >
+                                          <div>
+                                            <input
+                                              className="mr-1"
+                                              type="checkbox"
+                                              checked={checked}
+                                              onChange={handleCheckboxChange}
+                                            />
                                             Đọc kỹ{" "}
                                             <a
                                               className="text-primary"
@@ -588,7 +593,7 @@ const UserTour = () => {
                                               chính sách hoàn tiền
                                             </a>{" "}
                                             của chúng tôi nếu bạn muốn hủy tour.
-                                          </Checkbox>
+                                          </div>
                                         </div>
                                       ) : (
                                         <div></div>
