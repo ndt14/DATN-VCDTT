@@ -4,7 +4,7 @@ Thêm mới phân quyền
 @endSection
 @section('content')
 @section('select2_css')
-<link rel="stylesheet" href="{{asset('css/plugins/select2/select2.min.css')}}"> 
+<link rel="stylesheet" href="{{asset('css/plugins/select2/select2.min.css')}}">
 @endSection
 <div class="page-header d-print-none">
     <div class="container-xl">
@@ -113,6 +113,12 @@ Thêm mới phân quyền
                 </form>
             </div>
         </div>
+        <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -120,5 +126,5 @@ Thêm mới phân quyền
 <script src="{{asset('js/plugins/select2/select2.min.js')}}"></script>
 <script type="text/javascript">
     $('select').select2();
-  </script>  
+  </script>
 @endSection
