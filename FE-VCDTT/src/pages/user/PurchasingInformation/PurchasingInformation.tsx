@@ -159,7 +159,7 @@ const PurchasingInformation = () => {
       email: userEmail ? userEmail : "",
       phone_number: phoneNumber ? phoneNumber : "",
       message: "",
-      honorific: userGender ? userGender : null,
+      honorific: userGender ? userGender : "",
       address: userAddress ? userAddress : "",
       method: null,
     },
