@@ -68,7 +68,7 @@
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt: {{ $items['name'] }}
                             </h2>
-                            <button id="btnSubmitEdit" type="submit" class="btn btn-indigo ms-auto">Sửa</button>
+                            <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit" class="btn btn-indigo ms-auto">Sửa</button>
                         </div>
                         @csrf
                         <div class="card-body">
@@ -77,7 +77,7 @@
                             <div class="row">
                                 <div class="mb-3 col-4">
                                     <div class="form-label">Trạng thái thanh toán</div>
-                                    <select name="payment_status" class="form-select" aria-label="Default select example" @if ($items['purchase_method'] == 2)
+                                    <select name="payment_status" class="form-select" aria-label="Default select example" @if ($items['payment_status'] == 2 ||  $items['purchase_method'] == 2)
                                         disabled @endif>
                                         @if ($items['payment_status'] == 1)
                                             <option>-----Trạng thái thanh toán-----</option>
@@ -104,7 +104,6 @@
                                             @case(2)
                                                 @if (
                                                     $items['purchase_status'] == 2 ||
-                                                        $items['purchase_status'] == 3 ||
                                                         $items['purchase_status'] == 7 ||
                                                         $items['purchase_status'] == 8)
                                                     <option @if ($items['purchase_status'] == 2) selected @endif value="2">Đang
@@ -122,6 +121,10 @@
                                                             Khách chuyển thừa
                                                         </option>
                                                     @endif
+                                                @elseif ($items['purchase_status'] == 3)
+                                                    <option @if ($items['purchase_status'] == 3) selected @endif value="3">Đã
+                                                        phê duyệt
+                                                    </option>
                                                 @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5 || $items['purchase_status'] == 6)
                                                     <option @if ($items['purchase_status'] == 4) selected @endif value="4">Đang
                                                         đợi phê duyệt hủy tour
@@ -456,7 +459,7 @@
                             </div>
                             <div class="card-footer text-end">
                                 <div class="mb-3">
-                                    <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Sửa</button>
+                                    <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit" class="btn btn-indigo">Sửa</button>
                                 </div>
                             </div>
                         </form>
@@ -464,4 +467,11 @@
                 </div>
             </div>
         </div>
+        <script>
+            let confirmFunction = function() {
+                if (confirm('Bạn có chắc chắn thay đổi không?') == false){
+                    event.preventDefault()
+                }
+            }
+        </script>
     @endsection

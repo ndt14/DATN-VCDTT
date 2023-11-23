@@ -294,7 +294,9 @@
                 );
             })
             .finally(function() {
-                document.getElementById('notificationDot').remove();
+                if (document.getElementById('notificationDot')) {
+                    document.getElementById('notificationDot').remove();
+                };
             });
     };
 </script>
