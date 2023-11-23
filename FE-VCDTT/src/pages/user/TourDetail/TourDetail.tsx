@@ -29,7 +29,7 @@ const TourDetail = () => {
   // const { data: dataRating } = useGetRatingByIdQuery(idRating || "");
   // console.log(dataRating);
 
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   // console.log(user);
 
   const userId = user?.id;
