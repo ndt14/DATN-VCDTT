@@ -20,7 +20,7 @@ import Modal from "react-bootstrap/Modal";
 
 const PurchasingInformation = () => {
   // dữ liệu lừ localStorage
-  const userData = JSON.parse(localStorage.getItem("user") || "");
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = userData?.id;
   // console.log(tourId);
   //dữ liệu từ tourDetail

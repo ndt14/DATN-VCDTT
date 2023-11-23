@@ -23,7 +23,7 @@ dayjs.locale("vi");
 moment.locale("vi");
 
 const UserProfile = () => {
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
   const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
   //
@@ -149,8 +149,6 @@ const UserProfile = () => {
   // // Update the type according to the actual response structure
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // type UpdatePasswordResponse = SuccessResponse | ErrorResponse;
- 
-  
 
   // Update the type according to the actual response structure
   type UpdatePasswordResult =

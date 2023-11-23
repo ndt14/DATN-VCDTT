@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import "../../../assets/js/modal.js";
+// import "../../../assets/js/modal.js";
+
 // import { Modal, Form, Input, Checkbox, Button } from "antd";
 import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
@@ -87,18 +88,18 @@ const Header = () => {
   //     // Other properties if necessary...
   //   };
   // }
-  
+
   const handleSignIn = async () => {
     try {
       const response = await login({
         email: loginFormik.values.email,
         password: loginFormik.values.password,
       });
-  
+
       // Checking if 'data' exists in the response
-      if ('data' in response) {
+      if ("data" in response) {
         const responseData = response.data; // narrowing down the response to 'data' object
-  
+
         if (responseData.user) {
           setIsLoggedIn(true);
           setShowSignIn(false);
@@ -112,7 +113,7 @@ const Header = () => {
         }
       } else {
         // Handling the case where 'data' doesn't exist in the response
-        console.error('Error in API response:', response.error);
+        console.error("Error in API response:", response.error);
         alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
       }
     } catch (error) {
@@ -120,8 +121,6 @@ const Header = () => {
       alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
     }
   };
-  
-  
 
   const handleSignOut = () => {
     alert("Đăng xuất thành công");
@@ -139,19 +138,19 @@ const Header = () => {
       phone_number: registrationFormik.values.phone_number,
       c_password: registrationFormik.values.c_password,
     };
-  
+
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-  
+
     try {
       const response = await register(variables);
-  
+
       // Type guard to differentiate between success and error responses
-      if ('data' in response) {
+      if ("data" in response) {
         const userData = response.data.user;
-  
+
         if (userData) {
           setIsLoggedIn(true);
           setShowSignIn(false);
@@ -162,14 +161,14 @@ const Header = () => {
         }
       } else {
         // Handle error response
-        console.error('Error in API response:');
+        console.error("Error in API response:");
       }
     } catch (error) {
       // Handle any errors here
       console.error(error);
     }
   };
-  
+
   //validate
   const loginFormik = useFormik({
     initialValues: {
@@ -219,12 +218,12 @@ const Header = () => {
                 <Link to="">
                   <img
                     className="white-logo"
-                    src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src="../../assets/images/VCDTT_logo-removebg-preview.png"
                     alt="logo"
                   />
                   <img
                     className="black-logo"
-                    src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src="../../assets/images/VCDTT_logo-removebg-preview.png"
                     alt="logo"
                   />
                 </Link>

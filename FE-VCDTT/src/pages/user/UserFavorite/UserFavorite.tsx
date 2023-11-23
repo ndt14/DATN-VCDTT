@@ -9,7 +9,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
 
   const { data: userData } = useGetUserByIdQuery(userId || "");

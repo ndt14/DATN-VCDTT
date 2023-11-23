@@ -14,7 +14,7 @@ import { Coupon } from "../../../interfaces/Coupon";
 
 
 const UserCoupon = () => {
-  const user = JSON.parse(localStorage.getItem("user")||"");
+  const user = JSON.parse(localStorage.getItem("user")||"{}");
   const userId = user?.id;
   const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
   const {data: couponData} = useGetCouponByUserQuery(userId || "");

@@ -16,7 +16,7 @@ import { ChangeEvent, MouseEvent } from "react";
 // import { CheckboxChangeEvent } from "antd";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
   const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
