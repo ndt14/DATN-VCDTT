@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                            Overview
-                                                            </div> -->
+                                                                Overview
+                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -68,7 +68,8 @@
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt: {{ $items['name'] }}
                             </h2>
-                            <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit" class="btn btn-indigo ms-auto">Sửa</button>
+                            <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit"
+                                class="btn btn-indigo ms-auto">Sửa</button>
                         </div>
                         @csrf
                         <div class="card-body">
@@ -77,8 +78,8 @@
                             <div class="row">
                                 <div class="mb-3 col-4">
                                     <div class="form-label">Trạng thái thanh toán</div>
-                                    <select name="payment_status" class="form-select" aria-label="Default select example" @if ($items['payment_status'] == 2 ||  $items['purchase_method'] == 2)
-                                        disabled @endif>
+                                    <select name="payment_status" class="form-select" aria-label="Default select example"
+                                        @if ($items['payment_status'] == 2 || $items['purchase_method'] == 2) disabled @endif>
                                         @if ($items['payment_status'] == 1)
                                             <option>-----Trạng thái thanh toán-----</option>
                                         @endif
@@ -102,10 +103,7 @@
                                         @endif
                                         @switch ($items['payment_status'])
                                             @case(2)
-                                                @if (
-                                                    $items['purchase_status'] == 2 ||
-                                                        $items['purchase_status'] == 7 ||
-                                                        $items['purchase_status'] == 8)
+                                                @if ($items['purchase_status'] == 2 || $items['purchase_status'] == 7 || $items['purchase_status'] == 8)
                                                     <option @if ($items['purchase_status'] == 2) selected @endif value="2">Đang
                                                         đợi phê duyệt thanh
                                                         toán
@@ -143,8 +141,8 @@
                                                         hủy do quá hạn
                                                 @endif
 
-                                            @default
-                                        @endswitch
+                                                @default
+                                            @endswitch
                                         </select>
                                     </div>
                                     <div class="mb-3 col-4">
@@ -459,7 +457,8 @@
                             </div>
                             <div class="card-footer text-end">
                                 <div class="mb-3">
-                                    <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit" class="btn btn-indigo">Sửa</button>
+                                    <button id="btnSubmitEdit" onclick="confirmFunction()" type="submit"
+                                        class="btn btn-indigo">Sửa</button>
                                 </div>
                             </div>
                         </form>
@@ -469,7 +468,9 @@
         </div>
         <script>
             let confirmFunction = function() {
-                if (confirm('Bạn có chắc chắn thay đổi không?') == false){
+                if (confirm(
+                        'Bạn có chắc chắn thay đổi không? Bạn sẽ KHÔNG thay đổi được nữa và người dùng sẽ nhận thông báo về thay đổi của bạn'
+                        ) == false) {
                     event.preventDefault()
                 }
             }
