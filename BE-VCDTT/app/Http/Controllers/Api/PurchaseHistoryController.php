@@ -25,6 +25,7 @@ use App\Models\Notification as NotificationModel;
 use App\Models\TermAndPrivacy;
 use App\Notifications\CancelPurchaseMailToClient;
 use App\Notifications\CancelPurchaseNotification;
+use App\Notifications\PurchaseNotificationToClient;
 use App\Notifications\RefundRemindingNotificationAdmin;
 use Illuminate\Support\Facades\Schema;
 
@@ -103,6 +104,8 @@ class PurchaseHistoryController extends Controller
         foreach ($users as $user) {
             $user->notify(new PurchaseNotificationAdmin($purchaseHistory, $user->id));
         }
+        $purchaseHistory->notify(new PurchaseNotificationToClient($purchaseHistory));
+
         if ($purchaseHistory->id) {
             return response()->json([
                 'data' => [
@@ -184,17 +187,9 @@ class PurchaseHistoryController extends Controller
         $purchaseHistory->fill($input);
 
         if ($purchaseHistory->save()) {
-            //Gửi mail khi admin cập nhật trạng thái đơn hàng
-            if ($updateAdmin) {
-                if ($purchaseHistory->purchase_status != 2 && $purchaseHistory->purchase_status != 4 && $purchaseHistory->purchase_status != 1) {
-                    $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
-                }
-                if ($purchaseHistory->purchase_status == 6) {
-                    foreach ($users as $user) {
-                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory, $user->id));
-                    }
-                }
-            } else {
+            //Gửi mail khi client cập nhật
+
+            if (!$updateAdmin){
                 switch ($purchaseHistory->purchase_status) {
                     case '2':
                         if ($purchaseHistory->comfirm_click == 2) {
@@ -306,8 +301,24 @@ class PurchaseHistoryController extends Controller
     {
         $items = Http::get('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         if ($request->isMethod('POST')) {
-            $data = $request->except('_token', 'btnSubmit');
+            $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-edit/' . $id, $data);
+            if ( isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
+                $users = User::where('is_admin', 1)->get();
+                $responseData = json_decode(json_encode($response['data']['purchase_history']));
+
+                $purchaseHistory = PurchaseHistory::find($responseData->id);
+
+                if ($purchaseHistory->purchase_status != 2 && $purchaseHistory->purchase_status != 4 && $purchaseHistory->purchase_status != 1) {
+                    $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
+                }
+                if ($purchaseHistory->purchase_status == 6) {
+                    foreach ($users as $user){
+                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory,$user->id));
+                    }
+                }
+            } 
+
             if ($response->status() == 200) {
                 return redirect()->route('purchase_histories.edit', ['id' => $id])->with('success', 'Cập nhật hóa đơn thành công');
             } else {
@@ -331,6 +342,15 @@ class PurchaseHistoryController extends Controller
         $notification = $user->notifications->where('id', $id)->first();
         $notification->markAsRead();
         // return redirect()->back();
+        return response()->json(['message' => 'Đã đọc', 'status' => 200]);
+    }
+
+    public function purchaseHistoryMarkAllAsRead()
+    {
+        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        foreach ($user->unreadnotifications as $notification){
+            $notification->markAsRead();
+        }
         return response()->json(['message' => 'Đã đọc', 'status' => 200]);
     }
 
@@ -361,6 +381,7 @@ class PurchaseHistoryController extends Controller
             }
         }
     }
+
 
 
     public function purchaseHistoryManagementTrash(Request $request)

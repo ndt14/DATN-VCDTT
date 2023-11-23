@@ -25,11 +25,12 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
     protected $tour_name;
     protected $name;
     protected $purchase_method;
+    protected $admin_id;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory)
+    public function __construct($purchaseHistory,$admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
@@ -42,6 +43,7 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
         $this->tour_name = $purchaseHistory->tour_name;
         $this->name = $purchaseHistory->name;
         $this->purchase_method = $purchaseHistory->purchase_method;
+        $this->admin_id = $admin_id;
     }
 
     /**
@@ -84,6 +86,6 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
 
     public function broadcastOn()
     {
-        return new Channel('datn-vcdtt-development');
+        return new PrivateChannel('datn-vcdtt-development.'.$this->admin_id);
     }
 }
