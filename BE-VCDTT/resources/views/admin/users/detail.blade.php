@@ -132,13 +132,19 @@
                         </span>
                     </div>
                 </div>
-                
-                
+
+
             </div>
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
             </div>
         </div>
     </div>
