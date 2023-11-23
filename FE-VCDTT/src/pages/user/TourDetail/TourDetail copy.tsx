@@ -173,7 +173,7 @@ const TourDetail = () => {
     user_id: userId,
     user_name: userName,
     content: "",
-    tour_id: id, // Assuming 'id' is the tour ID
+    tour_id: parseInt(id || "0", 10), // Assuming 'id' is the tour ID
   });
   // const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
   const handleStarRatingChange = (star: number) => {
@@ -202,21 +202,35 @@ const TourDetail = () => {
 
         // After a successful rating submission, update the component's state
         const newRating = {
-          id: response.data.id, // Use the actual ID received from the server
+          // id: response?.data.id, // Use the actual ID received from the server
           user_name: ratingData.user_name,
           content: ratingData.content,
           star: ratingData.star,
           created_at: new Date().toLocaleString(), // You can format the date accordingly
         };
-
+     console.log(newRating);
+     
         // Create a copy of the existing ratings and add the new rating
-        const updatedRatings = [...tourData.data.listRatings, newRating];
+        const updatedRatings = [tourData?.data.listRatings, newRating];
+        console.log(updatedRatings);
+        
 
-        // Update the component's state with the new ratings
-        setTour({
-          ...tourData,
-          data: { ...tourData.data, listRatings: updatedRatings },
+        // Update the component's state with the new ratings  
+        setTour((prevTour: Tour | undefined) => {
+          if (prevTour) {
+            return {
+              ...prevTour,
+              data: {
+                ...prevTour.data,
+                listRatings: updatedRatings,
+              },
+            };
+          }
+          // Handle the case where prevTour is undefined, if applicable
+          return undefined; // Or return a default value of type Tour | undefined
         });
+        
+        
 
         // Reset the rating form or clear the inputs
         setRatingData({
@@ -224,7 +238,7 @@ const TourDetail = () => {
           user_id: userId,
           user_name: userName,
           content: "",
-          tour_id: id, // Assuming 'id' is the tour ID
+          tour_id: parseInt(id || "0", 10), // Assuming 'id' is the tour ID
         });
       } catch (error) {
         // Handle error, e.g., show an error message
@@ -688,7 +702,7 @@ useEffect(() => {
                             <h3 className="comment-title">Đánh giá của bạn</h3>
                             {isLoggedIn ? (
                               tour === tourData &&
-                              foundPurchase?.tour_status == 3 ? (
+                              foundPurchase?.purchase_status == 3 ? (
                                 <form className="comment-form">
                                   <div className="full-width rate-wrap">
                                     <label>Chọn sao</label>
