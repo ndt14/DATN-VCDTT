@@ -3,7 +3,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body row row-deck row-cards">
-    <div class="col-sm-12 col-md-12" style="height: 50rem;">
+    <div class="col-sm-12 col-md-12" style="height: 60rem;">
         <div class="card-body" >
             <div class="row">
                 <div class="col-9">
@@ -234,7 +234,7 @@
                     @endswitch
                 </div>
             </div>
-            <a class="button btn btn-indigo mt-5 mb-5" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
+            <a class="button btn btn-indigo mt-5 " href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
         </div>
     </div>
 </div>

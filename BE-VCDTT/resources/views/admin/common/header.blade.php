@@ -222,7 +222,7 @@
                         data-bs-title="Chưa đọc"></span>
                     </div>
                     <div class="col text-truncate " style="width: 850px">
-                        <a onclick='markAsRead('` + id + `')'
+                        <a onclick="markAsRead('` + id + `')"
                         href="javascript: viewPurchaseHistoryDetail(${data.purchase_history_id});"
                             class="text-body d-block">
                             ` + purchaseMethodText + `
@@ -269,7 +269,7 @@
             // })
             .finally(function() {
                 let checkNoti = document.getElementsByName('notification-unread');
-                if (checkNoti.length == 0) {
+                if (checkNoti.length == 0 && document.getElementById('notificationDot')) {
                     document.getElementById('notificationDot').remove();
                 }
             });
