@@ -18,6 +18,7 @@ class checkAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         if(Auth::check() && Auth::user()->is_admin == 1 || Auth::check() && Auth::user()->is_admin == 3) {
             if(Auth::user()->is_admin == 1) {
 
