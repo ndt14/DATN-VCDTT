@@ -27,11 +27,12 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
     protected $purchase_method;
     protected $paid;
     protected $refund;
+    protected $admin_id;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory)
+    public function __construct($purchaseHistory,$admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
@@ -42,6 +43,7 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
         $this->purchase_method = $purchaseHistory->purchase_method;
         $this->paid = ($this->payment_status == 2) ? ' sau khi đã thanh toán. ' : '.';
         $this->refund = ($this->payment_status == 2) ? ' và liên hệ với khách hàng.' : '.';
+        $this->admin_id = $admin_id;
     }
 
     /**
@@ -85,6 +87,6 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
 
     public function broadcastOn()
     {
-        return new Channel('datn-vcdtt-development');
+        return new PrivateChannel('datn-vcdtt-development'.$this->admin_id);
     }
 }

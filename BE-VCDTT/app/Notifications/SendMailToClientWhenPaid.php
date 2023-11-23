@@ -29,6 +29,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     protected $updated_at;
     protected $table;
     protected $user_id;
+    protected $payment_status;
 
     /**
      * Create a new notification instance.
@@ -43,6 +44,8 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         $this->phone_number = $purchase_history->phone_number;
         $this->address = $purchase_history->address;
         $this->user_id = $purchase_history->user_id;
+
+        $this->payment_status = $purchase_history->payment_status;
 
         if ($purchase_history->purchase_method == 1) {
             $this->purchase_method = 'Chuyển khoản online';
@@ -105,6 +108,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
             return (new MailMessage)
                 ->subject('Cập nhật trạng thái đơn hàng')
                 ->view('mail.paid', [
+                    'status' => $this->status,
                     'name' => $this->name,
                     'email' => $this->email,
                     'phone_number' => $this->phone_number,
@@ -112,6 +116,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                     'purchase_method' => $this->purchase_method,
                     'transaction_id' => $this->transaction_id,
                     'updated_at' => $this->updated_at,
+                    'payment_status' => $this->payment_status
                 ]);
 
         } elseif ($this->user_id != 0) {
