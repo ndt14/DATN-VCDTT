@@ -26,12 +26,13 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
 
-        $request->authenticate();
-
+        
+        if($request->authenticate()) {
         $request->session()->regenerate();
-
         // Điều chỉnh chuyển hướng khi đăng nhập thành công tại đây
         return redirect()->route('dashboard.tour');
+        }
+        return redirect()->route('login')->with('fail', 'Tên đăng nhập hoặc mật khẩu chưa đúng hoặc bạn không có quyền truy cập vào phần này!');
     }
 
     /**
