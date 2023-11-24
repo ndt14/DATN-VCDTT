@@ -256,6 +256,7 @@
         `
 
         $('.notification').prepend(newNotificationHtml);
+        $('#notificationDot').remove();
         $('#notificationPing').prepend(notificationPing);
     });
 
