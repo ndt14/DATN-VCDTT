@@ -52,7 +52,7 @@ const UserTour = () => {
   //end phân trang
 
   const goToPayment = (id: number) => {
-    const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${id}`;
+    const VnpayURL = `http:admin.vcdtt.online/api/vnpay-payment/${id}`;
     window.location.href = VnpayURL;
   };
 
@@ -73,12 +73,15 @@ const UserTour = () => {
   // };
 
   const [show, setShow] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const handleShowQR = () => setShowQR(true);
+  const handleCloseQR = () => setShowQR(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
-  const openWindow = () => {
-    window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
+  const openPolicy = (id: number) => {
+    window.open(`/user/policy/${id}`, "_blank");
   };
   //
   // const cancelTour = async (id: number) => {
@@ -127,6 +130,30 @@ const UserTour = () => {
       alert("Bạn đã yêu cầu hủy tour. Đang đợi admin xác nhận");
     });
   };
+
+  // const updateBillQR = () => {
+  //   const data:Bill = {
+  //     id: id,
+  //     payment_status: 2,
+  //     comfirm_click: 2,
+  //     data: undefined,
+  //   };
+  //   updatePaymentStatus(data).then(() => {
+  //     if (isLoggedIn && isLoggedIn == true) {
+  //       alert(
+  //         "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn"
+  //       );
+  //       navigate("/user/tours");
+  //       window.location.reload();
+  //     } else {
+  //       alert(
+  //         "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn. Hãy đăng ký/đăng nhập để trải nghiệm các dịch vụ ưu đãi cho người dùng"
+  //       );
+  //       navigate("/");
+  //       window.location.reload();
+  //     }
+  //   });
+  // };
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
@@ -195,6 +222,9 @@ const UserTour = () => {
                 <Link className="nav-link" to={"/user/favorite"}>
                   <FaRegHeart /> Tour yêu thích
                 </Link>
+                <Link className="nav-link" to={"/user/coupon"}>
+                  <FaRegListAlt /> Mã Giảm giá
+                </Link>
               </nav>
 
               {/* End left panel */}
@@ -245,6 +275,11 @@ const UserTour = () => {
                 const handleConfirmPayment = () => {
                   if (id) {
                     confirmPayment(id);
+                  }
+                };
+                const handleOpenPolicy = () => {
+                  if (id) {
+                    openPolicy(id);
                   }
                 };
                 console.log(coupon_fixed);
@@ -358,14 +393,75 @@ const UserTour = () => {
                       purchase_status == 2 &&
                       purchase_method == 1 &&
                       comfirm_click == 1 ? (
-                        <button
-                          // onClick={}
-                          className="btn btn-success ml-3 rounded-md"
-                          style={{ height: "48px", borderRadius: "8px" }}
-                          onClick={handleConfirmPayment}
-                        >
-                          Xác nhận đã chuyển khoản
-                        </button>
+                        <span>
+                          <button
+                            className="btn btn-success ml-3 rounded-md"
+                            style={{ height: "48px", borderRadius: "8px" }}
+                            onClick={handleShowQR}
+                          >
+                            Xác nhận đã chuyển khoản
+                          </button>
+                          <Modal
+                            show={showQR}
+                            onHide={handleCloseQR}
+                            backdrop="static"
+                            keyboard={false}
+                          >
+                            <Modal.Header>
+                              <Modal.Title>
+                                <div className="text-center">
+                                  Vui lòng quét qr hoặc chuyển khoản cho thông
+                                  tin dưới đây
+                                </div>
+                              </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <div className="container">
+                                <div className="text-center">
+                                  <span className="fs-4 text-black fw-bold">
+                                    Ngân hàng MB BANK
+                                    <br />
+                                  </span>
+                                  {/* Hiển thị ảnh QR code */}
+                                  <img
+                                    src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg"
+                                    alt="QR Code"
+                                  />
+                                </div>
+
+                                <div className="text-center mt-3">
+                                  <span className="fs-4 text-black fw-bold">
+                                    Người thụ hưởng: Nguyễn Đức Thịnh <br />
+                                    Số tài khoản : 0915220156
+                                  </span>
+                                </div>
+                                <div className="text-center mt-3">
+                                  <span className="fs-4 text-danger fw-bold">
+                                    Số tiền bạn phải chuyển là:{" "}
+                                    {formattedFinalPrice}
+                                  </span>
+                                </div>
+                              </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <div className="text-center">
+                                {/* Thêm nút "Chuyển khoản thành công" */}
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={handleCloseQR}
+                                >
+                                  Thoát
+                                </button>
+                                <button
+                                  onClick={handleConfirmPayment}
+                                  className="btn btn-success"
+                                >
+                                  Chuyển khoản thành công
+                                </button>
+                              </div>
+                            </Modal.Footer>
+                          </Modal>
+                        </span>
                       ) : (
                         <div></div>
                       )}
@@ -496,6 +592,19 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
+                              <p>
+                                Trạng thái thanh toán:{" "}
+                                <span className="fw-bold text-danger">
+                                  {paymentStatus}
+                                </span>
+                              </p>
+                              <p>
+                                Trạng thái tour:{" "}
+                                <span className="fw-bold text-danger">
+                                  {tourStatus}
+                                </span>
+                              </p>
+
                               {purchase_method == 2 &&
                               payment_status == 1 &&
                               tour_status == 1 ? (
@@ -503,7 +612,7 @@ const UserTour = () => {
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
                                 >
-                                  Thanh toán
+                                  Thanh toán VNPAY
                                 </button>
                               ) : (
                                 <div>
@@ -588,7 +697,7 @@ const UserTour = () => {
                                             Đọc kỹ{" "}
                                             <a
                                               className="text-primary"
-                                              onClick={openWindow}
+                                              onClick={handleOpenPolicy}
                                             >
                                               chính sách hoàn tiền
                                             </a>{" "}
@@ -638,7 +747,7 @@ const UserTour = () => {
                 );
               }
             )}
-            <Button onClick={handleShow}>Launch demo modal</Button>
+            {/* <Button onClick={handleShow}>Launch demo modal</Button> */}
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
@@ -706,6 +815,7 @@ const UserTour = () => {
                 <Button onClick={handleClose}>Save Changes</Button>
               </Modal.Footer>
             </Modal>
+
             <ReactPaginate
               previousLabel={"<-"}
               nextLabel={"->"}

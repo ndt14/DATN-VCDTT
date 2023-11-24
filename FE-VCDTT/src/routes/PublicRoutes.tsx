@@ -22,8 +22,9 @@ import BillSuccess from "../pages/user/BillSuccess/BillSuccess";
 import UserTour from "../pages/user/UserTour/UserTour";
 import UserFavorite from "../pages/user/UserFavorite/UserFavorite";
 import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import UserPolicy from "../pages/user/UserPolicy/UserPolicy";
 
 function ScrollToTopOnNavigation() {
   const { pathname } = useLocation();
@@ -36,47 +37,47 @@ function ScrollToTopOnNavigation() {
 }
 const PublicRoutes = () => {
   return (
-  <>
- 
-    <ScrollToTopOnNavigation/>
-    <Routes>
-      <Route path="/" element={<LayOutClient />}>
-        <Route index element={<HomePage />} />
-        <Route path="tours" element={<HomePage />} />
-        <Route path="tours/:id" element={<TourDetail />} />
-        <Route
-          path="check_order_information/:id"
-          element={<PurchasingInformation />}
-        />
-        <Route path="vnpay?" element={<BillSuccess />} />
-        <Route path="categories" element={<HomePage />} />
-        <Route path="about" element={<HomePage />} />
-        <Route path="contact" element={<ContactPage />} />
-        <Route path="blogs" element={<BlogsPage />} />
-        <Route path="blogs/:id" element={<BlogDetail />} />
-        <Route path="faqs" element={<FaqsPage />} />
-        <Route path="wish_lists" element={<HomePage />} />
-        <Route path="purchase_histories" element={<HomePage />} />
-        <Route path="signin" element={<HomePage />} />
-        <Route path="signup" element={<HomePage />} />
-        <Route path="searchs/:id" element={<TourSearch />} />
-        <Route path="user/profile" element={<UserProfile />} />
-        <Route path="user/tours" element={<UserTour />} />
-        <Route path="user/favorite" element={<UserFavorite />} />
-        <Route path="user/coupon" element={<UserCoupon />} />
-    
-        <Route path="/search" element={<Search/>}></Route>
-        
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
+    <>
+      <ScrollToTopOnNavigation />
+      <Routes>
+        <Route path="/" element={<LayOutClient />}>
+          <Route index element={<HomePage />} />
+          <Route path="tours" element={<HomePage />} />
+          <Route path="tours/:id" element={<TourDetail />} />
+          <Route
+            path="check_order_information/:id"
+            element={<PurchasingInformation />}
+          />
+          <Route path="vnpay?" element={<BillSuccess />} />
+          <Route path="categories" element={<HomePage />} />
+          <Route path="about" element={<HomePage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="blogs" element={<BlogsPage />} />
+          <Route path="blogs/:id" element={<BlogDetail />} />
+          <Route path="faqs" element={<FaqsPage />} />
+          <Route path="wish_lists" element={<HomePage />} />
+          <Route path="purchase_histories" element={<HomePage />} />
+          <Route path="signin" element={<HomePage />} />
+          <Route path="signup" element={<HomePage />} />
+          <Route path="searchs/:id" element={<TourSearch />} />
+          <Route path="user/profile" element={<UserProfile />} />
+          <Route path="user/tours" element={<UserTour />} />
+          <Route path="user/favorite" element={<UserFavorite />} />
+          <Route path="user/coupon" element={<UserCoupon />} />
 
-      <Route path="admin" element={<LayoutAdmin />}>
-        <Route index element={<Dashboard />} />
-      </Route>
-      <Route path="reset-password/:token" element={<ResetPasswordModal/>} />
-      <Route path="*" element={<NotFoundPage />}></Route>
-      <Route path="privacy_policy" element={<PrivacyPolicy />} />
-    </Routes>
+          <Route path="/search" element={<Search />}></Route>
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+
+        <Route path="admin" element={<LayoutAdmin />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+        <Route path="reset-password/:token" element={<ResetPasswordModal />} />
+        <Route path="*" element={<NotFoundPage />}></Route>
+        <Route path="privacy_policy" element={<PrivacyPolicy />} />
+        <Route path="user/policy/:id" element={<UserPolicy />} />
+      </Routes>
     </>
   );
 };
