@@ -136,6 +136,7 @@ Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy
 
 
 Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
+Route::get('/purchase-history/mark-all-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAllAsRead']);
 
 //Page
 Route::get('/page', [TermAndPrivacyController::class, 'index']);

@@ -45,7 +45,7 @@ class ImageController extends Controller
     {
         $image = Image::find($id);
         if($image){
-            return Response::download(public_path($image->url), $image->name.'.'.$image->type, ['Content-Type: image/jpeg']);
+            return Response::download(public_path(str_replace('http://be-vcdtt.datn-vcdtt.test/', '', $image->url)), $image->name.'.'.$image->type, ['Content-Type: image/jpeg']);
         }
         else{
             // image not found -> 404

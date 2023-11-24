@@ -24,15 +24,15 @@ class RatingController extends Controller
     {
         //
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $ratings = Rating::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $ratings = Rating::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Rating())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->where('tour_id',$request->id)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('tour_id',$request->id)->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->where('tour_id', $request->id)->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('tour_id', $request->id)->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         $tour = Tour::find($request->id);
         return response()->json(
@@ -50,15 +50,15 @@ class RatingController extends Controller
     public function indexAll(Request $request)
     {
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $ratings = Rating::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $ratings = Rating::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Rating())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $ratings = Rating::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
             [
@@ -76,52 +76,55 @@ class RatingController extends Controller
      */
     public function store(RatingRequest $request)
     {
-        $check = PurchaseHistory::where('tour_id',$request->tour_id)->where('user_id',$request->user_id)->orderBy('id','desc')->first();
-        if($check->purchase_status == 5){
-            if($request->star){
-            $newRating = Rating::create($request->all());
-            if($newRating->id) {
-            $purchaseHistory = PurchaseHistory::find($check->id);
-            $input['purchase_status'] = 10; // Đã đi xong -> đã đánh giá
-            $purchaseHistory->fill($input);
-            $purchaseHistory->save();
-            return response()->json(
-                [
-                    'data' => [
-                        'rating' => new RatingResource($newRating)
-                    ],
-                    'message' => 'Đánh giá thành công',
-                    'status' => 200
-                ]
-            );
-        }else{
-            return response()->json([
-                'message' => 'Lỗi hệ thống',
-                'status' => 500
-            ]);
-        }
-    }else{
-        return response()->json(
-            [
-                'data' => [
-                    'purchase_status' => $check->purchase_status
-                ],
-                'message' => 'OK',
-                'status' => 200
-            ]
-        );
-    }
-        }else if($check->purchase_status == 10){
-            return response()->json([
-                'message' => 'Bạn đã đánh giá tour này, vui lòng đi lại tour',
-                'status' => 500
-            ]);
-        }else {
+        $check = PurchaseHistory::where('tour_id', $request->tour_id)->where('user_id', $request->user_id)->orderBy('id', 'desc')->first();
+        if ($check->tour_status == 3) {
+            if ($request->star) {
+                $newRating = Rating::create($request->all());
+                if ($newRating->id) {
+                    $purchaseHistory = PurchaseHistory::find($check->id);
+                    $input['tour_status'] = 1; // Đã đi xong -> đã đánh giá
+                    $purchaseHistory->fill($input);
+                    $purchaseHistory->save();
+                    return response()->json(
+                        [
+                            'data' => [
+                                'rating' => new RatingResource($newRating)
+                            ],
+                            'message' => 'Đánh giá thành công',
+                            'status' => 200
+                        ]
+                    );
+                } else {
+                    return response()->json([
+                        'message' => 'Lỗi hệ thống',
+                        'status' => 500
+                    ]);
+                }
+            } else {
+                return response()->json(
+                    [
+                        'data' => [
+                            'purchase_status' => $check->tour_status
+                        ],
+                        'message' => 'OK',
+                        'status' => 200
+                    ]
+                );
+            }
+        } elseif ($check->tour_status == 1) {
             return response()->json([
                 'data' => [
-                    'purchase_status' => $check->purchase_status
+                    'purchase_status' => $check->tour_status
                 ],
                 'message' => 'Bạn chưa đi tour này',
+                'status' => 404
+            ]);
+        } else {
+            return response()->json([
+                'data' => [
+                    'purchase_status' => $check->tour_status
+                ],
+                'message' => 'Bạn hoàn thành tour này',
                 'status' => 404
             ]);
         }
@@ -159,18 +162,17 @@ class RatingController extends Controller
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
         $rating->update($input);
-            if ($rating->id) {
-                return response()->json([
-                    'data' => [
-                        'rating' => new RatingResource($rating)
-                    ],
-                    'message' => 'Edit success',
-                    'status' => 200
-                ]);
-            } else {
-                return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
-            }
-
+        if ($rating->id) {
+            return response()->json([
+                'data' => [
+                    'rating' => new RatingResource($rating)
+                ],
+                'message' => 'Edit success',
+                'status' => 200
+            ]);
+        } else {
+            return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
+        }
     }
 
     /**
@@ -182,13 +184,13 @@ class RatingController extends Controller
 
         $rating = Rating::find($id);
 
-        if($rating) {
+        if ($rating) {
             $deleteRating = $rating->delete();
             if (!$deleteRating) {
                 return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
             return response()->json(['message' => 'OK', 'status' => 200]);
-        }else {
+        } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
@@ -211,70 +213,73 @@ class RatingController extends Controller
         }
     }
 
-     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function allRatingManagementList(Request $request) {
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
+    public function allRatingManagementList(Request $request)
+    {
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
         $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/rating?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['ratings']), false);
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.ratings.list_all', compact('data'));
     }
 
 
-    public function ratingManagementList(Request $request) {
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/'.$request->id."?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+    public function ratingManagementList(Request $request)
+    {
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/' . $request->id . "?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']), false);
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data->ratings);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data->ratings = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->ratings->setPath(request()->url());
-            $request->limit?$data->ratings->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->ratings->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->ratings->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->keyword?$data->ratings->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->ratings->currentPage()>$data->ratings->lastPage()){
+            $request->limit ? $data->ratings->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->ratings->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->ratings->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->keyword ? $data->ratings->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->ratings->currentPage() > $data->ratings->lastPage()) {
                 return redirect($data->ratings->url(1));
             }
-        }else{
+        } else {
             $data = [];
-
         }
         return view('admin.ratings.list', compact('data'));
     }
 
-    public function ratingManagementAdd() {
+    public function ratingManagementAdd()
+    {
         return view('admin.ratings.add');
     }
 
-    public function ratingManagementEdit(Request $request) {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/'.$request->id);
+    public function ratingManagementEdit(Request $request)
+    {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/' . $request->id);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/rating-edit/' . $request->id, $data);
@@ -288,19 +293,21 @@ class RatingController extends Controller
         return view('admin.ratings.edit', compact('data'));
     }
 
-    public function ratingManagementDetail(Request $request) {
+    public function ratingManagementDetail(Request $request)
+    {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/'.$request->id);
-        if($response->status() == 200) {
+        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/' . $request->id);
+        if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['rating']), false);
             $html = view('admin.ratings.detail', compact('item'))->render();
             return response()->json(['html' => $html, 'status' => 200]);
         }
     }
 
-    public function ratingManagementTrash(Request $request) {
+    public function ratingManagementTrash(Request $request)
+    {
         $data = Rating::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -311,16 +318,16 @@ class RatingController extends Controller
 
     // khôi phục bản ghi bị xóa mềm
 
-    public function ratingManagementRestore($id) {
+    public function ratingManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = Rating::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
             }
             return redirect()->route('rating.trash')->with('success', 'Khôi phục đánh giá thành công');
         }
         return redirect()->route('rating.trash');
     }
-
 }

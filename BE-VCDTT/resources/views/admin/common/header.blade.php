@@ -65,13 +65,19 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
                             <div class="card border-0 shadow-lg rounded-4 ">
-                                <div class="card-header ">
-                                    <h3 class="card-title">Thông báo</h3>
+                                <div class="card-header row">
+                                    <div class="col-md-6">
+                                        <h3 class="ms-auto">Thông báo</h3>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="ms-auto float-end" href="javascript: markAllAsRead()">Đánh dấu tất cả
+                                            là đã đọc</a>
+                                    </div>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
-                                    style="max-height: 27rem">
+                                    style="max-height: 27rem" id="notificationBox">
                                     @if ($user->notifications)
-                                        @foreach ($user->notifications as $notification)
+                                        @foreach ($user->notifications()->limit(10)->get() as $notification)
                                             <div class="list-group-item">
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
@@ -79,11 +85,12 @@
                                                             @if ($notification->read_at == null)
                                                                 <span class="badge bg-danger" data-bs-toggle="tooltip"
                                                                     data-bs-placement="top" data-bs-title="Chưa đọc"
-                                                                    name="notification-read"
+                                                                    name="notification-unread"
                                                                     id="notification-{{ $notification->id }}"></span>
                                                             @else
-                                                                <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top" data-bs-title="Đã đọc"
+                                                                <span class="badge bg-success"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    data-bs-title="Đã đọc"
                                                                     id="notification-{{ $notification->id }}"></span>
                                                             @endif
                                                         @endif
@@ -186,13 +193,13 @@
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
     let backendBaseUrl = "http://be-vcdtt.datn-vcdtt.test";
-    var user = <?php echo $user ; ?>;
+    var user = <?php echo $user; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1",
         authEndpoint: `${backendBaseUrl}/broadcasting/auth`,
         auth: {
             headers: {
-                "Authorization": "Bearer " 
+                "Authorization": "Bearer "
             }
         },
         encrypted: true
@@ -210,12 +217,12 @@
             <div class="list-group-item">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <span class="badge bg-danger" id="notification-` + id + `" data-bs-toggle="tooltip"
+                        <span class="badge bg-danger" name="notification-unread" id="notification-` + id + `" data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         data-bs-title="Chưa đọc"></span>
                     </div>
                     <div class="col text-truncate " style="width: 850px">
-                        <a onclick='markAsRead('` + id + `')'
+                        <a onclick="markAsRead('` + id + `')"
                         href="javascript: viewPurchaseHistoryDetail(${data.purchase_history_id});"
                             class="text-body d-block">
                             ` + purchaseMethodText + `
@@ -249,6 +256,7 @@
         `
 
         $('.notification').prepend(newNotificationHtml);
+        $('#notificationDot').remove();
         $('#notificationPing').prepend(notificationPing);
     });
 
@@ -256,20 +264,40 @@
         axios.get(`/api/purchase-history/mark-as-read/${id}`)
             .then(function(response) {
                 readNoti(id);
-                let checkNoti = document.getElementsByName('notification-read');
-                if (checkNoti.length == 0 && document.getElementById('notificationDot')) {
-                    document.getElementById('notificationDot').remove();
-                }
             })
             // .catch(function(error) {
             //     bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
             // })
-            .finally(function() {});
+            .finally(function() {
+                let checkNoti = document.getElementsByName('notification-unread');
+                if (checkNoti.length == 0 && document.getElementById('notificationDot')) {
+                    document.getElementById('notificationDot').remove();
+                }
+            });
 
     };
 
     let readNoti = function(id) {
         document.getElementById('notification-' + id).classList.remove('bg-danger');
+        document.getElementById('notification-' + id).removeAttribute('name')
         document.getElementById('notification-' + id).classList.add('bg-success');
-    }
+    };
+
+    let markAllAsRead = function() {
+        axios.get(`/api/purchase-history/mark-all-as-read`)
+            .then(function(response) {
+                document.getElementsByName('notification-unread').forEach(
+                    (element) => {
+                        element.classList.remove('bg-danger');
+                        element.classList.add('bg-success');
+                    }
+
+                );
+            })
+            .finally(function() {
+                if (document.getElementById('notificationDot')) {
+                    document.getElementById('notificationDot').remove();
+                };
+            });
+    };
 </script>
