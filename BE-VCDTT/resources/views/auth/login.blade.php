@@ -29,10 +29,14 @@
                 </div>
                 @endif
                 @if (Session::has('fail'))
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert" id="notiError">
-                    {{ Session::get('fail') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                <script>
+                    Swal.fire({
+                    icon: "error",
+                    title: "Gặp lỗi rồi!",
+                    text: "{{ session('fail') }}",
+                    footer: ''
+                  });
+                </script>
                 @endif
         </div>
 	    <div class="mb-3">

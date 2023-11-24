@@ -38,7 +38,7 @@ Chỉnh sửa đánh giá
                             <path d="M5 12l4 4"></path>
                             <path d="M5 12l4 -4"></path>
                         </svg>
-                        Back to list by tour
+                        Quay lại đánh giá theo tour
                     </a>
                     <a href="{{url('/rating')}}" class="btn btn-default d-none d-sm-inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -47,7 +47,7 @@ Chỉnh sửa đánh giá
                             <path d="M5 12l4 4"></path>
                             <path d="M5 12l4 -4"></path>
                         </svg>
-                        Back to list all
+                        Quay lại tất cả đánh giá
                     </a>
                 </div>
             </div>
@@ -88,6 +88,12 @@ Chỉnh sửa đánh giá
                         <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Gửi</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                </div>
             </div>
         </div>
     </div>

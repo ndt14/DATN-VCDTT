@@ -40,7 +40,7 @@ Thêm quản trị viên
                             <path d="M5 12l4 4"></path>
                             <path d="M5 12l4 -4"></path>
                         </svg>
-                        Back
+                        Quay lại
                     </a>
                     <a href="{{url('/user')}}" class="btn btn-default d-sm-none btn-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -214,6 +214,12 @@ Thêm quản trị viên
                         <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Submit</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                </div>
             </div>
         </div>
     </div>

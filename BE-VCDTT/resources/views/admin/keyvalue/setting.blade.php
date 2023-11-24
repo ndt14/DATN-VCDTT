@@ -53,7 +53,7 @@ Hệ thống
                             <label class="form-label">{{ $item->name }}</label>
                             <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
                             <br>
-                            <img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="200px" alt="{{ $item->value }}">
+                            <img src="{{ $item->value?$item->value:'null'}}" width="200px" alt="{{ $item->value }}">
                         </div>
                         @endif
                         @endforeach
@@ -94,7 +94,7 @@ Hệ thống
                         <div class="mb-3 row">
                             <label class="form-label">{{ $item->name }}</label>
                             <input type="file" name="{{ $item->key }}" class="form-control" value="{{ $item->value }}">
-                            <div class="row mt-1"><img src="{{ $item->value?''.Storage::url($item->value):'null'}}" width="100%" alt="{{ $item->value }}"></div>
+                            <div class="row mt-1"><img src="{{ $item->value?$item->value:'null'}}" width="100%" alt="{{ $item->value }}"></div>
                         </div>
                         @endif
                         @endforeach
@@ -104,6 +104,12 @@ Hệ thống
                         <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Lưu</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                </div>
             </div>
         </div>
     </div>

@@ -317,7 +317,7 @@ class PurchaseHistoryController extends Controller
                         $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory,$user->id));
                     }
                 }
-            } 
+            }
 
             if ($response->status() == 200) {
                 return redirect()->route('purchase_histories.edit', ['id' => $id])->with('success', 'Cập nhật hóa đơn thành công');
