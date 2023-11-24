@@ -41,7 +41,7 @@
                                 <path d="M5 12l4 4"></path>
                                 <path d="M5 12l4 -4"></path>
                             </svg>
-                            Back
+                            Quay lại
                         </a>
                         <a href="{{ url('/purchase-history') }}" class="btn btn-default d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
