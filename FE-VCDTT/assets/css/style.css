@@ -2770,7 +2770,7 @@ input[type=submit]:focus {
 }
 
 .shape-search-section .slider-shape {
-  background-image: url(assets/images/slider-pattern.png);
+  /* background-image: url(assets/images/slider-pattern.png); */
   background-size: cover;
   background-repeat: no-repeat;
   content: "";
@@ -5199,7 +5199,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 .inner-shape {
-  background-image: url(assets/images/slider-pattern.png);
+  /* background-image: url(assets/images/slider-pattern.png); */
   background-size: cover;
   background-repeat: no-repeat;
   content: "";
@@ -5220,7 +5220,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 .inner-banner-gray .inner-shape {
-  background-image: url(assets/images/banner-pattern.png);
+  /* background-image: url(assets/images/banner-pattern.png); */
 }
 
 .inner-baner-container {
@@ -7437,7 +7437,7 @@ procduct details css
 }
 
 .testimonial-page-section .testimonial-item:before {
-  background-image: url(assets/images/icon18.png);
+  /* background-image: url(assets/images/icon18.png); */
   background-repeat: no-repeat;
   background-position: 40px 14px;
   content: "";

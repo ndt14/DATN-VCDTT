@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
+import MessengerChat from "./MessengerChat";
 
 const Footer = () => {
   return (
+    <>
+          <MessengerChat/>
+
     <footer id="colophon" className="site-footer footer-primary">
        <div id="fb-root"></div>
 
@@ -148,6 +152,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

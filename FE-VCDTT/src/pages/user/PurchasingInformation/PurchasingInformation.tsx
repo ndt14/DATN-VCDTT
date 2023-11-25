@@ -350,7 +350,7 @@ const PurchasingInformation = () => {
       } else if (paymentMethod === "2") {
         setLoading(false);
         alert("Đặt tour thành công");
-        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+        const VnpayURL = `https://admin.vcdtt.online/api/vnpay-payment/${billID}`;
         window.location.href = VnpayURL;
       }
     } catch (error) {
@@ -432,7 +432,7 @@ const PurchasingInformation = () => {
     backgroundSize: "cover",
   };
   const openWindow = () => {
-    window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
+    window.open("https://vcdtt.online/privacy_policy", "_blank");
   };
   return (
     <>

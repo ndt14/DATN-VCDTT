@@ -37,6 +37,7 @@
     "react-bootstrap": "^2.9.0",
     "react-compound-slider": "^3.4.0",
     "react-dom": "^18.2.0",
+    "react-facebook": "^9.0.12",
     "react-icons": "^4.10.1",
     "react-instantsearch": "^7.2.0",
     "react-instantsearch-dom": "^6.40.4",
