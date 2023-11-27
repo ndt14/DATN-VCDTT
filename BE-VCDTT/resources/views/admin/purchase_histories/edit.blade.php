@@ -123,7 +123,7 @@
                                                     <option @if ($items['purchase_status'] == 3) selected @endif value="3">Đã
                                                         phê duyệt
                                                     </option>
-                                                @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5 || $items['purchase_status'] == 6)
+                                                @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5)
                                                     <option @if ($items['purchase_status'] == 4) selected @endif value="4">Đang
                                                         đợi phê duyệt hủy tour
                                                     </option>
@@ -131,6 +131,10 @@
                                                         phê duyệt, chưa hoàn tiền
                                                     </option>
                                                     <option @if ($items['purchase_status'] == 6) selected @endif value="6">Đã
+                                                        hủy tour thành công
+                                                    </option>
+                                                @elseif ($items['purchase_status'] == 6)
+                                                    <option @if ($items['purchase_status'] == 6) selected @endif value="6">Đã
                                                         hủy tour thành công
                                                     </option>
                                                 @endif
