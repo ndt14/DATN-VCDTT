@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Pusher\Pusher;
 use App\Models\User;
 use App\Models\Coupon;
 use App\Models\UsedCoupon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\TermAndPrivacy;
 use App\Models\PurchaseHistory;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\CouponResource;
+use Illuminate\Support\Facades\Schema;
 use App\Notifications\ComfirmPaymentAdmin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CancelNotificationAdmin;
@@ -22,12 +25,10 @@ use App\Notifications\SendMailToClientWhenPaid;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Notifications\PurchaseNotificationAdmin;
 use App\Models\Notification as NotificationModel;
-use App\Models\TermAndPrivacy;
 use App\Notifications\CancelPurchaseMailToClient;
 use App\Notifications\CancelPurchaseNotification;
 use App\Notifications\PurchaseNotificationToClient;
 use App\Notifications\RefundRemindingNotificationAdmin;
-use Illuminate\Support\Facades\Schema;
 
 
 class PurchaseHistoryController extends Controller
@@ -189,7 +190,7 @@ class PurchaseHistoryController extends Controller
         if ($purchaseHistory->save()) {
             //Gửi mail khi client cập nhật
 
-            if (!$updateAdmin){
+            if (!$updateAdmin) {
                 switch ($purchaseHistory->purchase_status) {
                     case '2':
                         if ($purchaseHistory->comfirm_click == 2) {
@@ -303,7 +304,7 @@ class PurchaseHistoryController extends Controller
         if ($request->isMethod('POST')) {
             $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
             $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/purchase-history-edit/' . $id, $data);
-            if ( isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
+            if (isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
                 $users = User::where('is_admin', 1)->get();
                 $responseData = json_decode(json_encode($response['data']['purchase_history']));
 
@@ -313,8 +314,8 @@ class PurchaseHistoryController extends Controller
                     $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
                 }
                 if ($purchaseHistory->purchase_status == 6) {
-                    foreach ($users as $user){
-                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory,$user->id));
+                    foreach ($users as $user) {
+                        $user->notify(new RefundRemindingNotificationAdmin($purchaseHistory, $user->id));
                     }
                 }
             }
@@ -348,7 +349,7 @@ class PurchaseHistoryController extends Controller
     public function purchaseHistoryMarkAllAsRead()
     {
         $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
-        foreach ($user->unreadnotifications as $notification){
+        foreach ($user->unreadnotifications as $notification) {
             $notification->markAsRead();
         }
         return response()->json(['message' => 'Đã đọc', 'status' => 200]);
@@ -410,4 +411,12 @@ class PurchaseHistoryController extends Controller
         }
         return redirect()->route('purchase_histories.trash');
     }
+
+    // public function test()
+    // {
+    //     $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3')->get();
+    //     foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
+    //         echo (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d'));
+    //     }
+    // }
 }

@@ -95,7 +95,7 @@
                                                             @endif
                                                         @endif
                                                     </div>
-                                                    <div class="col text-truncate " style="width: 850px">
+                                                    <div class="col text-truncate " style="width:850px; max-width: 850px">
                                                         <a onclick="markAsRead('{{ $notification->id }}')"
                                                             href="javascript: viewPurchaseHistoryDetail({{ $notification->data['purchase_history_id'] }});"
                                                             class="text-body d-block">

@@ -185,6 +185,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
 });
 
+// Route::get('/test', [PurchaseHistoryController::class, 'test']);
 
 
 
