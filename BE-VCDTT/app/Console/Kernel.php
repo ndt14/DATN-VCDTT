@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:auto-mail')->dailyAt('23:00');
+        $schedule->command('app:auto-mail')->dailyAt('21:19');
         $schedule->command('queue:listen')->everyMinute();
     }
 

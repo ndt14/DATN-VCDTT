@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                    Overview
-                                                                    </div> -->
+                                                                        Overview
+                                                                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -470,6 +470,12 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
                     </div>
                 </div>
             </div>

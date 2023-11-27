@@ -311,7 +311,7 @@ Danh sách đơn đặt
                                                             </svg>
                                                         </a>
                                                     @endif
-                                                    @if (auth()->user()->can('delete bill') || auth()->user()->is_admin == 1)
+                                                    {{-- @if (auth()->user()->can('delete bill') || auth()->user()->is_admin == 1)
                                                         <a class="btn btn-icon btn-outline-red"
                                                             href="javascript: removeItem({{ $item->id }})">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -329,7 +329,7 @@ Danh sách đơn đặt
                                                                 <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
                                                             </svg>
                                                         </a>
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                             </tr>
                                         @endforeach
