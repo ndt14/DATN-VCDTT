@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                Overview
-                                                                </div> -->
+                                                                    Overview
+                                                                    </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -79,7 +79,11 @@
                                 <div class="mb-3 col-4">
                                     <div class="form-label">Trạng thái thanh toán</div>
                                     <select name="payment_status" class="form-select" aria-label="Default select example"
-                                        @if ($items['payment_status'] == 2 || $items['purchase_method'] == 2) disabled @endif>
+                                        @if (
+                                            $items['payment_status'] == 2 ||
+                                                $items['purchase_method'] == 2 ||
+                                                $items['purchase_status'] == 9 ||
+                                                $items['purchase_status'] == 1) disabled @endif>
                                         @if ($items['payment_status'] == 1)
                                             <option>-----Trạng thái thanh toán-----</option>
                                         @endif
@@ -474,7 +478,7 @@
             let confirmFunction = function() {
                 if (confirm(
                         'Bạn có chắc chắn thay đổi không? Bạn sẽ KHÔNG thay đổi được nữa và người dùng sẽ nhận thông báo về thay đổi của bạn'
-                        ) == false) {
+                    ) == false) {
                     event.preventDefault()
                 }
             }
