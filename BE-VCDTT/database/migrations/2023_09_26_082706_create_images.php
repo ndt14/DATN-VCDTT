@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('url')->nullable();
             $table->bigInteger('tour_id')->nullable();
             $table->bigInteger('blog_id')->nullable();
+            $table->bigInteger('banner_id')->nullable();
             $table->timestamps();
         });
     }

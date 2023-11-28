@@ -155,6 +155,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
     Route::get('/image/image-list', [ImageController::class, 'imageList']);
+    Route::get('/image/image-show', [ImageController::class, 'imageShow']);
 
     Route::get('/image/dropzone', [ImageController::class, 'dropzone']);
     Route::post('/image-add', [ImageController::class, 'add'])->name('image.add');

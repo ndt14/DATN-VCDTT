@@ -21,7 +21,7 @@ class ImageController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         $data = Image::orderBy('created_at', 'desc')
                         ->get();
         foreach($data as $item){
@@ -81,7 +81,12 @@ class ImageController extends Controller
         $html = view('admin.tours.detail_image', compact('data'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
-
+    public function imageShow(Request $request)
+    {
+        $data = $request->query('imageValue');
+        $html = view('admin.images.show', compact('data'))->render();
+        return response()->json(['html' => $html, 'status' => 200]);
+    }
     public function dropzone(){
         $tours = Tour::select('name','id')->orderBy('created_at', 'desc')->get();
         return view('admin.images.dropzone', compact('tours'));
