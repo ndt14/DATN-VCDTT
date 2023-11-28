@@ -11,8 +11,10 @@ class PurchaseHistory extends Model
 {
     use HasFactory, Notifiable;
     use SoftDeletes;
-    protected $dates = ['deleted_at'];
     protected $table = 'purchase_histories';
+    protected $dates = ['deleted_at','tour_start_time','tour_end_time'];
+    protected $casts = ['expired_at' => 'datetime'];
+
 
     protected $fillable = [
         'user_id',

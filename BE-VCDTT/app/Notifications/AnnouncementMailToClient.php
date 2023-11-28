@@ -32,7 +32,7 @@ class AnnouncementMailToClient extends Notification implements ShouldQueue
             case '2':
                 $this->subject = "Nhắc lịch đi tour";
                 $this->line = "Chỉ còn 2 ngày nữa là đến ngày đi tour. Chúc quý khách một chuyến đi thượng lộ bình an!";
-                $this->warning = "Lưu ý, quý khách chỉ được hủy tour trước 1 ngày đi tour. Sau hôm nay, quý khách sẽ không thể hủy tour. Nếu có bất kỳ thắc mắc nào, xin vui lòng liên hệ CSKH để được tư vấn";
+                $this->warning = "Lưu ý, quý khách chỉ được hủy tour trước khi tour diễn ra 1 ngày. Sau hôm nay, quý khách sẽ không thể hủy tour. Nếu có bất kỳ thắc mắc nào, xin vui lòng liên hệ CSKH để được tư vấn";
                 break;
             case '3':
                 $this->subject = "Nhắc lịch đi tour";

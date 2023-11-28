@@ -99,11 +99,11 @@ class KeyValueController extends Controller
         if ($request->isMethod('POST')) {
             $dataInsert = $request->except('_token', 'btnSubmit');
             foreach($images as $key => $value ){
-                if($request->hasFile($key) && $request->file($key)->isValid()){
-                    $value!=''?Storage::delete('/public/'. $value ):'';
-                    $dataInsert[$key] = upLoadFile('images',$request->file($key));
-                }else{
-                    $dataInsert[$key] =  $value;
+                if ($request->hasFile($key) && $request->file($key)->isValid()) {
+                    deleteOldFile($value);
+                    $dataInsert[$key] = upLoadFile($key,$request->file($key));
+                } else {
+                    $dataInsert[$key] = $value;
                 }
             }
 
