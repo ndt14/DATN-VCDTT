@@ -42,4 +42,11 @@ class Coupon extends Model
             $coupon->save();
         });
     }
+
+    public function tour() {
+        return $this->belongsTo(Tour::class);
+    }
+    public function cate() {
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -1,6 +1,8 @@
 {
     "type": "module",
     "dependencies": {
+        "@ckeditor/ckeditor5-ckfinder": "^40.1.0",
+        "@ckeditor/ckeditor5-upload": "^40.1.0",
         "axios": "^1.5.1",
         "laravel-echo": "^1.15.3",
         "laravel-vite-plugin": "^0.8.1",

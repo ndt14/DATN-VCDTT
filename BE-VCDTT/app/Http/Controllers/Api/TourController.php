@@ -161,7 +161,7 @@ class TourController extends Controller
         if ($firstTourToCate->isNotEmpty()) {
             $cateIds = $firstTourToCate->pluck('cate_id')->toArray();
 
-            $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status', 'tours.created_at', 'tours.updated_at')
+            $query = Tour::select('tours.id', 'tours.name', 'tours.duration', 'tours.child_price', 'tours.adult_price', 'tours.sale_percentage', 'tours.start_destination', 'tours.end_destination', 'tours.tourist_count', 'tours.details', 'tours.location', 'tours.exact_location', 'tours.pathway', 'tours.main_img', 'tours.view_count', 'tours.status', 'tours.includes', 'tours.creator', 'tours.created_at', 'tours.updated_at')
                 ->join('tours_to_categories', 'tours.id', '=', 'tours_to_categories.tour_id')
                 ->where('tours.id', '<>', $id)
                 ->whereIn('tours_to_categories.cate_id', $cateIds)
@@ -194,6 +194,8 @@ class TourController extends Controller
             'main_img',
             'view_count',
             'status',
+            'includes',
+            'creator',
             'created_at',
             'updated_at'
 
@@ -374,7 +376,6 @@ class TourController extends Controller
                 return redirect()->route('tour.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
             }
         }
-
         return view('admin.tours.edit', compact('tour', 'cateIds'));
     }
 
@@ -393,4 +394,5 @@ class TourController extends Controller
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
+    
 }

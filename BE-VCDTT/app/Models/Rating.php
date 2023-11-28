@@ -20,4 +20,8 @@ class Rating extends Model
         'tour_id',
         'star'
     ];
+
+    public function tour() {
+        return $this->belongsTo(Tour::class);
+    }
 }

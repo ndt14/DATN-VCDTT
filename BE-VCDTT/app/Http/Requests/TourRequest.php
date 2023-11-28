@@ -49,6 +49,7 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
+                            'includes' => 'required'
                         ];
 
                         break;
@@ -71,6 +72,7 @@ class TourRequest extends FormRequest
                             'exact_location' => 'required',
                             'main_img' => 'required',
                             'status' => 'required',
+                            'includes' => 'required'
                         ];
 
                         break;
@@ -102,7 +104,8 @@ class TourRequest extends FormRequest
                 'main_img.required' => 'Ảnh chính của tour không được để trống',
                 'status.required' => 'Trạng thái tour không được để trống',
                 'view_count.required' => 'Số lượt xem không được để trống',
-                'pathway.required' => 'Đường dẫn không được trống'
+                'pathway.required' => 'Đường dẫn không được trống',
+                'includes.required' => 'Giá tour bao gồm không được để trống'
 
             ];
     }
