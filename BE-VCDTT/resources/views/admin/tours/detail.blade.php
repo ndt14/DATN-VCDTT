@@ -103,6 +103,14 @@
                 <div class="markdown">
                     {!! $item['details'] !!}
                 </div>
+                <h3 class="card-title mt-4">Giá bao gồm</h3>
+                <div class="markdown">
+                    {!! $item['includes'] !!}
+                </div>
+                <h3 class="card-title mt-4">Người tạo</h3>
+                <div class="markdown">
+                    {!! $item['creator'] !!}
+                </div>
             </div>
             <div class="card-footer bg-transparent mt-auto">
                 <div class="btn-list justify-content-end">

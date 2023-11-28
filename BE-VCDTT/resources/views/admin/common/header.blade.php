@@ -76,7 +76,8 @@
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable overflow-auto notification"
                                     style="max-height: 27rem" id="notificationBox">
-                                    @if ($user->notifications)
+                                    @if (auth()->user()->hasAnyDirectPermission(['access bill', 'edit bill', 'delete bill']) || auth()->user()->is_admin == 1)
+                                    @if($user->notifications)
                                         @foreach ($user->notifications()->limit(10)->get() as $notification)
                                             <div class="list-group-item">
                                                 <div class="row align-items-center">
@@ -130,6 +131,9 @@
                                                 </div>
                                             </div>
                                         @endforeach
+                                    @else
+                                    <span class="col text-truncate">Không có thông báo</span>
+                                    @endif
                                     @else
                                         <span class="col text-truncate">Không có thông báo</span>
                                     @endif

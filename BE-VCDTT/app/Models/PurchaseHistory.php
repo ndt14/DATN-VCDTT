@@ -54,4 +54,9 @@ class PurchaseHistory extends Model
         'purchase_status',
         'tour_status',
     ];
+
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class);
+    }
 }
