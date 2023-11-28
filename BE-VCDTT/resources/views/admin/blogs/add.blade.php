@@ -107,7 +107,7 @@
                             </div>
                             <div class="mb-3 col-10">
                                 <div class="form-label">Mô tả ngắn</div>
-                                <textarea name="short_desc" rows="5" type="text" class="form-control"></textarea>
+                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control"></textarea>
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('short_desc')
                                         {{ $message }}
@@ -116,7 +116,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả</div>
-                                <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="description"></textarea>
+                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description"></textarea>
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('description')
                                         {{ $message }}
@@ -145,8 +145,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Gửi</button>
+                        <div class="card-footer text-center">
+                            <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>
                         </div>
                     </form>
                 </div>
@@ -159,6 +159,36 @@
             </div>
         </div>
     </div>
+@endsection
+@section('ckeditor_5')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-1'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-2'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection
 @section('page_js')
     <script type="text/javascript">

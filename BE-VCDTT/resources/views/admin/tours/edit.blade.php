@@ -200,8 +200,8 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
-                                        <input name="pathway" type="text" class="form-control"
-                                            placeholder="Nhập lịch trình của tour" value="{{ $tour->pathway  }}">
+                                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="pathway"
+                                            placeholder="Nhập lịch trình của tour">{{ $tour->pathway  }}</textarea>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -346,6 +346,20 @@ Chỉnh sửa tour
     <script>
         ClassicEditor
             .create(document.querySelector('#editor-includes'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+      <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-schedule'), {
                 ckfinder: {
                     uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
                 }

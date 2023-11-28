@@ -74,7 +74,7 @@ Thêm mới Trang
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Nội dung</label>
-                            <textarea name="content" class="form-control ckeditor"id="" cols="30" rows="10"></textarea>
+                            <textarea name="content" class="form-control ckeditor" id="editor" cols="30" rows="10"></textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('content')
                                 {{ $message }}
@@ -117,6 +117,22 @@ Thêm mới Trang
         </div>
     </div>
 </div>
+@endsection
+@section('ckeditor_5')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection
 @section('page_js')
 @endSection
