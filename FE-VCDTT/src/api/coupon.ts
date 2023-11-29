@@ -5,7 +5,7 @@ const CouponApi = createApi({
     reducerPath: 'check-coupon',
     
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://admin.vcdtt.online/api",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
     }),
     endpoints: (builder) => ({
         checkCoupon: builder.mutation<{ message: string, status:number, coupon: Coupon }, Coupon>({

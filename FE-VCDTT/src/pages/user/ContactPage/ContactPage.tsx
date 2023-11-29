@@ -49,7 +49,7 @@ const ContactPage = () => {
 
     useEffect(() => {
       if (dataAddress) {
-        dataAddress.data.keyvalue.forEach(({ id, value }: Setting) => {
+        dataAddress.data.keyvalue.forEach(({ value }: Setting) => {
           const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
             value
           )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;

@@ -336,7 +336,7 @@ const PurchasingInformation = () => {
       } else if (paymentMethod === "2") {
         setLoading(false);
         alert("Đặt tour thành công");
-        const VnpayURL = `https://admin.vcdtt.online/api/vnpay-payment/${billID}`;
+        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
         window.location.href = VnpayURL;
       }
     } catch (error) {
