@@ -18,11 +18,16 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { useGetLogoQuery } from "../../api/setting.js";
+import { Setting } from "../../interfaces/Setting.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
   const { data: dataCate } = useGetCategoriesQuery();
+  const {data: dataLogo} = useGetLogoQuery();
+  
+  
   // console.log(dataCate?.data.categoriesParent)
 
   const [email, setEmail] = useState("");
@@ -190,22 +195,34 @@ const Header = () => {
         <div className="top-header"></div>
         <div className="bottom-header d-none d-lg-block d-sm-none">
           <div className="container d-flex justify-content-between align-items-center">
-            <div className="site-identity">
-              <h1 className="site-title">
-                <Link to="">
-                  <img
+           
+                  {dataLogo?.data.keyvalue.map(({id,value}:Setting)=>{
+                    return(
+                      <>
+                       <div className="site-identity" key={id}>
+                        <h1 className="site-title" >
+                        <Link to="" >
+                      <img
                     className="white-logo"
-                    src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src={value}
                     alt="logo"
                   />
-                  <img
+                    <img 
                     className="black-logo"
-                    src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src={value}
                     alt="logo"
                   />
                 </Link>
-              </h1>
-            </div>
+
+                </h1>
+                </div>
+                      </>
+                    )
+                  })}
+                 
+                
+            
+            
             <div className="main-navigation d-none d-lg-block">
               <nav id="navigation" className="navigation">
                 <ul>
