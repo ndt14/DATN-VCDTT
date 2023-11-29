@@ -76,7 +76,7 @@ Thêm mới câu hỏi & trả lời
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Câu trả lời</label>
-                            <textarea name="answer" class="form-control ckeditor"id="" cols="30" rows="10"></textarea>
+                            <textarea name="answer" class="form-control ckeditor" id="editor-1" cols="30" rows="10"></textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('answer')
                                 {{ $message }}
@@ -99,6 +99,22 @@ Thêm mới câu hỏi & trả lời
         </div>
     </div>
 </div>
+@endsection
+@section('ckeditor_5')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-1'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection
 @section('page_js')
 {{-- <script type="text/javascript">

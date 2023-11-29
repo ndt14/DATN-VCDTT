@@ -29,17 +29,28 @@ class Tour extends Model
         'pathway',
         'main_img',
         'status',
-        'view_count'
+        'view_count',
+        'includes',
+        'creator'
     ];
     protected $categoriesArray;
 
     public function categories() {
-        
+        return $this->belongsToMany(Category::class,'tours_to_categories','tour_id','cate_id');
+    }
+
+    public function coupons() {
+        return $this->hasMany(Coupon::class);
     }
 
     public function setCategoriesArray(array $categoriesArray)
     {
         $this->categoriesArray = $categoriesArray;
+    }
+
+    public function purchase()
+    {
+        return $this->hasMany(PurchaseHistory::class);
     }
 
     public function toSearchableArray()

@@ -4,29 +4,116 @@
 </div>
 <div class="modal-body row row-deck row-cards">
     <div class="col-sm-12 col-md-12" style="height: 60rem;">
-        <div class="card-body" >
-            <div class="row">
-                <div class="col-9">
-                    <label class="form-label">Tên người dùng</label>
-                    <h3>{{ $item['name'] }}</h3>
+        <div class="card-body card-body-scrollable">
+        <div class="row">
+                <div class="col-6 mb-3">
+                    <div class="form-label">Trạng thái thanh toán</div>
+                    <div class="custom-controls-stacked">
+                        @switch ($item['payment_status'])
+                            @case(1)
+                                <span class="badge bg-red-lt">Chưa thanh toán</span>
+                            @break
+
+                            @case(2)
+                                <span class="badge bg-green-lt">Đã thanh toán</span>
+                            @break
+                        @endswitch
+                    </div>
                 </div>
-                <div class="col-3">
-                    <label class="form-label">ID người dùng</label>
-                    {{ $item['user_id'] }}
+                <div class="col-4 mb-3">
+                    <div class="form-label">Trạng thái dơn hàng</div>
+                    @switch($item['purchase_status'])
+                        @case(1)
+                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
+                        @break
+
+                        @case(2)
+                            <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
+                        @break
+
+                        @case(3)
+                            <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
+                        @break
+
+                        @case(4)
+                            <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
+                        @break
+
+                        @case(5)
+                            <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
+                                tiền</span>
+                        @break
+
+                        @case(6)
+                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item['payment_status'] == 1)
+                                    (đã hoàn tiền)
+                                @endif </span>
+                        @break
+
+                        @case(7)
+                            <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
+                        @break
+
+                        @case(8)
+                            <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
+                        @break
+
+                        @default
+                        @break
+
+                    @endswitch
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <div class="form-label">Trạng thái tour</div>
+                    <div class="custom-controls-stacked">
+                        @switch($item['tour_status'])
+                            @case(1)
+                                <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
+                            @break
+
+                            @case(2)
+                                <span class="badge bg-green-lt">Đang diễn ra</span>
+                            @break
+
+                            @case(3)
+                                <span class="badge bg-light-lt">Đã kết thúc</span>
+                            @break
+
+                            @case(4)
+                                <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi tour</span>
+                            @break
+
+                            @default
+                            @break
+                        @endswitch
+                    </div>
+                </div>
+                <div class="col-4 mb-3">
+                    <a class="button btn btn-outline-indigo" href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>
                 </div>
             </div>
             <hr class="my-3">
             <div class="row">
-                <div class="col-4">
+                <div class="col-auto">
+                    <label class="form-label">Tên người dùng</label>
+                    <h3>{{ $item['name'] }}</h3>
+                </div>
+                <div class="col-auto px-3">
+                    <label class="form-label">ID người dùng</label>
+                    {{ $item['user_id'] }}
+                </div>
+                <div class="col-auto px-3">
                     <label class="form-label">Email</label>
                     {{ $item['email'] }}
                 </div>
-                <div class="col-4">
+                <div class="col-auto px-3">
                     <label class="form-label">Số điện thoại</label>
                     {{ $item['phone_number'] }}
 
                 </div>
-                <div class="col-4">
+                <div class="col-auto px-3">
                     <div class="form-label">Giới tính</div>
                     @switch ($item['gender'])
                         @case(0)
@@ -146,92 +233,6 @@
                     <div class="markdown">
                         {!! $item['payment_privacy']  !!}
                     </div>
-                </div>
-            </div>
-            <hr class="my-3">
-            <div class="row">
-                <div class="col-6 mb-3">
-                    <div class="form-label">Trạng thái thanh toán</div>
-                    <div class="custom-controls-stacked">
-                        @switch ($item['payment_status'])
-                            @case(1)
-                                <span class="badge bg-red-lt">Chưa thanh toán</span>
-                            @break
-
-                            @case(2)
-                                <span class="badge bg-green-lt">Đã thanh toán</span>
-                            @break
-                        @endswitch
-                    </div>
-                </div>
-
-                <div class="col-4 mb-3">
-                    <div class="form-label">Trạng thái dơn hàng</div>
-                    @switch($item['purchase_status'])
-                        @case(1)
-                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
-                        @break
-
-                        @case(2)
-                            <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
-                        @break
-
-                        @case(3)
-                            <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
-                        @break
-
-                        @case(4)
-                            <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
-                        @break
-
-                        @case(5)
-                            <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
-                                tiền</span>
-                        @break
-
-                        @case(6)
-                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item['payment_status'] == 1)
-                                    (đã hoàn tiền)
-                                @endif </span>
-                        @break
-
-                        @case(7)
-                            <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
-                        @break
-
-                        @case(8)
-                            <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
-                        @break
-
-                        @default
-                        @break
-
-                    @endswitch
-                </div>
-            </div>
-            <div class="col-4 mb-3">
-                <div class="form-label">Trạng thái tour</div>
-                <div class="custom-controls-stacked">
-                    @switch($item['tour_status'])
-                        @case(1)
-                            <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
-                        @break
-
-                        @case(2)
-                            <span class="badge bg-green-lt">Đang diễn ra</span>
-                        @break
-
-                        @case(3)
-                            <span class="badge bg-light-lt">Đã kết thúc</span>
-                        @break
-
-                        @case(4)
-                            <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi tour</span>
-                        @break
-
-                        @default
-                        @break
-                    @endswitch
                 </div>
             </div>
             <a class="button btn btn-indigo mt-5 " href=" {{ route('purchase_histories.edit', ['id' => $item['id']]) }}">Chỉnh sửa</a>

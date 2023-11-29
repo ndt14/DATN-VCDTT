@@ -8,7 +8,7 @@
 <script src="{{ asset('admin/assets/js/vendors/axios.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/vendors/fancybox.umd.js') }}"></script>
 <!-- Plugins -->
-<script src="{{ asset('ckedit_js/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+{{-- <script src="{{ asset('ckedit_js/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script> --}}
 <!-- Libs JS -->
 <script src="{{ asset('admin/assets/libs/apexcharts/dist/apexcharts.min.js') }}" defer></script>
 <script src="{{ asset('admin/assets/libs/jsvectormap/dist/js/jsvectormap.min.js') }}" defer></script>

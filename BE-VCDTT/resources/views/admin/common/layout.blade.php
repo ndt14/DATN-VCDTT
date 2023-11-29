@@ -4,8 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="{{ asset('ckeditor-5/ckeditor.js') }}"></script>
+    <script src="{{ asset('ckfinder/ckfinder.js') }}"></script>
     <title>@yield('meta_title') - VCDTT quản trị</title>
 
     @yield('meta_tags')
@@ -36,6 +39,7 @@
     @include('admin.common.javascript')
     @yield('page_js')
     @yield('select2_js')
+    @yield('ckeditor_5')
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 </html>

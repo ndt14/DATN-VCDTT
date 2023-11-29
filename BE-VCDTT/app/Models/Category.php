@@ -20,6 +20,15 @@ class Category extends Model
         'parent_id',
     ];
 
+    public function tours() {
+        return $this->belongsToMany(Tour::class, 'tours_to_categories', 'cate_id', 'tour_id');
+    }
+
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
     public function getCategoriesParent($keyword = '', $sort = ''){
         $query = $this->select( 'id', 'name', 'parent_id', 'created_at', 'updated_at')
         ->where('name', 'LIKE', '%' . $keyword . '%')

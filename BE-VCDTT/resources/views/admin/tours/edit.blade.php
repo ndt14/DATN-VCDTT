@@ -116,7 +116,7 @@ Chỉnh sửa tour
                                     </div>
                                     <div class="mb-3 col-6">
                                         <label class="form-label">Khoảng thời gian</label>
-                                        <input type="text" name="duration" class="form-control"
+                                        <input type="number" name="duration" class="form-control"
                                             placeholder="Nhập khoảng thời gian diễn ra tour"
                                             value="{{ $tour->duration  }}">
                                         <span class="text-danger d-flex justify-content-start">
@@ -129,7 +129,7 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá người lớn</div>
-                                        <input name="adult_price" type="text" placeholder="Nhập giá người lớn"
+                                        <input name="adult_price" type="number" placeholder="Nhập giá người lớn"
                                             class="form-control" value="{{ $tour->adult_price  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('adult_price')
@@ -139,7 +139,7 @@ Chỉnh sửa tour
                                     </div>
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Giá trẻ nhỏ</div>
-                                        <input name="child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
+                                        <input name="child_price" type="number" placeholder="Nhập giá cho trẻ nhỏ"
                                             class="form-control" value="{{ $tour->child_price  }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('child_price')
@@ -200,8 +200,8 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
-                                        <input name="pathway" type="text" class="form-control"
-                                            placeholder="Nhập lịch trình của tour" value="{{ $tour->pathway  }}">
+                                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="pathway"
+                                            placeholder="Nhập lịch trình của tour">{{ $tour->pathway  }}</textarea>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
                                                 {{ $message }}
@@ -216,7 +216,7 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Phần trăm giảm giá</div>
-                                        <input name="sale_percentage" type="text" class="form-control"
+                                        <input name="sale_percentage" type="number" class="form-control"
                                             placeholder="Nhập phần trăm giảm giá của tour"
                                             value="{{ $tour->sale_percentage  }}">
                                         <span class="text-danger d-flex justify-content-start">
@@ -228,7 +228,7 @@ Chỉnh sửa tour
 
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Số lượng hành khách</div>
-                                        <input name="tourist_count" type="text" class="form-control"
+                                        <input name="tourist_count" type="number" class="form-control"
                                             placeholder="Nhập tỉ lệ bán hàng của tour"
                                             value="{{ $tour->tourist_count  }}">
                                         <span class="text-danger d-flex justify-content-start">
@@ -238,42 +238,60 @@ Chỉnh sửa tour
                                         </span>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-label">Nội dung mô tả</div>
-                                    <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
-                                        placeholder="Nhập nội dung mô tả">{{ $tour->details  }}</textarea>
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('details')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-label">Trạng thái</div>
-                                    <div class="custom-controls-stacked">
-                                        <label class="custom-control custom-radio custom-control-inline me-2">
-                                            <input type="radio" class="custom-control-input"
-                                                @if ($tour->status  == '1') checked @endif name="status"
-                                                checked="" value="1">
-                                            <span class="custom-control-label">Kích hoạt</span>
-                                        </label>
-                                        <label class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" class="custom-control-input"
-                                                @if ($tour->status  == '0') checked @endif name="status"
-                                                value="0">
-                                            <span class="custom-control-label">Vô hiệu hóa</span>
-                                        </label>
-
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <div class="form-label">Nội dung mô tả</div>
+                                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
+                                            placeholder="Nhập nội dung mô tả">{{ $tour->details  }}</textarea>
                                         <span class="text-danger d-flex justify-content-start">
-                                            @error('status')
+                                            @error('details')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <div class="form-label">Giá bao gồm</div>
+                                        <textarea id="editor-includes" rows="6" class="form-control" name="includes" placeholder="Giá tour bao gồm">{{ $tour->includes  }}</textarea>
+                                        <span class="text-danger d-flex justify-content-start">
+                                            @error('includes')
                                                 {{ $message }}
                                             @enderror
                                         </span>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <div class="form-label">Trạng thái</div>
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-radio custom-control-inline me-2">
+                                                <input type="radio" class="custom-control-input"
+                                                    @if ($tour->status  == '1') checked @endif name="status"
+                                                    checked="" value="1">
+                                                <span class="custom-control-label">Kích hoạt</span>
+                                            </label>
+                                            <label class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" class="custom-control-input"
+                                                    @if ($tour->status  == '0') checked @endif name="status"
+                                                    value="0">
+                                                <span class="custom-control-label">Vô hiệu hóa</span>
+                                            </label>
+    
+                                            <span class="text-danger d-flex justify-content-start">
+                                                @error('status')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <div class="form-label">Người thêm</div>
+                                        <input name="creator" type="text" value="{{ $tour->creator ?? Auth::user()->name }}"
+                                            placeholder="" class="form-control" style="background-color: #80808061;" readonly>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer text-center">
-                                <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Submit</button>
+                                <button id="btnSubmitEdit" type="submit" class="btn btn-indigo">Cập nhật</button>
                             </div>
                         </form>
                     </div>
@@ -309,6 +327,50 @@ Chỉnh sửa tour
 @endsection
 @section('page_css')
 <link href="{{ asset('admin/assets/libs/dropzone/dist/dropzone.css')}}" rel="stylesheet"/>
+@endsection
+@section('ckeditor_5')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-includes'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+      <script>
+        ClassicEditor
+            .create(document.querySelector('#editor-schedule'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection
 @section('page_js')
 <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
