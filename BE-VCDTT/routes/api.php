@@ -1,27 +1,28 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Api\FAQController;
+
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\Auth\ResetPasswordController;
-use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
-use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\AllocationController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KeyValueController;
+use App\Http\Controllers\Api\WishListController;
+use App\Http\Controllers\Api\AllocationController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\TermAndPrivacyController;
 use App\Http\Controllers\Api\TourToCategoryController;
-use App\Http\Controllers\Api\WishListController;
-use App\Models\Coupon;
+use App\Http\Controllers\Api\PurchaseHistoryController;
+use App\Http\Controllers\Api\Auth\GoogleLoginController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,3 +150,7 @@ Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'd
 Route::get('/keyvalue',[KeyValueController::class,'index']);
 Route::get('/keyvalue/{key}',[KeyValueController::class,'show']);
 Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);
+
+//GG login
+Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback',[GoogleLoginController::class, 'handleGoogleCallback']);
