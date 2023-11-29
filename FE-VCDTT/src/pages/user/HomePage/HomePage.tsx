@@ -208,15 +208,15 @@ const HomePage = () => {
                                     />
                                   </Link>
                                 </figure>
-                                <div className="package-price">
+                                <div className="package-price badge">
                                   <h6 className="">
                                     <span>
+                                      {" "}
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
                                       }).format(adult_price)}{" "}
-                                      / người
-                                    </span>{" "}
+                                    </span>
                                   </h6>
                                 </div>
                                 <div className="package-content-wrap">
@@ -285,15 +285,15 @@ const HomePage = () => {
                                     />
                                   </Link>
                                 </figure>
-                                <div className="package-price">
+                                <div className="package-price badge">
                                   <h6 className="">
                                     <span>
+                                      {" "}
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
                                       }).format(adult_price)}{" "}
-                                      / người
-                                    </span>{" "}
+                                    </span>
                                   </h6>
                                 </div>
                                 <div className="package-content-wrap">
@@ -400,14 +400,13 @@ const HomePage = () => {
                                     />
                                   </Link>
                                 </figure>
-                                <div className="package-price">
+                                <div className="package-price badge">
                                   <h6 className="">
                                     <span>
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
                                       }).format(adult_price)}{" "}
-                                      / người
                                     </span>{" "}
                                   </h6>
                                 </div>
@@ -477,14 +476,13 @@ const HomePage = () => {
                                     />
                                   </Link>
                                 </figure>
-                                <div className="package-price">
+                                <div className="package-price badge">
                                   <h6 className="">
                                     <span>
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
                                       }).format(adult_price)}{" "}
-                                      / người
                                     </span>{" "}
                                   </h6>
                                 </div>
@@ -591,14 +589,13 @@ const HomePage = () => {
                                   />
                                 </Link>
                               </figure>
-                              <div className="package-price">
+                              <div className="package-price badge">
                                 <h6 className="">
                                   <span>
                                     {new Intl.NumberFormat("vi-VN", {
                                       style: "currency",
                                       currency: "VND",
                                     }).format(adult_price)}{" "}
-                                    / người
                                   </span>{" "}
                                 </h6>
                               </div>
@@ -662,14 +659,13 @@ const HomePage = () => {
                                   />
                                 </Link>
                               </figure>
-                              <div className="package-price">
+                              <div className="package-price badge">
                                 <h6 className="">
                                   <span>
                                     {new Intl.NumberFormat("vi-VN", {
                                       style: "currency",
                                       currency: "VND",
                                     }).format(adult_price)}{" "}
-                                    / người
                                   </span>{" "}
                                 </h6>
                               </div>

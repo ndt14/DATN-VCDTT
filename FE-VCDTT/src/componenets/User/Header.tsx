@@ -89,6 +89,32 @@ const Header = () => {
   //   };
   // }
 
+  let logoutTimer: ReturnType<typeof setTimeout>;
+  function startLogoutTimer() {
+    const logoutTime = 900000;
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+      timeOutSignOut();
+    }, logoutTime);
+  }
+
+  function clearLogoutTimer() {
+    clearTimeout(logoutTimer);
+  }
+
+  // const LogoutOnUnload = () => {
+  //   useEffect(() => {
+  //     const handleUnload = () => {
+  //       handleSignOut();
+  //     };
+  //     window.addEventListener("beforeunload", handleUnload);
+  //     return () => {
+  //       window.removeEventListener("beforeunload", handleUnload);
+  //     };
+  //   }, []);
+  //   return null;
+  // };
+
   const handleSignIn = async () => {
     try {
       const response = await login({
@@ -104,9 +130,10 @@ const Header = () => {
           setIsLoggedIn(true);
           setShowSignIn(false);
           localStorage.setItem("user", JSON.stringify(responseData.user));
-          localStorage.setItem("accessToken", responseData.accessToken);
+          localStorage.setItem("token", responseData.token);
           localStorage.removeItem("tempUser");
           alert("Đăng nhập thành công!");
+          startLogoutTimer();
           navigate("/");
         } else {
           alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
@@ -123,10 +150,22 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
+    clearLogoutTimer();
     alert("Đăng xuất thành công");
     setIsLoggedIn(false);
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("billIdSuccess");
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const timeOutSignOut = () => {
+    clearLogoutTimer();
+    alert("Hết thời hạn đăng nhập. Vui lòng đăng nhập lại");
+    setIsLoggedIn(false);
+    localStorage.removeItem("user");
+    localStorage.removeItem("billIdSuccess");
+    localStorage.removeItem("token");
     navigate("/");
   };
   const handleRegister = async () => {

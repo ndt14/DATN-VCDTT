@@ -8,14 +8,14 @@ const AuthApi = createApi({
         baseUrl: "https://admin.vcdtt.online/api",
     }),
     endpoints: (builder) => ({
-        register: builder.mutation<{ message: string, accessToken: string, user: User }, AuthSignup>({
+        register: builder.mutation<{ message: string, token: string, user: User }, AuthSignup>({
             query: (credentials) => ({
                 url: '/register',
                 method: 'POST',
                 body: credentials,
             }),
         }),
-        login: builder.mutation<{ message: string, accessToken: string, user: User }, AuthSignin>({
+        login: builder.mutation<{ message: string, token: string, user: User }, AuthSignin>({
             query: (credentials) => ({
                 url: '/login',
                 method: 'POST',

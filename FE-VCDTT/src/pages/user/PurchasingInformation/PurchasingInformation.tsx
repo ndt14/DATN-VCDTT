@@ -10,6 +10,7 @@ import { ChangeEvent } from "react";
 
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
+import { useGetUserByIdQuery } from "../../../api/user";
 
 import { Spin } from "antd";
 import Button from "react-bootstrap/Button";
@@ -22,7 +23,7 @@ const PurchasingInformation = () => {
   // dữ liệu lừ localStorage
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = userData?.id;
-  // console.log(tourId);
+
   //dữ liệu từ tourDetail
   const location = useLocation();
   const {
@@ -118,44 +119,18 @@ const PurchasingInformation = () => {
   const [checkCoupon] = useCheckCouponMutation();
   const [addBill] = useAddBillMutation();
 
-  // console.log(userId);
-
-  // const { data: userData } = useGetUserByIdQuery(userId || "");
-  // const {
-  //   name: userName,
-  //   email: userEmail,
-  //   phone_number: phoneNumber,
-  //   address: userAddress,
-  //   gender: userGender,
-  // } = userData?.data?.user ?? {};
-  // console.log(userData);
-  const userName = userData?.name;
-  const userEmail = userData?.email;
-  const phoneNumber = userData?.phone_number;
-  const userAddress = userData?.address;
-  const userGender = userData?.gender;
+  const { data: userAPIData } = useGetUserByIdQuery(userId || "");
+  console.log(userAPIData?.data.user.name);
+  const userName = userAPIData?.data.user.name;
+  const userEmail = userAPIData?.data.user.email;
+  const phoneNumber = userAPIData?.data.user.phone_number;
+  const userAddress = userAPIData?.data.user.address;
+  const userGender = userAPIData?.data.user.gender;
   const userLogIn = localStorage.getItem("isLoggedIn");
-
-  // Xử lý xác nhận thông tin form
-  // const [formData, setFormData] = useState({
-  //   user_info: "",
-  //   email: "",
-  //   phone_number: "",
-  //   message: "",
-  // });
-  // const handleChange = (
-  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevFormData) => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-  // };
 
   const formik = useFormik<FormValues>({
     initialValues: {
-      name: userName ? userName : "",
+      name: userName || "",
       email: userEmail ? userEmail : "",
       phone_number: phoneNumber ? phoneNumber : "",
       message: "",
@@ -176,13 +151,25 @@ const PurchasingInformation = () => {
     },
     validateOnMount: true,
   });
+  useEffect(() => {
+    if (userAPIData && userAPIData.data.user.name) {
+      formik.setValues((prevValues) => ({
+        ...prevValues,
+        name: userAPIData.data.user.name,
+        phone_number: userAPIData.data.user.phone_number,
+        address: userAPIData.data.user.address,
+        email: userAPIData.data.user.email,
+        honorific: userAPIData.data.user.gender,
+      }));
+    }
+  }, [userAPIData]);
   const isSubmitDisabled = Object.keys(formik.errors).length > 0;
   // Coupon
   const [couponData, setCouponData] = useState<{
     percentage: number | null;
     fixed: number | null;
     finalPrice: number;
-    couponName: string | null;
+    couponName: string;
     couponCode: string;
   }>({
     percentage: null,
@@ -240,7 +227,7 @@ const PurchasingInformation = () => {
             percentage: discountPercent ? discountPercent : null,
             fixed: discountFixed ? discountFixed : null,
             finalPrice: couponData.finalPrice,
-            couponName: coupon_name !== undefined ? coupon_name : null,
+            couponName: coupon_name !== undefined ? coupon_name : "",
             couponCode: formCoupon.coupon_code,
           });
         }
@@ -309,9 +296,8 @@ const PurchasingInformation = () => {
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,
       gender: formik.values.honorific.toString(),
-      coupon_name:
-        couponData.couponName !== null ? couponData.couponName : undefined,
-      coupon_code: couponData.couponCode,
+      coupon_name: couponData.couponName !== null ? couponData.couponName : "",
+      coupon_code: couponData.couponCode ? couponData.couponCode : "none",
       coupon_percentage:
         couponData.percentage && couponData.percentage > 0
           ? couponData.percentage
@@ -615,8 +601,7 @@ const PurchasingInformation = () => {
                         <p>{formattedTourPrice}</p>
                         {formattedFinalPrice !== formattedResultPrice ? (
                           <div>
-                            {couponData.percentage != null &&
-                            couponData.fixed == null ? (
+                            {couponData.percentage != null ? (
                               <div>
                                 <p>Giảm {couponData.percentage}%</p>
                               </div>
@@ -952,7 +937,7 @@ const PurchasingInformation = () => {
                             <input
                               type="text"
                               name="created_at"
-                              value={formattedResultPrice}
+                              value={formattedFinalPrice}
                               disabled
                             />
                           </div>
