@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const HeaderAdmin = (props: Props) => {
+const HeaderAdmin = () => {
   return (
     <>
     <div className="navbar-custom">

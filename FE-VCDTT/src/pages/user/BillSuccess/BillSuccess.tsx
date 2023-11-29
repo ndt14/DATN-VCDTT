@@ -1,13 +1,8 @@
-import React, { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useGetBillByIdQuery, useUpdateBillMutation } from "../../../api/bill";
 import { useState, useEffect } from "react";
 import { Bill } from "../../../interfaces/Bill";
-import { MouseEventHandler } from "react";
 import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 const BillSuccess = () => {
   const url = new URL(window.location.href);
@@ -15,10 +10,10 @@ const BillSuccess = () => {
   const transactionStatus = searchParams.get("vnp_TransactionStatus");
   const transactionId = searchParams.get("vnp_TransactionNo");
   console.log(transactionId);
-  const billId = JSON.parse(localStorage.getItem("billIdSuccess"));
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn"));
-  const tempUserData = JSON.parse(localStorage.getItem("tempUser"));
+  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "");
+  const userData = JSON.parse(localStorage.getItem("user") || "");
+  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "");
+  const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "");
   const userName = loginStatus == true ? userData.name : tempUserData.name;
   // const userAddress = loginStatus == true? userData.address: tempUserData.address
   const userEmail = loginStatus == true ? userData.email : tempUserData.email;
@@ -65,6 +60,7 @@ const BillSuccess = () => {
             payment_status: 2,
             purchase_status: 2,
             comfirm_click: 2,
+            data: undefined,
           };
           await updateBill(updatedBillData);
         } else {
@@ -72,6 +68,7 @@ const BillSuccess = () => {
             id: billId,
             transaction_id: transactionId !== null ? +transactionId : undefined,
             payment_status: 1,
+            data: undefined,
           };
           await updateBill(updatedBillData);
         }
@@ -83,7 +80,6 @@ const BillSuccess = () => {
     updateBillAfterLoad();
   }, []);
 
-  const navigate = useNavigate();
   const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrintPDF = () => {

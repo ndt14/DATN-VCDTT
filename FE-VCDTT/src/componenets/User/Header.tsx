@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import "../../../assets/js/modal.js";
+// import "../../../assets/js/modal.js";
+
 // import { Modal, Form, Input, Checkbox, Button } from "antd";
 import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { BsGoogle, BsFacebook } from "react-icons/bs";
+import { BsGoogle } from "react-icons/bs";
 import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
@@ -30,13 +31,8 @@ const Header = () => {
   
   // console.log(dataCate?.data.categoriesParent)
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerPhone, setRegisterPhone] = useState("");
-  const [registerName, setRegisterName] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [registerPassword] = useState("");
+  const [confirmPassword] = useState("");
 
   // Thêm các trường thông tin cần thiết khác nếu cần
 
@@ -87,27 +83,69 @@ const Header = () => {
   };
 
   const navigate = useNavigate();
-  const handleSignIn = async () => {
-    // event.preventDefault();
-    try {
-      const { data } = await login({
-        email: loginFormik.values.email, // Access email value from Formik
-        password: loginFormik.values.password, // Access password value from Formik
-      });
-      console.log(data);
 
-      if (data && data.user) {
-        // Login successful
-        setIsLoggedIn(true);
-        setShowSignIn(false);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("accessToken", data.token);
-        localStorage.removeItem("tempUser");
-        alert("Đăng nhập thành công!");
-        navigate("/");
+  // interface LoginResponse {
+  //   data: {
+  //     email: string;
+  //     password: string;
+  //     token: string;
+  //     // Other properties if necessary...
+  //   };
+  // }
+
+  let logoutTimer: ReturnType<typeof setTimeout>;
+  function startLogoutTimer() {
+    const logoutTime = 900000;
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+      timeOutSignOut();
+    }, logoutTime);
+  }
+
+  function clearLogoutTimer() {
+    clearTimeout(logoutTimer);
+  }
+
+  // const LogoutOnUnload = () => {
+  //   useEffect(() => {
+  //     const handleUnload = () => {
+  //       handleSignOut();
+  //     };
+  //     window.addEventListener("beforeunload", handleUnload);
+  //     return () => {
+  //       window.removeEventListener("beforeunload", handleUnload);
+  //     };
+  //   }, []);
+  //   return null;
+  // };
+
+  const handleSignIn = async () => {
+    try {
+      const response = await login({
+        email: loginFormik.values.email,
+        password: loginFormik.values.password,
+      });
+
+      // Checking if 'data' exists in the response
+      if ("data" in response) {
+        const responseData = response.data; // narrowing down the response to 'data' object
+
+        if (responseData.user) {
+          setIsLoggedIn(true);
+          setShowSignIn(false);
+          localStorage.setItem("user", JSON.stringify(responseData.user));
+          localStorage.setItem("token", responseData.token);
+          localStorage.removeItem("tempUser");
+          alert("Đăng nhập thành công!");
+          startLogoutTimer();
+          navigate("/");
+        } else {
+          alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+        }
       } else {
-        // Invalid credentials or other login error
-        alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+        // Handling the case where 'data' doesn't exist in the response
+        console.error("Error in API response:", response.error);
+        alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
       }
     } catch (error) {
       console.error("Lỗi đăng nhập: ", error);
@@ -116,10 +154,22 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
+    clearLogoutTimer();
     alert("Đăng xuất thành công");
     setIsLoggedIn(false);
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("billIdSuccess");
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const timeOutSignOut = () => {
+    clearLogoutTimer();
+    alert("Hết thời hạn đăng nhập. Vui lòng đăng nhập lại");
+    setIsLoggedIn(false);
+    localStorage.removeItem("user");
+    localStorage.removeItem("billIdSuccess");
+    localStorage.removeItem("token");
     navigate("/");
   };
   const handleRegister = async () => {
@@ -131,32 +181,37 @@ const Header = () => {
       phone_number: registrationFormik.values.phone_number,
       c_password: registrationFormik.values.c_password,
     };
+
     if (registerPassword !== confirmPassword) {
       alert("Mật khẩu và xác nhận mật khẩu không khớp!");
       return;
     }
-    // console.log(variables);
-    register(variables)
-      .then((response) => {
-        // Handle the response here
-        if (response && response?.data.user) {
+
+    try {
+      const response = await register(variables);
+
+      // Type guard to differentiate between success and error responses
+      if ("data" in response) {
+        const userData = response.data.user;
+
+        if (userData) {
           setIsLoggedIn(true);
           setShowSignIn(false);
-
-          const userName = response?.data.user;
-          localStorage.setItem("user", JSON.stringify(userName));
-          // localStorage.setItem("accessToken", response.token);
-          alert("đăng ký thành công");
-          // console.log(userName);
+          localStorage.setItem("user", JSON.stringify(userData));
+          alert("Đăng ký thành công");
         } else {
-          alert("đăng ký thất bại");
+          alert("Đăng ký thất bại");
         }
-      })
-      .catch((error) => {
-        // Handle any errors here
-        console.error(error);
-      });
+      } else {
+        // Handle error response
+        console.error("Error in API response:");
+      }
+    } catch (error) {
+      // Handle any errors here
+      console.error(error);
+    }
   };
+
   //validate
   const loginFormik = useFormik({
     initialValues: {
@@ -178,14 +233,20 @@ const Header = () => {
     onSubmit: handleRegister, // Your handleRegister function
   });
 
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const preParseUserData = localStorage.getItem("user");
+  let userData: { id: string; name: string; is_admin: number } | null = null;
+  if (typeof preParseUserData === "string") {
+    userData = JSON.parse(preParseUserData);
+  }
   console.log(userData);
 
   const userName = userData?.name;
+  console.log(userName);
+
   const is_admin = userData?.is_admin;
 
   const openWindow = () => {
-    window.open("http://be-vcdtt.datn-vcdtt.test/", "_blank");
+    window.open("https://admin.vcdtt.online", "_blank");
   };
 
   return (
@@ -287,9 +348,7 @@ const Header = () => {
                               </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                                  <Link onClick={openWindow}>
-                                    Đăng nhập admin
-                                  </Link>
+                                  <a onClick={openWindow}>Đăng nhập admin</a>
                                 </li>
                               ) : null}
 

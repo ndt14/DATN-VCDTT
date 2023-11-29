@@ -8,14 +8,14 @@ const CategoryApi = createApi({
     reducerPath: "category",
     tagTypes: ['Category'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "https://admin.vcdtt.online/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
         }
     }),
     endpoints: (builder) => ({
-        getCategories: builder.query<Category[], void>({
+        getCategories: builder.query<Category, void>({
             query: () => `/category`,
             providesTags: ['Category']
         }),

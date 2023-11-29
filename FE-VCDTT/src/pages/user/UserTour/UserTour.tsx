@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -7,17 +6,19 @@ import {
 } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
-import { Checkbox, Button, Popconfirm } from "antd";
+import { Button, Popconfirm } from "antd";
 import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import Modal from "react-bootstrap/Modal";
+import { ChangeEvent, MouseEvent } from "react";
+// import { CheckboxChangeEvent } from "antd";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId | "");
+  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
   const [updateBill] = useUpdateBillMutation();
 
@@ -50,12 +51,8 @@ const UserTour = () => {
   ) || []) as Bill[];
   //end phân trang
 
-  const formatNumber = (number: number) => {
-    return Math.floor(number).toString(); // or parseInt(number.toString(), 10).toString()
-  };
-
   const goToPayment = (id: number) => {
-    const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${id}`;
+    const VnpayURL = `http:admin.vcdtt.online/api/vnpay-payment/${id}`;
     window.location.href = VnpayURL;
   };
 
@@ -76,32 +73,42 @@ const UserTour = () => {
   // };
 
   const [show, setShow] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const handleShowQR = () => setShowQR(true);
+  const handleCloseQR = () => setShowQR(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
-  const openWindow = () => {
-    window.open("http://datn-vcdtt.test:5173/privacy_policy", "_blank");
+  const openPolicy = (id: number) => {
+    window.open(`/user/policy/${id}`, "_blank");
   };
   //
-  const cancelTour = async (id: number) => {
-    const data = {
-      purchase_status: 6,
-      payment_status: 1,
-      id: id,
-    };
+  // const cancelTour = async (id: number) => {
+  //   const data:any = {
+  //     purchase_status: 6,
+  //     payment_status: 1,
+  //     id: id,
+  //   };
 
-    await updateBill(data).then(() => {
-      alert("Hủy tour thành công");
-    });
-  };
+  //   await updateBill(data).then(() => {
+  //     alert("Hủy tour thành công");
+  //   });
+  // };
+  // interface PurchaseData {
+  //   purchase_status: number;
+  //   payment_status: number;
+  //   comfirm_click: number;
+  //   id: number;
+  // }
 
   const confirmPayment = async (id: number) => {
-    const data = {
+    const data: Bill = {
       purchase_status: 2,
       payment_status: 2,
       comfirm_click: 2,
       id: id,
+      data: undefined,
     };
 
     await updateBill(data).then(() => {
@@ -112,10 +119,11 @@ const UserTour = () => {
   };
 
   const cancelTourRefund = async (id: number) => {
-    const data = {
+    const data: Bill = {
       purchase_status: 4,
       payment_status: 2,
       id: id,
+      data: undefined,
     };
 
     await updateBill(data).then(() => {
@@ -123,19 +131,39 @@ const UserTour = () => {
     });
   };
 
-  const handleCheckboxChange = (e) => {
+  // const updateBillQR = () => {
+  //   const data:Bill = {
+  //     id: id,
+  //     payment_status: 2,
+  //     comfirm_click: 2,
+  //     data: undefined,
+  //   };
+  //   updatePaymentStatus(data).then(() => {
+  //     if (isLoggedIn && isLoggedIn == true) {
+  //       alert(
+  //         "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn"
+  //       );
+  //       navigate("/user/tours");
+  //       window.location.reload();
+  //     } else {
+  //       alert(
+  //         "Bạn xác nhận đã thanh toán. Hãy đợi chúng tôi xác nhận thanh toán đơn hàng của bạn. Hãy đăng ký/đăng nhập để trải nghiệm các dịch vụ ưu đãi cho người dùng"
+  //       );
+  //       navigate("/");
+  //       window.location.reload();
+  //     }
+  //   });
+  // };
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
 
-  const handleButtonDisabledClick = (e) => {
+  const handleButtonDisabledClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent event propagation
   };
 
-  const confirm = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
-  };
-
-  const cancel = (e: React.MouseEvent<HTMLElement>) => {};
+  const cancel = () => {};
 
   const titleElement = document.querySelector("title");
   if (titleElement) {
@@ -194,6 +222,9 @@ const UserTour = () => {
                 <Link className="nav-link" to={"/user/favorite"}>
                   <FaRegHeart /> Tour yêu thích
                 </Link>
+                <Link className="nav-link" to={"/user/coupon"}>
+                  <FaRegListAlt /> Mã Giảm giá
+                </Link>
               </nav>
 
               {/* End left panel */}
@@ -231,11 +262,11 @@ const UserTour = () => {
                     goToPayment(id);
                   }
                 };
-                const handleCancelTour = () => {
-                  if (id) {
-                    cancelTour(id);
-                  }
-                };
+                // const handleCancelTour = () => {
+                //   if (id) {
+                //     cancelTour(id);
+                //   }
+                // };
                 const handleCancelTourRefund = () => {
                   if (id) {
                     cancelTourRefund(id);
@@ -244,6 +275,11 @@ const UserTour = () => {
                 const handleConfirmPayment = () => {
                   if (id) {
                     confirmPayment(id);
+                  }
+                };
+                const handleOpenPolicy = () => {
+                  if (id) {
+                    openPolicy(id);
                   }
                 };
                 console.log(coupon_fixed);
@@ -287,16 +323,17 @@ const UserTour = () => {
                 // console.log(coupon_fixed);
 
                 const finalPrice = coupon_fixed
-                  ? adult_count * tour_adult_price +
-                    child_count * tour_child_price -
+                  ? (adult_count ?? 0) * (tour_adult_price ?? 0) +
+                    (child_count ?? 0) * (tour_child_price ?? 0) -
                     coupon_fixed
-                  : (adult_count * tour_adult_price +
-                      child_count * tour_child_price) *
-                    (1 - coupon_percentage / 100);
+                  : ((adult_count ?? 0) * (tour_adult_price ?? 0) +
+                      (child_count ?? 0) * (tour_child_price ?? 0)) *
+                    (1 - (coupon_percentage ?? 0) / 100);
                 const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 }).format(finalPrice);
+
                 return (
                   <div className="p-3 my-3 shadow row" key={id}>
                     <div className="col-8">
@@ -356,14 +393,75 @@ const UserTour = () => {
                       purchase_status == 2 &&
                       purchase_method == 1 &&
                       comfirm_click == 1 ? (
-                        <button
-                          // onClick={}
-                          className="btn btn-success ml-3 rounded-md"
-                          style={{ height: "48px", borderRadius: "8px" }}
-                          onClick={handleConfirmPayment}
-                        >
-                          Xác nhận đã chuyển khoản
-                        </button>
+                        <span>
+                          <button
+                            className="btn btn-success ml-3 rounded-md"
+                            style={{ height: "48px", borderRadius: "8px" }}
+                            onClick={handleShowQR}
+                          >
+                            Xác nhận đã chuyển khoản
+                          </button>
+                          <Modal
+                            show={showQR}
+                            onHide={handleCloseQR}
+                            backdrop="static"
+                            keyboard={false}
+                          >
+                            <Modal.Header>
+                              <Modal.Title>
+                                <div className="text-center">
+                                  Vui lòng quét qr hoặc chuyển khoản cho thông
+                                  tin dưới đây
+                                </div>
+                              </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <div className="container">
+                                <div className="text-center">
+                                  <span className="fs-4 text-black fw-bold">
+                                    Ngân hàng MB BANK
+                                    <br />
+                                  </span>
+                                  {/* Hiển thị ảnh QR code */}
+                                  <img
+                                    src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg"
+                                    alt="QR Code"
+                                  />
+                                </div>
+
+                                <div className="text-center mt-3">
+                                  <span className="fs-4 text-black fw-bold">
+                                    Người thụ hưởng: Nguyễn Đức Thịnh <br />
+                                    Số tài khoản : 0915220156
+                                  </span>
+                                </div>
+                                <div className="text-center mt-3">
+                                  <span className="fs-4 text-danger fw-bold">
+                                    Số tiền bạn phải chuyển là:{" "}
+                                    {formattedFinalPrice}
+                                  </span>
+                                </div>
+                              </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <div className="text-center">
+                                {/* Thêm nút "Chuyển khoản thành công" */}
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={handleCloseQR}
+                                >
+                                  Thoát
+                                </button>
+                                <button
+                                  onClick={handleConfirmPayment}
+                                  className="btn btn-success"
+                                >
+                                  Chuyển khoản thành công
+                                </button>
+                              </div>
+                            </Modal.Footer>
+                          </Modal>
+                        </span>
                       ) : (
                         <div></div>
                       )}
@@ -494,6 +592,19 @@ const UserTour = () => {
                                   {billStatus}
                                 </span>
                               </p>
+                              <p>
+                                Trạng thái thanh toán:{" "}
+                                <span className="fw-bold text-danger">
+                                  {paymentStatus}
+                                </span>
+                              </p>
+                              <p>
+                                Trạng thái tour:{" "}
+                                <span className="fw-bold text-danger">
+                                  {tourStatus}
+                                </span>
+                              </p>
+
                               {purchase_method == 2 &&
                               payment_status == 1 &&
                               tour_status == 1 ? (
@@ -501,7 +612,7 @@ const UserTour = () => {
                                   className="btn-continue mr-2"
                                   onClick={handleGoToPayment}
                                 >
-                                  Thanh toán
+                                  Thanh toán VNPAY
                                 </button>
                               ) : (
                                 <div>
@@ -576,19 +687,22 @@ const UserTour = () => {
                                               <div></div>
                                             )}
                                           </Popconfirm>
-                                          <Checkbox
-                                            checked={checked}
-                                            onChange={handleCheckboxChange}
-                                          >
+                                          <div>
+                                            <input
+                                              className="mr-1"
+                                              type="checkbox"
+                                              checked={checked}
+                                              onChange={handleCheckboxChange}
+                                            />
                                             Đọc kỹ{" "}
                                             <a
                                               className="text-primary"
-                                              onClick={openWindow}
+                                              onClick={handleOpenPolicy}
                                             >
                                               chính sách hoàn tiền
                                             </a>{" "}
                                             của chúng tôi nếu bạn muốn hủy tour.
-                                          </Checkbox>
+                                          </div>
                                         </div>
                                       ) : (
                                         <div></div>
@@ -633,9 +747,7 @@ const UserTour = () => {
                 );
               }
             )}
-            <Button variant="primary" onClick={handleShow}>
-              Launch demo modal
-            </Button>
+            {/* <Button onClick={handleShow}>Launch demo modal</Button> */}
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
@@ -699,14 +811,11 @@ const UserTour = () => {
                 </form>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
-                </Button>
+                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>Save Changes</Button>
               </Modal.Footer>
             </Modal>
+
             <ReactPaginate
               previousLabel={"<-"}
               nextLabel={"->"}

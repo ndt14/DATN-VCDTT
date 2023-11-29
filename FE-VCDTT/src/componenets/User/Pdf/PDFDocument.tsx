@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import  'jspdf-autotable';
 
-const PDFDocument = ({ data }) => {
+const PDFDocument = ({ data }:any) => {
   useEffect(() => {
     // Tạo một tài liệu jspdf
     const doc = new jsPDF();
@@ -16,7 +16,7 @@ const PDFDocument = ({ data }) => {
 
     // Thêm nội dung vào tài liệu
     doc.setFontSize(18);
-    doc.text(data.titles, 105, 20, 'center');
+    doc.text(data.titles, 105, 20);
 
     doc.setFontSize(12);
     doc.text(data.paymentStatus, 20, 40);
@@ -52,7 +52,7 @@ const PDFDocument = ({ data }) => {
     ];
 
     // Thêm bảng vào tài liệu sử dụng jspdf-autotable
-    doc.autoTable({
+    (doc as any).autoTable({
       head: [tableData[0]],
       body: tableData.slice(1),
       startY: 180, // Vị trí bắt đầu của bảng
