@@ -13,6 +13,6 @@ function deleteOldFile($filePath)
     $fullPath = public_path($filePath);
     if (file_exists($fullPath)) {
         unlink($fullPath);
-    } else {;
+    } else {
     }
 }
