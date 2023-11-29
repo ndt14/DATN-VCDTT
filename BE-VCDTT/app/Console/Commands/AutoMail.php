@@ -30,7 +30,7 @@ class AutoMail extends Command
     public function handle()
     {
         //send mail when bill is outdated
-        $purchaseHistoriesOutdated = PurchaseHistory::where('payment_status', '=', 1)->where('created_at', '=', Carbon::now()->subDays(1))->get();
+        $purchaseHistoriesOutdated = PurchaseHistory::where('payment_status', '=', 1)->whereDate('created_at', '=', Carbon::today()->subDays(1)->toDateString())->get();
 
         if ($purchaseHistoriesOutdated) {
             foreach ($purchaseHistoriesOutdated as $purchaseHistory) {
@@ -39,33 +39,34 @@ class AutoMail extends Command
                     'tour_status' => 5
                 ]);
 
-                return $purchaseHistory;
+                // return $purchaseHistory;
 
                 $purchaseHistory->notify(new SendMailToClientWhenPaid($purchaseHistory));
             }
         }
 
         //send mail when 1 week left untill start date
-        $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3');
+        $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3')->get();
         if ($purchaseHistoryTourAnnounces) {
             foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
-                if ($purchaseHistoryTourAnnounce->tour_start_time == (Carbon::now()->addDays(7))) {
+                //remind client about tour cancelling
+                if (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d') == (Carbon::today()->addDays(7)->toDateString())) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('1'));
-                } elseif ($purchaseHistoryTourAnnounce->tour_start_time == (Carbon::now()->addDays(2))) {
-                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('2'));
-                } elseif ($purchaseHistoryTourAnnounce->tour_start_time == (Carbon::now()->addDays(1))) {
+                } elseif (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d') == (Carbon::now()->addDays(2)->toDateString())) {
+                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('2')); //announce cancelling will be unavailable after 1 day
+                } elseif (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d') == (Carbon::now()->addDays(1)->toDateString())) {
                     $purchaseHistoryTourAnnounce->update([
-                        'tour_status' => 4
+                        'tour_status' => 4                                                   //turn off tour cancelling
                     ]);
-                } elseif ($purchaseHistoryTourAnnounce->tour_start_time == (Carbon::now())) {
+                } elseif (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d') == (Carbon::now()->toDateString())) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('3'));
                     $purchaseHistoryTourAnnounce->update([
-                        'tour_status' => 2
+                        'tour_status' => 2                                                    //wish client best experiences
                     ]);
-                } elseif ($purchaseHistoryTourAnnounce->tour_start_time == (Carbon::now()->subDays(1))) {
+                } elseif (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d') == (Carbon::now()->subDays(1)->toDateString())) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('4'));
                     $purchaseHistoryTourAnnounce->update([
-                        'tour_status' => 3
+                        'tour_status' => 3                                                    //thank you mail
                     ]);
                 }
             }

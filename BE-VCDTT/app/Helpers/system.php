@@ -1,7 +1,7 @@
 <?php
 function upLoadFile($type,$file) {
     $fileName = $type.time().'_'.$file->getClientOriginalName();
-    $filePath = 'uploads/'.$fileName;
+    $filePath = 'http://be-vcdtt.datn-vcdtt.test/uploads/'.$fileName;
 
     $file->move(public_path('uploads'), $fileName);
 

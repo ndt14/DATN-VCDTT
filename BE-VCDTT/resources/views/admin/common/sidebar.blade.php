@@ -215,6 +215,7 @@
           </div>
         </li>
         @endif
+        @if(auth()->user()->hasAnyDirectPermission(['access tour', 'add tour', 'edit tour', 'delete tour', 'access review', 'reply review', 'delete review', 'access post', 'add post', 'edit post', 'delete post']) || auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2 {{ $currentController == 'ImageController' ? 'active active-sidebar' : '' }}">
           <a class="nav-link" href="{{route('image.list')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
@@ -231,26 +232,29 @@
             </span>
           </a>
         </li>
+        @endif
+        @if(auth()->user()->is_admin == 1)
         <li class="nav-item py-lg-2 {{ $currentController == 'KeyValueController' ? 'active active-sidebar' : '' }}">
-            <a class="nav-link" href="{{route('settings')}}">
-              <span class="me-1 d-md-none d-lg-inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
-              </span>
-              <span class="fw-bold ms-1 fs-3">
-                Hệ thống
-              </span>
-            </a>
-          </li>
-        <li class="nav-item py-lg-2 {{ $currentController == 'TermAndPrivacyController' ? 'active active-sidebar' : '' }}">
-          <a class="nav-link" href="{{route('page.list')}}">
+          <a class="nav-link" href="{{route('settings')}}">
             <span class="me-1 d-md-none d-lg-inline-block">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-license" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11" /><path d="M9 7l4 0" /><path d="M9 11l4 0" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
             </span>
             <span class="fw-bold ms-1 fs-3">
-              Điều khoản & dịch vụ
+              Hệ thống
             </span>
           </a>
         </li>
+      <li class="nav-item py-lg-2 {{ $currentController == 'TermAndPrivacyController' ? 'active active-sidebar' : '' }}">
+        <a class="nav-link" href="{{route('page.list')}}">
+          <span class="me-1 d-md-none d-lg-inline-block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-license" style="margin-bottom: 2px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11" /><path d="M9 7l4 0" /><path d="M9 11l4 0" /></svg>
+          </span>
+          <span class="fw-bold ms-1 fs-3">
+            Điều khoản & dịch vụ
+          </span>
+        </a>
+      </li>
+      @endif
       </ul>
     </div>
   </div>

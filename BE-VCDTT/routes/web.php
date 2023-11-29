@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AllocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\UploadController;
 
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
@@ -37,7 +38,6 @@ Route::get('/', function () {
     // return redirect()->route('login');
     return redirect()->route('login');
 });
-
 Route::middleware(['auth', 'check.admin'])->group(function () {
 
     Route::get('/test', function () {
@@ -145,23 +145,24 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store')->middleware(['permission:admin|add category']);
     Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit')->middleware(['permission:admin|edit category']);
 
-    Route::get('/page', [TermAndPrivacyController::class, 'pageManagementList'])->name('page.list');
-    Route::match(['GET', 'POST'], '/page/add', [TermAndPrivacyController::class, 'pageManagementAdd'])->name('page.add');
-    Route::match(['GET', 'POST'], '/page/edit/{id}', [TermAndPrivacyController::class, 'pageManagementEdit'])->name('page.edit');
-    Route::get('/page/detail/{id}', [TermAndPrivacyController::class, 'pageManagementDetail'])->name('page.detail');
-    Route::get('/page/trash', [TermAndPrivacyController::class, 'pageManagementTrash'])->name('page.trash');
-    Route::get('page/restore/{id}', [TermAndPrivacyController::class, 'pageManagementRestore'])->name('page.restore');
+    Route::get('/page', [TermAndPrivacyController::class, 'pageManagementList'])->name('page.list')->middleware(['permission:admin']);;
+    Route::match(['GET', 'POST'], '/page/add', [TermAndPrivacyController::class, 'pageManagementAdd'])->name('page.add')->middleware(['permission:admin']);;
+    Route::match(['GET', 'POST'], '/page/edit/{id}', [TermAndPrivacyController::class, 'pageManagementEdit'])->name('page.edit')->middleware(['permission:admin']);;
+    Route::get('/page/detail/{id}', [TermAndPrivacyController::class, 'pageManagementDetail'])->name('page.detail')->middleware(['permission:admin']);;
+    Route::get('/page/trash', [TermAndPrivacyController::class, 'pageManagementTrash'])->name('page.trash')->middleware(['permission:admin']);;
+    Route::get('page/restore/{id}', [TermAndPrivacyController::class, 'pageManagementRestore'])->name('page.restore')->middleware(['permission:admin']);;
 
     //Image
-    Route::get('/image', [ImageController::class, 'index'])->name('image.list');
-    Route::get('/image/image-list', [ImageController::class, 'imageList']);
+    Route::get('/image', [ImageController::class, 'index'])->name('image.list')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
+    Route::get('/image/image-list', [ImageController::class, 'imageList'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
 
-    Route::get('/image/dropzone', [ImageController::class, 'dropzone']);
-    Route::post('/image-add', [ImageController::class, 'add'])->name('image.add');
-    Route::get('/image-download/{id}', [ImageController::class, 'download']);
-    Route::delete('/image-destroy/{id}', [ImageController::class, 'destroy']);
+    Route::get('/image/dropzone', [ImageController::class, 'dropzone'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
+    Route::post('/image-add', [ImageController::class, 'add'])->name('image.add')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
+    Route::get('/image-download/{id}', [ImageController::class, 'download'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
+    Route::delete('/image-destroy/{id}', [ImageController::class, 'destroy'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
 
     Route::post('/file-upload', [FileController::class, 'store'])->name('file.store');
+    Route::post('/upload-file-ckeditor', [UploadController::class, 'upload'])->name('ckeditor.upload');
 
     Route::get('/purchase-history', [PurchaseHistoryController::class, 'purchaseHistoryManagementList'])->name('purchase_histories.list')->middleware(['permission:admin|access bill|edit bill|delete bill']);
     Route::match(['GET', 'POST'],'/purchase-history/edit/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementEdit'])->name('purchase_histories.edit')->middleware(['permission:admin|edit bill']);
@@ -170,7 +171,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/purchase-history/trash', [PurchaseHistoryController::class, 'purchaseHistoryManagementTrash'])->name('purchase_histories.trash')->middleware(['permission:admin|delete bill']);
     Route::get('purchase-history/restore/{id}', [PurchaseHistoryController::class, 'purchaseHistoryManagementRestore'])->name('purchase_histories.restore')->middleware(['permission:admin|delete bill']);
 
-    Route::match(['GET', 'POST'],'/settings',[KeyValueController::class,'keyvalueManagementEditAll'])->name('settings');
+    Route::match(['GET', 'POST'],'/settings',[KeyValueController::class,'keyvalueManagementEditAll'])->name('settings')->middleware(['permission:admin']);
 
     Route::middleware('isAdmin')->group(function(){
     Route::get('/role', [RoleController::class, 'roleManagementList'])->name('role.list');
@@ -185,6 +186,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
 });
 
+// Route::get('/test', [PurchaseHistoryController::class, 'test']);
 
 
 

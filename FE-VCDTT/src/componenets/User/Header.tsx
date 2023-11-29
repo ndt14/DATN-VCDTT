@@ -19,12 +19,16 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-// import { AuthSignin } from "../../interfaces/Auth.js";
+import { useGetLogoQuery } from "../../api/setting.js";
+import { Setting } from "../../interfaces/Setting.js";
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
   const { data: dataCate } = useGetCategoriesQuery();
+  const {data: dataLogo} = useGetLogoQuery();
+
+  
   // console.log(dataCate?.data.categoriesParent)
 
   const [registerPassword] = useState("");
@@ -254,17 +258,26 @@ const Header = () => {
           <div className="container d-flex justify-content-between align-items-center">
             <div className="site-identity">
               <h1 className="site-title">
+             
                 <Link to="">
-                  <img
+                  {dataLogo?.data.keyvalue.map(({value}:Setting)=>{
+                    return(
+                      <>
+                      <img
                     className="white-logo"
-                    src="../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src={value}
                     alt="logo"
                   />
-                  <img
+                    <img
                     className="black-logo"
-                    src="../../assets/images/VCDTT_logo-removebg-preview.png"
+                    src={value}
                     alt="logo"
                   />
+                      </>
+                    )
+                  })}
+                 
+                
                 </Link>
               </h1>
             </div>

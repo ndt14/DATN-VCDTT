@@ -75,7 +75,7 @@ Chỉnh sửa đánh giá
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Trả lời của công ty</label>
-                            <textarea name="admin_answer" class="form-control ckeditor" placeholder="Enter answer" id="" cols="30" rows="10">{{$data->admin_answer}}</textarea>
+                            <textarea name="admin_answer" class="form-control ckeditor" placeholder="Enter answer" id="editor" cols="30" rows="10">{{$data->admin_answer}}</textarea>
                             <span class="text-danger d-flex justify-content-start">
                                 @error('admin_answer')
                                 {{ $message }}
@@ -98,6 +98,22 @@ Chỉnh sửa đánh giá
         </div>
     </div>
 </div>
+@endsection
+@section('ckeditor_5')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                }
+            })
+            .then(editor => {
+                return '';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection
 @section('page_js')
 {{-- <script type="text/javascript">

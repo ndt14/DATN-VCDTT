@@ -3,5 +3,5 @@ export interface Setting {
     key: string;
     value: string;
     name: string;
-
+data:any
 }
