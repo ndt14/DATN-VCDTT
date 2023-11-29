@@ -201,7 +201,7 @@ class UserController extends Controller
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/user?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/user?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['users']), false);
 
@@ -227,10 +227,10 @@ class UserController extends Controller
 
     public function userManagementEdit(UserRequest $request, $id)
     {
-        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/user-show/' . $request->id)['data']['user']));
+        $response = json_decode(json_encode(Http::get(url('').'/api/user-show/' . $request->id)['data']['user']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/user-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/user-edit/' . $id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('user.list')->with('success', 'Cập nhật user thành công');
             } else {
@@ -244,7 +244,7 @@ class UserController extends Controller
     {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/user-store', $data);
+            $response = Http::post(url('').'/api/user-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('user.list')->with('success', 'Thêm mới người dùng thành công');
             } else {
@@ -258,7 +258,7 @@ class UserController extends Controller
     public function userManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/user-show/' . $request->id)->json()['data']['user'];
+        $item = Http::get(url('').'/api/user-show/' . $request->id)->json()['data']['user'];
         $html = view('admin.users.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
