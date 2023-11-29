@@ -26,7 +26,7 @@ const Header = () => {
   const [register] = useRegisterMutation();
   const { data: dataCate } = useGetCategoriesQuery();
   const {data: dataLogo} = useGetLogoQuery();
-  
+
   
   // console.log(dataCate?.data.categoriesParent)
 
@@ -195,34 +195,31 @@ const Header = () => {
         <div className="top-header"></div>
         <div className="bottom-header d-none d-lg-block d-sm-none">
           <div className="container d-flex justify-content-between align-items-center">
-           
-                  {dataLogo?.data.keyvalue.map(({id,value}:Setting)=>{
+            <div className="site-identity">
+              <h1 className="site-title">
+             
+                <Link to="">
+                  {dataLogo?.data.keyvalue.map(({value}:Setting)=>{
                     return(
                       <>
-                       <div className="site-identity" key={id}>
-                        <h1 className="site-title" >
-                        <Link to="" >
                       <img
                     className="white-logo"
                     src={value}
                     alt="logo"
                   />
-                    <img 
+                    <img
                     className="black-logo"
                     src={value}
                     alt="logo"
                   />
-                </Link>
-
-                </h1>
-                </div>
                       </>
                     )
                   })}
                  
                 
-            
-            
+                </Link>
+              </h1>
+            </div>
             <div className="main-navigation d-none d-lg-block">
               <nav id="navigation" className="navigation">
                 <ul>

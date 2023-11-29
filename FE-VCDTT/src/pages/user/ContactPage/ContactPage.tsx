@@ -6,7 +6,7 @@ import { Setting } from '../../../interfaces/Setting';
 
 
 const ContactPage = () => {
-    const backgroundImageUrl = 'assets/images/inner-banner.jpg'; 
+    const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg'; 
 
     const containerStyle = {
       background: `url(${backgroundImageUrl})`,
@@ -46,19 +46,21 @@ const ContactPage = () => {
     const {data: dataEmail} = useGetEmailWebQuery()
     const {data: dataAddress} = useGetAddressQuery()
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    dataAddress?.data.keyvalue.map(({id,value}:Setting)=>{
-      useEffect(() => {
-         if (iframeRef.current) {
-           const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
-             value
-           )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
-           iframeRef.current.src = iframeSrc;
-         }
-       }, [value]);
-      return(
-       <span key={id}>{value}</span>
-   )
-   })
+
+    useEffect(() => {
+      if (dataAddress) {
+        dataAddress.data.keyvalue.forEach(({ id, value }: Setting) => {
+          const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+            value
+          )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+  
+          const iframe = iframeRef.current;
+          if (iframe) {
+            iframe.src = iframeSrc;
+          }
+        });
+      }
+    }, [dataAddress]);
    
   return (
    <>
