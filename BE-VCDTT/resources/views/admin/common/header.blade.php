@@ -203,7 +203,7 @@
 </div>
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
-    let backendBaseUrl = "http://be-vcdtt.datn-vcdtt.test";
+    let backendBaseUrl = "{{ url('')}}";
     var user = <?php echo $user; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1",

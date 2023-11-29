@@ -163,7 +163,7 @@ class TermAndPrivacyController extends Controller
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/page?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/page?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['pages']), false);
             $perPage = $request->limit??5;// Số mục trên mỗi trang
@@ -189,7 +189,7 @@ class TermAndPrivacyController extends Controller
     public function pageManagementAdd(TermAndPrivacyRequest $request) {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/page-store', $data);
+            $response = Http::post(url('').'/api/page-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('page.list')->with('success', 'Thêm mới page thành công');
             } else {
@@ -200,10 +200,10 @@ class TermAndPrivacyController extends Controller
     }
 
     public function pageManagementEdit(TermAndPrivacyRequest $request, $id) {
-        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/page-show/' . $request->id)['data']['page']));
+        $response = json_decode(json_encode(Http::get(url('').'/api/page-show/' . $request->id)['data']['page']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/page-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/page-edit/' . $id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('page.list')->with('success', 'Cập nhật page thành công');
             } else {
@@ -215,7 +215,7 @@ class TermAndPrivacyController extends Controller
     
     public function pageManagementDetail(Request $request) {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/page-show/'.$request->id);
+        $response = Http::get(url('').'/api/page-show/'.$request->id);
         if($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['page']), false);
             $html = view('admin.term_and_privacy.detail', compact('item'))->render();

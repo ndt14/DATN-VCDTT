@@ -157,7 +157,7 @@ class AllocationController extends Controller
 
     public function allocationManagementDetail(Request $request) {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/'.$request->id);
+        $response = Http::get(url('').'/api/rating-show/'.$request->id);
         if($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['rating']), false);
             $html = view('admin.ratings.detail', compact('item'))->render();
