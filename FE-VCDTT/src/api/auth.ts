@@ -1,20 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AuthSignin, AuthSignup } from '../interfaces/Auth';
+import { User } from '../interfaces/User';
 
 const AuthApi = createApi({
     reducerPath: 'auth',
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "https://admin.vcdtt.online/api",
     }),
     endpoints: (builder) => ({
-        register: builder.mutation<{ message: string, accessToken: string, user: {} }, AuthSignup>({
+        register: builder.mutation<{ message: string, token: string, user: User }, AuthSignup>({
             query: (credentials) => ({
                 url: '/register',
                 method: 'POST',
                 body: credentials,
             }),
         }),
-        login: builder.mutation<{ message: string, accessToken: string, user: {} }, AuthSignin>({
+        login: builder.mutation<{ message: string, token: string, user: User }, AuthSignin>({
             query: (credentials) => ({
                 url: '/login',
                 method: 'POST',
@@ -28,7 +29,7 @@ const AuthApi = createApi({
                 body: { email },
             }),
         }),
-        resetPasswordWithToken: builder.mutation<{ message: string }, { token: string, newPassword: string }>({
+        resetPasswordWithToken: builder.mutation<{ message: string }, { token: string|undefined, newPassword: string }>({
             query: ({ token, newPassword }) => ({
                 url: `/reset-password/${token}`, // Use the correct URL based on your backend
                 method: 'PUT', // Use the correct HTTP method for resetting the password

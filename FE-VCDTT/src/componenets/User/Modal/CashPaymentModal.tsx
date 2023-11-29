@@ -1,19 +1,19 @@
-import React from "react";
 import Modal from "react-bootstrap/Modal";
 import { useUpdateBillMutation } from "../../../api/bill";
-import { Navigate, useNavigate } from "react-router";
+import {  useNavigate } from "react-router";
+// import { MouseEventHandler } from "react";
 
-function CashPaymentModal(props) {
-  const { formattedFinalPrice, id /* các biến khác */ } = props.modalData;
-  const billId = JSON.parse(localStorage.getItem("billIdSuccess"));
-  const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+function CashPaymentModal(props: { modalData: { formattedFinalPrice: any; }; show: boolean | undefined; onHide: (() => void) | undefined; }) {
+  const { formattedFinalPrice /* các biến khác */ } = props.modalData;
+  const billId = JSON.parse(localStorage.getItem("billIdSuccess")||"");
+  const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn")||"");
   console.log(isLoggedIn);
 
   console.log(billId);
   const [updatePaymentStatus] = useUpdateBillMutation();
   const navigate = useNavigate();
   const updateBill = () => {
-    const data = {
+    const data:any = {
       id: billId,
       payment_status: 2,
       comfirm_click: 2,

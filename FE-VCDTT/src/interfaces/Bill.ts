@@ -21,12 +21,13 @@ export interface Bill {
     refund_percentage? :number;
     coupon_fixed? :number|null
     tour_start_time? :string;
-    tour_end_time? :number;
+    tour_end_time? :string;
     transaction_id?: number;
     payment_status?:number;
     purchase_status?:number;
     purchase_method?:number;
-    tour_status?:number
-    tour_image?:string
-    comfirm_click?:number
+    tour_status?:number;
+    tour_image?:string;
+    comfirm_click?:number;
+    data:any
 }

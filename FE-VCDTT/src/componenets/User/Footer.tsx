@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
+import MessengerChat from "./MessengerChat";
 
 const Footer = () => {
   return (
+    <>
+          <MessengerChat/>
+
     <footer id="colophon" className="site-footer footer-primary">
+       <div id="fb-root"></div>
+
+{/* <!-- Your Plugin chat code --> */}
+<div id="fb-customer-chat" className="fb-customerchat">
+  </div>
       <div className="top-footer">
         <div className="container">
           <div className="row">
@@ -143,6 +152,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 
