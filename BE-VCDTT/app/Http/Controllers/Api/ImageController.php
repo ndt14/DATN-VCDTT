@@ -52,14 +52,32 @@ class ImageController extends Controller
         }
     }
 
+    public function bannerCall(Request $request)
+    {
+        $banner = Image::select('id','url','created_at','updated_at')->where('banner_id',1)->get();
+        if($banner){
+            return response()->json([
+                'data' => [
+                    'banner' => ImageResource::collection($banner),
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ],);
+        }
+    }
+
+
     public function destroy(string $id)
     {
         $image = Image::find($id);
         if ($image) {
             $delete_img = $image->delete();
             if($delete_img) {
-                if (File::exists(public_path($image->url))) {
-                    File::delete(public_path($image->url));
+                $parsedUrl = parse_url($image->url);
+                $path = ltrim($parsedUrl['path'], '/');
+                $fullPath = public_path($path);
+                if (file_exists($fullPath)) {
+                    unlink($fullPath);
                 }
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             }else {
