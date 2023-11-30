@@ -17,20 +17,20 @@ class KeyValueSeeder extends Seeder
             [
                 'name' => 'Ảnh logo chính',
                 'key' => 'logo',
-                'value' => 'images/1700220530_logo.jpg'
+                'value' => ''
             ],
             [
                 'name' => 'Ảnh logo favicon',
                 'key' => 'favicon',
-                'value' => 'images/1700220530_logo-vcdtt-removebg.png'
+                'value' => ''
             ],
             [
-                'name' => 'Tên website',
+                'name' => 'Tên trang của website',
                 'key' => 'webTitle',
                 'value' => 'VCDTT'
             ],
             [
-                'name' => 'Email website',
+                'name' => 'Email đại diện website',
                 'key' => 'email',
                 'value' => 'admin@gmail.com'
             ],
@@ -50,6 +50,11 @@ class KeyValueSeeder extends Seeder
                 'value' => '0934234234'
             ],
             [
+                'name' => 'Đường link Facebook',
+                'key' => 'facebookLink',
+                'value' => ''
+            ],
+            [
                 'name' => 'Tên ngân hàng sử dụng',
                 'key' => 'bankName',
                 'value' => 'MBBank'
@@ -65,9 +70,29 @@ class KeyValueSeeder extends Seeder
                 'value' => '942342523'
             ],
             [
+                'name' => 'Ảnh QR tài khoản ngân hàng',
+                'key' => 'BankAccountQR',
+                'value' => ''
+            ],
+            [
+                'name' => 'Nội dung chung khi khác chuyển khoản',
+                'key' => 'bankingContent',
+                'value' => ''
+            ],
+            [
                 'name' => 'Ảnh banner',
                 'key' => 'banner',
-                'value' => 'images/1700220530_admin.jpg'
+                'value' => '1'
+            ],
+            [
+                'name' => 'Ảnh banner phụ',
+                'key' => 'subBanner',
+                'value' => ''
+            ],
+            [
+                'name' => 'Ảnh lúc tải trang',
+                'key' => 'loadingScreen',
+                'value' => ''
             ],
             [
                 'name' => 'Tiêu đề meta (Meta title)',
