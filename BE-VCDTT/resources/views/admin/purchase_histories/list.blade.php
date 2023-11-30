@@ -73,19 +73,21 @@ Danh sách đơn đặt
                                             @php
                                                 $purchaseStatus = [
                                                     1 => "Tự động hủy do quá hạn",
-                                                    2 => "Chưa phê duyệt thanh toán",
+                                                    2 => "Yêu cầu phê duyệt thanh toán",
                                                     3 => "Đã phê duyệt thanh toán",
-                                                    4 => "Đang muốn hủy tour",
-                                                    5 => "Đã phê duyệt hủy tour",
-                                                    6 => "Đã hủy thành công",
+                                                    4 => "Khách muốn hủy tour, chưa phê duyệt",
+                                                    5 => "Đã phê duyệt hủy tour, chưa hoàn tiền",
+                                                    6 => "Đã hủy thành công (Đã hoàn tiền)",
                                                     7 => "Chuyển khoản thiếu",
-                                                    8 => "Chuyển khoản thừa"
+                                                    8 => "Chuyển khoản thừa",
+                                                    9 => "Chưa thanh toán"
                                                 ];
                                                 $tourStatus=[
                                                     1 => "Chưa tới ngày đi",
                                                     2 => "Đang diễn ra",
                                                     3 => "Đã kết thúc",
                                                     4 => "Còn 1 ngày tới ngày đi tour"
+                                                    5 => "Chưa thanh toán"
                                                 ]
                                             @endphp
                                             <select class="form-select" name="purchase_status">
