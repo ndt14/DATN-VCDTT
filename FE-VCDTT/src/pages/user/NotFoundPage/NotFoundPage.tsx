@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const NotFoundPage = (props: Props) => { 
+const NotFoundPage = () => { 
     const backgroundImageUrl = '../../../../assets/images/404-img.jpg'; 
 
   const containerStyle = {

@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+
 import algoliasearch from "algoliasearch/lite";
 import {
   Configure,
   HierarchicalMenu,
-  Highlight,
+ 
   Hits,
   InstantSearch,
-  Menu,
+  
   Pagination,
-  RangeInput,
+  
   RefinementList,
   SortBy,
   SearchBox,
   useInstantSearch,
-  CurrentRefinements,
+  
   
 } from "react-instantsearch";
 
@@ -38,9 +38,9 @@ export function Search() {
   const { search } = useLocation();
   console.log(search);
 
-  const queryParams = new URLSearchParams(search);
-  const queryParam = queryParams.get("?tours%5Bquery%5D");
-  const [query, setQuery] = useState(queryParam || "");
+  // const queryParams = new URLSearchParams(search);
+  // const queryParam = queryParams.get("?tours%5Bquery%5D");
+  // const [query, setQuery] = useState(queryParam || "");
 
   // Lấy giá trị từ Local Storage
   const separatorText = localStorage.getItem("separatorText");
@@ -158,7 +158,7 @@ export function Search() {
             /> */}
                 </div>
 
-                <NoResultsBoundary fallback={<NoResults />} />
+                <NoResultsBoundary fallback={<NoResults />} children={undefined} />
                 {/* <div className='row'> */}
                 <Hits
                   hitComponent={Hit}

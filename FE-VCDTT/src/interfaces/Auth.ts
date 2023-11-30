@@ -6,6 +6,6 @@ export interface AuthSignup {
     name: string;
 }
 export interface AuthSignin {
-    email: string;
-    password: string;
+    email?: string;
+    password?: string;
 }

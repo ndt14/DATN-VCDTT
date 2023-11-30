@@ -33,6 +33,7 @@ class User extends Authenticatable
         'gender',
         'is_admin',
         'status',
+        'google_id'
     ];
     protected $dates = ['deleted_at'];
     /**

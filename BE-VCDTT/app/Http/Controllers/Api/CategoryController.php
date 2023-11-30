@@ -211,14 +211,14 @@ class CategoryController extends Controller
 
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
 
-    public function cateManagementList(Request $request)
-    {
-        $data['sortField'] = $sortField = $request->sort ?? '';
-        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
-        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
-        $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if ($response->status() == 200) {
+
+    public function cateManagementList(Request $request) {
+        $data['sortField']=$sortField = $request->sort??'';
+        $data['sortDirection']=$sortDirection = $request->direction??'';
+        $data['searchCol']=$searchCol = $request->searchCol??'';
+        $data['keyword']=$keyword = $request->keyword??'';
+        $response = Http::get(url('')."/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        if($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
             foreach ($data as $key => $item) {
                 if ($item['parent_id'] == NULL) {
@@ -258,11 +258,11 @@ class CategoryController extends Controller
     public function cateManagementStore(CategoryRequest $request)
     {
         $data = $request->all();
-        $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/category-store', $data);
-        if ($response->status() == 200) {
-            return redirect()->route('category.add')->with('success', 'Add data Success');
-        } else {
-            return redirect()->route('category.add')->with('fail', 'Add data Fail');
+        $response = Http::post(url('').'/api/category-store', $data);
+        if($response->status() == 200) {
+            return redirect()->route('category.add')->with('success','Add data Success');
+        }else {
+            return redirect()->route('category.add')->with('fail','Add data Fail');
         }
     }
 
@@ -271,16 +271,16 @@ class CategoryController extends Controller
 
         if ($request->isMethod('POST')) {
             $data = $request->all();
-            $response = Http::put("http://be-vcdtt.datn-vcdtt.test/api/category-edit/{$id}", $data);
-            if ($response->status() == 200) {
-                return redirect()->route('category.edit', ['id' => $id])->with('success', 'Edit data Success');
-            } else {
-                return redirect()->route('category.edit', ['id' => $id])->with('fail', 'Edit data Fail');
+            $response = Http::put(url('')."/api/category-edit/{$id}", $data);
+            if($response->status() == 200) {
+                return redirect()->route('category.edit', ['id' => $id])->with('success','Edit data Success');
+            }else {
+                return redirect()->route('category.edit', ['id' => $id])->with('fail','Edit data Fail');
             }
         }
         $listCateParent = Category::whereNull('parent_id')->get();
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/category-show/' . $id);
-        if ($response->status() == 200) {
+        $response = Http::get(url('').'/api/category-show/'.$id);
+        if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['category']));
             return view('admin.categories.edit', compact('data', 'listCateParent'));
         } else {

@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const SideBarAdmin = (props: Props) => {
+const SideBarAdmin = () => {
   return (
     <>
     <div className="left-side-menu">

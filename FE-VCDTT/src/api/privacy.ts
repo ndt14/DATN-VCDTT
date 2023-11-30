@@ -9,14 +9,14 @@ const PrivacyApi = createApi({
     reducerPath: "page",
     tagTypes: ['Page'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
         }
     }),
     endpoints: (builder) => ({
-        getPrivacy: builder.query<Privacy[], void>({
+        getPrivacy: builder.query<Privacy, void>({
             query: () => `/page`,
             providesTags: ['Page']
         }),

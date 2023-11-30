@@ -221,7 +221,7 @@ class RatingController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/rating?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/rating?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['ratings']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
@@ -250,7 +250,7 @@ class RatingController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating/' . $request->id . "?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('').'/api/rating/' . $request->id . "?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
@@ -279,10 +279,10 @@ class RatingController extends Controller
 
     public function ratingManagementEdit(Request $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/' . $request->id);
+        $response = Http::get(url('').'/api/rating-show/' . $request->id);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/rating-edit/' . $request->id, $data);
+            $response = Http::put(url('').'/api/rating-edit/' . $request->id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('rating.edit', ['id' => $request->id])->with('success', 'Cập nhật rating thành công');
             } else {
@@ -296,7 +296,7 @@ class RatingController extends Controller
     public function ratingManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/rating-show/' . $request->id);
+        $response = Http::get(url('').'/api/rating-show/' . $request->id);
         if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['rating']), false);
             $html = view('admin.ratings.detail', compact('item'))->render();

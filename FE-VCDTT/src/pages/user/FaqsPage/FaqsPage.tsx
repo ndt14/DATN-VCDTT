@@ -1,11 +1,9 @@
-import React from 'react'
 import Loader from '../../../componenets/User/Loader';
 import { useGetFaqsQuery } from '../../../api/faqs';
 import { Faq } from '../../../interfaces/Faq';
 
-type Props = {}
 
-const FaqsPage = (props: Props) => {
+const FaqsPage = () => {
    const {data} = useGetFaqsQuery();
    console.log(data);
    

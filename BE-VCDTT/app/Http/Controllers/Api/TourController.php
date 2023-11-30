@@ -313,7 +313,7 @@ class TourController extends Controller
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/tour?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/tour?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['tours']), false);
 
@@ -345,7 +345,7 @@ class TourController extends Controller
 
             $data = $request->except('_token');
 
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/tour-store', $data);
+            $response = Http::post(url('').'/api/tour-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
             } else {
@@ -358,7 +358,7 @@ class TourController extends Controller
 
     public function tourManagementEdit(TourRequest $request, $id)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $id)['data'];
+        $response = Http::get(url('').'/api/tour-show/' . $id)['data'];
         $tour = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
         $cateIds = [];
@@ -368,7 +368,7 @@ class TourController extends Controller
         }
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/tour-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/tour-edit/' . $id, $data);
 
             if ($response->status() == 200) {
                 return redirect()->route('tour.list')->with('success', 'Cập nhật tour thành công');
@@ -382,7 +382,7 @@ class TourController extends Controller
     public function tourManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/tour-show/' . $request->id)['data']['tour'];
+        $item = Http::get(url('').'/api/tour-show/' . $request->id)['data']['tour'];
         $listRatings = Rating::where('tour_id',$request->id)->orderBy('id', 'desc')->get();
         $star = 0; $t=0;
         foreach ($listRatings as $c) {

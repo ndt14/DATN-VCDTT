@@ -179,7 +179,7 @@ class FAQController extends Controller
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/faq?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/faq?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['faqs']), false);
             $perPage = $request->limit??5;// Số mục trên mỗi trang
@@ -205,7 +205,7 @@ class FAQController extends Controller
     public function faqManagementAdd(FAQRequest $request) {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/faq-store', $data);
+            $response = Http::post(url('').'/api/faq-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('faq.list')->with('success', 'Thêm mới faq thành công');
             } else {
@@ -216,10 +216,10 @@ class FAQController extends Controller
     }
 
     public function faqManagementEdit(FAQRequest $request, $id) {
-        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/' . $request->id)['data']['faq']));
+        $response = json_decode(json_encode(Http::get(url('').'/api/faq-show/' . $request->id)['data']['faq']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/faq-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/faq-edit/' . $id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('faq.list')->with('success', 'Cập nhật faq thành công');
             } else {
@@ -231,7 +231,7 @@ class FAQController extends Controller
 
     public function faqManagementDetail(Request $request) {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/faq-show/'.$request->id);
+        $response = Http::get(url('').'/api/faq-show/'.$request->id);
         if($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['faq']), false);
             $html = view('admin.faqs.detail', compact('item'))->render();

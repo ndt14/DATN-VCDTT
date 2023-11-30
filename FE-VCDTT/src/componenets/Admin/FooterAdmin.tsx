@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const FooterAdmin = (props: Props) => {
+const FooterAdmin = () => {
   return (
 <>
 <footer className="footer">

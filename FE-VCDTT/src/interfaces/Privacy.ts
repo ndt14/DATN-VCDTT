@@ -3,5 +3,7 @@ export interface Privacy {
     title: string;
     type: string;
     content:string;
-    status:number
+    status:number;
+    data:any;
+    // privacy:any;
 }
