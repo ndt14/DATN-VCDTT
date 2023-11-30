@@ -186,7 +186,7 @@ class BlogController extends Controller
         $data['sortDirection']=$sortDirection = $request->direction??'';
         $data['searchCol']=$searchCol = $request->searchCol??'';
         $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/blog?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/blog?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
         if($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['blogs']), false);
             $perPage = $request->limit??5;// Số mục trên mỗi trang
@@ -214,7 +214,7 @@ class BlogController extends Controller
     {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/blog-store', $data);
+            $response = Http::post(url('').'/api/blog-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('blog.list')->with('success', 'Thêm mới blog thành công');
             } else {
@@ -226,10 +226,10 @@ class BlogController extends Controller
 
     public function blogManagementEdit(BlogRequest $request, $id)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
+        $response = Http::get(url('').'/api/blog-show/' . $request->id)['data']['blog'];
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/blog-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/blog-edit/' . $id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('blog.list')->with('success', 'Cập nhật blog thành công');
             } else {
@@ -242,7 +242,7 @@ class BlogController extends Controller
     public function blogManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get('http://be-vcdtt.datn-vcdtt.test/api/blog-show/' . $request->id)['data']['blog'];
+        $item = Http::get(url('').'/api/blog-show/' . $request->id)['data']['blog'];
         $html = view('admin.blogs.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }

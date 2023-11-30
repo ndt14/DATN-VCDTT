@@ -88,7 +88,7 @@ class KeyValueController extends Controller
 
     public function keyvalueManagementEditAll(KeyValueRequest $request)
     {
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/keyvalue');
+        $response = Http::get(url('').'/api/keyvalue');
         $data = json_decode(json_encode($response->json()['data']['keyvalues']), false);
         $images=[];
         foreach ($data as $item){
@@ -109,7 +109,7 @@ class KeyValueController extends Controller
                 }
             }
 
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/keyvalue-edit-all', $dataInsert);
+            $response = Http::post(url('').'/api/keyvalue-edit-all', $dataInsert);
             if ($response->status() == 200) {
                 return redirect()->route('settings')->with('success', 'Cập nhật thành công');
             } else {

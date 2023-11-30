@@ -8,14 +8,14 @@ const BillApi = createApi({
     reducerPath: "bill",
     tagTypes: ['Bill'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
         }
     }),
     endpoints: (builder) => ({
-        getBills: builder.query<Bill[], void>({
+        getBills: builder.query<Bill, void>({
             query: () => `/bill`,
             providesTags: ['Bill']
         }),

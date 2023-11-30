@@ -8,14 +8,14 @@ const FaqApi = createApi({
     reducerPath: "faq",
     tagTypes: ['Faq'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
         }
     }),
     endpoints: (builder) => ({
-        getFaqs: builder.query<Faq[], void>({
+        getFaqs: builder.query<Faq, void>({
             query: () => `/faq`,
             providesTags: ['Faq']
         }),

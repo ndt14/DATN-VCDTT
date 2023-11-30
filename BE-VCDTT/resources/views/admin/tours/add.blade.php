@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                                Overview
-                                                                                            </div> -->
+                            Overview
+                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý tour
                     </h1>
@@ -60,10 +60,9 @@
     </div>
     <div class="page-body">
         <div class="container-xl">
-            <div class="row row-deck row-cards">
-                <div class="col-sm-12 col-md-8 offset-md-2" id="myDropzone">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{ route('tour.add') }}"
-                        method="POST" enctype="multipart/form-data">
+            <form class="row row-cards" id="frmAdd" action="{{ route('tour.add') }}" method="POST" enctype="multipart/form-data">
+            <div class="col-sm-12 col-md-9">
+                    <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Thêm tour
@@ -81,7 +80,7 @@
                                 </span>
                             </div>
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col">
                                     <label class="form-label">Ảnh đại diện</label>
                                     <div class="row g-2">
                                         <div class="col">
@@ -125,38 +124,6 @@
                                     </div>
                                     <span class="text-danger d-flex justify-content-start">
                                         @error('main_img')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <label class="form-label">Khoảng thời gian</label>
-                                    <input type="number" name="duration" class="form-control"
-                                        placeholder="Nhập khoảng thời gian diễn ra tour" value="{{old('duration') ?? ''}}">
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('duration')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Giá người lớn</div>
-                                    <input name="adult_price" type="number" placeholder="Nhập giá người lớn"
-                                        class="form-control" value="{{old('adult_price') ?? ''}}">
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('adult_price')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Giá trẻ nhỏ</div>
-                                    <input name="child_price" type="number" placeholder="Nhập giá cho trẻ nhỏ"
-                                        class="form-control" value="{{old('child_price') ?? ''}}">
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('child_price')
                                             {{ $message }}
                                         @enderror
                                     </span>
@@ -210,7 +177,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col">
                                     <div class="form-label">Lịch trình tour</div>
                                     <textarea id="editor-schedule" rows="6" class="form-control" name="pathway" placeholder="Nhập lịch trình của tour">{{old('pathway') ?? ''}}</textarea>
                                     <span class="text-danger d-flex justify-content-start">
@@ -219,17 +186,82 @@
                                         @enderror
                                     </span>
                                 </div>
-                                <div class="mb-3 col-6">
-                                    <label class="form-label">Choose Category</label>
-                                    <select type="text" class="form-select" name="categories_data[]"
-                                        placeholder="Select category" id="select-category" multiple></select>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-12">
+                                    <div class="form-label">Giá bao gồm</div>
+                                    <textarea id="editor-includes" rows="6" class="form-control" name="includes" placeholder="Giá tour bao gồm">{{old('includes') ?? ''}}</textarea>
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('includes')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                </div>
+                                <div class="mb-3 col-md-12">
+                                    <div class="form-label">Nội dung mô tả</div>
+                                    <textarea id="editor" rows="6" class="form-control" name="details" placeholder="Nhập nội dung mô tả">{{old('details') ?? ''}}</textarea>
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('details')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="imgArray" type="hidden" id="imgArray">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <div class="card border-0 shadow-lg rounded-4 ">
+                        <div class="card-header">
+                            <h2 class="card-title"><br></h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <label class="form-label">Khoảng thời gian</label>
+                                    <input type="number" name="duration" class="form-control"
+                                        placeholder="Nhập khoảng thời gian diễn ra tour" value="{{old('duration') ?? ''}}">
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('duration')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <div class="form-label">Giá người lớn</div>
+                                    <input name="adult_price" type="number" placeholder="Nhập giá người lớn"
+                                        class="form-control" value="{{old('adult_price') ?? ''}}">
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('adult_price')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                </div>
+                                <div class="mb-3 col-12">
+                                    <div class="form-label">Giá trẻ nhỏ</div>
+                                    <input name="child_price" type="number" placeholder="Nhập giá cho trẻ nhỏ"
+                                        class="form-control" value="{{old('child_price') ?? ''}}">
+                                    <span class="text-danger d-flex justify-content-start">
+                                        @error('child_price')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                             </div>
 
-
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <label class="form-label">Lựa chọn danh mục</label>
+                                    <select type="text" class="form-select" name="categories_data[]" placeholder="Chọn danh mục"
+                                            id="select-category" multiple></select>
+                                </div>
+                            </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-12">
                                     <div class="form-label">Phần trăm giảm giá</div>
                                     <input name="sale_percentage" type="number" class="form-control"
                                         placeholder="Nhập phần trăm giảm giá" value="{{old('sale_percentage') ?? ''}}">
@@ -240,7 +272,7 @@
                                     </span>
                                 </div>
 
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-12">
                                     <div class="form-label">Số lượng hành khách</div>
                                     <input name="tourist_count" type="number" class="form-control"
                                         placeholder="Nhập số lượng hành khách" value="{{old('tourist_count') ?? ''}}">
@@ -252,31 +284,16 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 col-md-6">
-                                    <div class="form-label">Nội dung mô tả</div>
-                                    <textarea id="editor" rows="6" class="form-control" name="details" placeholder="Nhập nội dung mô tả">{{old('details') ?? ''}}</textarea>
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('details')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                <div class="mb-3 col-md-12">
+                                    <div class="form-label">Người thêm</div>
+                                    <input name="creator" type="text" value="{{ Auth::user()->name ?? '' }}"
+                                        placeholder="" class="form-control" readonly disabled>
+                                    </div>
                                 </div>
-                                <div class="mb-3 col-md-6">
-                                    <div class="form-label">Giá bao gồm</div>
-                                    <textarea id="editor-includes" rows="6" class="form-control" name="includes" placeholder="Giá tour bao gồm">{{old('includes') ?? ''}}</textarea>
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('includes')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-12">
                                     <div class="form-label">Trạng thái</div>
                                     <div class="custom-controls-stacked">
-                                        <div class="" style="border: 1px solid darkgray;padding: 9px;border-radius: 5px;">
+                                        <div class="" style="padding: 9px;">
                                             <label class="custom-control custom-radio custom-control-inline me-2">
                                                 <input type="radio" class="custom-control-input"
                                                     @if (old('status') == '1') checked @endif name="status"
@@ -297,21 +314,14 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <div class="form-label">Người thêm</div>
-                                    <input name="creator" type="text" value="{{ Auth::user()->name ?? '' }}"
-                                        placeholder="" class="form-control" style="background-color: #80808061;" readonly>
-                                </div>
                             </div>
-                            <input name="imgArray" type="hidden" id="imgArray">
                         </div>
                         <div class="card-footer text-end">
                             <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
 
         </div>
     </div>

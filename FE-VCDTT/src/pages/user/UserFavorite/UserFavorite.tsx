@@ -1,20 +1,15 @@
-import React, { useRef } from "react";
-import { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
-import { Bill } from "../../../interfaces/Bill";
-import { Alert, Space } from "antd";
 import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 import { Tour } from "../../../interfaces/Tour";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
-import { Favorite } from "../../../interfaces/Favorite";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 
 const UserTour = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
 
   const { data: userData } = useGetUserByIdQuery(userId || "");
@@ -31,7 +26,7 @@ const UserTour = () => {
       user_id: userId,
       tour_id: id,
     };
-    updateTourFavorite(info).then((response) => {
+    updateTourFavorite(info).then(() => {
       alert("Bỏ thích thành công");
     });
   };
@@ -85,17 +80,20 @@ const UserTour = () => {
               <div className="shadow-lg">
                 <nav className="nav flex-column ">
                   <Link className="nav-link" to={"/user/profile"}>
-                  <IoPersonOutline />     Thông tin cá nhân
+                    <IoPersonOutline /> Thông tin cá nhân
                   </Link>
                   <Link className="nav-link active" to={"/user/tours"}>
-                  <FaRegListAlt />    Tour đã đặt
+                    <FaRegListAlt /> Tour đã đặt
                   </Link>
                   <Link
                     className="nav-link text-white"
                     style={{ backgroundColor: "#1677FF" }}
                     to={"/user/favorite"}
                   >
-                 <FaRegHeart />    Tour yêu thích
+                    <FaRegHeart /> Tour yêu thích
+                  </Link>
+                  <Link className="nav-link" to={"/user/coupon"}>
+                    <FaRegListAlt /> Mã Giảm giá
                   </Link>
                 </nav>
               </div>
@@ -155,7 +153,7 @@ const UserTour = () => {
 
                             <div className="btn-wrap">
                               <a
-                                onClick={handleClick(id)}
+                                onClick={() => handleClick(id || 0)}
                                 href="#"
                                 className="button-text width-6"
                               >

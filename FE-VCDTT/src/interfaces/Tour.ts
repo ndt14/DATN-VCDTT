@@ -15,4 +15,5 @@ export interface Tour {
     view_count: number;
     status: string;
     star:number;
+    data:any;
 }

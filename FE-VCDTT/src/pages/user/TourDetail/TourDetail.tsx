@@ -1,69 +1,75 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { Key, useEffect, useRef, useState } from "react";
 import { useGetTourByIdQuery } from "../../../api/tours";
-import Loader from "../../../componenets/User/Loader";
 import "./TourDetail.css";
 import { DatePicker, Rate, Skeleton } from "antd";
 import type { DatePickerProps } from "antd";
 import moment from "moment";
-import TinySlider from "tiny-slider-react";
+// import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 import { Tour } from "../../../interfaces/Tour";
 import { Rating } from "../../../interfaces/Rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import {
-  useAddRatingMutation,
-  useGetRatingByIdQuery,
-} from "../../../api/rating";
+import { useAddRatingMutation } from "../../../api/rating";
 import { AiFillEye } from "react-icons/ai";
-import { useGetUserByIdQuery } from "../../../api/user";
+// import { useGetUserByIdQuery } from "../../../api/user";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 import ReactPaginate from "react-paginate";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/en";
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
-  const [idArray, setIdArray] = useState<number[]>([]);
+  const [idArray] = useState<number[]>([]);
 
   const [addRating] = useAddRatingMutation();
-  const { id: idRating } = useParams<{ id: string }>();
-  const { data: dataRating } = useGetRatingByIdQuery(idRating | "");
+  // const { id: idRating } = useParams<{ id: string }>();
+  // const { data: dataRating } = useGetRatingByIdQuery(idRating || "");
   // console.log(dataRating);
 
-  const user = JSON.parse(localStorage.getItem("user")) || "";
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   // console.log(user);
 
   const userId = user?.id;
-  const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId | "");
+  const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId || "");
   // console.log(TourHistoryData);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
   const userName = user.name;
-  const location = useLocation();
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+  const onChange: DatePickerProps["onChange"] = (_date, dateString) => {
     setDateTour(dateString);
     setIsDateSelected(true);
     // localStorage.setItem("dateTour", dateString);
   };
-  const settings = {
-    lazyload: false,
-    nav: false,
-    mouseDrag: true,
-    items: 3,
-    autoplay: true,
-    autoplayButtonOutput: false,
-  };
+  // const settings = {
+  //   lazyload: false,
+  //   nav: false,
+  //   mouseDrag: true,
+  //   items: 3,
+  //   autoplay: true,
+  //   autoplayButtonOutput: false,
+  // };
 
   //
   const { id } = useParams<{ id: string }>();
+  // const tourId = parseInt(id);
 
   const { data: tourData, isLoading } = useGetTourByIdQuery(id || "");
   console.log(tourData);
   const [tour, setTour] = useState(tourData);
 
-  const tourId = parseInt(id);
+  let tourId;
+  if (id) {
+    tourId = parseInt(id, 10);
+  }
+  if (tourId) {
+    // Use tourId in your logic
+    // For example:
+    // console.log(tourId);
+  }
   // console.log(typeof tourId);
   const main_img = tourData?.data?.tour.main_img;
   const tourName = tourData?.data?.tour.name;
@@ -90,8 +96,8 @@ const TourDetail = () => {
   }).format(tourChildPrice);
 
   //validate date
-  const disabledDate = (current: moment.Moment | null) => {
-    return current && current < moment().startOf("day");
+  const disabledDate = (current: Dayjs | null): boolean => {
+    return current ? current.isBefore(dayjs().startOf("day")) : false;
   };
 
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
@@ -140,11 +146,11 @@ const TourDetail = () => {
       setChildPrice(newPrice);
     }
   };
-
+  const lastPrice = price + childPrice;
   const formattedResultPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(price + childPrice);
+  }).format(lastPrice);
 
   //đánh giá
   const renderStarRating = (rating: number): JSX.Element[] => {
@@ -167,7 +173,7 @@ const TourDetail = () => {
     user_id: userId,
     user_name: userName,
     content: "",
-    tour_id: id, // Assuming 'id' is the tour ID
+    tour_id: parseInt(id || "0", 10), // Assuming 'id' is the tour ID
   });
   // const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
   const handleStarRatingChange = (star: number) => {
@@ -196,21 +202,35 @@ const TourDetail = () => {
 
         // After a successful rating submission, update the component's state
         const newRating = {
-          id: response.data.id, // Use the actual ID received from the server
+          // id: response?.data.id, // Use the actual ID received from the server
           user_name: ratingData.user_name,
           content: ratingData.content,
           star: ratingData.star,
           created_at: new Date().toLocaleString(), // You can format the date accordingly
         };
-
+     console.log(newRating);
+     
         // Create a copy of the existing ratings and add the new rating
-        const updatedRatings = [...tourData.data.listRatings, newRating];
+        const updatedRatings = [...tourData?.data.listRatings, newRating];
+        console.log(updatedRatings);
+        
 
-        // Update the component's state with the new ratings
-        setTour({
-          ...tourData,
-          data: { ...tourData.data, listRatings: updatedRatings },
+        // Update the component's state with the new ratings  
+        setTour((prevTour: Tour | undefined) => {
+          if (prevTour) {
+            return {
+              ...prevTour,
+              data: {
+                ...prevTour.data,
+                listRatings: updatedRatings,
+              },
+            };
+          }
+          // Handle the case where prevTour is undefined, if applicable
+          return undefined; // Or return a default value of type Tour | undefined
         });
+        
+        
 
         // Reset the rating form or clear the inputs
         setRatingData({
@@ -218,7 +238,7 @@ const TourDetail = () => {
           user_id: userId,
           user_name: userName,
           content: "",
-          tour_id: id, // Assuming 'id' is the tour ID
+          tour_id: parseInt(id || "0", 10), // Assuming 'id' is the tour ID
         });
       } catch (error) {
         // Handle error, e.g., show an error message
@@ -240,7 +260,7 @@ const TourDetail = () => {
   const purchase_history = TourHistoryData?.data?.purchase_history;
   if (purchase_history) {
     var foundPurchase = purchase_history.find(
-      (purchase) => purchase.tour_id === Number(id)
+      (purchase: { tour_id: number }) => purchase.tour_id === Number(id)
     );
 
     // console.log(foundPurchase.purchase_status);
@@ -261,7 +281,7 @@ const TourDetail = () => {
   const calculateAverageRating = () => {
     let totalRating = 0;
     if (tourData?.data?.listRatings) {
-      tourData.data.listRatings.forEach((rating) => {
+      tourData.data.listRatings.forEach((rating: { star: string }) => {
         totalRating += parseInt(rating.star);
       });
       return totalRating / tourData.data.listRatings.length;
@@ -284,16 +304,17 @@ const TourDetail = () => {
   //end đánh giá
   const isLoggedIn = user != "";
   //map
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  useEffect(() => {
-    if (iframeRef.current) {
-      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
-        exact_location
-      )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
-      iframeRef.current.src = iframeSrc;
-    }
-  }, [exact_location]);
+useEffect(() => {
+  if (iframeRef.current) {
+    const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+      exact_location
+    )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+    iframeRef.current.src = iframeSrc;
+  }
+}, [exact_location]);
+
   //end map
 
   //SEO
@@ -322,27 +343,25 @@ const TourDetail = () => {
           <div className="container">
             <div className="row">
               <div className="col-lg-7">
-                
                 <div className="single-tour-inner">
-                {isLoading ? (
-                <Skeleton active />
-              ) : (
-                  <div>
-                  {tourSale != 0 ? (
-                    <div>
-                      
-                      <h2>
-                        {tourName}{" "}
-                        <span className="badge bg-success">
-                          Giảm {tourSale} %
-                        </span>
-                      </h2>
-                    </div>
+                  {isLoading ? (
+                    <Skeleton active />
                   ) : (
-                    <h2>{tourName}</h2>
+                    <div>
+                      {tourSale != 0 ? (
+                        <div>
+                          <h2>
+                            {tourName}{" "}
+                            <span className="badge bg-success">
+                              Giảm {tourSale} %
+                            </span>
+                          </h2>
+                        </div>
+                      ) : (
+                        <h2>{tourName}</h2>
+                      )}
+                    </div>
                   )}
-</div>
-              )}
                   <div>
                     <div
                       id="carousel-thumb"
@@ -352,16 +371,22 @@ const TourDetail = () => {
                     >
                       <div className="carousel-inner" role="listbox">
                         <div className="carousel-item active">
-                        {isLoading ? (
-                            <Skeleton.Image active style={{ width: '800px', height: '400px',margin:'10px' }}/>
-
-                            ) : (
-                          <img
-                            className="d-block img-tour-detail"
-                            src={tourData?.data?.tour.main_img}
-                            alt="First slide"
-                          />
-                            )}
+                          {isLoading ? (
+                            <Skeleton.Image
+                              active
+                              style={{
+                                width: "800px",
+                                height: "400px",
+                                margin: "10px",
+                              }}
+                            />
+                          ) : (
+                            <img
+                              className="d-block img-tour-detail"
+                              src={tourData?.data?.tour.main_img}
+                              alt="First slide"
+                            />
+                          )}
                         </div>
                         {/* <div className="carousel-item">
                           <img
@@ -377,7 +402,7 @@ const TourDetail = () => {
                             alt="Third slide"
                           />
                         </div> */}
-                        {imageGallery?.map(({ url }) => {
+                        {imageGallery?.map(({ url }:any) => {
                           return (
                             <div className="carousel-item ">
                               <img
@@ -415,22 +440,21 @@ const TourDetail = () => {
                         <span className="sr-only">Next</span>
                       </a>
                       {isLoading ? (
-                         <Skeleton.Image active/>
-
-                            ) : (
-                      <ul className="carousel-indicator">
-                        <li
-                          data-target="#carousel-thumb"
-                          data-slide-to="0"
-                          className=" mx-1"
-                          style={{ width: "80px" }}
-                        >
-                          <img
-                            className="d-block img-fluid img-tour-detail-small"
-                            src={tourData?.data?.tour.main_img}
-                          />
-                        </li>
-                        {/* <li
+                        <Skeleton.Image active />
+                      ) : (
+                        <ul className="carousel-indicator">
+                          <li
+                            data-target="#carousel-thumb"
+                            data-slide-to="0"
+                            className=" mx-1"
+                            style={{ width: "80px" }}
+                          >
+                            <img
+                              className="d-block img-fluid img-tour-detail-small"
+                              src={tourData?.data?.tour.main_img}
+                            />
+                          </li>
+                          {/* <li
                           data-target="#carousel-thumb"
                           data-slide-to="1"
                           style={{ width: "80px" }}
@@ -452,26 +476,31 @@ const TourDetail = () => {
                             src="https://i.ibb.co/sC4SgqP/slider-3.jpg"
                           />
                         </li> */}
-                        {imageGallery?.map((image, index) => {
-                          const { url } = image;
-                          return (
-                            <li
-                              data-target="#carousel-thumb"
-                              data-slide-to={index + 1}
-                              className="mx-1"
-                              style={{ width: "80px" }}
-                              key={index}
-                            >
-                              <img
-                                className="d-block img-fluid img-tour-detail-small"
-                                src={url}
-                                alt={`Image ${index}`}
-                              />
-                            </li>
-                          );
-                        })}
-                      </ul>
-                            )}
+                          {imageGallery?.map(
+                            (
+                              image: { url: any },
+                              index: Key | null | undefined
+                            ) => {
+                              const { url } = image;
+                              return (
+                                <li
+                                  data-target="#carousel-thumb"
+                                  data-slide-to={(index as  number) + 1}
+                                  className="mx-1"
+                                  style={{ width: "80px" }}
+                                  key={index}
+                                >
+                                  <img
+                                    className="d-block img-fluid img-tour-detail-small"
+                                    src={url}
+                                    alt={`Image ${index}`}
+                                  />
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
+                      )}
                     </div>
                   </div>
 
@@ -598,7 +627,7 @@ const TourDetail = () => {
                                 created_at,
                               }: Rating) => {
                                 // Chuyển đổi giá trị "start" thành số nguyên
-                                const starRating = parseInt(star);
+                                // const starRating = parseInt(star);
 
                                 return (
                                   <>
@@ -617,10 +646,10 @@ const TourDetail = () => {
                                             <div className="rating-wrap">
                                               <div
                                                 className=""
-                                                title={`Rated ${starRating} sao trên 5 sao tối đa`}
+                                                title={`Rated ${star} sao trên 5 sao tối đa`}
                                               >
                                                 <span className="w-90">
-                                                  {renderStarRating(starRating)}
+                                                  {renderStarRating(star as number)}
                                                 </span>
                                               </div>
                                             </div>
@@ -628,7 +657,7 @@ const TourDetail = () => {
                                           <p
                                             className=""
                                             dangerouslySetInnerHTML={{
-                                              __html: content,
+                                              __html: content||""
                                             }}
                                           ></p>
                                         </div>
@@ -673,7 +702,7 @@ const TourDetail = () => {
                             <h3 className="comment-title">Đánh giá của bạn</h3>
                             {isLoggedIn ? (
                               tour === tourData &&
-                              foundPurchase?.purchase_status == 3 ? (
+                              foundPurchase?.tour_status == 3 ? (
                                 <form className="comment-form">
                                   <div className="full-width rate-wrap">
                                     <label>Chọn sao</label>
@@ -751,201 +780,202 @@ const TourDetail = () => {
 
               <div className="col-lg-5">
                 <div className="sidebar">
-                {isLoading ? (
-                <Skeleton active />
-              ) : (
-                  <div className="package-price">
-                    <h5 className="price rounded-2">
-                      <span className="text-decoration-line-through mr-3">
-                        {" "}
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(preSaleTourPrice)}{" "}
-                      </span>
-                      <span className=""> {formattedTourPrice} </span>
-                    </h5>
-                    {/* {tourSale != 0 ? (
+                  {isLoading ? (
+                    <Skeleton active />
+                  ) : (
+                    <div className="package-price">
+                      <h5 className="price rounded-2">
+                        <span className="text-decoration-line-through mr-3">
+                          {" "}
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(preSaleTourPrice)}{" "}
+                        </span>
+                        <span className=""> {formattedTourPrice} </span>
+                      </h5>
+                      {/* {tourSale != 0 ? (
                       <p className="price">Giảm {tourSale}%</p>
                     ) : (
                       <span></span>
                     )} */}
-                    <div className="start-wrap">
-                      <div
-                        className=""
-                        title={`Rated ${averageRating} out of 5`}
-                      >
-                        <span className="w-90">
-                          <Rate allowHalf disabled value={averageRating} />
-                        </span>
+                      <div className="start-wrap">
+                        <div
+                          className=""
+                          title={`Rated ${averageRating} out of 5`}
+                        >
+                          <span className="w-90">
+                            <Rate allowHalf disabled value={averageRating} />
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-              )}
-               {isLoading ? (
-                <Skeleton active />
-              ) : (
-                  <div className="widget-bg booking-form-wrap">
-                    <h4 className="bg-title">Thông tin đặt tour</h4>
+                  )}
+                  {isLoading ? (
+                    <Skeleton active />
+                  ) : (
+                    <div className="widget-bg booking-form-wrap">
+                      <h4 className="bg-title">Thông tin đặt tour</h4>
 
-                    <form className="booking-form">
-                      <div className="row">
-                        {tourSale != 0 ? (
-                          <div className="col-sm-7">
-                            <label htmlFor="" className="h6">
-                              Người lớn(150cm trở lên)
-                            </label>
-                            <div className="">
-                              <span className="font-weight-bold mr-3 text-decoration-line-through">
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(preSaleTourPrice)}
-                              </span>
-                              <span className="price">
-                                {formattedTourPrice}
-                              </span>
+                      <form className="booking-form">
+                        <div className="row">
+                          {tourSale != 0 ? (
+                            <div className="col-sm-7">
+                              <label htmlFor="" className="h6">
+                                Người lớn(150cm trở lên)
+                              </label>
+                              <div className="">
+                                <span className="font-weight-bold mr-3 text-decoration-line-through">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(preSaleTourPrice)}
+                                </span>
+                                <span className="price">
+                                  {formattedTourPrice}
+                                </span>
+                              </div>
+                              <div className="price"></div>
+
+                              <label htmlFor="" className="h6">
+                                Trẻ em dưới 150cm
+                              </label>
+                              <div className="">
+                                <span className="font-weight-bold mr-3 text-decoration-line-through">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(preSaleTourChildPrice)}
+                                </span>
+                                <span className="price">
+                                  {formattedTourChildPrice}
+                                </span>
+                              </div>
+                              <div className="price"></div>
                             </div>
-                            <div className="price"></div>
-
-                            <label htmlFor="" className="h6">
-                              Trẻ em dưới 150cm
-                            </label>
-                            <div className="">
-                              <span className="font-weight-bold mr-3 text-decoration-line-through">
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(preSaleTourChildPrice)}
-                              </span>
-                              <span className="price">
+                          ) : (
+                            <div className="col-sm-7">
+                              <label htmlFor="" className="h6">
+                                Người lớn(150cm trở lên)
+                              </label>
+                              <div className="price">{formattedTourPrice}</div>
+                              <label htmlFor="" className="h6">
+                                Trẻ em dưới 150cm
+                              </label>
+                              <div className="price">
                                 {formattedTourChildPrice}
-                              </span>
+                              </div>
                             </div>
-                            <div className="price"></div>
-                          </div>
-                        ) : (
-                          <div className="col-sm-7">
-                            <label htmlFor="" className="h6">
-                              Người lớn(150cm trở lên)
-                            </label>
-                            <div className="price">{formattedTourPrice}</div>
-                            <label htmlFor="" className="h6">
-                              Trẻ em dưới 150cm
-                            </label>
-                            <div className="price">
-                              {formattedTourChildPrice}
-                            </div>
-                          </div>
-                        )}
+                          )}
 
-                        <div className="col-sm-5 mt-2">
-                          {/* <a className="minus-btn mr-2" href="#">
+                          <div className="col-sm-5 mt-2">
+                            {/* <a className="minus-btn mr-2" href="#">
                             <i className="fa fa-minus"></i>
                           </a> */}
-                          <input
-                            className="quantity-form"
-                            onChange={handleProductNumberChange}
-                            type="number"
-                            value={productNumber}
-                          />
-                          <br />
-                          <input
-                            className="quantity-form"
-                            style={{
-                              marginTop: "36px",
-                            }}
-                            type="number"
-                            // min={0}
-                            onChange={handleProductChildNumberChange}
-                            value={productChildNumber}
-                          />
-                          {/* <a className="plus-btn ml-2" href="#">
+                            <input
+                              className="quantity-form"
+                              onChange={handleProductNumberChange}
+                              type="number"
+                              value={productNumber}
+                            />
+                            <br />
+                            <input
+                              className="quantity-form"
+                              style={{
+                                marginTop: "36px",
+                              }}
+                              type="number"
+                              // min={0}
+                              onChange={handleProductChildNumberChange}
+                              value={productChildNumber}
+                            />
+                            {/* <a className="plus-btn ml-2" href="#">
                             <i className="fa fa-plus"></i>
                           </a> */}
-                        </div>
+                          </div>
 
-                        <div className="col-sm-5 mt-2">
-                          <label htmlFor="" className="h6">
-                            Chọn ngày đi
-                          </label>
+                          <div className="col-sm-5 mt-2">
+                            <label htmlFor="" className="h6">
+                              Chọn ngày đi
+                            </label>
 
-                          <DatePicker
-                            onChange={onChange}
-                            disabledDate={disabledDate}
-                          />
-                        </div>
+                            <DatePicker
+                              onChange={onChange}
+                              disabledDate={disabledDate}
+                            />
+                          </div>
 
-                        <div className="col-sm-12">
-                          {productNumber + productChildNumber > tourLimit ? (
-                            <p style={{ color: "red" }} className="mt-2">
-                              Số lượng vượt quá giới hạn tour. Nếu bạn thực sự
-                              muốn đặt tour với số lượng lớn, hãy liên hệ trực
-                              tiếp với chúng tôi
-                            </p>
-                          ) : (
-                            <div></div>
-                          )}
-                        </div>
+                          <div className="col-sm-12">
+                            {productNumber + productChildNumber > tourLimit ? (
+                              <p style={{ color: "red" }} className="mt-2">
+                                Số lượng vượt quá giới hạn tour. Nếu bạn thực sự
+                                muốn đặt tour với số lượng lớn, hãy liên hệ trực
+                                tiếp với chúng tôi
+                              </p>
+                            ) : (
+                              <div></div>
+                            )}
+                          </div>
 
-                        <div className="col-sm-12 mt-2">
-                          <label htmlFor="" className="h5 d-flex">
-                            <p className="mr-2">Tổng giá :</p>{" "}
-                            <p className="price">
-                              {" "}
-                              {price + childPrice > 0
-                                ? formattedResultPrice
-                                : formattedTourPrice}
-                            </p>
-                          </label>
-                        </div>
-                        <div className="col-sm-12">
-                          {isDateSelected ? (
-                            <div className="form-group submit-btn">
-                              <Link
-                                to={`/check_order_information/${id}`}
-                                state={{
-                                  tourData,
-                                  productNumber,
-                                  productChildNumber,
-                                  childPrice,
-                                  price,
-                                  formattedResultPrice,
-                                  dateTour,
-                                  tourName,
-                                  tourLocation,
-                                  tourPrice,
-                                  tourChildPrice,
-                                  tourId,
-                                  exact_location,
-                                  tourDuration,
-                                  main_img,
-                                }}
-                              >
-                                <button
-                                  type="submit"
-                                  name="submit"
-                                  value="Đặt tour"
-                                  disabled={
-                                    productNumber + productChildNumber >
-                                    tourLimit
-                                  }
-                                  className="btn-continue"
+                          <div className="col-sm-12 mt-2">
+                            <label htmlFor="" className="h5 d-flex">
+                              <p className="mr-2">Tổng giá :</p>{" "}
+                              <p className="price">
+                                {" "}
+                                {price + childPrice > 0
+                                  ? formattedResultPrice
+                                  : formattedTourPrice}
+                              </p>
+                            </label>
+                          </div>
+                          <div className="col-sm-12">
+                            {isDateSelected ? (
+                              <div className="form-group submit-btn">
+                                <Link
+                                  to={`/check_order_information/${id}`}
+                                  state={{
+                                    tourData,
+                                    productNumber,
+                                    productChildNumber,
+                                    childPrice,
+                                    price,
+                                    formattedResultPrice,
+                                    dateTour,
+                                    tourName,
+                                    tourLocation,
+                                    tourPrice,
+                                    tourChildPrice,
+                                    tourId,
+                                    exact_location,
+                                    tourDuration,
+                                    main_img,
+                                    lastPrice,
+                                  }}
                                 >
-                                  Đặt tour
-                                </button>
-                              </Link>
-                            </div>
-                          ) : (
-                            <p style={{ color: "red" }}>
-                              Vui lòng chọn ngày đi để tiếp tục.
-                            </p>
-                          )}
+                                  <button
+                                    type="submit"
+                                    name="submit"
+                                    value="Đặt tour"
+                                    disabled={
+                                      productNumber + productChildNumber >
+                                      tourLimit
+                                    }
+                                    className="btn-continue"
+                                  >
+                                    Đặt tour
+                                  </button>
+                                </Link>
+                              </div>
+                            ) : (
+                              <p style={{ color: "red" }}>
+                                Vui lòng chọn ngày đi để tiếp tục.
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-              )}
+                      </form>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

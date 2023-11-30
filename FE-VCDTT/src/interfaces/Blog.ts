@@ -6,4 +6,6 @@ export interface Blog {
     main_img:string;
     view_count:number;
     status: number;
+    data:any;
+    blog:any;
 }
