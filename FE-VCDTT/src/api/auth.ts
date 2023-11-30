@@ -22,6 +22,10 @@ const AuthApi = createApi({
                 body: credentials,
             }),
         }),
+        getLoginGoogle: builder.query<{ name: string, token: string, email: string,url:string }, void>({
+            query: () => `/auth/google`,
+            
+        }),
         resetPassword: builder.mutation<{ message: string }, { email: string }>({
             query: (email) => ({
                 url: '/reset-password', // Update the URL accordingly
@@ -39,7 +43,7 @@ const AuthApi = createApi({
     }),
 });
 
-export const { useLoginMutation,useRegisterMutation,useResetPasswordMutation,useResetPasswordWithTokenMutation} = AuthApi;
+export const { useLoginMutation,useRegisterMutation,useResetPasswordMutation,useResetPasswordWithTokenMutation,useGetLoginGoogleQuery} = AuthApi;
 
 export const authReducer = AuthApi.reducer;
 export default AuthApi;
