@@ -99,7 +99,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::match(['GET', 'POST'], '/tour/add', [TourController::class, 'tourManagementAdd'])->name('tour.add')->middleware(['permission:admin|add tour']);
     Route::match(['GET', 'POST'], '/tour/edit/{id}', [TourController::class, 'tourManagementEdit'])->name('tour.edit')->middleware(['permission:admin|edit tour']);
     Route::get('/tour/detail/{id}', [TourController::class, 'tourManagementDetail'])->name('tour.detail')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review']);
-
+    Route::get('tour/trash', [TourController::class, 'tourManagementTrash'])->name('tour.trash')->middleware(['permission:admin|delete tour']);
+    Route::get('/tour/restore/{id}', [TourController::class,'tourManagementRestore'])->name('tour.restore')->middleware(['permission:admin|delete tour']);
 
 
 
@@ -144,6 +145,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/category/add', [CategoryController::class, 'cateManagementAdd'])->name('category.add')->middleware(['permission:admin|add category']);
     Route::post('/category/store', [CategoryController::class, 'cateManagementStore'])->name('category.store')->middleware(['permission:admin|add category']);
     Route::match(['GET', 'POST'], '/category/edit/{id}', [CategoryController::class, 'cateManagementEdit'])->name('category.edit')->middleware(['permission:admin|edit category']);
+    Route::get('/category/trash', [CategoryController::class, 'cateManagementTrash'])->name('cate.trash')->middleware(['permission:admin|delete category']);
+    Route::get('/category/restore/{id}', [CategoryController::class,'cateManagementRestore'])->name('cate.store')->middleware(['permission:admin|delete category']);
 
     Route::get('/page', [TermAndPrivacyController::class, 'pageManagementList'])->name('page.list')->middleware(['permission:admin']);;
     Route::match(['GET', 'POST'], '/page/add', [TermAndPrivacyController::class, 'pageManagementAdd'])->name('page.add')->middleware(['permission:admin']);;

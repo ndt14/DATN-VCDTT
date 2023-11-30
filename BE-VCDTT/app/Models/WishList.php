@@ -18,6 +18,6 @@ class WishList extends Model
     ];
 
     public function tour() {
-        return $this->belongsTo(Tour::class);
+        return $this->belongsTo(Tour::class)->withTrashed();
     }
 }

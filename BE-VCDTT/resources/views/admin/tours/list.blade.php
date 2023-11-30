@@ -37,7 +37,7 @@ Danh sách tour
                         <div class="card-header">
                             <h3 class="card-title">Tour</h3>
                             @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete tour'))
-                            <a href="" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
+                            <a href="{{route('tour.trash')}}" style="padding-left: 5px; text-decoration: none; color: black;"><span style="color: black;">|</span> Thùng rác</a>
                             @endif
                             @if(auth()->user()->can('add tour') || auth()->user()->is_admin == 1)
                 <div class="col-auto ms-auto d-print-none">

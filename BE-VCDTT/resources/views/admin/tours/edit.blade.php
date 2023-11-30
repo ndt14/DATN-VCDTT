@@ -200,7 +200,7 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Lịch trình tour</div>
-                                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="pathway"
+                                        <textarea id="editor-sche" rows="6" class="form-control text-editor ckeditor" name="pathway"
                                             placeholder="Nhập lịch trình của tour">{{ $tour->pathway  }}</textarea>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('exact_location')
@@ -209,8 +209,8 @@ Chỉnh sửa tour
                                         </span>
                                     </div>
                                     <div class="mb-3 col-6">
-                                        <label class="form-label">Choose Category</label>
-                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Select category" id="select-category" value="" multiple></select>
+                                        <label class="form-label">Danh mục</label>
+                                        <select type="text" class="form-select" name="categories_data[]" placeholder="Thêm danh mục cho tour" id="select-category" value="" multiple></select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -241,7 +241,7 @@ Chỉnh sửa tour
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <div class="form-label">Nội dung mô tả</div>
-                                        <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="details"
+                                        <textarea id="editor-des" rows="6" class="form-control text-editor ckeditor" name="details"
                                             placeholder="Nhập nội dung mô tả">{{ $tour->details  }}</textarea>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('details')
@@ -331,7 +331,7 @@ Chỉnh sửa tour
 @section('ckeditor_5')
     <script>
         ClassicEditor
-            .create(document.querySelector('#editor'), {
+            .create(document.querySelector('#editor-des'), {
                 ckfinder: {
                     uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
                 }
@@ -359,7 +359,7 @@ Chỉnh sửa tour
     </script>
       <script>
         ClassicEditor
-            .create(document.querySelector('#editor-schedule'), {
+            .create(document.querySelector('#editor-sche'), {
                 ckfinder: {
                     uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
                 }

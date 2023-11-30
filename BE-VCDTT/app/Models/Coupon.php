@@ -44,9 +44,9 @@ class Coupon extends Model
     }
 
     public function tour() {
-        return $this->belongsTo(Tour::class);
+        return $this->belongsTo(Tour::class)->withTrashed();
     }
     public function cate() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->withTrashed();
     }
 }

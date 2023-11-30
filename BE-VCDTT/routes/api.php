@@ -62,6 +62,7 @@ Route::post('/category-store', [CategoryController::class, 'store'])->name('api.
 Route::get('/category-show/{id}', [CategoryController::class, 'show']);
 Route::put('/category-edit/{id}', [CategoryController::class, 'update'])->name('api.category.edit');
 Route::delete('/category-destroy/{id}', [CategoryController::class, 'destroy']);
+Route::delete('/category-destroy-forever/{id}', [CategoryController::class, 'destroyForever']);
 
 // Coupon
 Route::get('/coupon', [CouponController::class, 'index']);

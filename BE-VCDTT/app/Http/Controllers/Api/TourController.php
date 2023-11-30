@@ -394,5 +394,30 @@ class TourController extends Controller
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
+
+    public function tourManagementTrash(Request $request) {
+        $data = Tour::onlyTrashed()->get();
+        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.tours.trash', compact('data'));
+    }
+
+     // khôi phục bản ghi bị xóa mềm
+
+     public function tourManagementRestore($id) {
+
+        if($id) {
+            $data = Tour::withTrashed()->find($id);
+            if($data) {
+                $data->restore();
+            }
+            return redirect()->route('tour.trash')->with('success', 'Khôi phục tour thành công');
+        }
+        return redirect()->route('tour.trash');
+    }
     
 }

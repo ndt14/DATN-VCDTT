@@ -220,9 +220,9 @@
                                     </span>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label class="form-label">Choose Category</label>
+                                    <label class="form-label">Danh mục</label>
                                     <select type="text" class="form-select" name="categories_data[]"
-                                        placeholder="Select category" id="select-category" multiple></select>
+                                        placeholder="Thêm danh mục cho tour" id="select-category" multiple></select>
                                 </div>
                             </div>
 
