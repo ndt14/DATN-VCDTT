@@ -8,7 +8,7 @@ const BlogApi = createApi({
     reducerPath: "blog",
     tagTypes: ['Blog'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://admin.vcdtt.online/api",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);

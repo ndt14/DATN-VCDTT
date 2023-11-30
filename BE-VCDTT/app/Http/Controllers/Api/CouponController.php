@@ -260,7 +260,7 @@ class CouponController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get("http://be-vcdtt.datn-vcdtt.test/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['coupons']), false);
 
@@ -289,7 +289,7 @@ class CouponController extends Controller
     {
         if ($request->isMethod('POST')) {
             $data = $request->except('_token');
-            $response = Http::post('http://be-vcdtt.datn-vcdtt.test/api/coupon-store', $data);
+            $response = Http::post(url('').'/api/coupon-store', $data);
             if ($response->status() == 200) {
                 return redirect()->route('coupon.list')->with('success', 'Thêm mới mã giảm giá thành công');
             } else {
@@ -301,10 +301,10 @@ class CouponController extends Controller
 
     public function couponManagementEdit(Request $request, $id)
     {
-        $response = json_decode(json_encode(Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $id)['data']['coupon']));
+        $response = json_decode(json_encode(Http::get(url('').'/api/coupon-show/' . $id)['data']['coupon']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put('http://be-vcdtt.datn-vcdtt.test/api/coupon-edit/' . $id, $data);
+            $response = Http::put(url('').'/api/coupon-edit/' . $id, $data);
             if ($response->status() == 200) {
                 return redirect()->route('coupon.list')->with('success', 'Cập nhật mã giảm giá thành công');
             } else {
@@ -318,7 +318,7 @@ class CouponController extends Controller
     public function couponManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $response = Http::get('http://be-vcdtt.datn-vcdtt.test/api/coupon-show/' . $request->id);
+        $response = Http::get(url('').'/api/coupon-show/' . $request->id);
         if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['coupon']), false);
             $html = view('admin.coupons.detail', compact('item'))->render();

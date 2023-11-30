@@ -202,7 +202,7 @@
         class="email-bg">
         <div style="max-width: 700px; margin: 0 auto;" class="email-container">
             <table width="100%"
-                style="margin: auto;  background-image: url(images/top-right-of-email.png); background-position: 100% 0%; background-repeat: no-repeat;">
+                style="margin: auto;  background-image: url({{url('images/top-right-of-email.png')}}); background-position: 100% 0%; background-repeat: no-repeat;">
                 <tbody>
                     <!-- header -->
 
@@ -212,8 +212,8 @@
                                 class="in-center" style="margin-top: 86px;margin-bottom: 56px; ">
                                 <tr style="margin-bottom: 5rem">
                                     <td style=" text-align: left;">
-                                        <a href="#S" target="_blank">
-                                            <img src="images/logo.jpg" width="200" height="50" alt="alt_text"
+                                        <a href="https://vcdtt.online/" target="_blank">
+                                            <img src="{{url('images/logo.jpg')}}" width="200" height="50" alt="alt_text"
                                                 border="0" style="height: auto;">
                                         </a>
                                     </td>
@@ -306,7 +306,7 @@
                                 <tr>
                                     <td>
                                         <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
-                                            target="_blank" href="http://datn-vcdtt.test:5173/user/tours">Kiểm tra đơn
+                                            target="_blank" href="https://vcdtt.online/user/tours">Kiểm tra đơn
                                             hàng của bạn</a>
                                     </td>
                                 </tr>
@@ -337,15 +337,15 @@
                                         <div
                                             style="color: #0D6EFD; margin-left: auto;margin-right: auto; width: auto; display: flex; justify-items: center; justify-content: center;">
                                             <span style="margin: 0 9px; border-bottom: #0D6EFD solid 1px;">
-                                                <a target="_blank" href="#"
+                                                <a target="_blank" href="https://vcdtt.online/privacy_policy"
                                                     style="text-decoration: none; color: #222222;">Chính sách</a>
                                             </span>
                                             <span style="margin: 0 9px; border-bottom: #0D6EFD solid 1px;">
-                                                <a target="_blank" href="#"
+                                                <a target="_blank" href="https://vcdtt.online/contact"
                                                     style="text-decoration: none; color: #222222;">Liên hệ</a>
                                             </span>
                                             <span style="margin: 0 9px; border-bottom: #0D6EFD solid 1px;">
-                                                <a target="_blank" href="#Ư"
+                                                <a target="_blank" href="https://vcdtt.online/"
                                                     style="text-decoration: none; color: #222222;">VCDTT</a>
                                             </span>
                                         </div>
@@ -356,7 +356,7 @@
                                 width="auto" style="margin-bottom: 37px; margin-left: auto; margin-right: auto;">
                                 <tr style="margin-bottom: 5rem">
                                     <td>
-                                        <img src="images/logo.jpg" width="128" height="45" alt="alt_text"
+                                        <img src="{{url('images/logo.jpg')}}" width="128" height="45" alt="alt_text"
                                             border="0" style="height: auto;">
                                     </td>
                                 </tr>
