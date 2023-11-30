@@ -50,6 +50,11 @@ class KeyValueSeeder extends Seeder
                 'value' => '0934234234'
             ],
             [
+                'name' => 'Facebook',
+                'key' => 'facebookLink',
+                'value' => ''
+            ],
+            [
                 'name' => 'Tên ngân hàng sử dụng',
                 'key' => 'bankName',
                 'value' => 'MBBank'
@@ -70,9 +75,14 @@ class KeyValueSeeder extends Seeder
                 'value' => ''
             ],
             [
+                'name' => 'Nội dung chung khi khác chuyển khoản',
+                'key' => 'bankContent',
+                'value' => ''
+            ],
+            [
                 'name' => 'Ảnh banner',
                 'key' => 'banner',
-                'value' => ''
+                'value' => '1'
             ],
             [
                 'name' => 'Ảnh banner phụ',

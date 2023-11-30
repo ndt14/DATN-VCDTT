@@ -96,6 +96,7 @@ class KeyValueController extends Controller
             $item->key=='favicon'?$images['favicon'] = $item->value:'';
             $item->key=='banner'?$images['banner'] = $item->value:'';
             $item->key=='subBanner'?$images['subBanner'] = $item->value:'';
+            $item->key=='BankAccountQR'?$images['BankAccountQR'] = $item->value:'';
         }
         if ($request->isMethod('POST')) {
             $dataInsert = $request->except('_token', 'btnSubmit');

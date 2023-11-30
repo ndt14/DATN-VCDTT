@@ -87,6 +87,23 @@ class ImageController extends Controller
         $html = view('admin.images.show', compact('data'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
+    public function bannerEdit(Request $request)
+    {
+        $images = Image::orderBy('created_at', 'desc')->get();
+        $dataImages = ImageResource::collection($images);
+        $banners = Image::select('url')->whereNotNull('banner_id')->orderBy('updated_at', 'desc')->get();
+        $data = json_decode(json_encode($banners, false));
+        if ($request->id) {
+            $check = Image::where('id',$request->id)->first();
+            if($check->banner_id==""){
+                Image::where('id', $request->id)->update(['banner_id' => 1]);
+            }else{
+                Image::where('id', $request->id)->update(['banner_id' => null]);
+            }
+        }
+        $html = view('admin.images.banner_edit', compact('dataImages','data'))->render();
+        return response()->json(['html' => $html, 'status' => 200]);
+    }
     public function dropzone(){
         $tours = Tour::select('name','id')->orderBy('created_at', 'desc')->get();
         return view('admin.images.dropzone', compact('tours'));
