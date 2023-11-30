@@ -1,7 +1,8 @@
 <?php
-function upLoadFile($type,$file) {
-    $fileName = $type.time().'_'.$file->getClientOriginalName();
-    $filePath = url('').'/uploads/'.$fileName;
+function upLoadFile($type, $file)
+{
+    $fileName = $type . time() . '_' . $file->getClientOriginalName();
+    $filePath = url('') . '/uploads/' . $fileName;
 
     $file->move(public_path('uploads'), $fileName);
 
@@ -10,13 +11,14 @@ function upLoadFile($type,$file) {
 
 function deleteOldFile($filePath)
 {
+    if ($filePath != "") {
+        $parsedUrl = parse_url($filePath);
+        $path = ltrim($parsedUrl['path'], '/');
 
-    $parsedUrl = parse_url($filePath);
-    $path = ltrim($parsedUrl['path'], '/');
-
-    $fullPath = public_path($path);
-    if (file_exists($fullPath)) {
-        unlink($fullPath);
-    } else {
+        $fullPath = public_path($path);
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        } else {
+        }
     }
 }
