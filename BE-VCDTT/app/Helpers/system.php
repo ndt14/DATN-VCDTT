@@ -10,9 +10,13 @@ function upLoadFile($type,$file) {
 
 function deleteOldFile($filePath)
 {
-    $fullPath = public_path($filePath);
+
+    $parsedUrl = parse_url($filePath);
+    $path = ltrim($parsedUrl['path'], '/');
+
+    $fullPath = public_path($path);
     if (file_exists($fullPath)) {
         unlink($fullPath);
-    } else {;
+    } else {
     }
 }

@@ -153,8 +153,10 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('page/restore/{id}', [TermAndPrivacyController::class, 'pageManagementRestore'])->name('page.restore')->middleware(['permission:admin']);;
 
     //Image
-    Route::get('/image', [ImageController::class, 'index'])->name('image.list')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
-    Route::get('/image/image-list', [ImageController::class, 'imageList'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
+    Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::get('/image/image-list', [ImageController::class, 'imageList']);
+    Route::get('/image/image-show', [ImageController::class, 'imageShow']);
+    Route::get('/image/banner-edit', [ImageController::class, 'bannerEdit']);
 
     Route::get('/image/dropzone', [ImageController::class, 'dropzone'])->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
     Route::post('/image-add', [ImageController::class, 'add'])->name('image.add')->middleware(['permission:admin|access tour|add tour|edit tour|delete tour|reply review|access post|add post|edit post|delete post']);
