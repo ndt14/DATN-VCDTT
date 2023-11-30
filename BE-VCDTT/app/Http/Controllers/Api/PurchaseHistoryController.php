@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use PDF;
 use Carbon\Carbon;
 use Pusher\Pusher;
 use App\Models\User;
@@ -24,9 +25,7 @@ use App\Http\Resources\PurchaseHistoryResource;
 use App\Notifications\SendMailToClientWhenPaid;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Notifications\PurchaseNotificationAdmin;
-use App\Models\Notification as NotificationModel;
 use App\Notifications\CancelPurchaseMailToClient;
-use App\Notifications\CancelPurchaseNotification;
 use App\Notifications\PurchaseNotificationToClient;
 use App\Notifications\RefundRemindingNotificationAdmin;
 
@@ -273,7 +272,7 @@ class PurchaseHistoryController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get(url('')."/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('') . "/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
@@ -300,10 +299,10 @@ class PurchaseHistoryController extends Controller
 
     public function purchaseHistoryManagementEdit(Request $request, string $id)
     {
-        $items = Http::get(url('').'/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
+        $items = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         if ($request->isMethod('POST')) {
             $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
-            $response = Http::put(url('').'/api/purchase-history-edit/' . $id, $data);
+            $response = Http::put(url('') . '/api/purchase-history-edit/' . $id, $data);
             if (isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
                 $users = User::where('is_admin', 1)->get();
                 $responseData = json_decode(json_encode($response['data']['purchase_history']));
@@ -332,7 +331,7 @@ class PurchaseHistoryController extends Controller
     public function purchaseHistoryManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get(url('').'/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
+        $item = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         $html = view('admin.purchase_histories.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
@@ -412,11 +411,10 @@ class PurchaseHistoryController extends Controller
         return redirect()->route('purchase_histories.trash');
     }
 
-    // public function test()
-    // {
-    //     $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3')->get();
-    //     foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
-    //         echo (Carbon::parse($purchaseHistoryTourAnnounce->tour_start_time)->format('Y-m-d'));
-    //     }
-    // }
+    public function printInvoice(Request $request)
+    {
+        $item = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
+        $pdf = PDF::loadView('admin.purchase_histories.invoice', compact('item'));
+        return $pdf->download('Hóa đơn '. $item->name .'.pdf');
+    }
 }

@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Danh sách đơn đặt
+    Danh sách đơn đặt
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -46,12 +46,12 @@ Danh sách đơn đặt
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                    </div>
-                                    entries
-                                    </div>-->
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                        </div>
+                                        entries
+                                        </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -72,21 +72,21 @@ Danh sách đơn đặt
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             @php
                                                 $purchaseStatus = [
-                                                    1 => "Tự động hủy do quá hạn",
-                                                    2 => "Chưa phê duyệt thanh toán",
-                                                    3 => "Đã phê duyệt thanh toán",
-                                                    4 => "Đang muốn hủy tour",
-                                                    5 => "Đã phê duyệt hủy tour",
-                                                    6 => "Đã hủy thành công",
-                                                    7 => "Chuyển khoản thiếu",
-                                                    8 => "Chuyển khoản thừa"
+                                                    1 => 'Tự động hủy do quá hạn',
+                                                    2 => 'Chưa phê duyệt thanh toán',
+                                                    3 => 'Đã phê duyệt thanh toán',
+                                                    4 => 'Đang muốn hủy tour',
+                                                    5 => 'Đã phê duyệt hủy tour',
+                                                    6 => 'Đã hủy thành công',
+                                                    7 => 'Chuyển khoản thiếu',
+                                                    8 => 'Chuyển khoản thừa',
                                                 ];
-                                                $tourStatus=[
-                                                    1 => "Chưa tới ngày đi",
-                                                    2 => "Đang diễn ra",
-                                                    3 => "Đã kết thúc",
-                                                    4 => "Còn 1 ngày tới ngày đi tour"
-                                                ]
+                                                $tourStatus = [
+                                                    1 => 'Chưa tới ngày đi',
+                                                    2 => 'Đang diễn ra',
+                                                    3 => 'Đã kết thúc',
+                                                    4 => 'Còn 1 ngày tới ngày đi tour',
+                                                ];
                                             @endphp
                                             <select class="form-select" name="purchase_status">
                                                 @if (!request()->query('purchase_status'))
@@ -110,8 +110,8 @@ Danh sách đơn đặt
                                                 @endif
                                                 @foreach ($tourStatus as $key => $value)
                                                     <option
-                                                    {{ request()->query('tour_status') === "$key" ? 'selected' : '' }}
-                                                    value="{{ $key }}">{{ $value }}</option>
+                                                        {{ request()->query('tour_status') === "$key" ? 'selected' : '' }}
+                                                        value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -253,7 +253,9 @@ Danh sách đơn đặt
                                                         @break
 
                                                         @case(6)
-                                                            <span class="badge bg-green-lt">Đã hủy thành công @if($item->payment_status == 1) (đã hoàn tiền) @endif </span>
+                                                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item->payment_status == 1)
+                                                                    (đã hoàn tiền)
+                                                                @endif </span>
                                                         @break
 
                                                         @case(7)
@@ -311,7 +313,23 @@ Danh sách đơn đặt
                                                             </svg>
                                                         </a>
                                                     @endif
-                                                    {{-- @if (auth()->user()->can('delete bill') || auth()->user()->is_admin == 1)
+                                                    <a class="btn btn-icon btn-outline-red"
+                                                        href="{{ route('printInvoice', ['id' => $item->id]) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="icon icon-tabler icon-tabler-printer" width="24"
+                                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                                            stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path
+                                                                d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                                                            <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                                                            <path
+                                                                d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                                                        </svg>
+                                                    </a>
+                                                    {{-- @if (auth()->user()->can('delete bill') ||
+    auth()->user()->is_admin == 1)
                                                         <a class="btn btn-icon btn-outline-red"
                                                             href="javascript: removeItem({{ $item->id }})">
                                                             <svg xmlns="http://www.w3.org/2000/svg"

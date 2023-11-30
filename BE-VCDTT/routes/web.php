@@ -184,6 +184,8 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     });
     Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarnDashboard'])->name('dashboard.tour');
     Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
+
+    Route::get('/printInvoice/{id}', [PurchaseHistoryController::class, 'printInvoice'])->name('printInvoice');
 });
 
 // Route::get('/test', [PurchaseHistoryController::class, 'test']);
