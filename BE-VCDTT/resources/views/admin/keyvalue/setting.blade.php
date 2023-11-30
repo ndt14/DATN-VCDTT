@@ -48,8 +48,8 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 @foreach ($data as $item)
-                                    @if ($item->key == 'webTitle' || $item->key == 'email' || $item->key == 'address')
-                                        <div class="mb-3 col-4">
+                                    @if ($item->key == 'webTitle' || $item->key == 'email' || $item->key == 'facebookLink' || $item->key == 'address')
+                                        <div class="mb-3 col">
                                             <label class="form-label">{{ $item->name }}</label>
                                             <input type="text" name="{{ $item->key }}" class="form-control"
                                                 value="{{ $item->value }}">
@@ -60,7 +60,7 @@
                             <div class="row mb-3">
                                 @foreach ($data as $item)
                                     @if ($item->key == 'webPhoneNumber1' || $item->key == 'webPhoneNumber2')
-                                        <div class="mb-3 col-6">
+                                        <div class="mb-3 col">
                                             <label class="form-label">{{ $item->name }}</label>
                                             <input type="text" name="{{ $item->key }}" class="form-control"
                                                 value="{{ $item->value }}">
@@ -70,8 +70,8 @@
                             </div>
                             <div class="row mb-3">
                                 @foreach ($data as $item)
-                                    @if ($item->key == 'bankName' || $item->key == 'bankAccountName' || $item->key == 'bankAccountNumber')
-                                        <div class="mb-3 col-4">
+                                    @if ($item->key == 'bankName' || $item->key == 'bankAccountName')
+                                        <div class="mb-3 col">
                                             <label class="form-label">{{ $item->name }}</label>
                                             <input type="text" name="{{ $item->key }}" class="form-control"
                                                 value="{{ $item->value }}">
@@ -81,8 +81,19 @@
                             </div>
                             <div class="row mb-3">
                                 @foreach ($data as $item)
-                                    @if ($item->key == 'BankAccountQR' || $item->key == 'subBanner')
-                                        <div class="mb-3 col-6">
+                                    @if ($item->key == 'bankAccountNumber' || $item->key == 'bankingContent')
+                                        <div class="mb-3 col">
+                                            <label class="form-label">{{ $item->name }}</label>
+                                            <input type="text" name="{{ $item->key }}" class="form-control"
+                                                value="{{ $item->value }}">
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                            <div class="row mb-3">
+                                @foreach ($data as $item)
+                                    @if ($item->key == 'BankAccountQR' || $item->key == 'loadingScreen')
+                                        <div class="mb-3 col">
                                             <label class="form-label">{{ $item->name }}</label>
                                             <div class="row">
                                                 <div class="col-11">
@@ -142,7 +153,7 @@
                             <div class="row mb-3">
                                 @foreach ($data as $item)
                                     @if ($item->key == 'logo' || $item->key == 'favicon')
-                                        <div class="mb-3 col-6">
+                                        <div class="mb-3 col">
                                             <label class="form-label">{{ $item->name }}</label>
                                             <div class="row">
                                                 <div class="col-11">
@@ -202,13 +213,11 @@
                             <div class="row mb-3">
                                 @foreach ($data as $item)
                                     @if ($item->key == 'banner')
-                                        <div class="mb-3 row">
-                                            <label class="form-label">{{ $item->name }}</label>
-                                            <input type="hidden" name="{{ $item->name }}"
-                                                value="{{ $item->key }}">
+                                        <div class="mb-3 col">
+                                            <label class="form-label row">{{ $item->name }}</label>
                                             <div class="row">
                                                 <a href="javascript:void(0);"
-                                                    onclick="bannerEdit('{{ $item->value }}');"
+                                                    onclick="bannerEdit('');"
                                                     class="btn btn-icon btn-indigo" aria-label="Button">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                         class="icon icon-tabler icon-tabler-layers-intersect"
@@ -224,6 +233,62 @@
                                                 </a>
                                             </div>
                                         </div>
+                                    @endif
+                                    @if($item->key == 'subBanner' )
+                                    <div class="mb-3 col">
+                                        <label class="form-label">{{ $item->name }}</label>
+                                        <div class="row">
+                                            <div class="col-11">
+                                                <input type="text" name="{{ $item->key }}"
+                                                    class="form-control" value="{{ $item->value }}">
+                                            </div>
+                                            <div class="col-1">
+                                                <a href="javascript:void(0);"
+                                                    onclick="viewImageShow('{{ $item->value }}');"
+                                                    class="btn btn-icon btn-indigo" aria-label="Button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="icon icon-tabler icon-tabler-zoom-scan" width="24"
+                                                        height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                                                        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                                                        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                                                        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+                                                        <path d="M8 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                                        <path d="M16 16l-2.5 -2.5" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-11">
+                                                <input id="image-input-{{ $item->key }}" type="file"
+                                                    name="{{ $item->key }}" class="form-control">
+                                            </div>
+                                            <div class="col-1">
+                                                <span onclick="showImage('{{ $item->key }}')"
+                                                    class="btn btn-icon btn-indigo" aria-label="Button"
+                                                    id="image-button-{{ $item->key }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="icon icon-tabler icon-tabler-zoom-scan" width="24"
+                                                        height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                                                        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                                                        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                                                        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+                                                        <path d="M8 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                                        <path d="M16 16l-2.5 -2.5" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endif
                                 @endforeach
                             </div>

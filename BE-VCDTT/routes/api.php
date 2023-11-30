@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\PurchaseHistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\AllocationController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\KeyValueController;
 use App\Http\Controllers\Api\TermAndPrivacyController;
 use App\Http\Controllers\Api\TourToCategoryController;
@@ -149,3 +150,4 @@ Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'd
 Route::get('/keyvalue',[KeyValueController::class,'index']);
 Route::get('/keyvalue/{key}',[KeyValueController::class,'show']);
 Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);
+Route::get('/banner',[ImageController::class,'bannerCall']);

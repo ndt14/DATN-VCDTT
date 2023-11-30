@@ -50,7 +50,7 @@ class KeyValueSeeder extends Seeder
                 'value' => '0934234234'
             ],
             [
-                'name' => 'Facebook',
+                'name' => 'Đường link Facebook',
                 'key' => 'facebookLink',
                 'value' => ''
             ],
@@ -76,7 +76,7 @@ class KeyValueSeeder extends Seeder
             ],
             [
                 'name' => 'Nội dung chung khi khác chuyển khoản',
-                'key' => 'bankContent',
+                'key' => 'bankingContent',
                 'value' => ''
             ],
             [
