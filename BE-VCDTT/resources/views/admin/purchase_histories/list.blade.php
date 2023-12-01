@@ -79,15 +79,13 @@ Danh sách đơn đặt
                                                     5 => "Đã phê duyệt hủy tour, chưa hoàn tiền",
                                                     6 => "Đã hủy thành công (Đã hoàn tiền)",
                                                     7 => "Chuyển khoản thiếu",
-                                                    8 => "Chuyển khoản thừa",
-                                                    9 => "Chưa thanh toán"
+                                                    8 => "Chuyển khoản thừa"
                                                 ];
                                                 $tourStatus=[
                                                     1 => "Chưa tới ngày đi",
                                                     2 => "Đang diễn ra",
                                                     3 => "Đã kết thúc",
                                                     4 => "Còn 1 ngày tới ngày đi tour"
-                                                    5 => "Chưa thanh toán"
                                                 ]
                                             @endphp
                                             <select class="form-select" name="purchase_status">
