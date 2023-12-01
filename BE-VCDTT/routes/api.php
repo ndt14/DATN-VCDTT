@@ -131,7 +131,7 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
-Route::post('/list-coupon/{id}', [CouponController::class, 'listCouponUserId']);
+Route::get('/list-coupon/{id}', [CouponController::class, 'listCouponUserId']);
 
 
 Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.delete');
