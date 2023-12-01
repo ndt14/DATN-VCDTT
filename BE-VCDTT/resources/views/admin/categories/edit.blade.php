@@ -63,13 +63,13 @@ Chỉnh sửa danh mục
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{route('category.edit', ['id' => $data->id])}}" method="POST">
+                <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Tên</label>
                             <input type="text" name="name" class="form-control" placeholder="Enter question" value="{{$data->name}}">
-                            <span class="text-danger d-flex justify-content-start">
+                            <span class="text-danger d-flex justify-content-start spanError" data-tag="name">
                                 @error('name')
                                 {{ $message }}
                                 @enderror
@@ -89,7 +89,7 @@ Chỉnh sửa danh mục
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Cập nhật</button>
+                        <button id="btnSubmitAdd" type="button" data-id="{{$data->id}}" class="btn btn-indigo">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -104,6 +104,84 @@ Chỉnh sửa danh mục
 </div>
 @endsection
 @section('page_js')
+<!-- Thêm faq !-->
+<script>
+    $(document).ready(function() {
+
+        $('#btnSubmitAdd').click(function(e) {
+            e.preventDefault();
+            var id = document.querySelector('#btnSubmitAdd').dataset.id;
+            // lấy dữ liệu từ form
+            var formData = new FormData(this.form);
+            // thực hiện Ajax
+            $.ajax({
+
+                url: "{{route('category.edit', ['id' => ':id'])}}".replace(':id', id),
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // xử lý response từ server
+                    if (response.status === 200) {
+
+                        // Hiển thị SweetAlert khi thành công
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: response.message,
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: response.message,
+                            icon: 'error'
+                        });
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    // Xóa tất cả lỗi hiện tại trên giao diện
+                    var listSpans = document.querySelectorAll(".spanError");
+                    listSpans.forEach(function(item) {
+                        item.innerHTML = '';
+                    });
+
+                    // Xử lý lỗi ajax nếu có
+                    var errorResponse = JSON.parse(xhr.responseText);
+
+                    // Lặp qua từng trường lỗi
+                    Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                        // `fieldName` là tên trường có lỗi
+                        var errorMessages = errorResponse.errors[fieldName];
+
+                        // Lặp qua từng thông điệp lỗi trong mảng
+                        errorMessages.forEach(function(errorMessage) {
+                            var listSpans = document.querySelectorAll(
+                                ".spanError");
+
+                            listSpans.forEach(function(item) {
+                                if (item.dataset.tag.trim() ==
+                                    fieldName.trim()) {
+                                    // Hiển thị lỗi chỉ ở trường tương ứng
+                                    item.innerHTML = errorMessage;
+                                }
+                            });
+                        });
+                    });
+
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi thực hiện sửa danh mục',
+                        icon: 'error'
+                    });
+                }
+
+            });
+        });
+    });
+</script>
+<!-- --------------------------------------------- !-->
 {{-- <script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {

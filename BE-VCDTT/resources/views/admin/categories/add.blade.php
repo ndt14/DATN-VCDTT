@@ -69,7 +69,7 @@ Thêm mới danh mục
                         <div class="mb-3">
                             <label class="form-label">Tên danh mục</label>
                             <input type="text" name="name" class="form-control" placeholder="Nhập tên danh mục" value="">
-                            <span class="text-danger d-flex justify-content-start">
+                            <span class="text-danger d-flex justify-content-start spanError" data-tag="name">
                                 @error('name')
                                 {{ $message }}
                                 @enderror
@@ -88,7 +88,7 @@ Thêm mới danh mục
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>
+                        <button id="btnSubmitAdd" type="button" class="btn btn-indigo">Thêm mới</button>
                     </div>
                 </form>
             </div>
@@ -103,7 +103,82 @@ Thêm mới danh mục
 </div>
 @endsection
 @section('page_js')
-<script type="text/javascript">
+<!-- Thêm faq !-->
+<script>
+    $(document).ready(function() {
 
+        $('#btnSubmitAdd').click(function(e) {
+            e.preventDefault();
+
+            // lấy dữ liệu từ form
+            var formData = new FormData(this.form);
+            // thực hiện Ajax
+            $.ajax({
+
+                url: "{{ route('category.store') }}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // xử lý response từ server
+                    if (response.status === 200) {
+
+                        // Hiển thị SweetAlert khi thành công
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: response.message,
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: response.message,
+                            icon: 'error'
+                        });
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    // Xóa tất cả lỗi hiện tại trên giao diện
+                    var listSpans = document.querySelectorAll(".spanError");
+                    listSpans.forEach(function(item) {
+                        item.innerHTML = '';
+                    });
+
+                    // Xử lý lỗi ajax nếu có
+                    var errorResponse = JSON.parse(xhr.responseText);
+
+                    // Lặp qua từng trường lỗi
+                    Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                        // `fieldName` là tên trường có lỗi
+                        var errorMessages = errorResponse.errors[fieldName];
+
+                        // Lặp qua từng thông điệp lỗi trong mảng
+                        errorMessages.forEach(function(errorMessage) {
+                            var listSpans = document.querySelectorAll(
+                                ".spanError");
+
+                            listSpans.forEach(function(item) {
+                                if (item.dataset.tag.trim() ==
+                                    fieldName.trim()) {
+                                    // Hiển thị lỗi chỉ ở trường tương ứng
+                                    item.innerHTML = errorMessage;
+                                }
+                            });
+                        });
+                    });
+
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi thực hiện thêm danh mục',
+                        icon: 'error'
+                    });
+                }
+
+            });
+        });
+    });
 </script>
+<!-- --------------------------------------------- !-->
 @endSection

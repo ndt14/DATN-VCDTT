@@ -381,16 +381,14 @@
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
-                        text: 'Ok!',
+                        text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
                             axios.delete(`/api/category-destroy-forever/${id}`).then(function(response) {
                                 Swal.fire({
-                                        position: "top-center",
-                                        icon: "success",
-                                        title: "Xóa thành công",
-                                        showConfirmButton: false,
-                                        timer: 1500
+                                        title: 'Thành công!',
+                                        text: 'Xóa danh mục thành công',
+                                        icon: 'success'
                                     })
                                     .then((response) => {
                                         if (response) {
@@ -400,7 +398,10 @@
                             });
                         }
                     },
-                    close: function() {}
+                    close: {
+                        text: 'Không',
+                        function() {}
+                    }
                 }
             });
         };

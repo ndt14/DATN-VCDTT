@@ -346,23 +346,28 @@
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
-                        text: 'Ok!',
+                        text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
                             axios.delete(`/api/category-destroy/${id}`).then(function(response) {
                                 Swal.fire({
-                                        position: "top-center",
-                                        icon: "success",
-                                        title: "Di chuyển vào thùng thành công",
-                                        showConfirmButton: false,
-                                        timer: 1500
+                                        title: 'Thành công!',
+                                        text: 'Di chuyển vào thùng thành công',
+                                        icon: 'success'
                                     })
-                                location.reload();
+                                    .then((response) => {
+                                        if (response) {
+                                            location.reload();
+                                        }
+                                    });
                                     
                             });
                         }
                     },
-                    close: function() {}
+                    close: {
+                        text: 'Không',
+                        function() {}
+                    }
                 }
             });
         };

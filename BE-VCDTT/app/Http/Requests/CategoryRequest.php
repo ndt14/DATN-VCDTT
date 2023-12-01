@@ -41,7 +41,7 @@ class CategoryRequest extends FormRequest
                         // xây dựng validate
 
                         $rule = [
-                            'name' => 'required|unique:categories',
+                            'name' => 'required',
                         ];
 
                         break;

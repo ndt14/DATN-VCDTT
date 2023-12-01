@@ -319,10 +319,11 @@ class PurchaseHistoryController extends Controller
                 }
             }
 
-            if ($response->status() == 200) {
-                return redirect()->route('purchase_histories.edit', ['id' => $id])->with('success', 'Cập nhật hóa đơn thành công');
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật đơn hàng thành công', 'status' => 200]);
             } else {
-                return redirect()->route('purchase_histories.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật đơn hàng', 'status' => 500]);
             }
         }
         return view('admin.purchase_histories.edit', compact('items'));

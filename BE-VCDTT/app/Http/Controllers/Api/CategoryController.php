@@ -274,12 +274,15 @@ class CategoryController extends Controller
 
     public function cateManagementStore(CategoryRequest $request)
     {
-        $data = $request->all();
+        if($request->isMethod('POST')) {
+            $data = $request->all();
         $response = Http::post(url('') . '/api/category-store', $data);
-        if ($response->status() == 200) {
-            return redirect()->route('category.add')->with('success', 'Add data Success');
+         // Kiểm tra kết quả từ API và trả về response tương ứng
+         if ($response->successful()) {
+            return response()->json(['success' => true, 'message' => 'Thêm mới danh mục thành công', 'status' => 200]);
         } else {
-            return redirect()->route('category.add')->with('fail', 'Add data Fail');
+            return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới danh mục', 'status' => 500]);
+        }
         }
     }
 
@@ -289,11 +292,12 @@ class CategoryController extends Controller
         if ($request->isMethod('POST')) {
             $data = $request->all();
             $response = Http::put(url('') . "/api/category-edit/{$id}", $data);
-            if ($response->status() == 200) {
-                return redirect()->route('category.edit', ['id' => $id])->with('success', 'Edit data Success');
-            } else {
-                return redirect()->route('category.edit', ['id' => $id])->with('fail', 'Edit data Fail');
-            }
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+         if ($response->successful()) {
+            return response()->json(['success' => true, 'message' => 'Cập nhật danh mục thành công', 'status' => 200]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật danh mục', 'status' => 500]);
+        }
         }
         $listCateParent = Category::whereNull('parent_id')->get();
         $response = Http::get(url('') . '/api/category-show/' . $id);
