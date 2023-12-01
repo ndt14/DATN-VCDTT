@@ -386,10 +386,19 @@ const HomePage = () => {
                         view_count,
                         adult_price,
                         star,
+                        sale_percentage,
                       }: Tour) => {
                         if (idArray.includes(id as number)) {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link to={`/tours/${id}`}>
@@ -406,7 +415,11 @@ const HomePage = () => {
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
-                                      }).format(adult_price)}{" "}
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
                                     </span>{" "}
                                   </h6>
                                 </div>
@@ -466,6 +479,14 @@ const HomePage = () => {
                         } else {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link to={`/tours/${id}`}>
@@ -482,8 +503,18 @@ const HomePage = () => {
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
-                                      }).format(adult_price)}{" "}
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
                                     </span>{" "}
+                                    {/* <span>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(adult_price)}{" "}
+                                    </span>{" "} */}
                                   </h6>
                                 </div>
                                 <div className="package-content-wrap">
@@ -648,7 +679,10 @@ const HomePage = () => {
                         );
                       } else {
                         return (
-                          <div className="col-lg-4 col-md-6" key={id}>
+                          <div
+                            className="col-lg-4 col-md-6 position-relative"
+                            key={id}
+                          >
                             <div className="package-wrap">
                               <figure className="feature-image">
                                 <Link to={`/tours/${id}`}>

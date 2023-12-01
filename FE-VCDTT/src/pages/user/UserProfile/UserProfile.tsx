@@ -208,6 +208,8 @@ const UserProfile = () => {
     gender = "Nữ";
   } else if (userGender == 3) {
     gender = "Khác";
+  } else {
+    gender = "Chưa xác định";
   }
   //
   const titleElement = document.querySelector("title");
