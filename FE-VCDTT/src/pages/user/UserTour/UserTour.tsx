@@ -15,6 +15,11 @@ import Modal from "react-bootstrap/Modal";
 import { ChangeEvent, MouseEvent } from "react";
 // import { CheckboxChangeEvent } from "antd";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
@@ -52,7 +57,7 @@ const UserTour = () => {
   //end phân trang
 
   const goToPayment = (id: number) => {
-    const VnpayURL = `http:admin.vcdtt.online/api/vnpay-payment/${id}`;
+    const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${id}`;
     window.location.href = VnpayURL;
   };
 
@@ -78,7 +83,7 @@ const UserTour = () => {
   const handleCloseQR = () => setShowQR(false);
 
   const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+  const handleShow = () => setShow(true);
 
   const openPolicy = (id: number) => {
     window.open(`/user/policy/${id}`, "_blank");
@@ -110,11 +115,14 @@ const UserTour = () => {
       id: id,
       data: undefined,
     };
+    console.log(data);
 
     await updateBill(data).then(() => {
-      alert(
-        "Chúng tôi đã nhận được xác nhận đã thanh toán của bạn. Admin sẽ xác nhận và cập nhật đơn hàng của bạn sớm nhất có thể"
-      );
+      MySwal.fire({
+        text: "Chúng tôi đã nhận được xác nhận đã thanh toán của bạn. Admin sẽ xác nhận và cập nhật đơn hàng của bạn sớm nhất có thể",
+        icon: "success",
+        confirmButtonText: "Tôi đã hiểu",
+      });
     });
   };
 
@@ -127,7 +135,11 @@ const UserTour = () => {
     };
 
     await updateBill(data).then(() => {
-      alert("Bạn đã yêu cầu hủy tour. Đang đợi admin xác nhận");
+      MySwal.fire({
+        text: "Bạn đã yêu cầu hủy tour. Đang đợi admin xác nhận",
+        icon: "success",
+        confirmButtonText: "Đồng ý",
+      });
     });
   };
 
@@ -747,7 +759,7 @@ const UserTour = () => {
                 );
               }
             )}
-            {/* <Button onClick={handleShow}>Launch demo modal</Button> */}
+            <Button onClick={handleShow}>Launch demo modal</Button>
 
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>

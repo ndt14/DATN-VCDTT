@@ -18,6 +18,10 @@ import Modal from "react-bootstrap/Modal";
 // import { setTimeout } from "timers/promises";
 
 // type Props = {};
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const PurchasingInformation = () => {
   // dữ liệu lừ localStorage
@@ -329,15 +333,32 @@ const PurchasingInformation = () => {
 
       if (paymentMethod === "1") {
         setLoading(false);
-        alert("Đặt tour thành công");
-        hideConfirmTourFormModal();
-
-        setShowPaymentModal(true);
+        try {
+          await MySwal.fire({
+            title: "Chuyển khoản",
+            text: "Đặt tour thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          hideConfirmTourFormModal();
+          setShowPaymentModal(true);
+        } catch (error) {
+          console.error("SweetAlert2 error:", error);
+        }
       } else if (paymentMethod === "2") {
         setLoading(false);
-        alert("Đặt tour thành công");
-        const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
-        window.location.href = VnpayURL;
+        try {
+          await MySwal.fire({
+            title: "VNPAY",
+            text: "Đặt tour thành công",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
+          window.location.href = VnpayURL;
+        } catch (error) {
+          console.error("SweetAlert2 error:", error);
+        }
       }
     } catch (error) {
       console.error(error);

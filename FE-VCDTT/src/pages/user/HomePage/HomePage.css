@@ -60,3 +60,14 @@ img {
 .quantity-form {
     width: 80px !important;
 }
+
+.discount {
+
+    height: 50px;
+    z-index: 1;
+
+    top: 0;
+    margin: auto;
+    text-align: center;
+    vertical-align: baseline;
+}

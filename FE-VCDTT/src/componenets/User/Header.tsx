@@ -6,7 +6,11 @@ import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle } from "react-icons/bs";
-import { useGetLoginGoogleQuery, useLoginMutation, useRegisterMutation } from "../../api/auth.js";
+import {
+  useGetLoginGoogleQuery,
+  useLoginMutation,
+  useRegisterMutation,
+} from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
@@ -21,14 +25,17 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useGetLogoQuery } from "../../api/setting.js";
 import { Setting } from "../../interfaces/Setting.js";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const Header = () => {
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
   const { data: dataCate } = useGetCategoriesQuery();
-  const {data: dataLogo} = useGetLogoQuery();
+  const { data: dataLogo } = useGetLogoQuery();
 
-  
   // console.log(dataCate?.data.categoriesParent)
 
   const [registerPassword] = useState("");
@@ -136,16 +143,28 @@ const Header = () => {
           localStorage.setItem("user", JSON.stringify(responseData.user));
           localStorage.setItem("token", responseData.token);
           localStorage.removeItem("tempUser");
-          alert("Đăng nhập thành công!");
+          await MySwal.fire({
+            text: "Đăng nhập thành công.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
           startLogoutTimer();
           navigate("/");
         } else {
-          alert("Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.");
+          MySwal.fire({
+            text: "Đăng nhập thất bại.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
         }
       } else {
         // Handling the case where 'data' doesn't exist in the response
         console.error("Error in API response:", response.error);
-        alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
+        MySwal.fire({
+          text: "Đăng nhập thất bại",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
       }
     } catch (error) {
       console.error("Lỗi đăng nhập: ", error);
@@ -231,7 +250,7 @@ const Header = () => {
     },
     validationSchema: registrationSchema,
     onSubmit: handleRegister, // Your handleRegister function
-  }); 
+  });
 
   const preParseUserData = localStorage.getItem("user");
   let userData: { id: string; name: string; is_admin: number } | null = null;
@@ -251,61 +270,66 @@ const Header = () => {
 
   //google login
 
-const {data:dataGoogle} = useGetLoginGoogleQuery()
-console.log(dataGoogle);
+  const { data: dataGoogle } = useGetLoginGoogleQuery();
+  console.log(dataGoogle);
 
-const [, setLoading] = useState(true);
-const [, setError] = useState(null);
-const [data, setData] = useState<any>({});
+  const [, setLoading] = useState(true);
+  const [, setError] = useState(null);
+  const [data, setData] = useState<any>({});
 
-// Sau khi nhận được dữ liệu từ API Google
-const handleGoogleLoginSuccess = (googleUserData: { user: any; token: string; }) => {
-  // Lưu thông tin người dùng và token vào localStorage
-  localStorage.setItem('user', JSON.stringify(googleUserData.user));
-  localStorage.setItem('token', googleUserData.token);
+  // Sau khi nhận được dữ liệu từ API Google
+  const handleGoogleLoginSuccess = (googleUserData: {
+    user: any;
+    token: string;
+  }) => {
+    // Lưu thông tin người dùng và token vào localStorage
+    localStorage.setItem("user", JSON.stringify(googleUserData.user));
+    localStorage.setItem("token", googleUserData.token);
 
-  // Đánh dấu người dùng đã đăng nhập thành công
-  setIsLoggedIn(true);
+    // Đánh dấu người dùng đã đăng nhập thành công
+    setIsLoggedIn(true);
 
-  // Chuyển hướng đến trang người dùng
-  navigate("/"); // Đổi thành URL của trang người dùng của bạn
-};
+    // Chuyển hướng đến trang người dùng
+    navigate("/"); // Đổi thành URL của trang người dùng của bạn
+  };
 
-// ...
+  // ...
 
-// Trong useEffect sau khi fetch dữ liệu từ API Google
+  // Trong useEffect sau khi fetch dữ liệu từ API Google
 
+  const location = useLocation();
 
-const location = useLocation();
+  // ... Các phần khác của component
 
-// ... Các phần khác của component
+  useEffect(() => {
+    if (location && location.search) {
+      fetch(
+        `https://admin.vcdtt.online/api/auth/google/callback${location.search}`,
+        { headers: new Headers({ accept: "application/json" }) }
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Something went wrong!");
+        })
+        .then((fetchedData) => {
+          setData(fetchedData);
+          setLoading(false);
 
-useEffect(() => {
-  if (location && location.search) {
-    fetch(`https://admin.vcdtt.online/api/auth/google/callback${location.search}`, { headers: new Headers({ accept: 'application/json' }) })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Something went wrong!');
-      })
-      .then((fetchedData) => {
-        setData(fetchedData);
-        setLoading(false);
+          // Gọi hàm xử lý đăng nhập thành công với Google
+          handleGoogleLoginSuccess(fetchedData);
+        })
+        .catch((fetchError) => {
+          setError(fetchError);
+          setLoading(false);
+          console.error(fetchError);
+        });
+    }
+  }, [location]);
+  console.log("data", data);
 
-        // Gọi hàm xử lý đăng nhập thành công với Google
-        handleGoogleLoginSuccess(fetchedData);
-      })
-      .catch((fetchError) => {
-        setError(fetchError);
-        setLoading(false);
-        console.error(fetchError);
-      });
-  }
-}, [location]);
-console.log("data",data);
- 
-//end google
+  //end google
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -315,26 +339,15 @@ console.log("data",data);
           <div className="container d-flex justify-content-between align-items-center">
             <div className="site-identity">
               <h1 className="site-title">
-             
                 <Link to="">
-                  {dataLogo?.data.keyvalue.map(({value}:Setting)=>{
-                    return(
+                  {dataLogo?.data.keyvalue.map(({ value }: Setting) => {
+                    return (
                       <>
-                      <img
-                    className="white-logo"
-                    src={value}
-                    alt="logo"
-                  />
-                    <img
-                    className="black-logo"
-                    src={value}
-                    alt="logo"
-                  />
+                        <img className="white-logo" src={value} alt="logo" />
+                        <img className="black-logo" src={value} alt="logo" />
                       </>
-                    )
+                    );
                   })}
-                 
-                
                 </Link>
               </h1>
             </div>
@@ -516,14 +529,11 @@ console.log("data",data);
                             HOẶC ĐĂNG NHẬP VỚI
                           </h4>
                           <a className="App-link" href={dataGoogle?.url}>
-                          <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
-                            <BsGoogle />
-                          
-              
-                <span className="mx-2">Đăng nhập với Google</span>
-             
-           
-                          </button>
+                            <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
+                              <BsGoogle />
+
+                              <span className="mx-2">Đăng nhập với Google</span>
+                            </button>
                           </a>
                         </div>
                       )}
@@ -659,14 +669,11 @@ console.log("data",data);
                             HOẶC ĐĂNG KÝ VỚI
                           </h4>
                           <a className="App-link" href={dataGoogle?.url}>
-                          <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
-                            <BsGoogle />
-                          
-              
-                <span className="mx-2">Đăng nhập với Google</span>
-             
-           
-                          </button>
+                            <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
+                              <BsGoogle />
+
+                              <span className="mx-2">Đăng nhập với Google</span>
+                            </button>
                           </a>
                         </div>
                       )}

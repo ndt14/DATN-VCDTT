@@ -19,6 +19,11 @@ import ReactPaginate from "react-paginate";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/en";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>(" ");
   const [isDateSelected, setIsDateSelected] = useState(false);
@@ -97,9 +102,15 @@ const TourDetail = () => {
 
   //validate date
   const disabledDate = (current: Dayjs | null): boolean => {
-    return current ? current.isBefore(dayjs().startOf("day")) : false;
+    if (current) {
+      const currentDate = dayjs().startOf("day");
+      const futureDate = currentDate.add(5, "day");
+      return (
+        current.isBefore(currentDate) || current.diff(futureDate, "day") <= 0
+      );
+    }
+    return true; // Vô hiệu hóa tất cả các ngày nếu current là null
   };
-
   const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
 
   const containerStyle = {
@@ -198,7 +209,11 @@ const TourDetail = () => {
 
         // Handle success, e.g., show a success message or update UI
         console.log("Đánh giá thành công", response);
-        alert("Đánh giá thành công");
+        await MySwal.fire({
+          text: "Đánh giá thành công",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
 
         // After a successful rating submission, update the component's state
         const newRating = {
@@ -208,14 +223,13 @@ const TourDetail = () => {
           star: ratingData.star,
           created_at: new Date().toLocaleString(), // You can format the date accordingly
         };
-     console.log(newRating);
-     
+        console.log(newRating);
+
         // Create a copy of the existing ratings and add the new rating
         const updatedRatings = [...tourData?.data.listRatings, newRating];
         console.log(updatedRatings);
-        
 
-        // Update the component's state with the new ratings  
+        // Update the component's state with the new ratings
         setTour((prevTour: Tour | undefined) => {
           if (prevTour) {
             return {
@@ -229,8 +243,6 @@ const TourDetail = () => {
           // Handle the case where prevTour is undefined, if applicable
           return undefined; // Or return a default value of type Tour | undefined
         });
-        
-        
 
         // Reset the rating form or clear the inputs
         setRatingData({
@@ -306,14 +318,14 @@ const TourDetail = () => {
   //map
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-useEffect(() => {
-  if (iframeRef.current) {
-    const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
-      exact_location
-    )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
-    iframeRef.current.src = iframeSrc;
-  }
-}, [exact_location]);
+  useEffect(() => {
+    if (iframeRef.current) {
+      const iframeSrc = `https://maps.google.com/maps?width=600&height=400&hl=en&q=${encodeURIComponent(
+        exact_location
+      )}&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
+      iframeRef.current.src = iframeSrc;
+    }
+  }, [exact_location]);
 
   //end map
 
@@ -402,7 +414,7 @@ useEffect(() => {
                             alt="Third slide"
                           />
                         </div> */}
-                        {imageGallery?.map(({ url }:any) => {
+                        {imageGallery?.map(({ url }: any) => {
                           return (
                             <div className="carousel-item ">
                               <img
@@ -485,7 +497,7 @@ useEffect(() => {
                               return (
                                 <li
                                   data-target="#carousel-thumb"
-                                  data-slide-to={(index as  number) + 1}
+                                  data-slide-to={(index as number) + 1}
                                   className="mx-1"
                                   style={{ width: "80px" }}
                                   key={index}
@@ -649,7 +661,9 @@ useEffect(() => {
                                                 title={`Rated ${star} sao trên 5 sao tối đa`}
                                               >
                                                 <span className="w-90">
-                                                  {renderStarRating(star as number)}
+                                                  {renderStarRating(
+                                                    star as number
+                                                  )}
                                                 </span>
                                               </div>
                                             </div>
@@ -657,7 +671,7 @@ useEffect(() => {
                                           <p
                                             className=""
                                             dangerouslySetInnerHTML={{
-                                              __html: content||""
+                                              __html: content || "",
                                             }}
                                           ></p>
                                         </div>
