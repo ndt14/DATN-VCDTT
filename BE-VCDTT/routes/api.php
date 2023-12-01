@@ -154,3 +154,5 @@ Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);
 //GG login
 Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback',[GoogleLoginController::class, 'handleGoogleCallback']);
+
+// Route::get('/test', [PurchaseHistoryController::class, 'test']);

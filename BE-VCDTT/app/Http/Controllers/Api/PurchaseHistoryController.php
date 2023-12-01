@@ -411,10 +411,11 @@ class PurchaseHistoryController extends Controller
         return redirect()->route('purchase_histories.trash');
     }
 
-    public function printInvoice(Request $request)
-    {
-        $item = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
-        $pdf = PDF::loadView('admin.purchase_histories.invoice', compact('item'));
-        return $pdf->download('Hóa đơn '. $item->name .'.pdf');
-    }
+    // public function printInvoice(Request $request)
+    // {
+    //     $item = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
+    //     $pdf = PDF::loadView('admin.purchase_histories.invoice', compact('item'));
+    //     return $pdf->download('Hóa đơn '. $item->name .'.pdf');
+    // }
+
 }
