@@ -303,6 +303,19 @@ class TourController extends Controller
         }
     }
 
+    public function destroyForever(string $id) {
+
+        if($id) {
+            $tour = Tour::withTrashed()->find($id);
+        if($tour) {
+            TourToCategory::where('tour_id', $tour->id)->forceDelete();
+            $tour->forceDelete();
+        }
+        return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'Xóa tour thành công']);
+    }
+
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
@@ -414,6 +427,7 @@ class TourController extends Controller
             $data = Tour::withTrashed()->find($id);
             if($data) {
                 $data->restore();
+                TourToCategory::where('tour_id', $data->id)->restore();
             }
             return redirect()->route('tour.trash')->with('success', 'Khôi phục tour thành công');
         }
