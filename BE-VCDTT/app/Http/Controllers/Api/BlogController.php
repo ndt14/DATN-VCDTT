@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -24,15 +25,15 @@ class BlogController extends Controller
     {
         // Tích hợp tìm kiếm
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $blogs = Blog::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $blogs = Blog::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Blog())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $blogs = Blog::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $blogs = Blog::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json([
             'data' => [
@@ -40,7 +41,7 @@ class BlogController extends Controller
             ],
             'message' => 'OK',
             'status' => 200
-        ],);
+        ], );
     }
 
     public function add()
@@ -145,7 +146,7 @@ class BlogController extends Controller
     {
         $blog = Blog::find($id);
         if ($blog) {
-            $delete_blog =  $blog->delete();
+            $delete_blog = $blog->delete();
             if ($delete_blog) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -163,7 +164,7 @@ class BlogController extends Controller
     {
         $blog = Blog::withTrashed()->find($id);
         if ($blog) {
-            $delete_blog =  $blog->forceDelete();
+            $delete_blog = $blog->forceDelete();
             if ($delete_blog) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -181,30 +182,30 @@ class BlogController extends Controller
 
     public function blogManagementList(Request $request)
     {
-        $data['status']=$status = $request->status??'';
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/blog?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+        $data['status'] = $status = $request->status ?? '';
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/blog?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['blogs']), false);
-            $perPage = $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             // $data->setPath(request()->url())->appends(['limit' => $perPage,'sort' => $sortField,'direction'=>$sortDirection,'status'=>$status,'keyword'=>$keyword]);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->status ? $data->setPath(request()->url())->appends(['status' => $status]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else {
+        } else {
             $data = [];
         }
         return view('admin.blogs.list', compact('data'));
@@ -212,28 +213,57 @@ class BlogController extends Controller
 
     public function blogManagementAdd(BlogRequest $request)
     {
-        $data = $request->except('_token');
+
         if ($request->isMethod('POST')) {
-            $response = Http::post(url('').'/api/blog-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('blog.list')->with('success', 'Thêm mới blog thành công');
-            } else {
-                return redirect()->route('blog.add')->with('fail', 'Đã xảy ra lỗi');
+            if ($request->ajax()) {
+                $data = $request->except('_token');
+                // Validate form
+                $myCustomAttributes = [
+                    'title' => 'required',
+                    'author' => 'required',
+                    'short_desc' => 'required',
+                    'description' => 'required',
+                    'main_img' => 'required',
+                ];
+                $validator = Validator::make($data, [
+                    // 
+                    'title.required' => 'Không được bỏ trống tiêu đề!',
+                    'author.required' => 'Không được bỏ trống tác giả!',
+                    'short_desc.required' => 'Không được bỏ trống miêu tả ngắn!',
+                    'description.required' => 'Mô tả blog không được trống',
+                    'main_img.required' => 'Không được bỏ trống ảnh!',
+                ], [], [], $myCustomAttributes);
+
+
+                // kiểm tra lỗi
+
+                if ($validator->fails()) {
+                    return response()->json(['success' => false, 'errors' => $myCustomAttributes, 422]);
+                }
+                $response = Http::post(url('') . '/api/blog-store', $data);
+                // Kiểm tra kết quả từ API và trả về response tương ứng
+                if ($response->successful()) {
+                    return response()->json(['success' => true, 'message' => 'Thêm mới bài viết thành công', 'status' => 200]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới bài viết', 'status' => 500]);
+                }
             }
-        };
+        }
+        ;
         return view('admin.blogs.add');
     }
 
     public function blogManagementEdit(BlogRequest $request, $id)
     {
-        $response = Http::get(url('').'/api/blog-show/' . $request->id)['data']['blog'];
+        $response = Http::get(url('') . '/api/blog-show/' . $request->id)['data']['blog'];
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/blog-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('blog.list')->with('success', 'Cập nhật blog thành công');
+            $response = Http::put(url('') . '/api/blog-edit/' . $id, $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật bài viết thành công', 'status' => 200]);
             } else {
-                return redirect()->route('blog.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật bài viết', 'status' => 500]);
             }
         }
         return view('admin.blogs.edit', compact('response'));
@@ -242,33 +272,35 @@ class BlogController extends Controller
     public function blogManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get(url('').'/api/blog-show/' . $request->id)['data']['blog'];
+        $item = Http::get(url('') . '/api/blog-show/' . $request->id)['data']['blog'];
         $html = view('admin.blogs.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function blogManagementTrash(Request $request) {
+    public function blogManagementTrash(Request $request)
+    {
         $data = Blog::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
-            $currentPage = LengthAwarePaginator::resolveCurrentPage();
-            $collection = new Collection($data);
-            $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-            $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-            $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
         return view('admin.blogs.trash', compact('data'));
     }
 
     // khôi phục bản ghi bị xóa mềm
 
-    public function blogManagementRestore($id) {
+    public function blogManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = Blog::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
             }
-            return redirect()->route('blog.trash')->with('success', 'Khôi phục bài viết thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('blog.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục blog không thành công']);
     }
 }

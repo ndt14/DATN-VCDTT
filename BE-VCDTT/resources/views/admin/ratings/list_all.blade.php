@@ -304,16 +304,14 @@ Danh sách đánh giá
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'Ok!',
+                    text: 'Được rồi!',
                     btnClass: 'btn-danger',
                     action: function() {
                         axios.delete(`/api/rating-destroy/${id}`).then(function(response) {
                             Swal.fire({
-                            position: "top-center",
-                            icon: "success",
-                            title: "Di chuyển vào thùng thành công",
-                            showConfirmButton: false,
-                            timer: 1500
+                                title: 'Thành công!',
+                                text: 'Di chuyển vào thùng thành công',
+                                icon: 'success'
                             })
                             .then((response) => {
                             if (response) {
@@ -323,7 +321,10 @@ Danh sách đánh giá
                         });
                     }
                 },
-                close: function() {}
+                close: {
+                    text: 'Không',
+                    function() {}
+                }
             }
         });
     };

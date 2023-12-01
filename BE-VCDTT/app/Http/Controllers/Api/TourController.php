@@ -37,27 +37,28 @@ class TourController extends Controller
         // Tích hợp tìm kiếm
         $keyword = $request->keyword ? trim($request->keyword) : '';
         $limit = intval($request->limit) ? intval($request->limit) : '';
-        if(!$request->searchCol){
-            $tours = Tour::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $tours = Tour::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new Tour())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }elseif($limit){
-            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->limit($limit)->get();
-        }else{
-            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } elseif ($limit) {
+            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->limit($limit)->get();
+        } else {
+            $tours = Tour::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
-        foreach($tours as $tour){
-            $listRatings = Rating::where('tour_id',$tour->id)->orderBy('id', 'desc')->get();
-            $star = 0; $t=0;
+        foreach ($tours as $tour) {
+            $listRatings = Rating::where('tour_id', $tour->id)->orderBy('id', 'desc')->get();
+            $star = 0;
+            $t = 0;
             foreach ($listRatings as $c) {
                 $star += $c->star;
                 $t++;
             }
-            $tour->star=$star/($t==0?1:$t);
-            $tour->starCount= $t;
+            $tour->star = $star / ($t == 0 ? 1 : $t);
+            $tour->starCount = $t;
         }
         return response()->json(
             [
@@ -303,15 +304,16 @@ class TourController extends Controller
         }
     }
 
-    public function destroyForever(string $id) {
+    public function destroyForever(string $id)
+    {
 
-        if($id) {
+        if ($id) {
             $tour = Tour::withTrashed()->find($id);
-        if($tour) {
-            TourToCategory::where('tour_id', $tour->id)->forceDelete();
-            $tour->forceDelete();
-        }
-        return response()->json(['success' => true]);
+            if ($tour) {
+                TourToCategory::where('tour_id', $tour->id)->forceDelete();
+                $tour->forceDelete();
+            }
+            return response()->json(['success' => true]);
         }
         return response()->json(['success' => false, 'Xóa tour thành công']);
     }
@@ -321,30 +323,30 @@ class TourController extends Controller
 
     public function tourManagementList(Request $request)
     {
-        $data['status']=$status = $request->status??'';
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/tour?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+        $data['status'] = $status = $request->status ?? '';
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/tour?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['tours']), false);
 
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->status ? $data->setPath(request()->url())->appends(['status' => $status]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.tours.list', compact('data'));
@@ -353,25 +355,78 @@ class TourController extends Controller
     public function tourManagementAdd(TourRequest $request)
     {
         if ($request->isMethod('POST')) {
+            // Kiểm tra nếu request là Ajax
+            if ($request->ajax()) {
+                $data = $request->except('_token');
 
-            $data = $request->except('_token');
 
-            $data = $request->except('_token');
 
-            $response = Http::post(url('').'/api/tour-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('tour.list')->with('success', 'Thêm mới tour thành công');
-            } else {
-                return redirect()->route('tour.add')->with('fail', 'Đã xảy ra lỗi');
+                // Validate form
+                $myCustomAttributes = [
+                    'name.required' => 'Tên của tour không được để trống',
+                    'duration.required' => 'Khoảng thời gian tour không được để trống',
+                    'child_price.required' => 'Giá tour cho trẻ nhỏ không được trống',
+                    'adult_price.required' => 'Giá tour cho người lớn không được trống',
+                    'sale_percentage.required' => 'Phần trăm giảm giá không được trống',
+                    'start_destination.required' => 'Điểm bắt đầu không được để trống',
+                    'end_destination.required' => 'Điểm kết thúc không được để trống',
+                    'tourist_count.required' => 'Số lượng khách du lịch không được để trống',
+                    'details.required' => 'Chi tiết tour không được để trống',
+                    'pathway.required' => 'Lịch trình tour du lịch không được để trống',
+                    'location.required' => 'Vị trí tour du lịch không được để trống',
+                    'exact_location.required' => 'Vị trí chính xác tour du lịch không được để trống',
+                    'main_img.required' => 'Ảnh chính của tour không được để trống',
+                    'status.required' => 'Trạng thái tour không được để trống',
+                    'view_count.required' => 'Số lượt xem không được để trống',
+                    'pathway.required' => 'Đường dẫn không được trống',
+                    'includes.required' => 'Giá tour bao gồm không được để trống'
+                ];
+                $validator = Validator::make($data, [
+                    // 
+                    'name' => 'required',
+                    'duration' => 'required',
+                    'child_price' => 'required',
+                    'adult_price' => 'required',
+                    'sale_percentage' => 'required',
+                    'start_destination' => 'required',
+                    'end_destination' => 'required',
+                    'tourist_count' => 'required',
+                    'details' => 'required',
+                    'pathway' => 'required',
+                    'location' => 'required',
+                    'exact_location' => 'required',
+                    'main_img' => 'required',
+                    'status' => 'required',
+                    'includes' => 'required'
+                ], [], [], $myCustomAttributes);
+
+
+                // kiểm tra lỗi
+
+                if ($validator->fails()) {
+                    return response()->json(['success' => false, 'errors' => $myCustomAttributes, 422]);
+                }
+
+
+                // Gửi request Ajax đến API
+                $response = Http::post(url('') . '/api/tour-store', $data);
+
+                // Kiểm tra kết quả từ API và trả về response tương ứng
+                if ($response->successful()) {
+                    return response()->json(['success' => true, 'message' => 'Thêm mới tour thành công', 'status' => 200]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới tour', 'status' => 500]);
+                }
             }
         }
+
         return view('admin.tours.add');
     }
 
 
     public function tourManagementEdit(TourRequest $request, $id)
     {
-        $response = Http::get(url('').'/api/tour-show/' . $id)['data'];
+        $response = Http::get(url('') . '/api/tour-show/' . $id)['data'];
         $tour = json_decode(json_encode($response['tour']), false);
         $tourToCate = $response['tourToCategories'];
         $cateIds = [];
@@ -380,37 +435,92 @@ class TourController extends Controller
             $cateIds[] = $item['cate_id'];
         }
         if ($request->isMethod('POST')) {
-            $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/tour-edit/' . $id, $data);
+            // Kiểm tra nếu request là Ajax
+            if ($request->ajax()) {
+                $data = $request->except('_token', 'btnSubmit');
 
-            if ($response->status() == 200) {
-                return redirect()->route('tour.list')->with('success', 'Cập nhật tour thành công');
+
+
+                // Validate form
+                $myCustomAttributes = [
+                    'name.required' => 'Tên của tour không được để trống',
+                    'duration.required' => 'Khoảng thời gian tour không được để trống',
+                    'child_price.required' => 'Giá tour cho trẻ nhỏ không được trống',
+                    'adult_price.required' => 'Giá tour cho người lớn không được trống',
+                    'sale_percentage.required' => 'Phần trăm giảm giá không được trống',
+                    'start_destination.required' => 'Điểm bắt đầu không được để trống',
+                    'end_destination.required' => 'Điểm kết thúc không được để trống',
+                    'tourist_count.required' => 'Số lượng khách du lịch không được để trống',
+                    'details.required' => 'Chi tiết tour không được để trống',
+                    'pathway.required' => 'Lịch trình tour du lịch không được để trống',
+                    'location.required' => 'Vị trí tour du lịch không được để trống',
+                    'exact_location.required' => 'Vị trí chính xác tour du lịch không được để trống',
+                    'main_img.required' => 'Ảnh chính của tour không được để trống',
+                    'status.required' => 'Trạng thái tour không được để trống',
+                    'view_count.required' => 'Số lượt xem không được để trống',
+                    'pathway.required' => 'Đường dẫn không được trống',
+                    'includes.required' => 'Giá tour bao gồm không được để trống'
+                ];
+                $validator = Validator::make($data, [
+                    // 
+                    'name' => 'required',
+                    'duration' => 'required',
+                    'child_price' => 'required',
+                    'adult_price' => 'required',
+                    'sale_percentage' => 'required',
+                    'start_destination' => 'required',
+                    'end_destination' => 'required',
+                    'tourist_count' => 'required',
+                    'details' => 'required',
+                    'pathway' => 'required',
+                    'location' => 'required',
+                    'exact_location' => 'required',
+                    'main_img' => 'required',
+                    'status' => 'required',
+                    'includes' => 'required'
+                ], [], [], $myCustomAttributes);
+
+
+                // kiểm tra lỗi
+
+                if ($validator->fails()) {
+                    return response()->json(['success' => false, 'errors' => $myCustomAttributes, 422]);
+                }
+
+            $response = Http::put(url('') . '/api/tour-edit/' . $id, $data);
+
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật tour thành công', 'status' => 200]);
             } else {
-                return redirect()->route('tour.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật tour', 'status' => 500]);
             }
         }
+    }
         return view('admin.tours.edit', compact('tour', 'cateIds'));
     }
 
     public function tourManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get(url('').'/api/tour-show/' . $request->id)['data']['tour'];
-        $listRatings = Rating::where('tour_id',$request->id)->orderBy('id', 'desc')->get();
-        $star = 0; $t=0;
+        $item = Http::get(url('') . '/api/tour-show/' . $request->id)['data']['tour'];
+        $listRatings = Rating::where('tour_id', $request->id)->orderBy('id', 'desc')->get();
+        $star = 0;
+        $t = 0;
         foreach ($listRatings as $c) {
             $star += $c->star;
             $t++;
         }
-        $item['star'] = $star/($t==0?1:$t);
+        $item['star'] = $star / ($t == 0 ? 1 : $t);
         $item['rcount'] = $t;
         $html = view('admin.tours.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function tourManagementTrash(Request $request) {
+    public function tourManagementTrash(Request $request)
+    {
         $data = Tour::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -419,19 +529,21 @@ class TourController extends Controller
         return view('admin.tours.trash', compact('data'));
     }
 
-     // khôi phục bản ghi bị xóa mềm
+    // khôi phục bản ghi bị xóa mềm
 
-     public function tourManagementRestore($id) {
+    public function tourManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = Tour::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
                 TourToCategory::where('tour_id', $data->id)->restore();
             }
-            return redirect()->route('tour.trash')->with('success', 'Khôi phục tour thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('tour.trash');
-    }
+        return response()->json(['success' => false, 'message' => 'Khôi phục tour không thành công']);
     
+    }
+
 }

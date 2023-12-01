@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Dánh giá đã xoá
+Tất cả đánh giá trong thùng
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -142,7 +142,7 @@ Dánh giá đã xoá
                                                 </td>
                                                 <td class="text-end">
                                                     @if(auth()->user()->can('delete rating') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-green" href="{{route('rating.restore', ['id'=>$item->id])}}">
+                                                    <button class="btn btn-icon btn-outline-green" onclick="restoreRating({{$item->id}})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                             <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
@@ -150,7 +150,7 @@ Dánh giá đã xoá
                                                             <path d="M22 19l-3 -3l-3 3"></path>
                                                             <path d="M12 7v5l2.5 2.5"></path>
                                                             </svg>
-                                                    </a>
+                                                    </button>
                                                     @endif
                                                     @if(auth()->user()->can('delete review') || auth()->user()->is_admin == 1)
                                                     <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
@@ -244,6 +244,42 @@ Dánh giá đã xoá
     </div>
 @endSection
 @section('page_js')
+<script>
+    // Đặt mã JS vào đây hoặc tải từ file JS riêng
+
+    function restoreRating(id) {
+        // Gọi Ajax để khôi phục danh mục
+        $.ajax({
+            url: '/rating/restore/' + id, // Thay đổi đúng route của bạn
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Hiển thị modal thành công bằng SweetAlert2
+                    Swal.fire({
+                            title: 'Thành công!',
+                            text: 'Khôi phục đánh giá thành công',
+                            icon: 'success'
+                        })
+                        .then(() => {
+                            // Chuyển hướng sau khi hiển thị modal
+                            window.location.href = '/rating/trash/all'; // Thay đổi đúng route của bạn
+                        });
+                } else {
+                    // Xử lý trường hợp lỗi (nếu cần)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Đã xảy ra lỗi khi khôi phục đánh giá!'
+                    });
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
     <script type="text/javascript">
         let viewDetail = function(id) {
         axios.get(`/rating/detail/${id}`)
@@ -292,26 +328,23 @@ Dánh giá đã xoá
             columnClass: 'col-md-3 col-sm-6',
             buttons: {
                 removeButton: {
-                    text: 'OK!',
+                    text: 'Được rồi!',
                     btnClass: 'btn-danger',
                     action: function() {
                         axios.delete(`/api/rating-destroy-forever/${id}`).then(function(response) {
                             Swal.fire({
-                            position: "top-center",
-                            icon: "success",
-                            title: "Xóa thành công",
-                            showConfirmButton: false,
-                            timer: 1500
-                            })
-                            .then((response) => {
-                            if (response) {
+                                    title: 'Thành công!',
+                                    text: 'Xóa đánh giá thành công',
+                                    icon: 'success'
+                                })
                                 location.reload();
-                            }
-                        });
                         });
                     }
                 },
-                close: function() {}
+                close: {
+                    text: 'Không',
+                    function() {}
+                }
             }
         });
     };

@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Danh sách danh mục
+    Danh sách danh mục
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -12,19 +12,19 @@ Danh sách danh mục
                     </h1>
                 </div>
                 <!-- <div class="col-12 ">
-                    @if (Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @if (Session::has('fail'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                            {{ Session::get('fail') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                </div> -->
+                        @if (Session::has('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
+                                {{ Session::get('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+    @endif
+                        @if (Session::has('fail'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
+                                {{ Session::get('fail') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+    @endif
+                    </div> -->
 
             </div>
         </div>
@@ -36,45 +36,48 @@ Danh sách danh mục
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Danh mục</h3> 
-                            @if(auth()->user()->is_admin == 1 || auth()->user()->can('delete category'))
-                            <a href="{{route('cate.trash')}}" style="padding-left: 5px; text-decoration: none;"><span style="color: black;">|</span> Thùng rác</a>
+                            <h3 class="card-title">Danh mục</h3>
+                            @if (auth()->user()->is_admin == 1 ||
+                                    auth()->user()->can('delete category'))
+                                <a href="{{ route('cate.trash') }}" style="padding-left: 5px; text-decoration: none;"><span
+                                        style="color: black;">|</span> Thùng rác</a>
                             @endif
-                            @if(auth()->user()->can('add category') || auth()->user()->is_admin == 1)
-                <div class="col-auto ms-auto d-print-none">
-                    <div class="btn-list">
-                        <a href="{{ route('category.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            Thêm mới
-                        </a>
-                        <a href="{{ route('category.add') }}" class="btn btn-indigo d-sm-none btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                @endif
+                            @if (auth()->user()->can('add category') || auth()->user()->is_admin == 1)
+                                <div class="col-auto ms-auto d-print-none">
+                                    <div class="btn-list">
+                                        <a href="{{ route('category.add') }}"
+                                            class="btn btn-indigo d-none d-sm-inline-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                            Thêm mới
+                                        </a>
+                                        <a href="{{ route('category.add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                    </div>
-                                    entries
-                                </div>-->
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                        </div>
+                                        entries
+                                    </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         @php
@@ -88,20 +91,22 @@ Danh sách danh mục
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="searchCol">
-                                                @if(!request()->query('searchCol'))
-                                                <option value="">Chọn cột</option>
+                                                @if (!request()->query('searchCol'))
+                                                    <option value="">Chọn cột</option>
                                                 @else
-                                                <option value="">Mặc định</option>
+                                                    <option value="">Mặc định</option>
                                                 @endif
                                                 <option value="id">ID</option>
                                                 @foreach ($tableCols as $key => $value)
-                                                    <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                    <option {{ request()->query('searchCol') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
+                                            <input type="text" name="keyword"
+                                                value="{{ request()->query('keyword') }}" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
@@ -117,19 +122,19 @@ Danh sách danh mục
                                     <tr>
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
-                                        <th {{ $key=='child'? "class=w-1":'' }} >
-                                            @if($key!='child')
-                                            @sortablelink($key, $value)
-                                            @else
-                                            {{ $value }}
-                                            @endif
-                                        </th>
+                                            <th {{ $key == 'child' ? 'class=w-1' : '' }}>
+                                                @if ($key != 'child')
+                                                    @sortablelink($key, $value)
+                                                @else
+                                                    {{ $value }}
+                                                @endif
+                                            </th>
                                         @endforeach
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($data->items() == [])
+                                    @if ($data->items() == [])
                                         <tr>
                                             <td colspan="9">
                                                 <div>Không có dữ liệu</div>
@@ -139,82 +144,120 @@ Danh sách danh mục
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
-                                                <td>{{ isset($item->child) && count($item->child) != 0 ? count($item->child)." con:" : "" }}</td>
-                                                <td>
-                                                {{ string_truncate($item->name, 70) }}
+                                                <td>{{ isset($item->child) && count($item->child) != 0 ? count($item->child) . ' con:' : '' }}
                                                 </td>
-                                            <td>
-                                                {{ time_format($item->created_at) }}
-                                            </td>
-                                            <td>
-                                                {{ time_format($item->updated_at) }}
-                                            </td>
+                                                <td>
+                                                    {{ string_truncate($item->name, 70) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($item->created_at) }}
+                                                </td>
+                                                <td>
+                                                    {{ time_format($item->updated_at) }}
+                                                </td>
                                                 <td class="text-end">
-                                                    @if(auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
-                                                    <button class="btn btn-icon btn-outline-green" onclick="restoreCategory({{$item->id}})">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                            <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
-                                                            <path d="M19 22v-6"></path>
-                                                            <path d="M22 19l-3 -3l-3 3"></path>
-                                                            <path d="M12 7v5l2.5 2.5"></path>
+                                                    @if (auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
+                                                        <button class="btn btn-icon btn-outline-green"
+                                                            onclick="restoreCategory({{ $item->id }})">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="icon icon-tabler icon-tabler-clock-up"
+                                                                width="24" height="24" viewBox="0 0 24 24"
+                                                                stroke-width="2" stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                </path>
+                                                                <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
+                                                                <path d="M19 22v-6"></path>
+                                                                <path d="M22 19l-3 -3l-3 3"></path>
+                                                                <path d="M12 7v5l2.5 2.5"></path>
                                                             </svg>
-                                                    </button>
+                                                        </button>
                                                     @endif
-                                                    @if(auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
-                                                    <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $item->id}})">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M4 7l16 0"></path>
-                                                        <path d="M10 11l0 6"></path>
-                                                        <path d="M14 11l0 6"></path>
-                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                        </svg>
-                                                    </a>
+                                                    @if (auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
+                                                        <a class="btn btn-icon btn-outline-red"
+                                                            href="javascript: removeItem({{ $item->id }})">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="icon icon-tabler icon-tabler-trash" width="24"
+                                                                height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                </path>
+                                                                <path d="M4 7l16 0"></path>
+                                                                <path d="M10 11l0 6"></path>
+                                                                <path d="M14 11l0 6"></path>
+                                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12">
+                                                                </path>
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                            </svg>
+                                                        </a>
                                                     @endif
                                                 </td>
                                             </tr>
-                                            @if($item->child)
+                                            @if ($item->child)
                                                 @foreach ($item->child as $child)
-                                                <tr>
-                                                <td><span class="text-muted">{{ $child->id }}</span></td>
-                                                <td class="bg-secondary-subtle text-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-corner-down-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M6 6v6a3 3 0 0 0 3 3h10l-4 -4m0 8l4 -4"></path>
-                                                    </svg>
-                                                    </td>
-                                                <td>
-                                                    {{ string_truncate($child->name, 70) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($child->created_at) }}
-                                                </td>
-                                                <td>
-                                                    {{ time_format($child->updated_at) }}
-                                                </td>
-                                                    <td class="text-end">
-                                                        <a class="btn btn-icon btn-outline-green" href="{{ route('category.edit', ['id' => $child->id]) }}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                            <path d="M16 5l3 3"></path>
+                                                    <tr>
+                                                        <td><span class="text-muted">{{ $child->id }}</span></td>
+                                                        <td class="bg-secondary-subtle text-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="icon icon-tabler icon-tabler-corner-down-right"
+                                                                width="24" height="24" viewBox="0 0 24 24"
+                                                                stroke-width="2" stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                </path>
+                                                                <path d="M6 6v6a3 3 0 0 0 3 3h10l-4 -4m0 8l4 -4"></path>
                                                             </svg>
-                                                        </a>
-                                                        <a class="btn btn-icon btn-outline-red" href="javascript: removeItem({{ $child->id}})">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                            <path d="M4 7l16 0"></path>
-                                                            <path d="M10 11l0 6"></path>
-                                                            <path d="M14 11l0 6"></path>
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                                                            </svg>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                        <td>
+                                                            {{ string_truncate($child->name, 70) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ time_format($child->created_at) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ time_format($child->updated_at) }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <a class="btn btn-icon btn-outline-green"
+                                                                href="{{ route('category.edit', ['id' => $child->id]) }}">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="icon icon-tabler icon-tabler-edit"
+                                                                    width="24" height="24" viewBox="0 0 24 24"
+                                                                    stroke-width="2" stroke="currentColor" fill="none"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                    </path>
+                                                                    <path
+                                                                        d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1">
+                                                                    </path>
+                                                                    <path
+                                                                        d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z">
+                                                                    </path>
+                                                                    <path d="M16 5l3 3"></path>
+                                                                </svg>
+                                                            </a>
+                                                            <a class="btn btn-icon btn-outline-red"
+                                                                href="javascript: removeItem({{ $child->id }})">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    class="icon icon-tabler icon-tabler-trash"
+                                                                    width="24" height="24" viewBox="0 0 24 24"
+                                                                    stroke-width="2" stroke="currentColor" fill="none"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                                    </path>
+                                                                    <path d="M4 7l16 0"></path>
+                                                                    <path d="M10 11l0 6"></path>
+                                                                    <path d="M14 11l0 6"></path>
+                                                                    <path
+                                                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12">
+                                                                    </path>
+                                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3">
+                                                                    </path>
+                                                                </svg>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -235,7 +278,8 @@ Danh sách danh mục
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                                bản ghi</p>
+                                bản ghi
+                            </p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
@@ -291,75 +335,74 @@ Danh sách danh mục
     </div>
 @endSection
 @section('page_js')
-<script>
-    // Đặt mã JS vào đây hoặc tải từ file JS riêng
+    <script>
+        // Đặt mã JS vào đây hoặc tải từ file JS riêng
 
-    function restoreCategory(id) {
-        // Gọi Ajax để khôi phục danh mục
-        $.ajax({
-            url: '/category/restore/' + id, // Thay đổi đúng route của bạn
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    // Hiển thị modal thành công bằng SweetAlert2
-                    Swal.fire({
-                        position: "top-center",
-                        icon: "success",
-                        title: "Danh mục đã được khôi phục",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        // Chuyển hướng sau khi hiển thị modal
-                        window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
-                    });
-                } else {
-                    // Xử lý trường hợp lỗi (nếu cần)
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Đã xảy ra lỗi khi khôi phục danh mục!'
-                    });
-                }
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    }
-</script>
-
-    <script type="text/javascript">
-        let removeItem = function(id) {
-        $.confirm({
-            theme: theme,
-            title: 'Xác nhận',
-            content: 'Xóa vĩnh viễn danh mục?',
-            columnClass: 'col-md-3 col-sm-6',
-            buttons: {
-                removeButton: {
-                    text: 'Ok!',
-                    btnClass: 'btn-danger',
-                    action: function() {
-                        axios.delete(`/api/category-destroy-forever/${id}`).then(function(response) {
-                            Swal.fire({
-                            position: "top-center",
-                            icon: "success",
-                            title: "Xóa thành công",
-                            showConfirmButton: false,
-                            timer: 1500
+        function restoreCategory(id) {
+            // Gọi Ajax để khôi phục danh mục
+            $.ajax({
+                url: '/category/restore/' + id, // Thay đổi đúng route của bạn
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Hiển thị modal thành công bằng SweetAlert2
+                        Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Khôi phục danh mục thành công',
+                                icon: 'success'
                             })
-                            .then((response) => {
-                            if (response) {
-                                location.reload();
-                            }
-                        });
+                            .then(() => {
+                                // Chuyển hướng sau khi hiển thị modal
+                                window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
+                            });
+                    } else {
+                        // Xử lý trường hợp lỗi (nếu cần)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Đã xảy ra lỗi khi khôi phục danh mục!'
                         });
                     }
                 },
-                close: function() {}
-            }
-        });
-    };
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        let removeItem = function(id) {
+            $.confirm({
+                theme: theme,
+                title: 'Xác nhận',
+                content: 'Xóa vĩnh viễn danh mục?',
+                columnClass: 'col-md-3 col-sm-6',
+                buttons: {
+                    removeButton: {
+                        text: 'Ok!',
+                        btnClass: 'btn-danger',
+                        action: function() {
+                            axios.delete(`/api/category-destroy-forever/${id}`).then(function(response) {
+                                Swal.fire({
+                                        position: "top-center",
+                                        icon: "success",
+                                        title: "Xóa thành công",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    .then((response) => {
+                                        if (response) {
+                                            location.reload();
+                                        }
+                                    });
+                            });
+                        }
+                    },
+                    close: function() {}
+                }
+            });
+        };
     </script>
 @endSection

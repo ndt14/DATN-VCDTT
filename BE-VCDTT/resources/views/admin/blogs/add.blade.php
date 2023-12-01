@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                    Overview
-                                </div> -->
+                                                            Overview
+                                                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý bài viết
                     </h1>
@@ -68,7 +68,7 @@
                         method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
-                                Thêm blog mới
+                                Thêm bài viết mới
                             </h2>
                         </div>
                         @csrf
@@ -78,16 +78,16 @@
                                     <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
                                         value="">
-                                    <span class="text-danger d-flex justify-content-start">
-                                        @error('title')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
+                                            @error('title')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tác giả</label>
                                     <input type="text" name="author" class="form-control" placeholder="" value="">
-                                    <span class="text-danger d-flex justify-content-start">
+                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="author">
                                         @error('author')
                                             {{ $message }}
                                         @enderror
@@ -99,16 +99,16 @@
                                 <label class="form-label">Ảnh</label>
                                 <input type="text" name="main_img" class="form-control" placeholder="Image"
                                     value="">
-                                <span class="text-danger d-flex justify-content-start">
-                                    @error('main_img')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
+                                        @error('main_img')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                             </div>
-                            <div class="mb-3 col-10">
+                            <div class="mb-3">
                                 <div class="form-label">Mô tả ngắn</div>
                                 <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control"></textarea>
-                                <span class="text-danger d-flex justify-content-start">
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="short_desc">
                                     @error('short_desc')
                                         {{ $message }}
                                     @enderror
@@ -117,7 +117,7 @@
                             <div class="mb-3">
                                 <div class="form-label">Mô tả</div>
                                 <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description"></textarea>
-                                <span class="text-danger d-flex justify-content-start">
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="description">
                                     @error('description')
                                         {{ $message }}
                                     @enderror
@@ -129,12 +129,12 @@
                                     <label class="custom-control custom-radio custom-control-inline me-2">
                                         <input type="radio" class="custom-control-input" name="status" checked=""
                                             value="1">
-                                        <span class="custom-control-label">Active</span>
+                                        <span class="custom-control-label">Hoạt động</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" class="custom-control-input" name="status"
                                             value="0">
-                                        <span class="custom-control-label">Unactive</span>
+                                        <span class="custom-control-label">Vô hiệu hóa</span>
                                     </label>
 
                                     <span class="text-danger d-flex justify-content-start">
@@ -146,7 +146,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Thêm mới</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo">Thêm mới</button>
                         </div>
                     </form>
                 </div>
@@ -169,7 +169,11 @@
                 }
             })
             .then(editor => {
-                return '';
+                editor.model.document.on('change:data', () => {
+                    editorData = editor.getData();
+                    $("#editor-1").text(editorData);
+
+                });
             })
             .catch(error => {
                 console.error(error);
@@ -183,12 +187,95 @@
                 }
             })
             .then(editor => {
-                return '';
+                editor.model.document.on('change:data', () => {
+                    editorData = editor.getData();
+                    $("#editor-2").text(editorData);
+
+                });
             })
             .catch(error => {
                 console.error(error);
             });
     </script>
+
+    <!-- Thêm blog !-->
+    <script>
+        $(document).ready(function() {
+
+            $('#btnSubmitAdd').click(function(e) {
+                e.preventDefault();
+
+                // lấy dữ liệu từ form
+                var formData = new FormData(this.form);
+                // thực hiện Ajax
+                $.ajax({
+
+                    url: "{{ route('blog.add') }}",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // xử lý response từ server
+                        if (response.status === 200) {
+
+                            // Hiển thị SweetAlert khi thành công
+                            Swal.fire({
+                                title: 'Thành công!',
+                                text: response.message,
+                                icon: 'success'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Xóa tất cả lỗi hiện tại trên giao diện
+                        var listSpans = document.querySelectorAll(".spanError");
+                        listSpans.forEach(function(item) {
+                            item.innerHTML = '';
+                        });
+
+                        // Xử lý lỗi ajax nếu có
+                        var errorResponse = JSON.parse(xhr.responseText);
+
+                        // Lặp qua từng trường lỗi
+                        Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                            // `fieldName` là tên trường có lỗi
+                            var errorMessages = errorResponse.errors[fieldName];
+
+                            // Lặp qua từng thông điệp lỗi trong mảng
+                            errorMessages.forEach(function(errorMessage) {
+                                var listSpans = document.querySelectorAll(
+                                    ".spanError");
+
+                                listSpans.forEach(function(item) {
+                                    if (item.dataset.tag.trim() ==
+                                        fieldName.trim()) {
+                                        // Hiển thị lỗi chỉ ở trường tương ứng
+                                        item.innerHTML = errorMessage;
+                                    }
+                                });
+                            });
+                        });
+
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: 'Đã xảy ra lỗi khi thực hiện thêm tour',
+                            icon: 'error'
+                        });
+                    }
+
+                });
+            });
+        });
+    </script>
+    <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
     <script type="text/javascript">

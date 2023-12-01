@@ -71,12 +71,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                        </div>
-                                        entries
-                                    </div>-->
+                                                    Show
+                                                    <div class="mx-2 d-inline-block">
+                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                    </div>
+                                                    entries
+                                                </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -87,9 +87,11 @@
                                                 @else
                                                     <option value="">Mặc định</option>
                                                 @endif
-                                                <option {{ request()->query('status') == 1 ? 'selected' : '' }} value="1">
+                                                <option {{ request()->query('status') == 1 ? 'selected' : '' }}
+                                                    value="1">
                                                     Đang hoạt động</option>
-                                                <option {{ request()->query('status') == 2 ? 'selected' : '' }} value="2">
+                                                <option {{ request()->query('status') == 2 ? 'selected' : '' }}
+                                                    value="2">
                                                     Không hoạt động</option>
                                             </select>
                                         </div>
@@ -180,8 +182,8 @@
                                                 </td>
                                                 <td class="text-end">
                                                     @if (auth()->user()->can('delete tour') || auth()->user()->is_admin == 1)
-                                                        <a class="btn btn-icon btn-outline-green"
-                                                            href="{{ route('tour.restore', ['id' => $item->id]) }}">
+                                                        <button class="btn btn-icon btn-outline-green"
+                                                            onclick="restoreTour({{ $item->id }})">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-clock-up"
                                                                 width="24" height="24" viewBox="0 0 24 24"
@@ -194,7 +196,7 @@
                                                                 <path d="M22 19l-3 -3l-3 3"></path>
                                                                 <path d="M12 7v5l2.5 2.5"></path>
                                                             </svg>
-                                                        </a>
+                                                        </button>
                                                     @endif
                                                     @if (auth()->user()->can('delete tour') || auth()->user()->is_admin == 1)
                                                         <a class="btn btn-icon btn-outline-red"
@@ -292,6 +294,42 @@
     </div>
 @endSection
 @section('page_js')
+    <script>
+        // Đặt mã JS vào đây hoặc tải từ file JS riêng
+
+        function restoreTour(id) {
+            // Gọi Ajax để khôi phục danh mục
+            $.ajax({
+                url: '/tour/restore/' + id, // Thay đổi đúng route của bạn
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Hiển thị modal thành công bằng SweetAlert2
+                        Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Khôi phục tour thành công',
+                                icon: 'success'
+                            })
+                            .then(() => {
+                                // Chuyển hướng sau khi hiển thị modal
+                                window.location.href = '/tour/trash'; // Thay đổi đúng route của bạn
+                            });
+                    } else {
+                        // Xử lý trường hợp lỗi (nếu cần)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Đã xảy ra lỗi khi khôi phục tour!'
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
     <script type="text/javascript">
         let viewDetail = function(id) {
             axios.get(`/tour/detail/${id}`)
@@ -308,24 +346,28 @@
         let removeItem = function(id) {
             $.confirm({
                 theme: theme,
-                title: 'Confirm',
-                content: 'Are you sure to remove?',
+                title: 'Xác nhận',
+                content: 'Bạn có chắc sẽ xóa bỏ tour này?',
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
-                        text: 'Yes',
+                        text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
                             axios.delete(`/api/tour-destroy-forever/${id}`).then(function(response) {
-                                bs5Utils.Snack.show('success', 'Success', delay = 5000,
-                                    dismissible = true);
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 2000);
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: 'Xóa tour thành công',
+                                    icon: 'success'
+                                })
+                                location.reload();
                             });
                         }
                     },
-                    close: function() {}
+                    close: {
+                        text: 'Không',
+                        function() {}
+                    }
                 }
             });
         };
