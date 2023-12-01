@@ -64,7 +64,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 "
+                    <form id="frmEdit" class="card border-0 shadow-lg rounded-4 "
                         method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
@@ -77,7 +77,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
-                                        value="{{$response['title']}}">
+                                        value="{{$blog->title}}">
                                         <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
                                             @error('title')
                                                 {{ $message }}
@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tác giả</label>
-                                    <input type="text" name="author" class="form-control" placeholder="" value="{{$response['author']}}">
+                                    <input type="text" name="author" class="form-control" placeholder="" value="{{$blog->author}}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="author">
                                         @error('author')
                                             {{ $message }}
@@ -95,10 +95,15 @@
                                 </div>
 
                             </div>
+                            <div class="mb-3 col-12">
+                                <label class="form-label">Lựa chọn danh mục</label>
+                                <select type="text" class="form-select" name="categories_data[]"
+                                    placeholder="Thêm danh mục cho blog" id="select-category" value="" multiple></select>
+                            </div>
                             <div class="mb-3 col-8">
                                 <label class="form-label">Ảnh</label>
                                 <input type="text" name="main_img" class="form-control" placeholder="Image"
-                                    value="{{$response['main_img']}}">
+                                    value="{{$blog->main_img}}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
                                         @error('main_img')
                                             {{ $message }}
@@ -107,7 +112,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả ngắn</div>
-                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{$response['short_desc']}}</textarea>
+                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{$blog->short_desc}}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="short_desc">
                                     @error('short_desc')
                                         {{ $message }}
@@ -116,7 +121,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả</div>
-                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{$response['description']}}</textarea>
+                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{$blog->description}}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="description">
                                     @error('description')
                                         {{ $message }}
@@ -127,13 +132,13 @@
                                 <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
-                                        <input type="radio" class="custom-control-input" name="status" @if($response['status'] == 1) checked @endif
+                                        <input type="radio" class="custom-control-input" name="status" @if($blog->status == 1) checked @endif
                                             value="1">
                                         <span class="custom-control-label">Hoạt động</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" class="custom-control-input" name="status"
-                                            value="0" @if($response['status'] == 0) checked @endif>
+                                            value="0" @if($blog->status == 0) checked @endif>
                                         <span class="custom-control-label">Vô hiệu hóa</span>
                                     </label>
 
@@ -146,7 +151,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response['id']}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$blog->id}}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -281,37 +286,84 @@
     <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
+<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
     <script type="text/javascript">
-        //     if ($('#frmAdd').length) {
-        //         $('#frmAdd').submit(function() {
-        //             let options = {
-        //                 beforeSubmit: function(formData, jqForm, options) {
-        //                     $('#btnSubmitAdd').addClass('btn-loading');
-        //                     $('#btnSubmitAdd').addClass("disabled");
-        //                 },
-        //                 success: function(response, statusText, xhr, $form) {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     if(response.status == 500){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-        //                     }
-        //                     if(response.status == 200){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-        //                     }
-        //                 },
-        //                 error: function() {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     $('#btnSubmitAdd').removeClass("disabled");
-        //                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-        //                 },
-        //                 dataType: 'json',
-        //                 clearForm: false,
-        //                 resetForm: false
-        //             };
-        //             $(this).ajaxSubmit(options);
-        //             return false;
-        //         });
-        // }
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
+            var categories_data = <?php echo htmlspecialchars(json_encode($cateIds)); ?>;
+            if ($('#frmEdit').length) {
+                $.ajax({
+                    url: "/api/category",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        //gender category
+                        var selectCatogories = $('#select-category');
+                        $.each(response.data.categoriesParent, function(index, category) {
+                            var id = category.id
+                            id = +id
+                            if (categories_data.includes(id)) {
+                                var option = $('<option selected></option>').val(id).text(
+                                    category.name);
+                            } else {
+                                var option = $('<option></option>').val(id).text(category.name);
+                            }
+                            selectCatogories.append(option);
+                            $.each(category.child, function(index, childCategory) {
+                                var childId = childCategory.id;
+                                childId = +childId;
+                                if (categories_data.includes(childId)) {
+                                    option = $('<option selected></option>').val(
+                                        childId).text(category.name + '-> ' +
+                                        childCategory.name);
+                                } else {
+                                    option = $('<option></option>').val(childId).text(
+                                        category.name + '-> ' + childCategory.name);
+
+                                }
+                                selectCatogories.append(option);
+                            });
+                        });
+
+                        //add to select by tom-select lib
+                        var el;
+                        window.TomSelect && (new TomSelect(el = document.getElementById(
+                            'select-category'), {
+                            copyClassesToDropdown: false,
+                            dropdownParent: 'body',
+                            controlInput: '<input>',
+                            render: {
+                                item: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                                option: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                            },
+                        }));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            $('#select-category').change(function() {
+                catogories_data = $(this).val();
+                console.log(catogories_data)
+            });
+        });
     </script>
 @endSection

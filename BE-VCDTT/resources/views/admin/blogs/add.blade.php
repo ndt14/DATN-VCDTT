@@ -105,6 +105,11 @@
                                         @enderror
                                     </span>
                             </div>
+                            <div class="mb-3 col-12">
+                                <label class="form-label">Lựa chọn danh mục</label>
+                                <select type="text" class="form-select" name="categories_data[]"
+                                    placeholder="Chọn danh mục" id="select-category" multiple></select>
+                            </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả ngắn</div>
                                 <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control"></textarea>
@@ -278,37 +283,74 @@
     <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
+<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
     <script type="text/javascript">
-        //     if ($('#frmAdd').length) {
-        //         $('#frmAdd').submit(function() {
-        //             let options = {
-        //                 beforeSubmit: function(formData, jqForm, options) {
-        //                     $('#btnSubmitAdd').addClass('btn-loading');
-        //                     $('#btnSubmitAdd').addClass("disabled");
-        //                 },
-        //                 success: function(response, statusText, xhr, $form) {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     if(response.status == 500){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-        //                     }
-        //                     if(response.status == 200){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-        //                     }
-        //                 },
-        //                 error: function() {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     $('#btnSubmitAdd').removeClass("disabled");
-        //                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-        //                 },
-        //                 dataType: 'json',
-        //                 clearForm: false,
-        //                 resetForm: false
-        //             };
-        //             $(this).ajaxSubmit(options);
-        //             return false;
-        //         });
-        // }
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
+
+            let categories_data = [];
+            if ($('#frmAdd').length) {
+                $.ajax({
+                    url: "/api/category",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        //gender category
+                        let selectCatogories = $('#select-category');
+                        $.each(response.data.categoriesParent, function(index, category) {
+                            let id = category.id
+                            id = +id
+                            let option = $('<option></option>').val(id).text(category.name);
+                            selectCatogories.append(option);
+                            $.each(category.child, function(index, childCategory) {
+                                let chlidId = childCategory.id;
+                                chlidId = +chlidId;
+                                let option = $('<option></option>').val(chlidId).text(
+                                    '(' + category.name + ')' + ' - ' +
+                                    childCategory.name);
+                                selectCatogories.append(option);
+                            });
+                        });
+
+                        //add to select by tom-select lib
+                        let el;
+                        window.TomSelect && (new TomSelect(el = document.getElementById(
+                            'select-category'), {
+                            copyClassesToDropdown: false,
+                            dropdownParent: 'body',
+                            controlInput: '<input>',
+                            render: {
+                                item: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                                option: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                            },
+                        }));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            $('#select-category').change(function() {
+                catogories_data = $(this).val();
+            });
+        });
     </script>
+
 @endSection
