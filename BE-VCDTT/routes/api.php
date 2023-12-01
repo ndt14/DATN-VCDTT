@@ -157,3 +157,5 @@ Route::get('/banner',[ImageController::class,'bannerCall']);
 //GG login
 Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback',[GoogleLoginController::class, 'handleGoogleCallback']);
+
+// Route::get('/test', [PurchaseHistoryController::class, 'test']);
