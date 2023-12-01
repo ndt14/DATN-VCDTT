@@ -183,18 +183,34 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->find($id);
         if ($category) {
+            
+            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
             $delete_cate = $category->forceDelete();
             $category->tours()->withTrashed()->update(['tours.deleted_at' => null]);
-            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
-            $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $category->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => null]);
-            $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
-            if ($checkIsset) {
-                $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
-                $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
-            } else {
-                $create_record_for_category = Category::insert(['name' => 'Chưa phân loại']);
-                $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $create_record_for_category->id]);
+            if (count($tourIds) > 0) {
+                foreach ($tourIds as $id_tour) {
+
+                    $check_cate_other_of_tour = DB::table('tours_to_categories')->where('cate_id', '<>', $category->id)->where('tour_id', $id_tour)->exists();
+
+                    if (!$check_cate_other_of_tour) {
+                        $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $category->id)->where('tour_id', $id_tour)->update(['deleted_at' => null]);
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                        }
+                    }else {
+                        $delete_tour_to_cate = TourToCategory::where('cate_id', $category->id)->where('tour_id', $id_tour)->forceDelete();
+                    }
+
+                }
             }
+
             if ($delete_cate) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -212,13 +228,14 @@ class CategoryController extends Controller
     # /\/\/\/\/\/\/\ ========================================================= NHÓM FUNC CỦA ADMIN BLADE =====================================
 
 
-    public function cateManagementList(Request $request) {
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+    public function cateManagementList(Request $request)
+    {
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/category?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = $response->json()['data']['categoriesParent'];
             foreach ($data as $key => $item) {
                 if ($item['parent_id'] == NULL) {
@@ -258,11 +275,11 @@ class CategoryController extends Controller
     public function cateManagementStore(CategoryRequest $request)
     {
         $data = $request->all();
-        $response = Http::post(url('').'/api/category-store', $data);
-        if($response->status() == 200) {
-            return redirect()->route('category.add')->with('success','Add data Success');
-        }else {
-            return redirect()->route('category.add')->with('fail','Add data Fail');
+        $response = Http::post(url('') . '/api/category-store', $data);
+        if ($response->status() == 200) {
+            return redirect()->route('category.add')->with('success', 'Add data Success');
+        } else {
+            return redirect()->route('category.add')->with('fail', 'Add data Fail');
         }
     }
 
@@ -271,16 +288,16 @@ class CategoryController extends Controller
 
         if ($request->isMethod('POST')) {
             $data = $request->all();
-            $response = Http::put(url('')."/api/category-edit/{$id}", $data);
-            if($response->status() == 200) {
-                return redirect()->route('category.edit', ['id' => $id])->with('success','Edit data Success');
-            }else {
-                return redirect()->route('category.edit', ['id' => $id])->with('fail','Edit data Fail');
+            $response = Http::put(url('') . "/api/category-edit/{$id}", $data);
+            if ($response->status() == 200) {
+                return redirect()->route('category.edit', ['id' => $id])->with('success', 'Edit data Success');
+            } else {
+                return redirect()->route('category.edit', ['id' => $id])->with('fail', 'Edit data Fail');
             }
         }
         $listCateParent = Category::whereNull('parent_id')->get();
-        $response = Http::get(url('').'/api/category-show/'.$id);
-        if($response->status() == 200) {
+        $response = Http::get(url('') . '/api/category-show/' . $id);
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['category']));
             return view('admin.categories.edit', compact('data', 'listCateParent'));
         } else {
