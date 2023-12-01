@@ -295,7 +295,7 @@ const PurchasingInformation = () => {
       email: formik.values.email,
       phone_number: formik.values.phone_number,
       suggestion: formik.values.message,
-      gender: formik.values.honorific.toString(),
+      gender: formik.values.honorific,
       coupon_name: couponData.couponName !== null ? couponData.couponName : "",
       coupon_code: couponData.couponCode ? couponData.couponCode : "none",
       coupon_percentage:
@@ -359,7 +359,7 @@ const PurchasingInformation = () => {
     email: formik.values.email,
     phone_number: formik.values.phone_number,
     suggestion: formik.values.message,
-    gender: formik.values.honorific.toString(),
+    gender: formik.values.honorific,
     coupon_name: couponData.couponName,
     coupon_code: couponData.couponCode,
     coupon_percentage:

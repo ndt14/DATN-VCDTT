@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // import "../../../assets/js/modal.js";
 
 // import { Modal, Form, Input, Checkbox, Button } from "antd";
@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { BsGoogle } from "react-icons/bs";
-import { useLoginMutation, useRegisterMutation } from "../../api/auth.js";
+import { useGetLoginGoogleQuery, useLoginMutation, useRegisterMutation } from "../../api/auth.js";
 import { useFormik } from "formik";
 import "../User/css/Header.css";
 import { loginSchema, registrationSchema } from "../../schemas/auth.js";
@@ -231,7 +231,7 @@ const Header = () => {
     },
     validationSchema: registrationSchema,
     onSubmit: handleRegister, // Your handleRegister function
-  });
+  }); 
 
   const preParseUserData = localStorage.getItem("user");
   let userData: { id: string; name: string; is_admin: number } | null = null;
@@ -249,6 +249,63 @@ const Header = () => {
     window.open("https://admin.vcdtt.online", "_blank");
   };
 
+  //google login
+
+const {data:dataGoogle} = useGetLoginGoogleQuery()
+console.log(dataGoogle);
+
+const [, setLoading] = useState(true);
+const [, setError] = useState(null);
+const [data, setData] = useState<any>({});
+
+// Sau khi nhận được dữ liệu từ API Google
+const handleGoogleLoginSuccess = (googleUserData: { user: any; token: string; }) => {
+  // Lưu thông tin người dùng và token vào localStorage
+  localStorage.setItem('user', JSON.stringify(googleUserData.user));
+  localStorage.setItem('token', googleUserData.token);
+
+  // Đánh dấu người dùng đã đăng nhập thành công
+  setIsLoggedIn(true);
+
+  // Chuyển hướng đến trang người dùng
+  navigate("/"); // Đổi thành URL của trang người dùng của bạn
+};
+
+// ...
+
+// Trong useEffect sau khi fetch dữ liệu từ API Google
+
+
+const location = useLocation();
+
+// ... Các phần khác của component
+
+useEffect(() => {
+  if (location && location.search) {
+    fetch(`https://admin.vcdtt.online/api/auth/google/callback${location.search}`, { headers: new Headers({ accept: 'application/json' }) })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Something went wrong!');
+      })
+      .then((fetchedData) => {
+        setData(fetchedData);
+        setLoading(false);
+
+        // Gọi hàm xử lý đăng nhập thành công với Google
+        handleGoogleLoginSuccess(fetchedData);
+      })
+      .catch((fetchError) => {
+        setError(fetchError);
+        setLoading(false);
+        console.error(fetchError);
+      });
+  }
+}, [location]);
+console.log("data",data);
+ 
+//end google
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -458,10 +515,16 @@ const Header = () => {
                           <h4 className="text-center my-3 fw-bold">
                             HOẶC ĐĂNG NHẬP VỚI
                           </h4>
+                          <a className="App-link" href={dataGoogle?.url}>
                           <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                             <BsGoogle />
-                            <span className="mx-2">Đăng nhập với Google</span>
+                          
+              
+                <span className="mx-2">Đăng nhập với Google</span>
+             
+           
                           </button>
+                          </a>
                         </div>
                       )}
                       {showSignUpForm && (
@@ -595,10 +658,16 @@ const Header = () => {
                           <h4 className="text-center my-3 fw-bold">
                             HOẶC ĐĂNG KÝ VỚI
                           </h4>
+                          <a className="App-link" href={dataGoogle?.url}>
                           <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                             <BsGoogle />
-                            <span className="mx-2">Đăng ký với Google</span>
+                          
+              
+                <span className="mx-2">Đăng nhập với Google</span>
+             
+           
                           </button>
+                          </a>
                         </div>
                       )}
                     </Modal.Body>

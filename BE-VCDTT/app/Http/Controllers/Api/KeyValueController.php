@@ -8,10 +8,7 @@ use App\Http\Resources\KeyValueResource;
 use App\Models\KeyValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Storage;
+
 
 class KeyValueController extends Controller
 {
@@ -95,6 +92,9 @@ class KeyValueController extends Controller
             $item->key=='logo'?$images['logo'] = $item->value:'';
             $item->key=='favicon'?$images['favicon'] = $item->value:'';
             $item->key=='banner'?$images['banner'] = $item->value:'';
+            $item->key=='subBanner'?$images['subBanner'] = $item->value:'';
+            $item->key=='BankAccountQR'?$images['BankAccountQR'] = $item->value:'';
+            $item->key=='loadingScreen'?$images['loadingScreen'] = $item->value:'';
         }
         if ($request->isMethod('POST')) {
             $dataInsert = $request->except('_token', 'btnSubmit');

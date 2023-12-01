@@ -11,11 +11,12 @@ use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\AllocationController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KeyValueController;
 use App\Http\Controllers\Api\WishListController;
-use App\Http\Controllers\Api\AllocationController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\TermAndPrivacyController;
@@ -129,7 +130,7 @@ Route::match(['get', 'post'], '/vnpay-payment/{id}', [PaymentController::class, 
 // Route::post('/vnpay-payment',[PaymentController::class,'vnpayPayment']);
 
 Route::post('/check-coupon', [PurchaseHistoryController::class, 'check_coupon']);
-Route::post('/list-coupon/{id}', [CouponController::class, 'listCouponUserId']);
+Route::get('/list-coupon/{id}', [CouponController::class, 'listCouponUserId']);
 
 
 Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.delete');
@@ -150,6 +151,7 @@ Route::delete('/page-destroy-forever/{id}', [TermAndPrivacyController::class, 'd
 Route::get('/keyvalue',[KeyValueController::class,'index']);
 Route::get('/keyvalue/{key}',[KeyValueController::class,'show']);
 Route::post('/keyvalue-edit-all',[KeyValueController::class,'updateAll']);
+Route::get('/banner',[ImageController::class,'bannerCall']);
 
 //GG login
 Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
