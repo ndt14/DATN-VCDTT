@@ -38,6 +38,7 @@ class BlogRequest extends FormRequest
                             'title' => 'required',
                             'author' => 'required',
                             'short_desc' => 'required',
+                            'description' => 'required',
                             'main_img' => 'required',
                         ];
 
@@ -51,6 +52,7 @@ class BlogRequest extends FormRequest
                             'title' => 'required',
                             'author' => 'required',
                             'short_desc' => 'required',
+                            'description'=> 'required',
                             'main_img' => 'required',
                         ];
 
@@ -69,6 +71,7 @@ class BlogRequest extends FormRequest
                 'title.required' => 'Không được bỏ trống tiêu đề!',
                 'author.required' => 'Không được bỏ trống tác giả!',
                 'short_desc.required' => 'Không được bỏ trống miêu tả ngắn!',
+                'description.required'=> 'Mô tả blog không được trống',
                 'main_img.required' => 'Không được bỏ trống ảnh!',
             ];
     }

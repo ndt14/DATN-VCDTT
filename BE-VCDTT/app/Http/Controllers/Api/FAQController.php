@@ -20,15 +20,15 @@ class FAQController extends Controller
     {
         //
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $faqs = FAQ::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $faqs = FAQ::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new FAQ())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $faqs = FAQ::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $faqs = FAQ::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
             [
@@ -47,7 +47,7 @@ class FAQController extends Controller
     public function store(FAQRequest $request)
     {
         $newFaq = FAQ::create($request->all());
-        if($newFaq->id) {
+        if ($newFaq->id) {
             return response()->json(
                 [
                     'data' => [
@@ -57,7 +57,7 @@ class FAQController extends Controller
                     'status' => 200
                 ]
             );
-        }else {
+        } else {
             return response()->json([
                 'message' => 'internal server error',
                 'status' => 500
@@ -91,23 +91,23 @@ class FAQController extends Controller
     // thực hiện tìm kiếm câu hỏi trong bảng faqs sử dụng chỉ mục và truy vấn full-text search
 
     public function search_faq(Request $request)
-{
-    $question = $request->query('question');
+    {
+        $question = $request->query('question');
 
-    $results = FAQ::where('question','LIKE',"%$question%")->get();
+        $results = FAQ::where('question', 'LIKE', "%$question%")->get();
 
-    if(count($results) > 0) {
-        return response()->json([
-            'data' => [
-                'faqs' => $results
-            ],
-            'message' => 'OK',
-            'status' => 200
-        ]);
-    }else {
-        return response()->json(['message' => '404 Not found', 'status' => 404]);
+        if (count($results) > 0) {
+            return response()->json([
+                'data' => [
+                    'faqs' => $results
+                ],
+                'message' => 'OK',
+                'status' => 200
+            ]);
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        }
     }
-}
 
     /**
      * Update the specified resource in storage.
@@ -116,20 +116,20 @@ class FAQController extends Controller
     {
         //
 
-            $faq = $request->all();
-            $updateFaq = FAQ::where('id', $id)->update($request->except('_token','_method'));
-            $faq = FAQ::find($id);
-            if ($updateFaq) {
-                return response()->json([
-                    'data' => [
-                        'faq' => $faq
-                    ],
-                    'message' => 'Edit success',
-                     'status' => 200
-                ]);
-            } else {
-                return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
-            }
+        $faq = $request->all();
+        $updateFaq = FAQ::where('id', $id)->update($request->except('_token', '_method'));
+        $faq = FAQ::find($id);
+        if ($updateFaq) {
+            return response()->json([
+                'data' => [
+                    'faq' => $faq
+                ],
+                'message' => 'Edit success',
+                'status' => 200
+            ]);
+        } else {
+            return response()->json(['message' => 'Edit fail, internal server error', 'status' => 500]);
+        }
 
     }
 
@@ -142,13 +142,13 @@ class FAQController extends Controller
 
         $faq = FAQ::find($id);
 
-        if($faq) {
+        if ($faq) {
             $deleteFaq = $faq->delete();
             if (!$deleteFaq) {
                 return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
             return response()->json(['message' => 'OK', 'status' => 200]);
-        }else {
+        } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
@@ -157,7 +157,7 @@ class FAQController extends Controller
     {
         $faq = FAQ::withTrashed()->find($id);
         if ($faq) {
-            $delete_faq =  $faq->forceDelete();
+            $delete_faq = $faq->forceDelete();
             if ($delete_faq) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -174,74 +174,82 @@ class FAQController extends Controller
 
     // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function faqManagementList(Request $request) {
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/faq?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+    public function faqManagementList(Request $request)
+    {
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/faq?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['faqs']), false);
-            $perPage = $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.faqs.list', compact('data'));
-}
+    }
 
 
-    public function faqManagementAdd(FAQRequest $request) {
+    public function faqManagementAdd(FAQRequest $request)
+    {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post(url('').'/api/faq-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('faq.list')->with('success', 'Thêm mới faq thành công');
+            $response = Http::post(url('') . '/api/faq-store', $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Thêm mới faq thành công', 'status' => 200]);
             } else {
-                return redirect()->route('faq.add')->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới faq', 'status' => 500]);
             }
-        };
+        }
+        ;
         return view('admin.faqs.add');
     }
 
-    public function faqManagementEdit(FAQRequest $request, $id) {
-        $response = json_decode(json_encode(Http::get(url('').'/api/faq-show/' . $request->id)['data']['faq']));
+    public function faqManagementEdit(FAQRequest $request, $id)
+    {
+        $response = json_decode(json_encode(Http::get(url('') . '/api/faq-show/' . $request->id)['data']['faq']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/faq-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('faq.list')->with('success', 'Cập nhật faq thành công');
+            $response = Http::put(url('') . '/api/faq-edit/' . $id, $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật faq thành công', 'status' => 200]);
             } else {
-                return redirect()->route('faq.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật faq', 'status' => 500]);
             }
         }
         return view('admin.faqs.edit', compact('response'));
     }
 
-    public function faqManagementDetail(Request $request) {
+    public function faqManagementDetail(Request $request)
+    {
         $data = $request->except('_token');
-        $response = Http::get(url('').'/api/faq-show/'.$request->id);
-        if($response->status() == 200) {
+        $response = Http::get(url('') . '/api/faq-show/' . $request->id);
+        if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['faq']), false);
             $html = view('admin.faqs.detail', compact('item'))->render();
             return response()->json(['html' => $html, 'status' => 200]);
         }
     }
 
-    public function faqManagementTrash(Request $request) {
+    public function faqManagementTrash(Request $request)
+    {
         $data = FAQ::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -252,16 +260,17 @@ class FAQController extends Controller
 
     // khôi phục bản ghi bị xóa mềm
 
-    public function faqManagementRestore($id) {
+    public function faqManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = FAQ::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
             }
-            return redirect()->route('faq.trash')->with('success', 'Khôi phục faq thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('faq.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục faq không thành công']);
     }
 
 }

@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Danh sách bài viết
+    Danh sách bài viết
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -45,52 +45,54 @@ Danh sách bài viết
                                         style="color: black;">|</span> Thùng rác</a>
                             @endif
                             @if (auth()->user()->can('add post') || auth()->user()->is_admin == 1)
-                    <div class="col-auto ms-auto d-print-none">
-                        <div class="btn-list">
-                            <a href="{{ route('blog.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                </svg>
-                                Thêm mới
-                            </a>
-                            <a href="{{ url('/blog-add') }}" class="btn btn-indigo d-sm-none btn-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                @endif
+                                <div class="col-auto ms-auto d-print-none">
+                                    <div class="btn-list">
+                                        <a href="{{ route('blog.add') }}" class="btn btn-indigo d-none d-sm-inline-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                            Thêm mới
+                                        </a>
+                                        <a href="{{ url('/blog-add') }}" class="btn btn-indigo d-sm-none btn-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                    </div>
-                                    entries
-                                </div>-->
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                        </div>
+                                        entries
+                                    </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="status">
-                                                @if(!request()->query('status'))
-                                                <option value="">Chọn trạng thái</option>
+                                                @if (!request()->query('status'))
+                                                    <option value="">Chọn trạng thái</option>
                                                 @else
-                                                <option value="">Mặc định</option>
+                                                    <option value="">Mặc định</option>
                                                 @endif
-                                                <option {{ request()->query('status')==1?'selected':'' }} value="1">Đang hoạt động</option>
-                                                <option {{ request()->query('status')==2?'selected':'' }} value="2">Không hoạt động</option>
+                                                <option {{ request()->query('status') == 1 ? 'selected' : '' }} value="1">
+                                                    Đang hoạt động</option>
+                                                <option {{ request()->query('status') == 2 ? 'selected' : '' }} value="2">
+                                                    Không hoạt động</option>
                                             </select>
                                         </div>
                                         @php
@@ -106,20 +108,22 @@ Danh sách bài viết
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="searchCol">
-                                                @if(!request()->query('searchCol'))
-                                                <option value="">Chọn cột</option>
+                                                @if (!request()->query('searchCol'))
+                                                    <option value="">Chọn cột</option>
                                                 @else
-                                                <option value="">Mặc định</option>
+                                                    <option value="">Mặc định</option>
                                                 @endif
                                                 <option value="id">ID</option>
                                                 @foreach ($tableCols as $key => $value)
-                                                    <option {{ request()->query('searchCol')==$key?'selected':'' }} value="{{ $key }}">{{ $value }}</option>
+                                                    <option {{ request()->query('searchCol') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}" class="form-control"
+                                            <input type="text" name="keyword"
+                                                value="{{ request()->query('keyword') }}" class="form-control"
                                                 placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
@@ -135,14 +139,14 @@ Danh sách bài viết
                                     <tr>
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
-                                        <th>@sortablelink($key, $value)</th>
+                                            <th>@sortablelink($key, $value)</th>
                                         @endforeach
                                         <th class="text-center">Trạng thái</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($data->items() == [])
+                                    @if ($data->items() == [])
                                         <tr>
                                             <td colspan="9">
                                                 <div>Không có dữ liệu</div>
@@ -160,7 +164,7 @@ Danh sách bài viết
                                                     {{ $item->author }}
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->short_desc, 50) }}
+                                                    {!! string_truncate($item->short_desc, 50) !!}
                                                 </td>
                                                 <td>
                                                     {{ $item->view_count }}
@@ -241,7 +245,8 @@ Danh sách bài viết
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                                bản ghi</p>
+                                bản ghi
+                            </p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
@@ -323,16 +328,14 @@ Danh sách bài viết
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
-                        text: 'Ok!',
+                        text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
                             axios.delete(`/api/blog-destroy/${id}`).then(function(response) {
                                 Swal.fire({
-                                        position: "top-center",
-                                        icon: "success",
-                                        title: "Di chuyển vào thùng thành công",
-                                        showConfirmButton: false,
-                                        timer: 1500
+                                        title: 'Thành công!',
+                                        text: 'Di chuyển vào thùng thành công',
+                                        icon: 'success'
                                     })
                                     .then((response) => {
                                         if (response) {
@@ -342,7 +345,10 @@ Danh sách bài viết
                             });
                         }
                     },
-                    close: function() {}
+                    close: {
+                        text: 'Không',
+                        function() {}
+                    }
                 }
             });
         };

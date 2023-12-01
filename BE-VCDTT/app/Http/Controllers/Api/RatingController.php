@@ -14,6 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class RatingController extends Controller
 {
@@ -282,12 +283,20 @@ class RatingController extends Controller
         $response = Http::get(url('').'/api/rating-show/' . $request->id);
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
+
+            // Kiểm tra nếu request là Ajax
+            if ($request->ajax()) {
+                $data = $request->except('_token', 'btnSubmit');
+
             $response = Http::put(url('').'/api/rating-edit/' . $request->id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('rating.edit', ['id' => $request->id])->with('success', 'Cập nhật rating thành công');
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Trả lời đánh giá thành công', 'status' => 200]);
             } else {
-                return redirect()->route('rating.edit', ['id' => $request->id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi trả lời đánh giá', 'status' => 500]);
             }
+
+        }
         }
         $data = json_decode(json_encode($response->json()['data']['rating']), false);
         return view('admin.ratings.edit', compact('data'));
@@ -326,8 +335,8 @@ class RatingController extends Controller
             if ($data) {
                 $data->restore();
             }
-            return redirect()->route('rating.trash')->with('success', 'Khôi phục đánh giá thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('rating.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục đánh giá không thành công']);
     }
 }

@@ -36,11 +36,11 @@ class Tour extends Model
     protected $categoriesArray;
 
     public function categories() {
-        return $this->belongsToMany(Category::class,'tours_to_categories','tour_id','cate_id');
+        return $this->belongsToMany(Category::class,'tours_to_categories','tour_id','cate_id')->withTrashed();;
     }
 
     public function coupons() {
-        return $this->hasMany(Coupon::class);
+        return $this->hasMany(Coupon::class)->withTrashed();
     }
 
     public function setCategoriesArray(array $categoriesArray)
@@ -50,7 +50,7 @@ class Tour extends Model
 
     public function purchase()
     {
-        return $this->hasMany(PurchaseHistory::class);
+        return $this->hasMany(PurchaseHistory::class)->withTrashed();
     }
 
     public function toSearchableArray()
@@ -79,25 +79,27 @@ class Tour extends Model
         ];
         $data['category']['lvl0'] = [];
         $data['category']['lvl1'] = [];
-        foreach($this->categoriesArray as $cate){
-            if(Category::where('id', $cate)->where('parent_id', null)->exists()){
-                $categoriesParent = Category::where('id', $cate)->first();
-                $categoriesParent->child = $categories->getCategoriesChild($cate);
-                $data['category']['lvl0'][] = $categoriesParent->name;
-                foreach ($categoriesParent->child as $child) {
-                    $data['category']['lvl1'][] = $categoriesParent->name.' > '. $child->name;
-                }
-                $data['parent_category'][] = $categoriesParent->name;
-            }
-            else{
-                $categoriesChild = Category::where('id', $cate)->first();
-                $parentList = Category::where('id', $categoriesChild->parent_id)->get();
-                foreach($parentList as $parent){
-                    if(!in_array( $parent->name.' > '. $categoriesChild->name,$data['category']['lvl1'])){
-                        $data['category']['lvl1'][] = $parent->name.' > '. $categoriesChild->name;
+        if(is_array($this->categoriesArray) || is_object($this->categoriesArray)) {
+            foreach($this->categoriesArray as $cate){
+                if(Category::where('id', $cate)->where('parent_id', null)->exists()){
+                    $categoriesParent = Category::where('id', $cate)->first();
+                    $categoriesParent->child = $categories->getCategoriesChild($cate);
+                    $data['category']['lvl0'][] = $categoriesParent->name;
+                    foreach ($categoriesParent->child as $child) {
+                        $data['category']['lvl1'][] = $categoriesParent->name.' > '. $child->name;
                     }
-                    if(!in_array( $parent->name,$data['category']['lvl0'])){
-                        $data['category']['lvl0'][] = $parent->name;
+                    $data['parent_category'][] = $categoriesParent->name;
+                }
+                else{
+                    $categoriesChild = Category::where('id', $cate)->first();
+                    $parentList = Category::where('id', $categoriesChild->parent_id)->get();
+                    foreach($parentList as $parent){
+                        if(!in_array( $parent->name.' > '. $categoriesChild->name,$data['category']['lvl1'])){
+                            $data['category']['lvl1'][] = $parent->name.' > '. $categoriesChild->name;
+                        }
+                        if(!in_array( $parent->name,$data['category']['lvl0'])){
+                            $data['category']['lvl0'][] = $parent->name;
+                        }
                     }
                 }
             }

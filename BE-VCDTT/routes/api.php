@@ -46,7 +46,7 @@ Route::post('/tour-store', [TourController::class, 'store']);
 Route::get('/tour-show/{id}', [TourController::class, 'show']);
 Route::put('/tour-edit/{id}', [TourController::class, 'update'])->name('api.tour.edit');
 Route::delete('/tour-destroy/{id}', [TourController::class, 'destroy']);
-// Route::get('/tour/cate/{id}', [TourToCategoryController::class,'show']);
+Route::delete('/tour-destroy-forever/{id}', [TourController::class, 'destroyForever']);
 
 //Blog
 Route::get('/blog', [BlogController::class, 'index']);
@@ -64,6 +64,7 @@ Route::post('/category-store', [CategoryController::class, 'store'])->name('api.
 Route::get('/category-show/{id}', [CategoryController::class, 'show']);
 Route::put('/category-edit/{id}', [CategoryController::class, 'update'])->name('api.category.edit');
 Route::delete('/category-destroy/{id}', [CategoryController::class, 'destroy']);
+Route::delete('/category-destroy-forever/{id}', [CategoryController::class, 'destroyForever']);
 
 // Coupon
 Route::get('/coupon', [CouponController::class, 'index']);

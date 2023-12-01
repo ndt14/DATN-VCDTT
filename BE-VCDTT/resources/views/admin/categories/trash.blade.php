@@ -144,7 +144,8 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td><span class="text-muted">{{ $item->id }}</span></td>
-                                                <td>{{ count($item->child) != 0 ? count($item->child) . ' con:' : '' }}</td>
+                                                <td>{{ isset($item->child) && count($item->child) != 0 ? count($item->child) . ' con:' : '' }}
+                                                </td>
                                                 <td>
                                                     {{ string_truncate($item->name, 70) }}
                                                 </td>
@@ -155,25 +156,22 @@
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-end">
-                                                    @if (auth()->user()->can('edit category') || auth()->user()->is_admin == 1)
-                                                        <a class="btn btn-icon btn-outline-green"
-                                                            href="{{ route('category.edit', ['id' => $item->id]) }}">
+                                                    @if (auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
+                                                        <button class="btn btn-icon btn-outline-green"
+                                                            onclick="restoreCategory({{ $item->id }})">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
-                                                                class="icon icon-tabler icon-tabler-edit" width="24"
-                                                                height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                stroke="currentColor" fill="none"
+                                                                class="icon icon-tabler icon-tabler-clock-up"
+                                                                width="24" height="24" viewBox="0 0 24 24"
+                                                                stroke-width="2" stroke="currentColor" fill="none"
                                                                 stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none">
                                                                 </path>
-                                                                <path
-                                                                    d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1">
-                                                                </path>
-                                                                <path
-                                                                    d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z">
-                                                                </path>
-                                                                <path d="M16 5l3 3"></path>
+                                                                <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
+                                                                <path d="M19 22v-6"></path>
+                                                                <path d="M22 19l-3 -3l-3 3"></path>
+                                                                <path d="M12 7v5l2.5 2.5"></path>
                                                             </svg>
-                                                        </a>
+                                                        </button>
                                                     @endif
                                                     @if (auth()->user()->can('delete category') || auth()->user()->is_admin == 1)
                                                         <a class="btn btn-icon btn-outline-red"
@@ -337,22 +335,59 @@
     </div>
 @endSection
 @section('page_js')
+    <script>
+        // Đặt mã JS vào đây hoặc tải từ file JS riêng
+
+        function restoreCategory(id) {
+            // Gọi Ajax để khôi phục danh mục
+            $.ajax({
+                url: '/category/restore/' + id, // Thay đổi đúng route của bạn
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Hiển thị modal thành công bằng SweetAlert2
+                        Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Khôi phục danh mục thành công',
+                                icon: 'success'
+                            })
+                            .then(() => {
+                                // Chuyển hướng sau khi hiển thị modal
+                                window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
+                            });
+                    } else {
+                        // Xử lý trường hợp lỗi (nếu cần)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Đã xảy ra lỗi khi khôi phục danh mục!'
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+
     <script type="text/javascript">
         let removeItem = function(id) {
             $.confirm({
                 theme: theme,
                 title: 'Xác nhận',
-                content: 'Di chuyển vào thùng rác?',
+                content: 'Xóa vĩnh viễn danh mục?',
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
                         text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
-                            axios.delete(`/api/category-destroy/${id}`).then(function(response) {
+                            axios.delete(`/api/category-destroy-forever/${id}`).then(function(response) {
                                 Swal.fire({
                                         title: 'Thành công!',
-                                        text: 'Di chuyển vào thùng thành công',
+                                        text: 'Xóa danh mục thành công',
                                         icon: 'success'
                                     })
                                     .then((response) => {
@@ -360,7 +395,6 @@
                                             location.reload();
                                         }
                                     });
-                                    
                             });
                         }
                     },

@@ -21,12 +21,12 @@ class Category extends Model
     ];
 
     public function tours() {
-        return $this->belongsToMany(Tour::class, 'tours_to_categories', 'cate_id', 'tour_id');
+        return $this->belongsToMany(Tour::class, 'tours_to_categories', 'cate_id', 'tour_id')->withTrashed();
     }
 
     public function coupons()
     {
-        return $this->hasMany(Coupon::class);
+        return $this->hasMany(Coupon::class)->withTrashed();
     }
 
     public function getCategoriesParent($keyword = '', $sort = ''){
