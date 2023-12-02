@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://datn-vcdtt.test:5173'),env('HOSTING_URL', 'https://vcdtt.online')],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://datn-vcdtt.test:5173')],
 
     'allowed_origins_patterns' => [],
 
