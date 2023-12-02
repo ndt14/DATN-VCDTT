@@ -42,7 +42,9 @@ class PurchaseHistoryController extends Controller
                     foreach ($columns as $column) {
                         $query->orWhere($column, 'like', '%' . $keyword . '%');
                     }
-                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
+                ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
+                ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
             } else {
                 $purchasehistorys = PurchaseHistory::where(function ($query) use ($keyword) {
                     $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
@@ -51,7 +53,8 @@ class PurchaseHistoryController extends Controller
                     }
                 })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
                     ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
-                    ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+                    ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')
+                    ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
             }
         } else {
             $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')

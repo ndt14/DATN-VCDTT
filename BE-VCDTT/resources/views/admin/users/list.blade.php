@@ -244,45 +244,52 @@
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
                                 bản ghi</p>
 
-                            <ul class="pagination m-0 ms-auto">
-                                <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->previousPageUrl() }}" tabindex="-1"
-                                        aria-disabled="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>prev</a>
-                                </li>
-                                <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $data->url(1) }}">1</a>
-                                </li>
-                                @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage() - 1; $page++)
+                                <ul class="pagination m-0 ms-auto">
+                                    <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $data->previousPageUrl() }}" tabindex="-1"
+                                            aria-disabled="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M15 6l-6 6l6 6"></path>
+                                            </svg>prev</a>
+                                    </li>
+                                    <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                    </li>
+                                    @if (1 + 2 != $data->currentPage() && $data->currentPage() > 4)
+                                        <li class="page-item">
+                                            ...
+                                        </li>
+                                    @endif
+                                    @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage(); $page++)
+                                        <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                        </li>
+                                    @endfor
+                                    @if ( $data->currentPage() < $data->lastPage() - 3)
+                                        <li class="page-item">
+                                            ...
+                                        </li>
+                                    @endif
+                                    @if ($data->lastPage() != 1 && $data->currentPage() < $data->lastPage() - 2)
                                     <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                        <a class="page-link"
+                                            href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
                                     </li>
-                                @endfor
-                                @if ($data->currentPage() + 3 != $data->lastPage() && $data->lastPage() > 3)
-                                    <li class="page-item">
-                                        ...
+                                    @endif
+                                    <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M9 6l6 6l-6 6"></path>
+                                            </svg>
+                                        </a>
                                     </li>
-                                @endif
-                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link"
-                                        href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
-                                </li>
-                                <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
+                                </ul>
 
                         </div>
                     </div>
