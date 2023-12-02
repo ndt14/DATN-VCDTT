@@ -352,9 +352,10 @@
                                 text: 'Khôi phục danh mục thành công',
                                 icon: 'success'
                             })
-                            .then(() => {
+                            .then((response) => {
                                 // Chuyển hướng sau khi hiển thị modal
-                                window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
+                                // window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
+                                console.log(response.data);
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)

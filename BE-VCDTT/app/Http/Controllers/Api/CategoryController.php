@@ -379,7 +379,7 @@ class CategoryController extends Controller
                 // Khôi phục danh mục
                 $data->restore();
             }
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'data' => $id]);
         }
         return response()->json(['success' => false, 'message' => 'Khôi phục danh mục không thành công']);
     }
