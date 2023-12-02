@@ -1,6 +1,6 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Danh sách mã giảm giá
+    Danh sách mã giảm giá
 @endSection
 @section('content')
     <div class="page-header d-print-none">
@@ -38,8 +38,11 @@ Danh sách mã giảm giá
                                 </svg>
                                 Thêm mới
                             </a>
-                            <a href="{{route('coupon.add')}}" class="btn btn-default d-sm-none btn-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <a href="{{ route('coupon.add') }}" class="btn btn-default d-sm-none btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                     <path d="M5 12l14 0"></path>
                                     <path d="M5 12l4 4"></path>
@@ -69,12 +72,12 @@ Danh sách mã giảm giá
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                            Show
-                                            <div class="mx-2 d-inline-block">
-                                                <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                            </div>
-                                            entries
-                                        </div>-->
+                                                    Show
+                                                    <div class="mx-2 d-inline-block">
+                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                    </div>
+                                                    entries
+                                                </div>-->
 
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
@@ -86,11 +89,14 @@ Danh sách mã giảm giá
                                                 @else
                                                     <option value="">Mặc định</option>
                                                 @endif
-                                                <option {{ request()->query('status') == 1 ? 'selected' : '' }} value="1">
+                                                <option {{ request()->query('status') == 1 ? 'selected' : '' }}
+                                                    value="1">
                                                     Đang hoạt động</option>
-                                                <option {{ request()->query('status') == 2 ? 'selected' : '' }} value="2">
+                                                <option {{ request()->query('status') == 2 ? 'selected' : '' }}
+                                                    value="2">
                                                     Không hoạt động</option>
-                                                <option {{ request()->query('status') == 3 ? 'selected' : '' }} value="3">Hết
+                                                <option {{ request()->query('status') == 3 ? 'selected' : '' }}
+                                                    value="3">Hết
                                                     hạn</option>
                                             </select>
                                         </div>
@@ -101,9 +107,11 @@ Danh sách mã giảm giá
                                                 @else
                                                     <option value="">Mặc định</option>
                                                 @endif
-                                                <option {{ request()->query('code_type') == 1 ? 'selected' : '' }} value="1">
+                                                <option {{ request()->query('code_type') == 1 ? 'selected' : '' }}
+                                                    value="1">
                                                     Giảm phần trăm</option>
-                                                <option {{ request()->query('code_type') == 2 ? 'selected' : '' }} value="2">
+                                                <option {{ request()->query('code_type') == 2 ? 'selected' : '' }}
+                                                    value="2">
                                                     Trừ cứng</option>
                                             </select>
                                         </div>
@@ -130,7 +138,8 @@ Danh sách mã giảm giá
                                                 <option value="id">ID</option>
                                                 @foreach ($tableCols as $key => $value)
                                                     @if ($key != 'code_type')
-                                                        <option {{ request()->query('searchCol') == $key ? 'selected' : '' }}
+                                                        <option
+                                                            {{ request()->query('searchCol') == $key ? 'selected' : '' }}
                                                             value="{{ $key }}">{{ $value }}</option>
                                                     @endif
                                                 @endforeach
@@ -138,8 +147,9 @@ Danh sách mã giảm giá
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" value="{{ request()->query('keyword') }}"
-                                                class="form-control" placeholder="Keyword">
+                                            <input type="text" name="keyword"
+                                                value="{{ request()->query('keyword') }}" class="form-control"
+                                                placeholder="Keyword">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -155,10 +165,10 @@ Danh sách mã giảm giá
                                         <th class="w-1">@sortablelink('id', 'ID')</th>
                                         @foreach ($tableCols as $key => $value)
                                             @if ($key == 'code_type' || $key == 'amount')
-                                                @if(($key == 'amount' && request('code_type') == '1')||($key == 'amount' && request('code_type') == '2'))
-                                                <th>@sortablelink($key, $value)</th>
+                                                @if (($key == 'amount' && request('code_type') == '1') || ($key == 'amount' && request('code_type') == '2'))
+                                                    <th>@sortablelink($key, $value)</th>
                                                 @else
-                                                <th>{{ $value }}</th>
+                                                    <th>{{ $value }}</th>
                                                 @endif
                                             @else
                                                 <th>@sortablelink($key, $value)</th>
@@ -168,7 +178,7 @@ Danh sách mã giảm giá
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($data->items() == [])
+                                    @if ($data->items() == [])
                                         <tr>
                                             <td colspan="9">
                                                 <div>Không có dữ liệu</div>
@@ -209,10 +219,11 @@ Danh sách mã giảm giá
                                                             data-bs-placement="top" data-bs-title="Hoạt động"></span>
                                                     @elseif ($item->status == 2)
                                                         <span class="badge bg-secondary" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Không hoạt động"></span>
+                                                            data-bs-placement="top"
+                                                            data-bs-title="Không hoạt động"></span>
                                                     @else
-                                                    <span class="badge bg-red" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" data-bs-title="Hết hạn"></span>
+                                                        <span class="badge bg-red" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" data-bs-title="Hết hạn"></span>
                                                     @endif
                                                 </td>
                                                 <td class="text-end">
@@ -360,16 +371,14 @@ Danh sách mã giảm giá
                 columnClass: 'col-md-3 col-sm-6',
                 buttons: {
                     removeButton: {
-                        text: 'Ok!',
+                        text: 'Được rồi!',
                         btnClass: 'btn-danger',
                         action: function() {
                             axios.delete(`/api/coupon-destroy/${id}`).then(function(response) {
                                 Swal.fire({
-                                        position: "top-center",
-                                        icon: "success",
-                                        title: "Di chuyển vào thùng thành công",
-                                        showConfirmButton: false,
-                                        timer: 1500
+                                        title: 'Thành công!',
+                                        text: 'Di chuyển vào thùng thành công',
+                                        icon: 'success'
                                     })
                                     .then((response) => {
                                         if (response) {
@@ -379,7 +388,10 @@ Danh sách mã giảm giá
                             });
                         }
                     },
-                    close: function() {}
+                    close: {
+                        text: 'Không',
+                        function() {}
+                    }
                 }
             });
         };

@@ -62,7 +62,7 @@ class CouponController extends Controller
         }
         return response()->json([
             'data' => [
-                'coupons' =>  CouponResource::collection($coupons),
+                'coupons' => CouponResource::collection($coupons),
             ],
             'message' => 'OK',
             'status' => 200
@@ -193,7 +193,7 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         if ($coupon) {
-            $delete_coupon =  $coupon->delete();
+            $delete_coupon = $coupon->delete();
 
             if ($delete_coupon) {
                 return response()->json([
@@ -224,7 +224,7 @@ class CouponController extends Controller
     {
         $coupon = Coupon::withTrashed()->find($id);
         if ($coupon) {
-            $delete_coupon =  $coupon->forceDelete();
+            $delete_coupon = $coupon->forceDelete();
             if ($delete_coupon) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -243,7 +243,7 @@ class CouponController extends Controller
         $coupons = Coupon::whereNotIn('code', UsedCoupon::select('coupon_code')->where('user_id', $id)->get())->get();
         return response()->json([
             'data' => [
-                'coupons' =>  CouponResource::collection($coupons),
+                'coupons' => CouponResource::collection($coupons),
             ],
             'message' => 'OK',
             'status' => 200
@@ -260,7 +260,7 @@ class CouponController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get(url('')."/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('') . "/api/coupon?sort=$sortField&direction=$sortDirection&status=$status&code_type=$code_type&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['coupons']), false);
 
@@ -288,28 +288,32 @@ class CouponController extends Controller
     public function couponManagementAdd(CouponRequest $request)
     {
         if ($request->isMethod('POST')) {
-            $data = $request->except('_token');
-            $response = Http::post(url('').'/api/coupon-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('coupon.list')->with('success', 'Thêm mới mã giảm giá thành công');
-            } else {
-                return redirect()->route('coupon.add')->with('fail', 'Đã xảy ra lỗi');
+            if ($request->ajax()) {
+                $data = $request->except('_token');
+                $response = Http::post(url('') . '/api/coupon-store', $data);
+                // Kiểm tra kết quả từ API và trả về response tương ứng
+                if ($response->successful()) {
+                    return response()->json(['success' => true, 'message' => 'Thêm mới mã giảm giá thành công', 'status' => 200]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới mã giảm giá', 'status' => 500]);
+                }
             }
         }
         return view('admin.coupons.add');
     }
 
-    public function couponManagementEdit(Request $request, $id)
+    public function couponManagementEdit(CouponRequest $request, $id)
     {
-        $response = json_decode(json_encode(Http::get(url('').'/api/coupon-show/' . $id)['data']['coupon']));
+        $response = json_decode(json_encode(Http::get(url('') . '/api/coupon-show/' . $id)['data']['coupon']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/coupon-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('coupon.list')->with('success', 'Cập nhật mã giảm giá thành công');
-            } else {
-                return redirect()->route('coupon.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
-            }
+            $response = Http::put(url('') . '/api/coupon-edit/' . $id, $data);
+           // Kiểm tra kết quả từ API và trả về response tương ứng
+           if ($response->successful()) {
+            return response()->json(['success' => true, 'message' => 'Cập nhật mã giảm giá thành công', 'status' => 200]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật mã giảm giá', 'status' => 500]);
+        }
         }
         return view('admin.coupons.edit', compact('response'));
     }
@@ -318,7 +322,7 @@ class CouponController extends Controller
     public function couponManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $response = Http::get(url('').'/api/coupon-show/' . $request->id);
+        $response = Http::get(url('') . '/api/coupon-show/' . $request->id);
         if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['coupon']), false);
             $html = view('admin.coupons.detail', compact('item'))->render();
@@ -348,8 +352,8 @@ class CouponController extends Controller
             if ($data) {
                 $data->restore();
             }
-            return redirect()->route('coupon.trash')->with('success', 'Khôi phục coupon thành công');
+            return response()->json(['success' => true, 'message' => 'Khôi phục mã giảm giá thành công']);
         }
-        return redirect()->route('coupon.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục mã giảm giá không thành công']);
     }
 }

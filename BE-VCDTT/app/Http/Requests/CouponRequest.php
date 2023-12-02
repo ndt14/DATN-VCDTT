@@ -35,6 +35,8 @@ class CouponRequest extends FormRequest
                         $rule = [
                             'name' => 'required',
                             'code' => 'required',
+                            'type' => 'required',
+                            'price' => 'required',
                             'start_date' => 'required',
                             'expiration_date' => 'required',
                             // 'percentage_price' => 'required',
@@ -52,6 +54,8 @@ class CouponRequest extends FormRequest
                         $rule = [
                             'name' => 'required',
                             'code' => 'required',
+                            'type' => 'required',
+                            'price' => 'required',
                             'start_date' => 'required',
                             'expiration_date' => 'required',
                             // 'percentage_price' => 'required',
@@ -74,13 +78,11 @@ class CouponRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên coupon không được trống',
-            'description.required' => 'Mô tả coupon không được trống',
+            'code.required' => 'Mã giảm giá không được trống',
             'start_date.required' => 'Ngày bắt đầu coupon không được trống',
-            'end_date.required' => 'Ngày kết thúc coupon không được trống',
-            'percentage_price.required' => 'Phần trăm giảm giá không được trống',
-            'fixed_price.required' => 'Giá giảm cố định không được trống',
-            'tour_id.required' => 'Tour áp dụng coupon hoặc danh mục áp dụng coupon không được trống',
-            'cate_id.required' => 'Tour áp dụng coupon hoặc danh mục áp dụng coupon không được trống',
+            'expiration_date.required' => 'Ngày kết thúc coupon không được trống',
+            'type.required' => 'Loại giảm giá không được trống',
+            'price' => 'Giá giảm tương ứng không được trống'
         ];
     }
 

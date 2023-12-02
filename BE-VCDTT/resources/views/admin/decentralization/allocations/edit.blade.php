@@ -63,7 +63,7 @@ Chỉnh sửa phần quyền
     <div class="container-xl">
         <div class="row row-deck row-cards">
             <div class="col-sm-12 col-md-8 offset-md-2">
-                <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="{{route('allocation.edit', ['user_id' => $user_id])}}" method="POST">
+                <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
@@ -106,7 +106,7 @@ Chỉnh sửa phần quyền
 
                     </div>
                     <div class="card-footer text-right">
-                        <button id="btnSubmitAdd" type="submit" class="btn btn-indigo">Cập nhật</button>
+                        <button id="btnSubmitAdd" type="button" data-id="{{$user_id}}" class="btn btn-indigo">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -121,4 +121,86 @@ Chỉnh sửa phần quyền
 </div>
 @endsection
 @section('page_js')
+<script>
+    $(document).ready(function() {
+
+        $('#btnSubmitAdd').click(function(e) {
+            e.preventDefault();
+
+            // lấy dữ liệu từ form
+            var formData = new FormData(this.form);
+            // thực hiện Ajax
+            $.ajax({
+
+                url: "{{ route('allocation.edit', ['user_id' => ':id']) }}".replace(':id', this.dataset.id),
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // xử lý response từ server
+                    if (response.status === 200) {
+
+                        // Hiển thị SweetAlert khi thành công
+                        Swal.fire({
+                                title: 'Thành công!',
+                                text: response.message,
+                                icon: 'success'
+                            })
+                            .then(function(response) {
+                                if (response) {
+                                    location.reload();
+                                }
+                            })
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: 'Cập nhật quyền cho người dùng không thành công',
+                            icon: 'error'
+                        });
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    // Xóa tất cả lỗi hiện tại trên giao diện
+                    var listSpans = document.querySelectorAll(".spanError");
+                    listSpans.forEach(function(item) {
+                        item.innerHTML = '';
+                    });
+
+                    // Xử lý lỗi ajax nếu có
+                    var errorResponse = JSON.parse(xhr.responseText);
+
+                    // Lặp qua từng trường lỗi
+                    Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                        // `fieldName` là tên trường có lỗi
+                        var errorMessages = errorResponse.errors[fieldName];
+
+                        // Lặp qua từng thông điệp lỗi trong mảng
+                        errorMessages.forEach(function(errorMessage) {
+                            var listSpans = document.querySelectorAll(
+                                ".spanError");
+
+                            listSpans.forEach(function(item) {
+                                if (item.dataset.tag.trim() ==
+                                    fieldName.trim()) {
+                                    // Hiển thị lỗi chỉ ở trường tương ứng
+                                    item.innerHTML = errorMessage;
+                                }
+                            });
+                        });
+                    });
+
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi thực hiện cập nhật cấp quyền',
+                        icon: 'error'
+                    });
+                }
+
+            });
+        });
+    });
+</script>
+<!-- --------------------------------------------- !-->
 @endSection

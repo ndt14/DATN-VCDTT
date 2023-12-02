@@ -48,7 +48,7 @@ class AllocationController extends Controller
                 if($user) {
                     $user->syncPermissions($permissions);
                     $user->syncRoles($roles);
-                    return redirect()->route('allocation.add')->with('success', 'Cấp quyền cho user có email "'.$user->email.'" thành công');
+                    return response()->json(['success' => true, 'message' => 'Cấp quyền cho người dùng thành công', 'status' => 200]);
                 }
             }
             }
@@ -78,7 +78,7 @@ class AllocationController extends Controller
                 $user->syncRoles($roles);
             }
             }
-            return redirect()->route('allocation.edit', ['user_id' => $user_id])->with('success', 'Cấp vai trò lại cho user có email "'.$user->email.'" thành công');
+            return response()->json(['success' => true, 'message' => 'Cập nhật quyền cho người dùng thành công', 'status' => 200]);
         }
         $list_roles = Role::where('name', '!=', 'Admin')->get();
         $list_users = User::where('is_admin','!=', 1)->select('id','email')->get();
