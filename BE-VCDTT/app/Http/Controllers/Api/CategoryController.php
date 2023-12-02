@@ -161,10 +161,36 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if ($category) {
             // Lấy danh sách các IDs của các tour thuộc danh mục hiện tại
-            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
+            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray(); // list id tour
             $update_tour_to_cate = TourToCategory::where('cate_id', $category->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => now()]);
+
+            if (count($tourIds) > 0) {
+                foreach ($tourIds as $id_tour) {
+
+                    $check_cate_other_of_tour = DB::table('tours_to_categories')->where('cate_id', '<>', $category->id)->where('tour_id', $id_tour)->exists();
+
+                    if (!$check_cate_other_of_tour) {
+                        $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $category->id)->where('tour_id', $id_tour)->update(['deleted_at' => null]);
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                        }
+                    }else {
+                        $delete_tour_to_cate = TourToCategory::where('cate_id', $category->id)->where('tour_id', $id_tour)->forceDelete();
+                    }
+
+                }
+            }
+
+
             $delete_cate = $category->delete(); // soft delete
-            $delete_cate = $category->tours()->delete();
+            // $delete_cate = $category->tours()->delete(); // tour cũng bị xóa mềm
             if ($delete_cate) {
                 return response()->json(['message' => 'Di chuyển vào thùng thành công', 'status' => 200, 'data' => $update_tour_to_cate]);
             } else {

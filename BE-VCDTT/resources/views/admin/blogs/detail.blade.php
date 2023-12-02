@@ -38,7 +38,7 @@
                 </div>
                 <h3 class="card-title mt-4">Mô tả ngắn</h3>
                 <div>
-                    {{ $item['short_desc'] }}
+                    {!! $item['short_desc'] !!}
                 </div>
                 <h3 class="card-title mt-4">Mô tả</h3>
                 <div class="markdown">
