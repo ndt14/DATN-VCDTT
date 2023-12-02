@@ -24,7 +24,7 @@ class KeyValueController extends Controller
             ],
             'message' => 'OK',
             'status' => 200
-        ],);
+        ], );
     }
 
     /**
@@ -40,14 +40,14 @@ class KeyValueController extends Controller
      */
     public function show($key)
     {
-        $keyvalue = KeyValue::where('key',$key)->get();
+        $keyvalue = KeyValue::where('key', $key)->get();
         return response()->json([
             'data' => [
                 'keyvalue' => KeyValueResource::collection($keyvalue),
             ],
             'message' => 'OK',
             'status' => 200
-        ],);
+        ], );
     }
 
     /**
@@ -55,13 +55,13 @@ class KeyValueController extends Controller
      */
     public function update(KeyValueRequest $request, string $id)
     {
-//
+        //
     }
 
     public function updateAll(KeyValueRequest $request)
     {
         $data = $request->all();
-        if ($data!=[]) {
+        if ($data != []) {
             if (!empty($data)) {
                 foreach ($data as $key => $value) {
                     KeyValue::where('key', $key)->update(['value' => $value]);
@@ -85,33 +85,34 @@ class KeyValueController extends Controller
 
     public function keyvalueManagementEditAll(KeyValueRequest $request)
     {
-        $response = Http::get(url('').'/api/keyvalue');
+        $response = Http::get(url('') . '/api/keyvalue');
         $data = json_decode(json_encode($response->json()['data']['keyvalues']), false);
-        $images=[];
-        foreach ($data as $item){
-            $item->key=='logo'?$images['logo'] = $item->value:'';
-            $item->key=='favicon'?$images['favicon'] = $item->value:'';
-            $item->key=='banner'?$images['banner'] = $item->value:'';
-            $item->key=='subBanner'?$images['subBanner'] = $item->value:'';
-            $item->key=='BankAccountQR'?$images['BankAccountQR'] = $item->value:'';
-            $item->key=='loadingScreen'?$images['loadingScreen'] = $item->value:'';
+        $images = [];
+        foreach ($data as $item) {
+            $item->key == 'logo' ? $images['logo'] = $item->value : '';
+            $item->key == 'favicon' ? $images['favicon'] = $item->value : '';
+            $item->key == 'banner' ? $images['banner'] = $item->value : '';
+            $item->key == 'subBanner' ? $images['subBanner'] = $item->value : '';
+            $item->key == 'BankAccountQR' ? $images['BankAccountQR'] = $item->value : '';
+            $item->key == 'loadingScreen' ? $images['loadingScreen'] = $item->value : '';
         }
         if ($request->isMethod('POST')) {
-            $dataInsert = $request->except('_token', 'btnSubmit');
-            foreach($images as $key => $value ){
+            $dataInsert = $request->except('_token');
+            foreach ($images as $key => $value) {
                 if ($request->hasFile($key) && $request->file($key)->isValid()) {
                     deleteOldFile($value);
-                    $dataInsert[$key] = upLoadFile($key,$request->file($key));
+                    $dataInsert[$key] = upLoadFile($key, $request->file($key));
                 } else {
                     $dataInsert[$key] = $value;
                 }
             }
 
-            $response = Http::post(url('').'/api/keyvalue-edit-all', $dataInsert);
-            if ($response->status() == 200) {
-                return redirect()->route('settings')->with('success', 'Cập nhật thành công');
+            $response = Http::post(url('') . '/api/keyvalue-edit-all', $dataInsert);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật hệ thống thành công', 'status' => 200]);
             } else {
-                return redirect()->route('settings')->with('fail', 'Đã xảy ra lỗi');
+                return 123;
             }
         }
         return view('admin.keyvalue.setting', compact('data'));

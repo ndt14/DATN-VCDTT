@@ -23,15 +23,15 @@ class UserController extends Controller
     {
         //
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $users = User::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $users = User::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new User())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $users = User::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status??'' . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $users = User::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->where('status', 'LIKE', '%' . $request->status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json([
             'data' => [
@@ -178,7 +178,7 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->find($id);
         if ($user) {
-            $delete_user =  $user->forceDelete();
+            $delete_user = $user->forceDelete();
             if ($delete_user) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -196,30 +196,30 @@ class UserController extends Controller
 
     public function userManagementList(Request $request)
     {
-        $data['status']=$status = $request->status??'';
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/user?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+        $data['status'] = $status = $request->status ?? '';
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/user?sort=$sortField&direction=$sortDirection&status=$status&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['users']), false);
 
-            $perPage= $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->status?$data->setPath(request()->url())->appends(['status'=>$status]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->status ? $data->setPath(request()->url())->appends(['status' => $status]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.users.list', compact('data'));
@@ -227,14 +227,15 @@ class UserController extends Controller
 
     public function userManagementEdit(UserRequest $request, $id)
     {
-        $response = json_decode(json_encode(Http::get(url('').'/api/user-show/' . $request->id)['data']['user']));
+        $response = json_decode(json_encode(Http::get(url('') . '/api/user-show/' . $request->id)['data']['user']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/user-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('user.list')->with('success', 'Cập nhật user thành công');
+            $response = Http::put(url('') . '/api/user-edit/' . $id, $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật tài khoản thành công', 'status' => 200]);
             } else {
-                return redirect()->route('user.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật tài khoản', 'status' => 500]);
             }
         }
         return view('admin.users.edit', compact('response'));
@@ -244,11 +245,14 @@ class UserController extends Controller
     {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post(url('').'/api/user-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('user.list')->with('success', 'Thêm mới người dùng thành công');
-            } else {
-                return redirect()->route('user.add')->with('fail', 'Đã xảy ra lỗi');
+            if ($request->ajax()) {
+                $response = Http::post(url('') . '/api/user-store', $data);
+                // Kiểm tra kết quả từ API và trả về response tương ứng
+                if ($response->successful()) {
+                    return response()->json(['success' => true, 'message' => 'Thêm mới tài khoản thành công', 'status' => 200]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới tài khoản', 'status' => 500]);
+                }
             }
         }
 
@@ -258,14 +262,15 @@ class UserController extends Controller
     public function userManagementDetail(Request $request)
     {
         $data = $request->except('_token');
-        $item = Http::get(url('').'/api/user-show/' . $request->id)->json()['data']['user'];
+        $item = Http::get(url('') . '/api/user-show/' . $request->id)->json()['data']['user'];
         $html = view('admin.users.detail', compact('item'))->render();
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function userManagementTrash(Request $request) {
+    public function userManagementTrash(Request $request)
+    {
         $data = User::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -276,15 +281,16 @@ class UserController extends Controller
 
     // khôi phục bản ghi bị xóa mềm
 
-    public function userManagementRestore($id) {
+    public function userManagementRestore($id)
+    {
 
-        if($id) {
+        if ($id) {
             $data = User::withTrashed()->find($id);
-            if($data) {
+            if ($data) {
                 $data->restore();
             }
-            return redirect()->route('user.trash')->with('success', 'Khôi phục tài khoản thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('user.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục tài khoản không thành công']);
     }
 }
