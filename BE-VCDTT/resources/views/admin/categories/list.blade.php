@@ -297,20 +297,27 @@
                                 <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
                                     <a class="page-link" href="{{ $data->url(1) }}">1</a>
                                 </li>
-                                @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage() - 1; $page++)
-                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
-                                    </li>
-                                @endfor
-                                @if ($data->currentPage() + 3 != $data->lastPage() && $data->lastPage() > 3)
+                                @if (1 + 2 != $data->currentPage() && $data->currentPage() > 4)
                                     <li class="page-item">
                                         ...
                                     </li>
                                 @endif
+                                @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage(); $page++)
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                    </li>
+                                @endfor
+                                @if ( $data->currentPage() < $data->lastPage() - 3)
+                                    <li class="page-item">
+                                        ...
+                                    </li>
+                                @endif
+                                @if ($data->lastPage() != 1 && $data->currentPage() < $data->lastPage() - 2)
                                 <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
                                     <a class="page-link"
                                         href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
                                 </li>
+                                @endif
                                 <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -360,7 +367,7 @@
                                             location.reload();
                                         }
                                     });
-                                    
+
                             });
                         }
                     },
