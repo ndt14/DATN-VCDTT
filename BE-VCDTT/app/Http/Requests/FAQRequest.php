@@ -24,11 +24,29 @@ class FAQRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-            'question' => 'required',
-            'answer' => 'required',
-        ];
+        $rule = [];
+        $currentAction = $this->route()->getActionMethod();
+
+        switch ($this->method()):
+            case 'POST':
+                switch ($currentAction):
+                    case 'faqManagementAdd':
+                        $rule = [
+                            'question' => 'required',
+                            'answer' => 'required',
+                        ];
+                        break;
+
+                    case 'faqManagementEdit':
+                        $rule = [
+                            'question' => 'required',
+                            'answer' => 'required',
+                        ];
+                        break;
+                endswitch;
+                break;
+        endswitch;
+        return $rule;
     }
 
     public function messages()

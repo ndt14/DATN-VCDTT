@@ -37,19 +37,26 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(): bool
     {
         $this->ensureIsNotRateLimited();
-
+    
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+            RateLimiter::clear($this->throttleKey());
+    
+            return false;
         }
-
+    
         RateLimiter::clear($this->throttleKey());
+    
+        return true;
+    }
+    
+
+    public function exists_user()
+    {
+        return 123;
     }
 
     /**
@@ -81,5 +88,14 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email không được bỏ trống.',
+            'email.email' => 'Email phải hợp lệ.',
+            'password.required' => 'Mật khẩu không được bỏ trống.',
+        ];
     }
 }

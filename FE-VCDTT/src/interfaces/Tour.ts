@@ -13,5 +13,7 @@ export interface Tour {
     exact_location: string;
     main_img: string;
     view_count: number;
-    status: string
+    status: string;
+    star:number;
+    data:any;
 }

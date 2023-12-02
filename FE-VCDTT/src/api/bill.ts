@@ -8,20 +8,26 @@ const BillApi = createApi({
     reducerPath: "bill",
     tagTypes: ['Bill'],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api/",
+        baseUrl: "http://be-vcdtt.datn-vcdtt.test/api",
         fetchFn: async (...arg) => {
             await pause(1000)
             return await fetch(...arg);
         }
     }),
     endpoints: (builder) => ({
-        getBills: builder.query<Bill[], void>({
+        getBills: builder.query<Bill, void>({
             query: () => `/bill`,
             providesTags: ['Bill']
         }),
         getBillById: builder.query<Bill, number | string>({
-            query: (id) => `/bill-show/${id}`,
+            query: (id) => `/purchase-history-show/${id}`,
             providesTags: ['Bill']
+        }),
+        getBillsWithUserID: builder.query<Bill,number|string>({
+            query: (id)=>({
+                url: `/purchase-history-show-by-user/${id}`,
+                providesTags: ['Bill']
+            })
         }),
         removeBill: builder.mutation<void, number | string>({
             query: (id) => ({
@@ -40,12 +46,13 @@ const BillApi = createApi({
         }),
         updateBill: builder.mutation<Bill, Bill>({
             query: (bill) => ({
-                url: `/bills/${bill.id}`,
+                url: `/purchase-history-edit/${bill.id}`,
                 method: "PUT",
                 body: bill
             }),
             invalidatesTags: ['Bill']
         })
+        
     })
 });
 
@@ -54,8 +61,8 @@ export const {
     useGetBillByIdQuery,
     useAddBillMutation,
     useRemoveBillMutation,
-    useUpdateBillMutation
-    
+    useUpdateBillMutation,
+    useGetBillsWithUserIDQuery
  } = BillApi;
 export const billReducer = BillApi.reducer;
 export default BillApi;

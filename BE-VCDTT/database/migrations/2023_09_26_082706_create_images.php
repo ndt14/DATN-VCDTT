@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('type')->nullable();
-            $table->string('url')->nullable();
+            $table->longText('url')->nullable();
             $table->bigInteger('tour_id')->nullable();
             $table->bigInteger('blog_id')->nullable();
+            $table->bigInteger('banner_id')->nullable();
             $table->timestamps();
         });
     }

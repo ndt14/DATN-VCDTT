@@ -8,7 +8,8 @@ import TourDetail from "./TourDetail/TourDetail";
 import PurchasingInformation from "./PurchasingInformation/PurchasingInformation";
 import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy";
 import BillDetail from "./BillDetail/BillDetail";
-
+import { Search } from "./SearchAlgolia/Search";
+import UserCoupon from "./UserCoupon/UserCoupon";
 
 export { 
 HomePage,
@@ -20,5 +21,7 @@ BlogDetail,
 TourDetail,
 PurchasingInformation,
 PrivacyPolicy,
-BillDetail
+BillDetail,
+Search,
+UserCoupon
  };

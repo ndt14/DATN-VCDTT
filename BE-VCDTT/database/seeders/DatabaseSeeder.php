@@ -25,11 +25,13 @@ class DatabaseSeeder extends Seeder
             BlogSeeder::class,
             CategorySeeder::class,
             CouponSeeder::class,
-            // PurchaseHistorySeeder::class,
+            PurchaseHistorySeeder::class,
             TourSeeder::class,
             UserSeeder::class,
             TourToCategorySeeder::class,
             RatingSeeder::class,
+            PermissionSeeder::class,
+            KeyValueSeeder::class,
         ]);
     }
 }
