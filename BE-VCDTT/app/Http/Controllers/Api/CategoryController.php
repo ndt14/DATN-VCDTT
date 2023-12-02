@@ -175,20 +175,27 @@ class CategoryController extends Controller
                         if ($checkIsset) {
                             $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
                             // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
-                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id, 'id_cate_before' => $category->id]);
                         } else {
                             $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
                             // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
-                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate, , 'id_cate_before' => $category->id]);
                         }
                     }else {
-                        $delete_tour_to_cate = TourToCategory::where('cate_id', $category->id)->where('tour_id', $id_tour)->forceDelete();
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id, , 'id_cate_before' => $category->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate, , 'id_cate_before' => $category->id]);
+                        }
                     }
 
                 }
             }
-
-
             $delete_cate = $category->delete(); // soft delete
             // $delete_cate = $category->tours()->delete(); // tour cũng bị xóa mềm
             if ($delete_cate) {
@@ -358,9 +365,17 @@ class CategoryController extends Controller
             if ($data) {
                 // Lấy danh sách các IDs của các tour thuộc danh mục hiện tại
                 $tourIds = $data->tours()->withTrashed()->pluck('tours.id')->toArray();
-                $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $data->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => null]);
+                // $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $data->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => null]);
+                if(count($tourIds) > 0) { 
+
+                    foreach($tourIds as $tour_id) {
+
+                        $update_tour_to_cate_item = DB::table('tours_to_categories')->where('id_cate_before', $data->id)->where('tour_id', $tour_id)->update(['cate_id' => $data->id]);
+
+                    }
+                }
                 // Khôi phục các tour thuộc danh mục
-                $data->tours()->withTrashed()->update(['tours.deleted_at' => null]);
+                // $data->tours()->withTrashed()->update(['tours.deleted_at' => null]);
                 // Khôi phục danh mục
                 $data->restore();
             }
