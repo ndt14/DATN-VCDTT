@@ -15,21 +15,18 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
         $faker = Factory::create();
-        for ($i = 1; $i < 20; $i++) {
             DB::table('users')->insert([
-                'name' => 'dcm' . $i,
-                'email' => $faker->email(),
+                'name' => 'Quản Trị Viên',
+                'email' => 'thinh1420003@gmail.com',
                 'password' => Hash::make('123456'),
                 'phone_number' => $faker->phoneNumber(),
                 'date_of_birth' => $faker->date(),
-                'address' => $faker->address(),
-                'gender' => $faker->numberBetween(1,3),
+                'address' => 'số 1 Trịnh Văn Bô, Nam Từ Liêm, Hà Nội',
+                'gender' => 1,
                 'image' => $faker->imageUrl(null, 640, 480),
                 'status' => 1,
-                'is_admin' => $faker->numberBetween(1, 2),
+                'is_admin' => 1,
             ]);
-        }
     }
 }
