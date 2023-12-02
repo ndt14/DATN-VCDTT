@@ -24,48 +24,48 @@ class TermAndPrivacyController extends Controller
         $existingTerm = TermAndPrivacy::where('type', 1)->first();
         if (!$existingTerm) {
             $dataTerm = [
-                'title'=> 'Điều khoản và dịch vụ bản mẫu',
-                'content'=> 'Nội dung điều khoản bản mẫu',
-                'type'=> '1',
+                'title' => 'Điều khoản và dịch vụ bản mẫu',
+                'content' => 'Nội dung điều khoản bản mẫu',
+                'type' => '1',
                 'status' => '2',
-            ]; 
+            ];
             TermAndPrivacy::create($dataTerm);
         }
         $existingPrivacy = TermAndPrivacy::where('type', 2)->first();
         if (!$existingPrivacy) {
             $dataPrivacy = [
-                'title'=> 'Điều khoản bảo mật thông tin bản mẫu',
-                'content'=> 'Nội dung điều khoản bảo mật thông tin bản mẫu',
-                'type'=> '2',
+                'title' => 'Điều khoản bảo mật thông tin bản mẫu',
+                'content' => 'Nội dung điều khoản bảo mật thông tin bản mẫu',
+                'type' => '2',
                 'status' => '2',
-            ]; 
+            ];
             TermAndPrivacy::create($dataPrivacy);
         }
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if(!$request->searchCol){
-            $page = TermAndPrivacy::where(function($query) use ($keyword) {
+        if (!$request->searchCol) {
+            $page = TermAndPrivacy::where(function ($query) use ($keyword) {
                 $columns = Schema::getColumnListing((new TermAndPrivacy())->getTable());
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $keyword . '%');
                 }
-            })->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
-        }else{
-            $page = TermAndPrivacy::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort??'created_at',$request->direction??'desc')->get();
+            })->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+        } else {
+            $page = TermAndPrivacy::where($request->searchCol, 'LIKE', '%' . $keyword . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
-        $term = TermAndPrivacy::where('type', '=','1')->get();
-        $privacy = TermAndPrivacy::where('type', '=','2')->get();
+        $term = TermAndPrivacy::where('type', '=', '1')->get();
+        $privacy = TermAndPrivacy::where('type', '=', '2')->get();
         return response()->json(
             [
                 'data' => [
                     'pages' => TermAndPrivacyResource::collection($page),
-                    'term'=> TermAndPrivacyResource::collection($term),
-                    'privacy'=> TermAndPrivacyResource::collection($privacy),
+                    'term' => TermAndPrivacyResource::collection($term),
+                    'privacy' => TermAndPrivacyResource::collection($privacy),
 
 
                 ],
                 'message' => 'OK',
                 'status' => 200
-            ]   
+            ]
         );
     }
 
@@ -73,11 +73,11 @@ class TermAndPrivacyController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
-        
+    {
+
         $newPage = TermAndPrivacy::create($request->all());
 
-        if($newPage->id) {
+        if ($newPage->id) {
             return response()->json(
                 [
                     'data' => [
@@ -87,7 +87,7 @@ class TermAndPrivacyController extends Controller
                     'status' => 200
                 ]
             );
-        }else {
+        } else {
             return response()->json([
                 'message' => 'internal server error',
                 'status' => 500
@@ -121,7 +121,7 @@ class TermAndPrivacyController extends Controller
     public function update(Request $request, string $id)
     {
         $page = $request->all();
-        $updatePage = TermAndPrivacy::where('id', $id)->update($request->except('_token','_method'));
+        $updatePage = TermAndPrivacy::where('id', $id)->update($request->except('_token', '_method'));
         $page = TermAndPrivacy::find($id);
         if ($updatePage) {
             return response()->json([
@@ -143,89 +143,99 @@ class TermAndPrivacyController extends Controller
     {
         $page = TermAndPrivacy::find($id);
 
-        if($page) {
+        if ($page) {
             $deletePage = $page->delete();
             if (!$deletePage) {
                 return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
             return response()->json(['message' => 'OK', 'status' => 200]);
-        }else {
+        } else {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
     }
 
 
 
-// ==================================================== Nhóm function CRUD trên blade admin ===========================================
+    // ==================================================== Nhóm function CRUD trên blade admin ===========================================
 
-    public function pageManagementList(Request $request) {
-        $data['sortField']=$sortField = $request->sort??'';
-        $data['sortDirection']=$sortDirection = $request->direction??'';
-        $data['searchCol']=$searchCol = $request->searchCol??'';
-        $data['keyword']=$keyword = $request->keyword??'';
-        $response = Http::get(url('')."/api/page?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
-        if($response->status() == 200) {
+    public function pageManagementList(Request $request)
+    {
+        $data['sortField'] = $sortField = $request->sort ?? '';
+        $data['sortDirection'] = $sortDirection = $request->direction ?? '';
+        $data['searchCol'] = $searchCol = $request->searchCol ?? '';
+        $data['keyword'] = $keyword = $request->keyword ?? '';
+        $response = Http::get(url('') . "/api/page?sort=$sortField&direction=$sortDirection&searchCol=$searchCol&keyword=$keyword");
+        if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['pages']), false);
-            $perPage = $request->limit??5;// Số mục trên mỗi trang
+            $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $collection = new Collection($data);
             $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
             $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
             $data->setPath(request()->url());
-            $request->limit?$data->setPath(request()->url())->appends(['limit' => $perPage]):'';
-            $request->sort&&$request->direction?$data->setPath(request()->url())->appends(['sort' => $sortField,'direction'=>$sortDirection]):'';
-            $request->searchCol?$data->setPath(request()->url())->appends(['searchCol'=>$searchCol]):'';
-            $request->keyword?$data->setPath(request()->url())->appends(['keyword'=>$keyword]):'';
-            if($data->currentPage()>$data->lastPage()){
+            $request->limit ? $data->setPath(request()->url())->appends(['limit' => $perPage]) : '';
+            $request->sort && $request->direction ? $data->setPath(request()->url())->appends(['sort' => $sortField, 'direction' => $sortDirection]) : '';
+            $request->searchCol ? $data->setPath(request()->url())->appends(['searchCol' => $searchCol]) : '';
+            $request->keyword ? $data->setPath(request()->url())->appends(['keyword' => $keyword]) : '';
+            if ($data->currentPage() > $data->lastPage()) {
                 return redirect($data->url(1));
             }
-        }else{
+        } else {
             $data = [];
         }
         return view('admin.term_and_privacy.list', compact('data'));
     }
-    
-    
-    public function pageManagementAdd(TermAndPrivacyRequest $request) {
+
+
+    public function pageManagementAdd(TermAndPrivacyRequest $request)
+    {
         $data = $request->except('_token');
         if ($request->isMethod('POST')) {
-            $response = Http::post(url('').'/api/page-store', $data);
-            if ($response->status() == 200) {
-                return redirect()->route('page.list')->with('success', 'Thêm mới page thành công');
-            } else {
-                return redirect()->route('page.add')->with('fail', 'Đã xảy ra lỗi');
+            if ($request->ajax()) {
+                $response = Http::post(url('') . '/api/page-store', $data);
+                // Kiểm tra kết quả từ API và trả về response tương ứng
+                if ($response->successful()) {
+                    return response()->json(['success' => true, 'message' => 'Thêm mới điều khoản & dịch vụ thành công', 'status' => 200]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới điều khoản & dịch vụ', 'status' => 500]);
+                }
             }
-        };
+        }
+        ;
         return view('admin.term_and_privacy.add');
     }
 
-    public function pageManagementEdit(TermAndPrivacyRequest $request, $id) {
-        $response = json_decode(json_encode(Http::get(url('').'/api/page-show/' . $request->id)['data']['page']));
+    public function pageManagementEdit(TermAndPrivacyRequest $request, $id)
+    {
+        $response = json_decode(json_encode(Http::get(url('') . '/api/page-show/' . $request->id)['data']['page']));
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
-            $response = Http::put(url('').'/api/page-edit/' . $id, $data);
-            if ($response->status() == 200) {
-                return redirect()->route('page.list')->with('success', 'Cập nhật page thành công');
+            $response = Http::put(url('') . '/api/page-edit/' . $id, $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật điều khoản & dịch vụ thành công', 'status' => 200]);
             } else {
-                return redirect()->route('page.edit', ['id' => $id])->with('fail', 'Đã xảy ra lỗi');
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật điều khoản & dịch vụ', 'status' => 500]);
             }
         }
         return view('admin.term_and_privacy.edit', compact('response'));
     }
-    
-    public function pageManagementDetail(Request $request) {
+
+    public function pageManagementDetail(Request $request)
+    {
         $data = $request->except('_token');
-        $response = Http::get(url('').'/api/page-show/'.$request->id);
-        if($response->status() == 200) {
+        $response = Http::get(url('') . '/api/page-show/' . $request->id);
+        if ($response->status() == 200) {
             $item = json_decode(json_encode($response->json()['data']['page']), false);
             $html = view('admin.term_and_privacy.detail', compact('item'))->render();
             return response()->json(['html' => $html, 'status' => 200]);
         }
     }
 
-    public function pageManagementTrash(Request $request) {
+    public function pageManagementTrash(Request $request)
+    {
         $data = TermAndPrivacy::onlyTrashed()->get();
-        $perPage = $request->limit??5;// Số mục trên mỗi trang
+        $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -233,39 +243,38 @@ class TermAndPrivacyController extends Controller
         $data->setPath(request()->url())->appends(['limit' => $perPage]);
         return view('admin.term_and_privacy.trash', compact('data'));
     }
-    
-        // khôi phục bản ghi bị xóa mềm
-    
-    public function pageManagementRestore($id) {
 
-        if($id) {
+    // khôi phục bản ghi bị xóa mềm
+
+    public function pageManagementRestore($id)
+    {
+
+        if ($id) {
             $data = TermAndPrivacy::withTrashed()->find($id);
-            if($data) {
-                if($data->type == 1 || $data->type == 2){
-                    $item = TermAndPrivacy::where('deleted_at', null)->where('type',$data->type)->first();
-                    if($item){
+            if ($data) {
+                if ($data->type == 1 || $data->type == 2) {
+                    $item = TermAndPrivacy::where('deleted_at', null)->where('type', $data->type)->first();
+                    if ($item) {
                         $update = $data->toArray();
                         $item->update($update);
                         $this->destroyForever($id);
-                    }
-                    else{
+                    } else {
                         $data->restore();
                     }
-                }
-                else{
+                } else {
                     $data->restore();
                 }
             }
-            return redirect()->route('page.trash')->with('success', 'Khôi phục page thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('page.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục điều khoản & dịch vụ không thành công']);
     }
 
     public function destroyForever(string $id)
     {
         $term = TermAndPrivacy::withTrashed()->find($id);
         if ($term) {
-            $delete_term =  $term->forceDelete();
+            $delete_term = $term->forceDelete();
             if ($delete_term) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
