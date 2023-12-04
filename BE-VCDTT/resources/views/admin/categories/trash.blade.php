@@ -354,8 +354,7 @@
                             })
                             .then((response) => {
                                 // Chuyển hướng sau khi hiển thị modal
-                                // window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
-                                console.log(response.data);
+                                window.location.href = '/category/trash'; // Thay đổi đúng route của bạn
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)
