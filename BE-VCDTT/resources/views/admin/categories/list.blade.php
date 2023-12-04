@@ -355,7 +355,7 @@
                     removeButton: {
                         text: 'Được rồi!',
                         btnClass: 'btn-danger',
-                        action: function() {
+                        action: function(response) {
                             axios.delete(`/api/category-destroy/${id}`).then(function(response) {
                                 Swal.fire({
                                         title: 'Thành công!',

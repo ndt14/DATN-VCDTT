@@ -23,6 +23,9 @@ class Category extends Model
     public function tours() {
         return $this->belongsToMany(Tour::class, 'tours_to_categories', 'cate_id', 'tour_id')->withTrashed();
     }
+    public function blogs() {
+        return $this->belongsToMany(Blog::class, 'blogs_to_categories', 'cate_id', 'blog_id')->withTrashed();
+    }
 
     public function coupons()
     {

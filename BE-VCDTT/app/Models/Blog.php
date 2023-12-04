@@ -25,4 +25,7 @@ class Blog extends Model
         'view_count',
         'status',
     ];
+    public function categories() {
+        return $this->belongsToMany(Category::class,'blogs_to_categories','blog_id','cate_id')->withTrashed();;
+    }
 }
