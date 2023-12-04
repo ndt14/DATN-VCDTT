@@ -344,7 +344,7 @@ const TourDetail = () => {
           <div className="inner-baner-container" style={containerStyle}>
             <div className="container">
               <div className="inner-banner-content">
-                <h1 className="inner-title">Tour chi tiết</h1>
+                <h2 className="inner-title">Tour chi tiết</h2>
               </div>
             </div>
           </div>
@@ -517,20 +517,35 @@ const TourDetail = () => {
                   </div>
 
                   <div className="tab-container">
-                    <ul className="nav nav-tabs" id="myTab" role="tablist">
-                      <li className="nav-item">
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item active">
                         <a
                           className="nav-link active"
+                          id="price-tab"
+                          data-toggle="tab"
+                          href="#price"
+                          role="tab"
+                          aria-controls="price"
+                          aria-selected="true"
+                        >
+                          Giá cả
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a
+                          className="nav-link"
                           id="overview-tab"
                           data-toggle="tab"
                           href="#overview"
                           role="tab"
                           aria-controls="overview"
-                          aria-selected="true"
+                          aria-selected="false"
                         >
                           Mô Tả
                         </a>
+                       
                       </li>
+                     
                       <li className="nav-item">
                         <a
                           className="nav-link"
@@ -574,6 +589,23 @@ const TourDetail = () => {
                     <div className="tab-content" id="myTabContent">
                       <div
                         className="tab-pane fade show active"
+                        id="price"
+                        role="tabpanel"
+                        aria-labelledby="price-tab"
+                      >
+                        {/* giá  */}
+                        <div className="price-content">
+                          <div
+                            className="mt-3"
+                            dangerouslySetInnerHTML={{
+                              __html: tourData?.data?.tour.includes,
+                            }}
+                          ></div>
+                          {/* {tourData?.data?.tour.details} */}
+                        </div>
+                      </div>
+                      <div
+                        className="tab-pane fade show"
                         id="overview"
                         role="tabpanel"
                         aria-labelledby="overview-tab"
@@ -589,6 +621,7 @@ const TourDetail = () => {
                           {/* {tourData?.data?.tour.details} */}
                         </div>
                       </div>
+
                       <div
                         className="tab-pane"
                         id="program"
@@ -661,9 +694,7 @@ const TourDetail = () => {
                                                 title={`Rated ${star} sao trên 5 sao tối đa`}
                                               >
                                                 <span className="w-90">
-                                                  {renderStarRating(
-                                                    star as number
-                                                  )}
+                                                  {renderStarRating(star as number)}
                                                 </span>
                                               </div>
                                             </div>
@@ -671,7 +702,7 @@ const TourDetail = () => {
                                           <p
                                             className=""
                                             dangerouslySetInnerHTML={{
-                                              __html: content || "",
+                                              __html: content||""
                                             }}
                                           ></p>
                                         </div>
