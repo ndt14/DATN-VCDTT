@@ -47,10 +47,12 @@ class AutoMail extends Command
         if ($purchaseHistoryTourAnnounces) {
             foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
                 $tour_start_time_string = $purchaseHistoryTourAnnounce->tour_start_time;
-                $tour_start_time = Carbon::createFromFormat("Y-m-d H:i:s", $tour_start_time_string)->format('Y-m-d');
+                $tour_start_time = Carbon::createFromFormat('d-m-Y', $tour_start_time_string);
+                $tour_start_time = $tour_start_time->format('Y-m-d');
 
                 $tour_end_time_string = $purchaseHistoryTourAnnounce->tour_end_time;
-                $tour_end_time = Carbon::createFromFormat("Y-m-d H:i:s", $tour_end_time_string)->format('Y-m-d');
+                $tour_end_time = Carbon::createFromFormat('d-m-Y', $tour_end_time_string);
+                $tour_end_time = $tour_end_time->format('Y-m-d');
 
                 //remind client about tour cancelling
                 if ($tour_start_time == (Carbon::today()->addDays(7)->toDateString()) && $purchaseHistoryTourAnnounce->mail_announced_7_days_left != 1) {
@@ -63,7 +65,7 @@ class AutoMail extends Command
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 4                                                   //turn off tour cancelling + mail
                     ]);
-                } elseif ($tour_start_time == Carbon::now()->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 2) {
+                } elseif (($tour_start_time <= Carbon::now()->toDateString() && Carbon::now()->toDateString() <= $tour_end_time )&& $purchaseHistoryTourAnnounce->tour_status != 2 && $purchaseHistoryTourAnnounce->tour_status != 3) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('3'));
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 2                                                    //wish client best experiences

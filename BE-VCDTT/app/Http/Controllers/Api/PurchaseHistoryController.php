@@ -420,21 +420,14 @@ class PurchaseHistoryController extends Controller
 
     // public function test()
     // {
-    //     $purchaseHistoriesOutdated = PurchaseHistory::select('id', 'payment_status', 'purchase_status', 'tour_status', 'created_at')->where('payment_status', '=', 1)->whereDate('created_at', '<=', Carbon::today()->subDays(1)->toDateString())->get();
-    //     echo $purchaseHistoriesOutdated;
-    //     // if ($purchaseHistoriesOutdated) {
-    //     //     $count = 0;
-    //     //     foreach ($purchaseHistoriesOutdated as $purchaseHistory) {
-    //     //         $purchaseHistory->update([
-    //     //             'purchase_status' => 1,
-    //     //             'tour_status' => 5
-    //     //         ]);
-    //     //         if($count == 1){
-    //     //         echo ($purchaseHistory);
-    //     //         }
-    //     //         $count++;
+    //     $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3')->get();
+    //     if ($purchaseHistoryTourAnnounces) {
+    //         foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
+    //             $tour_start_time_string = $purchaseHistoryTourAnnounce->tour_start_time;
+    //             $tour_start_time = Carbon::createFromFormat('d-m-Y', $tour_start_time_string);
+    //             echo $tour_start_time->format('Y-m-d');
+    //         }
+    //     };
 
-    //     //     }
-    //     // }
     // }
 }
