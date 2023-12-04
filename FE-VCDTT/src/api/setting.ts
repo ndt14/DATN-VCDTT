@@ -25,7 +25,7 @@ const SettingApi = createApi({
             providesTags: ['Keyvalue']
         }),
         getBanner: builder.query<Setting, void>({
-            query: () => `/keyvalue/banner`,
+            query: () => `/banner`,
             providesTags: ['Keyvalue']
         }),
         getBankAccountName: builder.query<Setting, void>({
@@ -52,6 +52,11 @@ const SettingApi = createApi({
             query: () => `/keyvalue/webTitle`,
             providesTags: ['Keyvalue']
         }),
+
+        getLoader: builder.query<Setting, void>({
+            query: () => `/keyvalue/loadingScreen`,
+            providesTags: ['Keyvalue']
+        }),
     })
 });
 
@@ -66,6 +71,7 @@ export const {
     useGetFaviconQuery,
     useGetWebPhoneNumber1Query,
     useGetWebTitleQuery,
+    useGetLoaderQuery
 
  } = SettingApi;
 export const settingReducer = SettingApi.reducer;

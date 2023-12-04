@@ -304,7 +304,7 @@ const Header = () => {
   useEffect(() => {
     if (location && location.search) {
       fetch(
-        `https://admin.vcdtt.online/api/auth/google/callback${location.search}`,
+        `http://be-vcdtt.datn-vcdtt.test/api/auth/google/callback${location.search}`,
         { headers: new Headers({ accept: "application/json" }) }
       )
         .then((response) => {
@@ -354,7 +354,7 @@ const Header = () => {
             <div className="main-navigation d-none d-lg-block">
               <nav id="navigation" className="navigation">
                 <ul>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to={"/"}>Trang chủ</Link>
                   </li>
                   <li className="menu-item-has-children">
@@ -376,9 +376,9 @@ const Header = () => {
                       )}
                     </ul>
                   </li>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to="blogs">Bài viết</Link>
-                    <ul>
+                    {/* <ul>
                       <li>
                         <Link to="blogs/1">Bài viết 1</Link>
                       </li>
@@ -388,9 +388,9 @@ const Header = () => {
                       <li>
                         <Link to="blogs/3">Bài viết 3</Link>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to="contact">Liên hệ</Link>
                   </li>
                 </ul>
@@ -415,6 +415,9 @@ const Header = () => {
                               </li>
                               <li>
                                 <Link to="user/favorite">Tour yêu thích</Link>
+                              </li>
+                              <li>
+                                <Link to="user/coupon">Kho mã giảm giá</Link>
                               </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>

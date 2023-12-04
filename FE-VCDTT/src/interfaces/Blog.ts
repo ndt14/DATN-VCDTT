@@ -8,4 +8,6 @@ export interface Blog {
     status: number;
     data:any;
     blog:any;
+    created_at:string;
+    author: string;
 }

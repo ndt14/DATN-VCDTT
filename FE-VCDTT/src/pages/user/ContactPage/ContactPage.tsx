@@ -73,7 +73,7 @@ const ContactPage = () => {
               <div className="inner-baner-container" style={containerStyle}>
                  <div className="container">
                     <div className="inner-banner-content">
-                       <h1 className="inner-title">Liên hệ chúng tôi</h1>
+                       <h2 className="inner-title">Liên hệ chúng tôi</h2>
                     </div>
                  </div>
               </div>
@@ -114,7 +114,7 @@ const ContactPage = () => {
                                          <i className="fas fa-map-signs"></i>
                                       </span>
                                       <div className="details-content">
-                                         <h4>ĐỊa chỉ</h4>
+                                         <h4>Địa chỉ</h4>
                                          {dataAddress?.data.keyvalue.map(({id,value}:Setting)=>{
                                             return(
                                              <span key={id}>{value}</span>
@@ -153,11 +153,9 @@ const ContactPage = () => {
                              </div>
                              <div className="contct-social social-links">
                                 <h3>Theo dõi chúng tôi trên mạng xã hội</h3>
-                                <ul>
+                                <ul >
                                    <li><a href="#"><i className="fab fa-facebook-f" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-instagram" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-linkedin" aria-hidden="true"></i></a></li>
+                                  
                                 </ul>
                              </div>
                           </div>
