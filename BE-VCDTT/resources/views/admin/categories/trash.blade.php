@@ -12,19 +12,19 @@
                     </h1>
                 </div>
                 <!-- <div class="col-12 ">
-                        @if (Session::has('success'))
+                            @if (Session::has('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiSuccess">
-                                {{ Session::get('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+                                    {{ Session::get('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
     @endif
-                        @if (Session::has('fail'))
+                            @if (Session::has('fail'))
     <div class="alert alert-success alert-dismissible fade show" role="alert" id="notiError">
-                                {{ Session::get('fail') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+                                    {{ Session::get('fail') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
     @endif
-                    </div> -->
+                        </div> -->
 
             </div>
         </div>
@@ -72,12 +72,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                        </div>
-                                        entries
-                                    </div>-->
+                                            Show
+                                            <div class="mx-2 d-inline-block">
+                                                <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                            </div>
+                                            entries
+                                        </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         @php
@@ -359,10 +359,15 @@
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Đã xảy ra lỗi khi khôi phục danh mục!'
-                        });
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Đã xảy ra lỗi khi khôi phục danh mục!'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
                 },
                 error: function(error) {

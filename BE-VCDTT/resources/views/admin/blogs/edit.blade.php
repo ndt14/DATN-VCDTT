@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                            Overview
-                                                        </div> -->
+                                                                    Overview
+                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý bài viết
                     </h1>
@@ -64,8 +64,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmEdit" class="card border-0 shadow-lg rounded-4 "
-                        method="POST">
+                    <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Cập nhật bài viết
@@ -77,16 +76,17 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
-                                        value="{{$blog->title}}">
-                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
-                                            @error('title')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                        value="{{ $blog->title }}">
+                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
+                                        @error('title')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tác giả</label>
-                                    <input type="text" name="author" class="form-control" placeholder="" value="{{$blog->author}}">
+                                    <input type="text" name="author" class="form-control" placeholder=""
+                                        value="{{ $blog->author }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="author">
                                         @error('author')
                                             {{ $message }}
@@ -98,21 +98,22 @@
                             <div class="mb-3 col-12">
                                 <label class="form-label">Lựa chọn danh mục</label>
                                 <select type="text" class="form-select" name="categories_data[]"
-                                    placeholder="Thêm danh mục cho blog" id="select-category" value="" multiple></select>
+                                    placeholder="Thêm danh mục cho blog" id="select-category" value=""
+                                    multiple></select>
                             </div>
                             <div class="mb-3 col-8">
                                 <label class="form-label">Ảnh</label>
                                 <input type="text" name="main_img" class="form-control" placeholder="Image"
-                                    value="{{$blog->main_img}}">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
-                                        @error('main_img')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    value="{{ $blog->main_img }}">
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
+                                    @error('main_img')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả ngắn</div>
-                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{$blog->short_desc}}</textarea>
+                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{ $blog->short_desc }}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="short_desc">
                                     @error('short_desc')
                                         {{ $message }}
@@ -121,7 +122,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả</div>
-                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{$blog->description}}</textarea>
+                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{ $blog->description }}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="description">
                                     @error('description')
                                         {{ $message }}
@@ -132,13 +133,13 @@
                                 <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
-                                        <input type="radio" class="custom-control-input" name="status" @if($blog->status == 1) checked @endif
-                                            value="1">
+                                        <input type="radio" class="custom-control-input" name="status"
+                                            @if ($blog->status == 1) checked @endif value="1">
                                         <span class="custom-control-label">Hoạt động</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input" name="status"
-                                            value="0" @if($blog->status == 0) checked @endif>
+                                        <input type="radio" class="custom-control-input" name="status" value="0"
+                                            @if ($blog->status == 0) checked @endif>
                                         <span class="custom-control-label">Vô hiệu hóa</span>
                                     </label>
 
@@ -151,7 +152,8 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$blog->id}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $blog->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -226,10 +228,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            });
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then((response) => {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                });
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -270,13 +277,13 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện cập nhật bài viết',
-                            icon: 'error'
-                        })
-                        .then(function(status) {
-                            location.reload();
-                        })
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện cập nhật bài viết',
+                                icon: 'error'
+                            })
+                            .then(function(status) {
+                                location.reload();
+                            })
                     }
 
                 });
@@ -286,7 +293,7 @@
     <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
-<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
+    <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
     <script type="text/javascript">
         $(document).ready(function() {
             modalContainer = new bootstrap.Modal('#modalContainer', {

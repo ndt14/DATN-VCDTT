@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                            Overview
-                        </div> -->
+                                Overview
+                            </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý tài khoản
                     </h1>
@@ -75,7 +75,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tên</label>
                                     <input type="text" name="name" class="form-control" placeholder="Tên"
-                                        value="{{$response->name }}">
+                                        value="{{ $response->name }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="name">
                                         @error('name')
                                             {{ $message }}
@@ -85,7 +85,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Email</label>
                                     <input type="email" name="email" class="form-control" placeholder="Email"
-                                        value="{{$response->email }}">
+                                        value="{{ $response->email }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="email">
                                         @error('email')
                                             {{ $message }}
@@ -98,7 +98,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Mật khẩu</label>
                                     <input type="password" name="password" class="form-control" placeholder="Mật khẩu"
-                                        value="{{$response->password }}">
+                                        value="{{ $response->password }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="password">
                                         @error('password')
                                             {{ $message }}
@@ -108,7 +108,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Ảnh đại diện</label>
                                     <input type="text" name="image" class="form-control" placeholder="Ảnh"
-                                        value="{{$response->image }}">
+                                        value="{{ $response->image }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="image">
                                         @error('image')
                                             {{ $message }}
@@ -120,7 +120,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="text" name="phone_number" class="form-control" placeholder="Sđt"
-                                        value="{{$response->phone_number }}">
+                                        value="{{ $response->phone_number }}">
                                     <span class="text-danger d-flex justify-content-start spanError"
                                         data-tag="phone_number">
                                         @error('phone_number')
@@ -131,7 +131,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Ngày sinh</label>
                                     <input type="date" name="date_of_birth" class="form-control"
-                                        placeholder="Ngày sinh" value="{{$response->date_of_birth }}">
+                                        placeholder="Ngày sinh" value="{{ $response->date_of_birth }}">
                                     <span class="text-danger d-flex justify-content-start spanError"
                                         data-tag="date_of_birth">
                                         @error('date_of_birth')
@@ -144,7 +144,7 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Địa chỉ</label>
                                     <input type="text" name="address" class="form-control" placeholder="Địa chỉ"
-                                        value="{{$response->address }}">
+                                        value="{{ $response->address }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="address">
                                         @error('address')
                                             {{ $message }}
@@ -155,8 +155,8 @@
                                     <label class="form-label">Giới tính</label>
                                     <select name="gender" id="" class="form-control">
                                         <option value="">Chọn</option>
-                                        <option value="1" {{$response->gender == 1 ? 'selected' : '' }}>Nam</option>
-                                        <option value="2" {{$response->gender == 2 ? 'selected' : '' }}>Nữ</option>
+                                        <option value="1" {{ $response->gender == 1 ? 'selected' : '' }}>Nam</option>
+                                        <option value="2" {{ $response->gender == 2 ? 'selected' : '' }}>Nữ</option>
                                     </select>
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="gender">
                                         @error('date_of_birth')
@@ -171,12 +171,13 @@
                                     <div class="custom-controls-stacked">
                                         <label class="custom-control custom-radio custom-control-inline me-2">
                                             <input type="radio" class="custom-control-input" name="status"
-                                                checked="" value="1" {{$response->status == 1 ? 'checked' : '' }}>
+                                                checked="" value="1"
+                                                {{ $response->status == 1 ? 'checked' : '' }}>
                                             <span class="custom-control-label">Hoạt động</span>
                                         </label>
                                         <label class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" class="custom-control-input" name="status"
-                                                value="0" {{$response->status == 0 ? 'checked' : '' }}>
+                                                value="0" {{ $response->status == 0 ? 'checked' : '' }}>
                                             <span class="custom-control-label">Vô hiệu hóa</span>
                                         </label>
 
@@ -186,35 +187,35 @@
                                 </div>
 
                                 @if (auth()->user()->is_admin == 1)
-                                <div class="mb-3 col-6">
-                                    <div class="form-label">Admin ?</div>
-                                    <div class="custom-controls-stacked">
-                                        <label class="custom-control custom-radio custom-control-inline me-2">
-                                            <input type="radio" class="custom-control-input" name="is_admin"
-                                                 value="2" {{$response->is_admin == 2 ? 'checked' : ''}}>
-                                            <span class="custom-control-label">Không</span>
-                                        </label>
-                                        <label class="custom-control custom-radio custom-control-inline me-2">
-                                            <input type="radio" class="custom-control-input" name="is_admin"
-                                                 value="3" {{$response->is_admin == 3 ? 'checked' : ''}}>
-                                            <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
-                                        </label>
-                                        <span class="text-danger d-flex justify-content-start">
-                                        </span>
+                                    <div class="mb-3 col-6">
+                                        <div class="form-label">Admin ?</div>
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-radio custom-control-inline me-2">
+                                                <input type="radio" class="custom-control-input" name="is_admin"
+                                                    value="2" {{ $response->is_admin == 2 ? 'checked' : '' }}>
+                                                <span class="custom-control-label">Không</span>
+                                            </label>
+                                            <label class="custom-control custom-radio custom-control-inline me-2">
+                                                <input type="radio" class="custom-control-input" name="is_admin"
+                                                    value="3" {{ $response->is_admin == 3 ? 'checked' : '' }}>
+                                                <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
+                                            </label>
+                                            <span class="text-danger d-flex justify-content-start">
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
                                 @else
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Admin ?</div>
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-radio custom-control-inline me-2">
                                                 <input type="radio" class="custom-control-input" name="is_admin"
-                                                    value="2" {{$response->is_admin == 2 ? 'checked' : ''}}>
+                                                    value="2" {{ $response->is_admin == 2 ? 'checked' : '' }}>
                                                 <span class="custom-control-label">Không</span>
                                             </label>
                                             <label class="custom-control custom-radio custom-control-inline me-2">
                                                 <input type="radio" class="custom-control-input" name="is_admin"
-                                                    value="3" {{$response->is_admin == 3 ? 'checked' : ''}}>
+                                                    value="3" {{ $response->is_admin == 3 ? 'checked' : '' }}>
                                                 <span class="custom-control-label">Khác. Cho phép truy cập dashboard</span>
                                             </label>
                                             <span class="text-danger d-flex justify-content-start">
@@ -225,7 +226,8 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response->id}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $response->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -252,7 +254,8 @@
                 // thực hiện Ajax
                 $.ajax({
 
-                    url: "{{ route('user.edit', ['id' => ':id']) }}".replace(':id', this.dataset.id),
+                    url: "{{ route('user.edit', ['id' => ':id']) }}".replace(':id', this.dataset
+                        .id),
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -312,10 +315,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện cập nhật tài khoản',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện cập nhật tài khoản',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });

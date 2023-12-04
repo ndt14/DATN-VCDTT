@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                            Overview
-                                                        </div> -->
+                                                                    Overview
+                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý bài viết
                     </h1>
@@ -78,11 +78,11 @@
                                     <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
                                         value="">
-                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
-                                            @error('title')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
+                                        @error('title')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tác giả</label>
@@ -99,11 +99,11 @@
                                 <label class="form-label">Ảnh</label>
                                 <input type="text" name="main_img" class="form-control" placeholder="Image"
                                     value="">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
-                                        @error('main_img')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
+                                    @error('main_img')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                             <div class="mb-3 col-12">
                                 <label class="form-label">Lựa chọn danh mục</label>
@@ -226,10 +226,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            });
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then((response) => {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                });
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -283,7 +288,7 @@
     <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
-<script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
+    <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
     <script type="text/javascript">
         $(document).ready(function() {
             modalContainer = new bootstrap.Modal('#modalContainer', {
@@ -352,5 +357,4 @@
             });
         });
     </script>
-
 @endSection

@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                            Overview
-                        </div> -->
+                                Overview
+                            </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý Trang
                     </h1>
@@ -63,8 +63,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action=""
-                        method="POST">
+                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="" method="POST">
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
@@ -165,15 +164,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            })
-                            .then(function(response) {
-                                if(response) {
-                                    location.reload();
-                                }
-                            })
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(response) {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                })
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -214,10 +213,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });

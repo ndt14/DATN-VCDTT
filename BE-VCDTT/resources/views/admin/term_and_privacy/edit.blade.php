@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                Overview
-                            </div> -->
+                                    Overview
+                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý Trang
                     </h1>
@@ -69,7 +69,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Tiêu đề</label>
                                 <input type="text" name="title" class="form-control" placeholder="Nhập câu hỏi"
-                                    value="{{$response->title}}">
+                                    value="{{ $response->title }}">
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('title')
                                         {{ $message }}
@@ -78,7 +78,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Nội dung</label>
-                                <textarea name="content" class="form-control ckeditor" id="editor" cols="30" rows="10">{{$response->content}}</textarea>
+                                <textarea name="content" class="form-control ckeditor" id="editor" cols="30" rows="10">{{ $response->content }}</textarea>
                                 <span class="text-danger d-flex justify-content-start">
                                     @error('content')
                                         {{ $message }}
@@ -95,7 +95,8 @@
                                         <span class="custom-control-label">Hoạt động</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input" name="status" value="0" {{ $response->status == 0 ? 'checked' : '' }}>
+                                        <input type="radio" class="custom-control-input" name="status" value="0"
+                                            {{ $response->status == 0 ? 'checked' : '' }}>
                                         <span class="custom-control-label">Vô hiệu hóa</span>
                                     </label>
                                     <span class="text-danger d-flex justify-content-start">
@@ -107,7 +108,8 @@
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response->id}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $response->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -153,7 +155,8 @@
                 // thực hiện Ajax
                 $.ajax({
 
-                    url: "{{ route('page.edit', ['id' => ':id']) }}".replace(':id', this.dataset.id),
+                    url: "{{ route('page.edit', ['id' => ':id']) }}".replace(':id', this.dataset
+                        .id),
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -213,10 +216,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });

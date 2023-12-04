@@ -21,8 +21,8 @@ Chỉnh sửa đánh giá
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                            Overview
-                        </div> -->
+                                Overview
+                            </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đánh giá
                     </h1>
@@ -148,10 +148,14 @@ Chỉnh sửa đánh giá
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            });
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(status) {
+                                    location.reload();
+                                })
+
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',

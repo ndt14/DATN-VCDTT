@@ -230,6 +230,7 @@ class BlogController extends Controller
     {
         $blog = Blog::withTrashed()->find($id);
         if ($blog) {
+            $delete_to_blog = BlogToCategory::where('blog_id', $blog->id)->forceDelete();
             $delete_blog = $blog->forceDelete();
             if ($delete_blog) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
