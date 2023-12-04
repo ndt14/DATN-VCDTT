@@ -199,13 +199,7 @@
             </div>
             <hr class="my-3">
             <div class="row">
-                <div class="col-3">
-                    <div class="form-label">Phần trăm hoàn tiền</div>
-                    {{ $item['refund_percentage'] }}
-                </div>
-
-
-                <div class="col-9">
+                <div class="col-12">
                     <div class="form-label">Góp ý của khách hàng</div>
                     {{ $item['suggestion'] }}
                 </div>

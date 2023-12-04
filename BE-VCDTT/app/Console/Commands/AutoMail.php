@@ -65,10 +65,14 @@ class AutoMail extends Command
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 4                                                   //turn off tour cancelling + mail
                     ]);
-                } elseif (($tour_start_time <= Carbon::now()->toDateString() && Carbon::now()->toDateString() <= $tour_end_time )&& $purchaseHistoryTourAnnounce->tour_status != 2 && $purchaseHistoryTourAnnounce->tour_status != 3) {
+                } elseif ($tour_start_time == Carbon::now()->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 2) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('3'));
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 2                                                    //wish client best experiences
+                    ]);
+                } elseif ($tour_end_time >= Carbon::now()->toDateString() && $tour_start_time < Carbon::now()->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 2) {
+                    $purchaseHistoryTourAnnounce->update([
+                        'tour_status' => 2                                                   //thank you mail
                     ]);
                 } elseif ($tour_end_time == Carbon::now()->subDays(1)->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 3) {
                     $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('4'));
