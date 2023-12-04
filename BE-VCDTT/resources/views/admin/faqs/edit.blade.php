@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                        Overview
-                    </div> -->
+                            Overview
+                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý câu hỏi thường gặp
                     </h1>
@@ -66,23 +66,22 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 "
-                        method="POST">
+                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " method="POST">
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Câu hỏi</label>
                                 <input type="text" name="question" class="form-control" placeholder="Nhập câu hỏi"
-                                    value="{{$response->question}}">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="question">
-                                        @error('question')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                    value="{{ $response->question }}">
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="question">
+                                    @error('question')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Câu trả lời</label>
-                                <textarea name="answer" class="form-control ckeditor" id="editor-1" cols="30" rows="10">{{$response->answer}}</textarea>
+                                <textarea name="answer" class="form-control ckeditor" id="editor-1" cols="30" rows="10">{{ $response->answer }}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="answer">
                                     @error('answer')
                                         {{ $message }}
@@ -92,7 +91,8 @@
 
                         </div>
                         <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response->id}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $response->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -127,87 +127,90 @@
     </script>
 @endsection
 @section('page_js')
-<!-- Thêm faq !-->
-<script>
-    $(document).ready(function() {
+    <!-- Thêm faq !-->
+    <script>
+        $(document).ready(function() {
 
-        $('#btnSubmitAdd').click(function(e) {
-            e.preventDefault();
-            var id = document.querySelector('#btnSubmitAdd').dataset.id;
-            // lấy dữ liệu từ form
-            var formData = new FormData(this.form);
-            // thực hiện Ajax
-            $.ajax({
+            $('#btnSubmitAdd').click(function(e) {
+                e.preventDefault();
+                var id = document.querySelector('#btnSubmitAdd').dataset.id;
+                // lấy dữ liệu từ form
+                var formData = new FormData(this.form);
+                // thực hiện Ajax
+                $.ajax({
 
-                url: "{{ route('faq.edit', ['id' => ':id']) }}".replace(':id', id),
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    // xử lý response từ server
-                    if (response.status === 200) {
+                    url: "{{ route('faq.edit', ['id' => ':id']) }}".replace(':id', id),
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // xử lý response từ server
+                        if (response.status === 200) {
 
-                        // Hiển thị SweetAlert khi thành công
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: response.message,
-                            icon: 'success'
+                            // Hiển thị SweetAlert khi thành công
+                            Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(status) {
+                                    location.reload();
+                                })
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Xóa tất cả lỗi hiện tại trên giao diện
+                        var listSpans = document.querySelectorAll(".spanError");
+                        listSpans.forEach(function(item) {
+                            item.innerHTML = '';
                         });
-                    } else {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: response.message,
-                            icon: 'error'
-                        });
-                    }
 
-                },
-                error: function(xhr, status, error) {
-                    // Xóa tất cả lỗi hiện tại trên giao diện
-                    var listSpans = document.querySelectorAll(".spanError");
-                    listSpans.forEach(function(item) {
-                        item.innerHTML = '';
-                    });
+                        // Xử lý lỗi ajax nếu có
+                        var errorResponse = JSON.parse(xhr.responseText);
 
-                    // Xử lý lỗi ajax nếu có
-                    var errorResponse = JSON.parse(xhr.responseText);
+                        // Lặp qua từng trường lỗi
+                        Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                            // `fieldName` là tên trường có lỗi
+                            var errorMessages = errorResponse.errors[fieldName];
 
-                    // Lặp qua từng trường lỗi
-                    Object.keys(errorResponse.errors).forEach(function(fieldName) {
-                        // `fieldName` là tên trường có lỗi
-                        var errorMessages = errorResponse.errors[fieldName];
+                            // Lặp qua từng thông điệp lỗi trong mảng
+                            errorMessages.forEach(function(errorMessage) {
+                                var listSpans = document.querySelectorAll(
+                                    ".spanError");
 
-                        // Lặp qua từng thông điệp lỗi trong mảng
-                        errorMessages.forEach(function(errorMessage) {
-                            var listSpans = document.querySelectorAll(
-                                ".spanError");
-
-                            listSpans.forEach(function(item) {
-                                if (item.dataset.tag.trim() ==
-                                    fieldName.trim()) {
-                                    // Hiển thị lỗi chỉ ở trường tương ứng
-                                    item.innerHTML = errorMessage;
-                                }
+                                listSpans.forEach(function(item) {
+                                    if (item.dataset.tag.trim() ==
+                                        fieldName.trim()) {
+                                        // Hiển thị lỗi chỉ ở trường tương ứng
+                                        item.innerHTML = errorMessage;
+                                    }
+                                });
                             });
                         });
-                    });
 
-                    Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
-                        icon: 'error'
-                    })
-                    .then(function(status) {
-                        location.reload();
-                    })
-                }
+                        Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
+                                icon: 'error'
+                            })
+                            .then(function(status) {
+                                location.reload();
+                            })
+                    }
 
+                });
             });
         });
-    });
-</script>
-<!-- --------------------------------------------- !-->
+    </script>
+    <!-- --------------------------------------------- !-->
     {{-- <script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {

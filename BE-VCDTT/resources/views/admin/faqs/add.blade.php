@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                        Overview
-                    </div> -->
+                            Overview
+                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý câu hỏi thường gặp
                     </h1>
@@ -74,11 +74,11 @@
                                 <label class="form-label">Câu hỏi</label>
                                 <input type="text" name="question" class="form-control" placeholder="Nhập câu hỏi"
                                     value="">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="question">
-                                        @error('question')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
+                                <span class="text-danger d-flex justify-content-start spanError" data-tag="question">
+                                    @error('question')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Câu trả lời</label>
@@ -127,84 +127,87 @@
     </script>
 @endsection
 @section('page_js')
-<!-- Thêm faq !-->
-<script>
-    $(document).ready(function() {
+    <!-- Thêm faq !-->
+    <script>
+        $(document).ready(function() {
 
-        $('#btnSubmitAdd').click(function(e) {
-            e.preventDefault();
+            $('#btnSubmitAdd').click(function(e) {
+                e.preventDefault();
 
-            // lấy dữ liệu từ form
-            var formData = new FormData(this.form);
-            // thực hiện Ajax
-            $.ajax({
+                // lấy dữ liệu từ form
+                var formData = new FormData(this.form);
+                // thực hiện Ajax
+                $.ajax({
 
-                url: "{{ route('faq.add') }}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    // xử lý response từ server
-                    if (response.status === 200) {
+                    url: "{{ route('faq.add') }}",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // xử lý response từ server
+                        if (response.status === 200) {
 
-                        // Hiển thị SweetAlert khi thành công
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: response.message,
-                            icon: 'success'
+                            // Hiển thị SweetAlert khi thành công
+                            Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(status) {
+                                    location.reload();
+                                })
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Xóa tất cả lỗi hiện tại trên giao diện
+                        var listSpans = document.querySelectorAll(".spanError");
+                        listSpans.forEach(function(item) {
+                            item.innerHTML = '';
                         });
-                    } else {
+
+                        // Xử lý lỗi ajax nếu có
+                        var errorResponse = JSON.parse(xhr.responseText);
+
+                        // Lặp qua từng trường lỗi
+                        Object.keys(errorResponse.errors).forEach(function(fieldName) {
+                            // `fieldName` là tên trường có lỗi
+                            var errorMessages = errorResponse.errors[fieldName];
+
+                            // Lặp qua từng thông điệp lỗi trong mảng
+                            errorMessages.forEach(function(errorMessage) {
+                                var listSpans = document.querySelectorAll(
+                                    ".spanError");
+
+                                listSpans.forEach(function(item) {
+                                    if (item.dataset.tag.trim() ==
+                                        fieldName.trim()) {
+                                        // Hiển thị lỗi chỉ ở trường tương ứng
+                                        item.innerHTML = errorMessage;
+                                    }
+                                });
+                            });
+                        });
+
                         Swal.fire({
                             title: 'Lỗi!',
-                            text: response.message,
+                            text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
                             icon: 'error'
                         });
                     }
 
-                },
-                error: function(xhr, status, error) {
-                    // Xóa tất cả lỗi hiện tại trên giao diện
-                    var listSpans = document.querySelectorAll(".spanError");
-                    listSpans.forEach(function(item) {
-                        item.innerHTML = '';
-                    });
-
-                    // Xử lý lỗi ajax nếu có
-                    var errorResponse = JSON.parse(xhr.responseText);
-
-                    // Lặp qua từng trường lỗi
-                    Object.keys(errorResponse.errors).forEach(function(fieldName) {
-                        // `fieldName` là tên trường có lỗi
-                        var errorMessages = errorResponse.errors[fieldName];
-
-                        // Lặp qua từng thông điệp lỗi trong mảng
-                        errorMessages.forEach(function(errorMessage) {
-                            var listSpans = document.querySelectorAll(
-                                ".spanError");
-
-                            listSpans.forEach(function(item) {
-                                if (item.dataset.tag.trim() ==
-                                    fieldName.trim()) {
-                                    // Hiển thị lỗi chỉ ở trường tương ứng
-                                    item.innerHTML = errorMessage;
-                                }
-                            });
-                        });
-                    });
-
-                    Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Đã xảy ra lỗi khi thực hiện thêm faq',
-                        icon: 'error'
-                    });
-                }
-
+                });
             });
         });
-    });
-</script>
-<!-- --------------------------------------------- !-->
+    </script>
+    <!-- --------------------------------------------- !-->
     {{-- <script type="text/javascript">
     if ($('#frmAdd').length) {
         $('#frmAdd').submit(function() {

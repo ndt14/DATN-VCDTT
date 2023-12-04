@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                            Overview
-                        </div> -->
+                                Overview
+                            </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý mã giảm giá
                     </h1>
@@ -102,8 +102,8 @@
                                     @enderror
                                 </span>
                                 <br>
-                                <input type="text" name="price" class="form-control" placeholder="Nhập giá giá tiền hoặc số % tương ứng"
-                                    value="">
+                                <input type="text" name="price" class="form-control"
+                                    placeholder="Nhập giá giá tiền hoặc số % tương ứng" value="">
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="price">
                                     @error('price')
                                         {{ $message }}
@@ -124,7 +124,8 @@
                                 <label class="form-label">Ngày hết hạn</label>
                                 <input type="date" name="expiration_date" class="form-control"
                                     placeholder="Nhập ngày kết thúc" value="">
-                                <span class="text-danger d-flex justify-content-start spanError" data-tag="expiration_date">
+                                <span class="text-danger d-flex justify-content-start spanError"
+                                    data-tag="expiration_date">
                                     @error('expiration_date')
                                         {{ $message }}
                                     @enderror
@@ -195,15 +196,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            })
-                            .then(function(response) {
-                                if(response) {
-                                    location.reload();
-                                }
-                            })
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(response) {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                })
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -239,17 +240,22 @@
                                         // Hiển thị lỗi chỉ ở trường tương ứng
                                         item.innerHTML = errorMessage;
                                     }
-                                    
+
                                 });
-                                
+
                             });
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm mã giảm giá',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm mã giảm giá',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });

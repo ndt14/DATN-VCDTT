@@ -43,12 +43,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                    </div>
-                                    entries
-                                </div>-->
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                        </div>
+                                        entries
+                                    </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -99,7 +99,7 @@
                                                     {{ $item->author }}
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->short_desc, 50) }}
+                                                    {!! string_truncate($item->short_desc, 50) !!}
                                                 </td>
                                                 <td>
                                                     {{ $item->view_count }}
@@ -183,7 +183,8 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                                bản ghi</p>
+                                bản ghi
+                            </p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
@@ -261,9 +262,10 @@
                                 text: 'Khôi phục blog thành công',
                                 icon: 'success'
                             })
-                            .then(() => {
-                                // Chuyển hướng sau khi hiển thị modal
-                                window.location.href = '/blog/trash'; // Thay đổi đúng route của bạn
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)

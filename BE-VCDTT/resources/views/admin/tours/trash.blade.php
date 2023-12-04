@@ -71,12 +71,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                                    Show
-                                                    <div class="mx-2 d-inline-block">
-                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                                    </div>
-                                                    entries
-                                                </div>-->
+                                                                    Show
+                                                                    <div class="mx-2 d-inline-block">
+                                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                                    </div>
+                                                                    entries
+                                                                </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -311,9 +311,10 @@
                                 text: 'Khôi phục tour thành công',
                                 icon: 'success'
                             })
-                            .then(() => {
-                                // Chuyển hướng sau khi hiển thị modal
-                                window.location.href = '/tour/trash'; // Thay đổi đúng route của bạn
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)
@@ -356,11 +357,15 @@
                         action: function() {
                             axios.delete(`/api/tour-destroy-forever/${id}`).then(function(response) {
                                 Swal.fire({
-                                    title: 'Thành công!',
-                                    text: 'Xóa tour thành công',
-                                    icon: 'success'
-                                })
-                                location.reload();
+                                        title: 'Thành công!',
+                                        text: 'Xóa tour thành công',
+                                        icon: 'success'
+                                    })
+                                    .then((response) => {
+                                        if (response) {
+                                            location.reload();
+                                        }
+                                    });
                             });
                         }
                     },

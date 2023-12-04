@@ -129,7 +129,7 @@
                                                         title="Show Detail">{{ string_truncate($item->title, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->content, 70) }}
+                                                    {!! string_truncate($item->content, 70) !!}
                                                 </td>
                                                 <td>
                                                     {{ $item->type == 1 ? 'Điều khoản ' : ($item->type == 2 ? 'Điều khoản bảo mật' : 'Khác') }}

@@ -59,7 +59,7 @@ class PurchaseHistoryController extends Controller
         } else {
             $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
                 ->where('payment_status', '%' . $request->payment_status ?? '' . '%')
-                ->where('purchase_status',  '%' . $request->purchase_status ?? '' . '%')
+                ->where('purchase_status', '%' . $request->purchase_status ?? '' . '%')
                 ->where('tour_status', '%' . $request->tour_status ?? '' . '%')
                 ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
@@ -251,15 +251,11 @@ class PurchaseHistoryController extends Controller
     {
         $purchaseHistory = PurchaseHistory::withTrashed()->find($id);
         if ($purchaseHistory) {
-            $delete_purchaseHistory =  $purchaseHistory->forceDelete();
-            if ($delete_purchaseHistory) {
-                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
-            } else {
-                return response()->json([
-                    'message' => 'internal server error',
-                    'status' => 500
-                ]);
+            $delete_purchaseHistory = $purchaseHistory->forceDelete();
+            if (!$delete_purchaseHistory) {
+                return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
+            return response()->json(['message' => 'OK', 'status' => 200]);
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 500]);
         }
@@ -306,7 +302,7 @@ class PurchaseHistoryController extends Controller
         if ($request->isMethod('POST')) {
             $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
             $response = Http::put(url('') . '/api/purchase-history-edit/' . $id, $data);
-            if (isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
+            if (isset($data->purchase_status) && isset($items['purchase_status']) && ($data->purchase_status != $items['purchase_status'])) {
                 $users = User::where('is_admin', 1)->get();
                 $responseData = json_decode(json_encode($response['data']['purchase_history']));
 
@@ -410,9 +406,9 @@ class PurchaseHistoryController extends Controller
             if ($data) {
                 $data->restore();
             }
-            return redirect()->route('purchase_histories.trash')->with('success', 'Khôi phục đơn đặt thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('purchase_histories.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục hóa đơn không thành công']);
     }
 
     // public function printInvoice(Request $request)

@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                        Overview
-                    </div> -->
+                            Overview
+                        </div> -->
                     <h2 class="page-title">
                         Roles Management
                     </h2>
@@ -355,7 +355,8 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="permission">
+                                    <span class="text-danger d-flex justify-content-start spanError"
+                                        data-tag="permission">
                                         @error('permission')
                                             {{ $message }}
                                         @enderror
@@ -445,10 +446,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm vai trò',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm vai trò',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });

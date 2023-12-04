@@ -233,6 +233,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
+                    console.log(response.data);
                     if (response.success) {
                         // Hiển thị modal thành công bằng SweetAlert2
                         Swal.fire({

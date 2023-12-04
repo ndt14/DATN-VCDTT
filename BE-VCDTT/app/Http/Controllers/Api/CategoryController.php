@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\TourResource;
+use App\Models\BlogToCategory;
 use App\Models\Tour;
 use App\Models\TourToCategory;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -161,12 +162,82 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if ($category) {
             // Lấy danh sách các IDs của các tour thuộc danh mục hiện tại
-            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
-            $update_tour_to_cate = TourToCategory::where('cate_id', $category->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => now()]);
+            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray(); // list id tour
+            // Lấy danh sách các IDs của các blog thuộc danh mục hiện tại
+            $blogIds = $category->blogs()->withTrashed()->pluck('blogs.id')->toArray(); // list id blog
+            // $update_tour_to_cate = TourToCategory::where('cate_id', $category->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => now()]);
+
+            if (count($tourIds) > 0) {
+                foreach ($tourIds as $id_tour) {
+
+                    $check_cate_other_of_tour = DB::table('tours_to_categories')->where('cate_id', '<>', $category->id)->where('tour_id', $id_tour)->exists();
+
+                    if (!$check_cate_other_of_tour) {
+                        $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $category->id)->where('tour_id', $id_tour)->update(['deleted_at' => null]);
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id, 'id_cate_before' => $category->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate, 'id_cate_before' => $category->id]);
+                        }
+                    } else {
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id, 'id_cate_before' => $category->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
+                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate, 'id_cate_before' => $category->id]);
+                        }
+                    }
+
+                }
+            }
+
+            if (count($blogIds) > 0) {
+                foreach ($blogIds as $id_blog) {
+
+                    $check_cate_other_of_blog = DB::table('blogs_to_categories')->where('cate_id', '<>', $category->id)->where('blog_id', $id_blog)->exists();
+
+                    if (!$check_cate_other_of_blog) {
+                        $update_tour_to_cate = DB::table('blogs_to_categories')->where('cate_id', $category->id)->where('blog_id', $id_blog)->update(['deleted_at' => null]);
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['blogs_to_categories.cate_id' => $result->id]);
+                            BlogToCategory::where('blog_id', $id_blog)->where('cate_id', $category->id)->withTrashed()->update(['blogs_to_categories.cate_id' => $result->id, 'id_cate_before' => $category->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['blogs_to_categories.cate_id' => $id_cate]);
+                            BlogToCategory::where('blog_id', $id_blog)->where('cate_id', $category->id)->withTrashed()->update(['blogs_to_categories.cate_id' => $id_cate, 'id_cate_before' => $category->id]);
+                        }
+                    } else {
+                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
+                        if ($checkIsset) {
+                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                            // $category->tours()->withTrashed()->update(['blogs_to_categories.cate_id' => $result->id]);
+                            BlogToCategory::where('blog_id', $id_blog)->where('cate_id', $category->id)->withTrashed()->update(['blogs_to_categories.cate_id' => $result->id, 'id_cate_before' => $category->id]);
+                        } else {
+                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
+                            // $category->tours()->withTrashed()->update(['blogs_to_categories.cate_id' => $id_cate]);
+                            BlogToCategory::where('blog_id', $id_blog)->where('cate_id', $category->id)->withTrashed()->update(['blogs_to_categories.cate_id' => $id_cate, 'id_cate_before' => $category->id]);
+                        }
+                    }
+
+                }
+
+            }
+
             $delete_cate = $category->delete(); // soft delete
-            $delete_cate = $category->tours()->delete();
+            // $delete_cate = $category->tours()->delete(); // tour cũng bị xóa mềm
             if ($delete_cate) {
-                return response()->json(['message' => 'Di chuyển vào thùng thành công', 'status' => 200, 'data' => $update_tour_to_cate]);
+                return response()->json(['message' => 'Di chuyển vào thùng thành công', 'status' => 200]);
             } else {
                 return response()->json([
                     'message' => 'internal server error',
@@ -183,34 +254,30 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->find($id);
         if ($category) {
+
+            $tourIds = DB::table('tours_to_categories')->where('id_cate_before', $id)->select('tour_id')->pluck('tour_id')->toArray();
+            $blogIds = DB::table('blogs_to_categories')->where('id_cate_before', $id)->select('blog_id')->pluck('blog_id')->toArray();
             
-            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
-            $delete_cate = $category->forceDelete();
-            $category->tours()->withTrashed()->update(['tours.deleted_at' => null]);
+            $unclassified = Category::where('name', 'Chưa phân loại')->select('id')->first();
             if (count($tourIds) > 0) {
-                foreach ($tourIds as $id_tour) {
-
-                    $check_cate_other_of_tour = DB::table('tours_to_categories')->where('cate_id', '<>', $category->id)->where('tour_id', $id_tour)->exists();
-
-                    if (!$check_cate_other_of_tour) {
-                        $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $category->id)->where('tour_id', $id_tour)->update(['deleted_at' => null]);
-                        $checkIsset = Category::where('name', 'Chưa phân loại')->exists();
-                        if ($checkIsset) {
-                            $result = Category::where('name', 'Chưa phân loại')->select('id')->first();
-                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
-                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $result->id]);
-                        } else {
-                            $id_cate = Category::insertGetId(['name' => 'Chưa phân loại']);
-                            // $category->tours()->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
-                            TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate]);
-                        }
-                    }else {
-                        $delete_tour_to_cate = TourToCategory::where('cate_id', $category->id)->where('tour_id', $id_tour)->forceDelete();
+                foreach ($tourIds as $tour_id) {
+                    $check__tour = DB::table('tours_to_categories')->where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->exists();
+                    if ($check__tour) {
+                        $delete_tour_to_cate_item = TourToCategory::where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->forceDelete();
                     }
 
                 }
             }
+            if (count($blogIds) > 0) {
+                foreach ($blogIds as $blog_id) {
+                    $check__blog = DB::table('blogs_to_categories')->where('blog_id', $blog_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->exists();
+                    if ($check__tour) {
+                        $delete_blog_to_cate_item = BlogToCategory::where('blog_id', $blog_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->forceDelete();
+                    }
 
+                }
+            }
+            $delete_cate = $category->forceDelete();
             if ($delete_cate) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
             } else {
@@ -222,6 +289,7 @@ class CategoryController extends Controller
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 500]);
         }
+
     }
 
 
@@ -274,15 +342,15 @@ class CategoryController extends Controller
 
     public function cateManagementStore(CategoryRequest $request)
     {
-        if($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $data = $request->all();
-        $response = Http::post(url('') . '/api/category-store', $data);
-         // Kiểm tra kết quả từ API và trả về response tương ứng
-         if ($response->successful()) {
-            return response()->json(['success' => true, 'message' => 'Thêm mới danh mục thành công', 'status' => 200]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới danh mục', 'status' => 500]);
-        }
+            $response = Http::post(url('') . '/api/category-store', $data);
+            // Kiểm tra kết quả từ API và trả về response tương ứng
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Thêm mới danh mục thành công', 'status' => 200]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Lỗi khi thêm mới danh mục', 'status' => 500]);
+            }
         }
     }
 
@@ -293,11 +361,11 @@ class CategoryController extends Controller
             $data = $request->all();
             $response = Http::put(url('') . "/api/category-edit/{$id}", $data);
             // Kiểm tra kết quả từ API và trả về response tương ứng
-         if ($response->successful()) {
-            return response()->json(['success' => true, 'message' => 'Cập nhật danh mục thành công', 'status' => 200]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật danh mục', 'status' => 500]);
-        }
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Cập nhật danh mục thành công', 'status' => 200]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật danh mục', 'status' => 500]);
+            }
         }
         $listCateParent = Category::whereNull('parent_id')->get();
         $response = Http::get(url('') . '/api/category-show/' . $id);
@@ -331,10 +399,31 @@ class CategoryController extends Controller
             $data = Category::withTrashed()->find($id);
             if ($data) {
                 // Lấy danh sách các IDs của các tour thuộc danh mục hiện tại
-                $tourIds = $data->tours()->withTrashed()->pluck('tours.id')->toArray();
-                $update_tour_to_cate = DB::table('tours_to_categories')->where('cate_id', $data->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => null]);
+                $tourIds = DB::table('tours_to_categories')->where('id_cate_before', $id)->select('tour_id')->pluck('tour_id')->toArray();
+                $blogIds = DB::table('blogs_to_categories')->where('id_cate_before', $id)->select('blog_id')->pluck('blog_id')->toArray();
+                $unclassified = Category::where('name', 'Chưa phân loại')->select('id')->first();
+                if (count($tourIds) > 0) {
+
+                    foreach ($tourIds as $tour_id) {
+                        $check__tour = DB::table('tours_to_categories')->where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->exists();
+                        if ($check__tour) {
+                            $update_tour_to_cate_item = DB::table('tours_to_categories')->where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->update(['cate_id' => $data->id, 'id_cate_before' => NULL]);
+                        }
+
+                    }
+                }
+                if (count($blogIds) > 0) {
+
+                    foreach ($blogIds as $blog_id) {
+                        $check__blog = DB::table('blogs_to_categories')->where('blog_id', $blog_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->exists();
+                        if ($check__blog) {
+                            $update_blog_to_cate_item = DB::table('blogs_to_categories')->where('blog_id', $blog_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->update(['cate_id' => $data->id, 'id_cate_before' => NULL]);
+                        }
+
+                    }
+                }
                 // Khôi phục các tour thuộc danh mục
-                $data->tours()->withTrashed()->update(['tours.deleted_at' => null]);
+                // $data->tours()->withTrashed()->update(['tours.deleted_at' => null]);
                 // Khôi phục danh mục
                 $data->restore();
             }

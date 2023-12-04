@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                        Overview
-                    </div> -->
+                            Overview
+                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý tài khoản
                     </h1>
@@ -121,7 +121,8 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="text" name="phone_number" class="form-control" placeholder="Sđt"
                                         value="">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="phone_number">
+                                    <span class="text-danger d-flex justify-content-start spanError"
+                                        data-tag="phone_number">
                                         @error('phone_number')
                                             {{ $message }}
                                         @enderror
@@ -131,7 +132,8 @@
                                     <label class="form-label">Ngày sinh</label>
                                     <input type="date" name="date_of_birth" class="form-control"
                                         placeholder="Ngày sinh" value="">
-                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="date_of_birth">
+                                    <span class="text-danger d-flex justify-content-start spanError"
+                                        data-tag="date_of_birth">
                                         @error('date_of_birth')
                                             {{ $message }}
                                         @enderror
@@ -169,12 +171,12 @@
                                     <div class="custom-controls-stacked">
                                         <label class="custom-control custom-radio custom-control-inline me-2">
                                             <input type="radio" class="custom-control-input" name="status"
-                                                checked="" value="1" {{old('status') == 1 ? 'checked' : '' }}>
+                                                checked="" value="1" {{ old('status') == 1 ? 'checked' : '' }}>
                                             <span class="custom-control-label">Hoạt động</span>
                                         </label>
                                         <label class="custom-control custom-radio custom-control-inline">
                                             <input type="radio" class="custom-control-input" name="status"
-                                                value="0" {{old('status') == 0 ? 'checked'  : '' }}>
+                                                value="0" {{ old('status') == 0 ? 'checked' : '' }}>
                                             <span class="custom-control-label">Vô hiệu hóa</span>
                                         </label>
 
@@ -261,15 +263,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            })
-                            .then(function(response) {
-                                if(response) {
-                                    location.reload();
-                                }
-                            })
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(response) {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                })
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -310,10 +312,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm tài khoản',
-                            icon: 'error'
-                        });
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm tài khoản',
+                                icon: 'error'
+                            })
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
+                            });
                     }
 
                 });
