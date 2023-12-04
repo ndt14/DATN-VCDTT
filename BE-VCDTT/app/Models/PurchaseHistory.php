@@ -55,6 +55,9 @@ class PurchaseHistory extends Model
         'payment_status',
         'purchase_status',
         'tour_status',
+
+        'cancel_reason',
+        'bank_number',
         'mail_announced_7_days_left',
     ];
 
