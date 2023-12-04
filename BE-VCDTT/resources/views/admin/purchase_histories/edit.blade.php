@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                    Overview
-                                                                                    </div> -->
+                                                                                        Overview
+                                                                                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -62,13 +62,13 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 "
-                        action="" method="POST">
+                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt: {{ $items['name'] }}
                             </h2>
-                            {{-- <button id="btnSubmitAdd" type="button" class="btn btn-indigo ms-auto">Sửa</button> --}}
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo ms-auto"
+                                data-id="{{ $items['id'] }}">Sửa</button>
                         </div>
                         @csrf
                         <div class="card-body">
@@ -209,8 +209,8 @@
                                 <div class="row">
                                     <div class="mb-3 col-9">
                                         <label class="form-label">Tên người dùng</label>
-                                        <input type="text" name="name" class="form-control"
-                                            placeholder="Nhập tên người dùng" value="{{ $items['name'] }}">
+                                        <span name="user_id">{{ $items['name'] }}
+                                        </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('name')
                                                 {{ $message }}
@@ -219,8 +219,8 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <label class="form-label">ID người dùng</label>
-                                        <input type="text" name="user_id" class="form-control"
-                                            placeholder="Nhập ID người dùng" value="{{ $items['user_id'] }}">
+                                        <span name="user_id">{{ $items['user_id'] }}
+                                        </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('user_id')
                                                 {{ $message }}
@@ -414,19 +414,6 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="mb-3 ">
-                                        <div class="form-label">Phần trăm hoàn tiền</div>
-                                        <input name="refund_percentage" type="text" class="form-control"
-                                            placeholder="Nhập vị trí của tour" value="{{ $items['refund_percentage'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
-                                            @error('refund_percentage')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
                                 <div class="mb-3">
                                     <div class="form-label">Góp ý của khách hàng</div>
                                     <textarea id="editor" rows="6" class="form-control text-editor ckeditor" name="suggestion"
@@ -464,7 +451,8 @@
                             </div>
                             <div class="card-footer text-end">
                                 <div class="mb-3">
-                                    <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$items['id']}}">Sửa</button>
+                                    <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                        data-id="{{ $items['id'] }}">Sửa</button>
                                 </div>
                             </div>
                         </form>
@@ -479,42 +467,43 @@
             </div>
         </div>
     @endSection
-        @section('page_js')
-            <!-- Cập nhật đơn hàng !-->
-            <script>
-                $(document).ready(function() {
+    @section('page_js')
+        <!-- Cập nhật đơn hàng !-->
+        <script>
+            $(document).ready(function() {
 
-                    $('#btnSubmitAdd').click(function(e) {
-                        e.preventDefault();
+                $('#btnSubmitAdd').click(function(e) {
+                    e.preventDefault();
 
-                        Swal.fire({
-                            title: "Xác nhận",
-                            text: "Bạn có chắc chắn thay đổi không? Bạn sẽ KHÔNG thay đổi được nữa và người dùng sẽ nhận thông báo về thay đổi của bạn!",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Được rồi!",
-                            cancelButtonText: 'Không'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                var id = document.querySelector('#btnSubmitAdd').dataset.id;
-                                // lấy dữ liệu từ form
-                                var formData = new FormData(this.form);
-                                // thực hiện Ajax
-                                $.ajax({
+                    Swal.fire({
+                        title: "Xác nhận",
+                        text: "Bạn có chắc chắn thay đổi không? Bạn sẽ KHÔNG thay đổi được nữa và người dùng sẽ nhận thông báo về thay đổi của bạn!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Được rồi!",
+                        cancelButtonText: 'Không'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var id = document.querySelector('#btnSubmitAdd').dataset.id;
+                            // lấy dữ liệu từ form
+                            var formData = new FormData(this.form);
+                            // thực hiện Ajax
+                            $.ajax({
 
-                                    url: "{{ route('purchase_histories.edit', ['id' => ':id']) }}".replace(':id',id),
-                                    type: "POST",
-                                    data: formData,
-                                    contentType: false,
-                                    processData: false,
-                                    success: function(response) {
-                                        // xử lý response từ server
-                                        if (response.status === 200) {
+                                url: "{{ route('purchase_histories.edit', ['id' => ':id']) }}"
+                                    .replace(':id', id),
+                                type: "POST",
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                success: function(response) {
+                                    // xử lý response từ server
+                                    if (response.status === 200) {
 
-                                            // Hiển thị SweetAlert khi thành công
-                                            Swal.fire({
+                                        // Hiển thị SweetAlert khi thành công
+                                        Swal.fire({
                                                 title: 'Thành công!',
                                                 text: response.message,
                                                 icon: 'success'
@@ -522,68 +511,68 @@
                                             .then(function(response) {
                                                 location.reload();
                                             })
-                                        } else {
-                                            Swal.fire({
-                                                title: 'Lỗi!',
-                                                text: response.message,
-                                                icon: 'error'
-                                            });
-                                        }
-
-                                    },
-                                    error: function(xhr, status, error) {
-                                        // Xóa tất cả lỗi hiện tại trên giao diện
-                                        var listSpans = document.querySelectorAll(".spanError");
-                                        listSpans.forEach(function(item) {
-                                            item.innerHTML = '';
-                                        });
-
-                                        // Xử lý lỗi ajax nếu có
-                                        var errorResponse = JSON.parse(xhr.responseText);
-
-                                        // Lặp qua từng trường lỗi
-                                        Object.keys(errorResponse.errors).forEach(function(
-                                            fieldName) {
-                                            // `fieldName` là tên trường có lỗi
-                                            var errorMessages = errorResponse.errors[
-                                                fieldName];
-
-                                            // Lặp qua từng thông điệp lỗi trong mảng
-                                            errorMessages.forEach(function(
-                                                errorMessage) {
-                                                var listSpans = document
-                                                    .querySelectorAll(
-                                                        ".spanError");
-
-                                                listSpans.forEach(function(
-                                                    item) {
-                                                    if (item.dataset.tag
-                                                        .trim() ==
-                                                        fieldName.trim()
-                                                    ) {
-                                                        // Hiển thị lỗi chỉ ở trường tương ứng
-                                                        item.innerHTML =
-                                                            errorMessage;
-                                                    }
-                                                });
-                                            });
-                                        });
-
+                                    } else {
                                         Swal.fire({
-                                                title: 'Lỗi!',
-                                                text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
-                                                icon: 'error'
-                                            })
-                                            .then(function(status) {
-                                                location.reload();
-                                            })
+                                            title: 'Lỗi!',
+                                            text: response.message,
+                                            icon: 'error'
+                                        });
                                     }
 
-                                });
-                            }
-                        });
+                                },
+                                error: function(xhr, status, error) {
+                                    // Xóa tất cả lỗi hiện tại trên giao diện
+                                    var listSpans = document.querySelectorAll(".spanError");
+                                    listSpans.forEach(function(item) {
+                                        item.innerHTML = '';
+                                    });
+
+                                    // Xử lý lỗi ajax nếu có
+                                    var errorResponse = JSON.parse(xhr.responseText);
+
+                                    // Lặp qua từng trường lỗi
+                                    Object.keys(errorResponse.errors).forEach(function(
+                                        fieldName) {
+                                        // `fieldName` là tên trường có lỗi
+                                        var errorMessages = errorResponse.errors[
+                                            fieldName];
+
+                                        // Lặp qua từng thông điệp lỗi trong mảng
+                                        errorMessages.forEach(function(
+                                            errorMessage) {
+                                            var listSpans = document
+                                                .querySelectorAll(
+                                                    ".spanError");
+
+                                            listSpans.forEach(function(
+                                                item) {
+                                                if (item.dataset.tag
+                                                    .trim() ==
+                                                    fieldName.trim()
+                                                ) {
+                                                    // Hiển thị lỗi chỉ ở trường tương ứng
+                                                    item.innerHTML =
+                                                        errorMessage;
+                                                }
+                                            });
+                                        });
+                                    });
+
+                                    Swal.fire({
+                                            title: 'Lỗi!',
+                                            text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
+                                            icon: 'error'
+                                        })
+                                        .then(function(status) {
+                                            location.reload();
+                                        })
+                                }
+
+                            });
+                        }
                     });
                 });
-            </script>
-            <!-- --------------------------------------------- !-->
-        @endsection
+            });
+        </script>
+        <!-- --------------------------------------------- !-->
+    @endsection
