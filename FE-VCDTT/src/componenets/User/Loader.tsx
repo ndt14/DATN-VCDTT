@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
+import { useGetLoaderQuery } from "../../api/setting";
+import { Setting } from "../../interfaces/Setting";
 
 const Loader = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const {data:dataLoader} = useGetLoaderQuery();
 
   useEffect(() => {
     // Sử dụng setTimeout để đặt trạng thái isLoading thành false sau 2 giây
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // 2 giây
+    }, 3000); // 2 giây
 
     // Hủy bỏ timer khi component unmount
     return () => clearTimeout(timer);
@@ -17,7 +20,15 @@ const Loader = () => {
   return isLoading ? (
     <div id="siteLoader" className="site-loader">
       <div className="preloader-content">
-        <img src="../../../assets/images/loader1.gif" alt="" />
+
+         {dataLoader?.data.keyvalue.map(({value}:Setting)=>{
+                    return(
+                  <img
+                    src={value}
+                    alt=""
+                  />
+                  )
+                })}
       </div>
     </div>
   ) : null;

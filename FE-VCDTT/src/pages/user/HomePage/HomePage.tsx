@@ -4,7 +4,7 @@ import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
 
-import { SearchBar } from "../../../componenets";
+
 import { useGetToursQuery } from "../../../api/tours";
 import { Tour } from "../../../interfaces/Tour";
 import { Link } from "react-router-dom";
@@ -17,6 +17,9 @@ import { useUpdateFavoriteMutation } from "../../../api/favorite";
 import { AiFillEye } from "react-icons/ai";
 import { useGetBlogsQuery } from "../../../api/blogs";
 import { Blog } from "../../../interfaces/Blog";
+import { useGetBannerQuery } from "../../../api/setting";
+import { Setting } from "../../../interfaces/Setting";
+import SearchBar from "../../../componenets/User/SearchBar";
 
 const HomePage = () => {
   //
@@ -107,6 +110,29 @@ const HomePage = () => {
   if (titleElement) {
     titleElement.innerText = "Trang chủ - VCDTT";
   }
+  const removeVietnameseSigns = (str: any) => {
+    str = str.toLowerCase();
+    // Chuyển đổi các ký tự có dấu thành không dấu
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, 'a');
+    str = str.replace(/đ/g, 'd');
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, 'e');
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, 'i');
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, 'o');
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, 'u');
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, 'y');
+    return str;
+};
+
+const createSlugFromString = (inputString: any) => {
+    const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
+    return stringWithoutVietnameseSigns
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+};
+
 
   //blog
   const { data: dataBlog } = useGetBlogsQuery();
@@ -114,6 +140,8 @@ const HomePage = () => {
   const sortedDiscountedBlogs = _.orderBy(dataBlog?.data.blogs, ["id"]);
   const newBlogs = sortedDiscountedBlogs.slice(0, 3);
 
+  //banner
+  const {data: dataBanner} = useGetBannerQuery();
   return (
     <>
       <Loader />
@@ -124,12 +152,22 @@ const HomePage = () => {
           <div className="home-slider d-none d-md-block">
             <div className="home-banner-items">
               <div className="banner-inner-wrap">
-                <Carousel autoplay>
-                  <img src="../../../../assets/images/bg/bg1.jpg" alt="" />
-                  <img src="../../../../assets/images/bg/bg3.jpg" alt="" />
-                  <img src="../../../../assets/images/bg/bg6.jpg" alt="" />
-                  <img src="../../../../assets/images/bg/bg7.jpg" alt="" />
-                </Carousel>
+              <Carousel autoplay>
+                  {
+                    dataBanner?.data.banner.map(({url}: Setting)=>{
+                      return (
+                        <>
+                        <Carousel >
+                        <img src={url} alt="" />
+                        </Carousel>
+                     
+                         
+ 
+                        </>
+                      )
+                    })
+                  }
+                  </Carousel>
               </div>
               <div className="banner-content-wrap">
                 <div className="container"></div>
@@ -200,7 +238,7 @@ const HomePage = () => {
                             <div className="col-lg-4 col-md-6" key={id}>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}`}>
+                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -226,7 +264,7 @@ const HomePage = () => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}`}
+                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -251,7 +289,7 @@ const HomePage = () => {
                                     </div>
                                     <div className="text-description">
                                       <span
-                                        className=""
+                                        className="text-from-api"
                                         dangerouslySetInnerHTML={{
                                           __html: details,
                                         }}
@@ -277,7 +315,7 @@ const HomePage = () => {
                             <div className="col-lg-4 col-md-6" key={id}>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}`}>
+                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -303,7 +341,7 @@ const HomePage = () => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}`}
+                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -328,7 +366,7 @@ const HomePage = () => {
                                     </div>
                                     <div className="text-description">
                                       <span
-                                        className=""
+                                        className="text-from-api"
                                         dangerouslySetInnerHTML={{
                                           __html: details,
                                         }}
@@ -401,7 +439,7 @@ const HomePage = () => {
                               </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}`}>
+                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -430,7 +468,7 @@ const HomePage = () => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}`}
+                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -489,7 +527,7 @@ const HomePage = () => {
                               </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}`}>
+                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -524,7 +562,7 @@ const HomePage = () => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}`}
+                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -612,7 +650,8 @@ const HomePage = () => {
                           <div className="col-lg-4 col-md-6" key={id}>
                             <div className="package-wrap">
                               <figure className="feature-image">
-                                <Link to={`/tours/${id}`}>
+                                <Link  to={`/tours/${id}-${createSlugFromString(name)}.html`}
+>
                                   <img
                                     className="w-full img-fixed"
                                     src={main_img}
@@ -637,7 +676,8 @@ const HomePage = () => {
                                     <h3 className="margin-top-12 text-content">
                                       <Link
                                         className="mt-12"
-                                        to={`/tours/${id}`}
+                                        to={`/tours/${id}-${createSlugFromString(name)}.html`}
+
                                       >
                                         {name}
                                       </Link>
@@ -656,7 +696,7 @@ const HomePage = () => {
                                   </div>
                                   <div className="text-description">
                                     <span
-                                      className=""
+                                      className="text-from-api"
                                       dangerouslySetInnerHTML={{
                                         __html: details,
                                       }}
@@ -679,13 +719,15 @@ const HomePage = () => {
                         );
                       } else {
                         return (
+                          
                           <div
                             className="col-lg-4 col-md-6 position-relative"
                             key={id}
                           >
                             <div className="package-wrap">
                               <figure className="feature-image">
-                                <Link to={`/tours/${id}`}>
+                                <Link  to={`/tours/${id}-${createSlugFromString(name)}.html`}
+>
                                   <img
                                     className="w-full img-fixed"
                                     src={main_img}
@@ -710,7 +752,8 @@ const HomePage = () => {
                                     <h3 className="margin-top-12 text-content">
                                       <Link
                                         className="mt-12"
-                                        to={`/tours/${id}`}
+                                        to={`/tours/${id}-${createSlugFromString(name)}.html`}
+
                                       >
                                         {name}
                                       </Link>
@@ -731,7 +774,7 @@ const HomePage = () => {
                                   </div>
                                   <div className="text-description">
                                     <span
-                                      className=""
+                                      className="text-from-api"
                                       dangerouslySetInnerHTML={{
                                         __html: details,
                                       }}
@@ -757,8 +800,8 @@ const HomePage = () => {
                   )}
 
                   <ReactPaginate
-                    previousLabel={"Back"}
-                    nextLabel={"Next"}
+                    previousLabel={"<-"}
+                    nextLabel={"->"}
                     breakLabel={"..."}
                     pageCount={pageCount}
                     onPageChange={handlePageChange}
@@ -783,117 +826,7 @@ const HomePage = () => {
           </div>
         </section>
         {/*  */}
-        <section className="activity-section">
-          <div className="container">
-            <div className="section-heading text-center">
-              <div className="row">
-                <div className="col-lg-8 offset-lg-2">
-                  <h5 className="dash-style">Du lịch theo hoạt động</h5>
-                  <h2>LÝ DO NÊN ĐẶT TOUR VỚI VCDTT</h2>
-                  {/* <p>
-                    Mollit voluptatem perspiciatis convallis elementum corporis
-                    quo veritatis aliquid blandit, blandit torquent, odit
-                    placeat. Adipiscing repudiandae eius cursus? Nostrum magnis
-                    maxime curae placeat.
-                  </p> */}
-                </div>
-              </div>
-            </div>
-
-            <div className="activity-inner row">
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon6.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Cuộc phiêu lưu</a>
-                    </h4>
-                    {/* <p>15 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon10.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Đi bộ xuyên rừng</a>
-                    </h4>
-                    {/* <p>12 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon9.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Lửa trại</a>
-                    </h4>
-                    {/* <p>7 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon8.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Đường địa hình</a>
-                    </h4>
-                    {/* <p>15 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon7.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Cắm trại</a>
-                    </h4>
-                    {/* <p>13 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-2 col-md-4 col-sm-6">
-                <div className="activity-item">
-                  <div className="activity-icon">
-                    <a href="#">
-                      <img src="assets/images/icon11.png" alt="" />
-                    </a>
-                  </div>
-                  <div className="activity-content">
-                    <h4>
-                      <a href="#">Khám phá</a>
-                    </h4>
-                    {/* <p>25 Destination</p> */}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+       
         {/* <!-- best html end -->
             <!-- Home client section html start --> */}
 
@@ -926,15 +859,15 @@ const HomePage = () => {
                         <h3>
                           <Link to={`blogs/${id}`}>{title}</Link>
                         </h3>
-                        <div className="entry-meta">
-                          <span className="byline">{short_desc}</span>
-                          {/* <span className="posted-on">
-                        <a href="#">August 17, 2021</a>
-                      </span>
-                      <span className="comments-link">
-                        <a href="#">No Comments</a>
-                      </span> */}
-                        </div>
+                        <div className="text-description">
+                                    <span
+                                      className="text-from-api"
+                                      dangerouslySetInnerHTML={{
+                                        __html: short_desc,
+                                      }}
+                                    ></span>
+                                  </div>
+
                       </div>
                     </article>
                   </div>

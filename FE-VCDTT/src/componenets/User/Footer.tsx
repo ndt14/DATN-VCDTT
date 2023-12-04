@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 import MessengerChat from "./MessengerChat";
+import { useGetAddressQuery, useGetEmailWebQuery, useGetLogoQuery, useGetWebPhoneNumber1Query } from "../../api/setting";
+import { Setting } from "../../interfaces/Setting";
+import { useGetBlogsQuery } from "../../api/blogs";
+import _ from "lodash";
+import { Blog } from "../../interfaces/Blog";
+import moment from "moment";
 
 const Footer = () => {
+  const {data: dataPhone} = useGetWebPhoneNumber1Query()
+  const {data: dataEmail} = useGetEmailWebQuery()
+  const {data: dataAddress} = useGetAddressQuery()
+  const {data: dataLogo} = useGetLogoQuery()
+
+   //blog
+   const { data: dataBlog } = useGetBlogsQuery();
+   console.log(dataBlog);
+   const sortedDiscountedBlogs = _.orderBy(dataBlog?.data.blogs, ["id"]);
+   const newBlogs = sortedDiscountedBlogs.slice(0, 2);
   return (
     <>
           <MessengerChat/>
@@ -15,34 +31,38 @@ const Footer = () => {
       <div className="top-footer">
         <div className="container">
           <div className="row">
-            <div className="col-lg-3 col-md-6">
+            <div className="col-lg-4 col-md-6">
               <aside className="widget widget_text">
                 <h3 className="widget-title">Về VCDTT</h3>
                 <div className="textwidget widget-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus
-                  leo.
+                - VCDTT là một trang web bán tour du lịch đầy màu sắc và phong phú. <br />
+              - Chúng tôi cung cấp những trải nghiệm du lịch tuyệt vời với các tour độc đáo, dẫn đường chuyên nghiệp và dịch vụ chăm sóc khách hàng tận tâm. <br />
+               - Hãy ghé thăm VCDTT để khám phá những điểm đến hấp dẫn và tạo ra những kỷ niệm đáng nhớ!
                 </div>
-                <div className="award-img">
+                {/* <div className="award-img">
                   <a href="#">
                     <img src="assets/images/logo6.png" alt="" />
                   </a>
                   <a href="#">
                     <img src="assets/images/logo2.png" alt="" />
                   </a>
-                </div>
+                </div> */}
               </aside>
             </div>
-            <div className="col-lg-3 col-md-6">
+            <div className="col-lg-4 col-md-6">
               <aside className="widget widget_text">
                 <h3 className="widget-title">THÔNG TIN LIÊN HỆ</h3>
                 <div className="textwidget widget-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 Nếu có thắc mắc hãy liên hẹ với chúng tôi qua các phương thức liên lạc
                   <ul>
                     <li>
                       <a href="#">
                         <i className="fas fa-phone-alt"></i>
-                        +01 (977) 2599 12
+                        {dataPhone?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>{value}</span>
+                                         )
+                                         })}
                       </a>
                     </li>
                     <li>
@@ -50,67 +70,61 @@ const Footer = () => {
                         <i className="fas fa-envelope"></i>
                         <span
                           className="__cf_email__"
-                          data-cfemail="51323e3c21303f2811353e3c30383f7f323e3c"
+                         
                         >
-                          [email&#160;protected]
+                          {dataEmail?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>{value}</span>
+                                         )
+                                         })}
                         </span>
                       </a>
                     </li>
                     <li>
                       <i className="fas fa-map-marker-alt"></i>
-                      3146 Koontz, California
+                      {dataAddress?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>{value}</span>
+                                         )
+                                         })}
                     </li>
                   </ul>
                 </div>
               </aside>
             </div>
-            <div className="col-lg-3 col-md-6">
+            <div className="col-lg-4 col-md-6">
               <aside className="widget widget_recent_post">
                 <h3 className="widget-title">BÀI VIẾT MỚI NHẤT</h3>
-                <ul>
-                  <li>
-                    <h5>
-                      <a href="#">
-                        Life is a beautiful journey not a destination
-                      </a>
-                    </h5>
-                    <div className="entry-meta">
-                      <span className="post-on">
-                        <a href="#">August 17, 2021</a>
-                      </span>
-                      <span className="comments-link">
-                        <a href="#">No Comments</a>
-                      </span>
-                    </div>
-                  </li>
-                  <li>
-                    <h5>
-                      <a href="#">Take only memories, leave only footprints</a>
-                    </h5>
-                    <div className="entry-meta">
-                      <span className="post-on">
-                        <a href="#">August 17, 2021</a>
-                      </span>
-                      <span className="comments-link">
-                        <a href="#">No Comments</a>
-                      </span>
-                    </div>
-                  </li>
-                </ul>
+                {newBlogs?.map(({ id, title, created_at }: Blog) => {
+return(
+  <ul key={id}>
+  <li className="mt-2">
+    <h5>
+      <a href="#">
+       {title}
+      </a>
+    </h5>
+    <div className="entry-meta">
+      <span className="post-on">
+        <a href="#"> {moment(created_at).format(
+                                                "DD/MM/YYYY"
+                                              )}</a>
+      </span>
+      {/* <span className="comments-link">
+        <a href="#">No Comments</a>
+      </span> */}
+    </div>
+  </li>
+ 
+</ul>
+)
+
+})}
+               
               </aside>
             </div>
-            <div className="col-lg-3 col-md-6">
-              <aside className="widget widget_newslatter">
-                <h3 className="widget-title">ĐĂNG KÝ</h3>
-                <div className="widget-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </div>
-                <form className="newslatter-form">
-                  <input type="email" name="s" placeholder="Email của bạn.." />
-                  <input type="submit" name="s" value="ĐĂNG KÝ NGAY" />
-                </form>
-              </aside>
-            </div>
+          
+
           </div>
         </div>
       </div>
@@ -136,10 +150,14 @@ const Footer = () => {
             <div className="col-md-4 text-center">
               <div className="footer-logo">
                 <Link to="">
+                {dataLogo?.data.keyvalue.map(({value}:Setting)=>{
+                    return(
                   <img
-                    src="assets/images/VCDTT_logo-removebg-preview.png"
+                    src={value}
                     alt=""
                   />
+                  )
+                })}
                 </Link>
               </div>
             </div>
