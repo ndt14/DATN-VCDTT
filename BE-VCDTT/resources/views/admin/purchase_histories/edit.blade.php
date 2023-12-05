@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                        Overview
-                                                                                        </div> -->
+                                                                                                Overview
+                                                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -65,7 +65,7 @@
                     <form id="frmAdd" class="card border-0 shadow-lg rounded-4 " action="" method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
-                                Chỉnh sửa đơn đặt: {{ $items['name'] }}
+                                Chỉnh sửa đơn đặt của khách hàng: {{ $items['name'] }}
                             </h2>
                             <button id="btnSubmitAdd" type="button" class="btn btn-indigo ms-auto"
                                 data-id="{{ $items['id'] }}">Sửa</button>
@@ -208,8 +208,8 @@
                                 <div class="hr-text fs-2">Chỉnh sửa thông tin</div>
                                 <div class="row">
                                     <div class="mb-3 col-9">
-                                        <label class="form-label">Tên người dùng</label>
-                                        <span name="user_id">{{ $items['name'] }}
+                                        <label class="form-label fs-2">Tên người dùng</label>
+                                        <span name="user_id" class="fs-2">{{ $items['name'] }}
                                         </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('name')
@@ -218,10 +218,10 @@
                                         </span>
                                     </div>
                                     <div class="mb-3 col-3">
-                                        <label class="form-label">ID người dùng</label>
-                                        <span name="user_id">{{ $items['user_id'] }}
+                                        <label class="form-label fs-2">ID người dùng</label>
+                                        <span name="user_id" class="fs-2">{{ $items['user_id'] }}
                                         </span>
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start ">
                                             @error('user_id')
                                                 {{ $message }}
                                             @enderror
@@ -290,8 +290,8 @@
                                 <div class="row">
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Số trẻ em</div>
-                                        <input name="child_count" type="text" placeholder="Nhập số trẻ em"
-                                            class="form-control" value="{{ $items['child_count'] }}">
+                                        <span name="child_count">{{ $items['child_count'] }}
+                                        </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('child_count')
                                                 {{ $message }}
@@ -300,8 +300,8 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Giá trẻ em</div>
-                                        <input name="tour_child_price" type="text" placeholder="Nhập giá cho trẻ nhỏ"
-                                            class="form-control" value="{{ $items['tour_child_price'] }}">
+                                        <span name="tour_child_price">{{ $items['tour_child_price'] }}
+                                        </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_child_price')
                                                 {{ $message }}
@@ -310,8 +310,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Số người lớn</div>
-                                        <input name="adult_count" type="text" placeholder="Nhập số người lớn"
-                                            class="form-control" value="{{ $items['adult_count'] }}">
+                                        <span name="adult_count">{{ $items['adult_count'] }} </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('adult_count')
                                                 {{ $message }}
@@ -320,8 +319,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Giá người lớn</div>
-                                        <input name="tour_adult_price" type="text" placeholder="Nhập giá cho người lớn"
-                                            class="form-control" value="{{ $items['tour_adult_price'] }}">
+                                        <span name="tour_adult_price">{{ $items['tour_adult_price'] }} </span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_adult_price')
                                                 {{ $message }}
@@ -370,9 +368,9 @@
 
                                 <div class="row">
                                     <div class="mb-3 col-3">
-                                        <div class="form-label">Tour đang giảm giá (%)</div>
+                                        <div class="form-label">Tour giảm giá (%)</div>
                                         <input name="tour_sale_percentage" type="text" class="form-control"
-                                            placeholder="Nhập phần trăm giảm giá của tour"
+                                            placeholder="Phần trưam giảm giá tour"
                                             value="{{ $items['tour_sale_percentage'] }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_sale_percentage')
@@ -393,7 +391,7 @@
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Phần trăm giảm giá</div>
                                         <input name="coupon_percentage" type="text" class="form-control"
-                                            placeholder="Nhập phần trăm giảm giá của mã giảm giá"
+                                            placeholder="Nhập phần trăm giảm giá (mã giảm giá)"
                                             value="{{ $items['coupon_percentage'] }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_percentage')
@@ -402,9 +400,9 @@
                                         </span>
                                     </div>
                                     <div class="mb-3 col-3">
-                                        <div class="form-label">Số tiền được giảm trực tiếp</div>
+                                        <div class="form-label">Số tiền giảm thẳng</div>
                                         <input name="coupon_fixed" type="text" class="form-control"
-                                            placeholder="Nhập phần trăm giảm giá của mã giảm giá"
+                                            placeholder="Số tiền giảm thẳng (mã giảm giá)"
                                             value="{{ $items['coupon_fixed'] }}">
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_fixed')
@@ -439,7 +437,7 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Thời gian kết thúc</div>
                                         <input name="tour_end_time" type="text" placeholder="Nhập điểm kết thúc tour"
-                                            class="form-control" value="{{ $items['tour_end_time'] }}">
+                                            class="form-control" value="{{ $items['tour_end_time'] }}" disabled>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_end_time')
                                                 {{ $message }}

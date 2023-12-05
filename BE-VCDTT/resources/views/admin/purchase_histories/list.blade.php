@@ -46,12 +46,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                        </div>
-                                        entries
-                                        </div>-->
+                                            Show
+                                            <div class="mx-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                            </div>
+                                            entries
+                                            </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -230,67 +230,80 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @switch($item->purchase_status)
-                                                        @case(1)
-                                                            <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
-                                                        @break
+                                                    @if ($item->payment_status == 2)
+                                                        @switch($item->purchase_status)
+                                                            @case(2)
+                                                                <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
+                                                            @break
 
-                                                        @case(2)
-                                                            <span class="badge bg-orange-lt">Chưa phê duyệt thanh toán</span>
-                                                        @break
+                                                            @case(3)
+                                                                <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
+                                                            @break
 
-                                                        @case(3)
-                                                            <span class="badge bg-green-lt">Đã phê duyệt thanh toán</span>
-                                                        @break
+                                                            @case(4)
+                                                                <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
+                                                            @break
 
-                                                        @case(4)
-                                                            <span class="badge bg-orange-lt">Đang muốn hủy tour</span>
-                                                        @break
+                                                            @case(5)
+                                                                <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
+                                                                    tiền</span>
+                                                            @break
 
-                                                        @case(5)
-                                                            <span class="badge bg-red-lt">Đã phê duyệt hủy tour, chưa hoàn
-                                                                tiền</span>
-                                                        @break
+                                                            @case(6)
+                                                                <span class="badge bg-green-lt">Đã hủy thành công @if ($item->payment_status == 1)
+                                                                        (đã hoàn tiền)
+                                                                    @endif </span>
+                                                            @break
 
-                                                        @case(6)
-                                                            <span class="badge bg-green-lt">Đã hủy thành công @if ($item->payment_status == 1)
-                                                                    (đã hoàn tiền)
-                                                                @endif </span>
-                                                        @break
+                                                            @case(7)
+                                                                <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
+                                                            @break
 
-                                                        @case(7)
-                                                            <span class="badge bg-orange-lt">Chuyển khoản thiếu</span>
-                                                        @break
+                                                            @case(8)
+                                                                <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
+                                                            @break
 
-                                                        @case(8)
-                                                            <span class="badge bg-orange-lt">Chuyển khoản thừa</span>
-                                                        @break
-
-                                                        @default
-                                                        @break
-                                                    @endswitch
+                                                            @default
+                                                            @break
+                                                        @endswitch
+                                                    @else
+                                                        @if ($item->purchase_status == 1)
+                                                            <span class="badge bg-green-lt">Quá hạn thanh toán</span>
+                                                        @else
+                                                            <span class="badge bg-muted-lt">Đơn chưa thanh toán</span>
+                                                        @endif
+                                                    @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @switch($item->tour_status)
-                                                        @case(1)
-                                                            <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
-                                                        @break
+                                                    @if ($item->payment_status == 2)
+                                                        @if ($item->purchase_status != 6)
+                                                            @switch($item->tour_status)
+                                                                @case(1)
+                                                                    <span class="badge bg-muted-lt">Chưa tới ngày đi</span>
+                                                                @break
 
-                                                        @case(2)
-                                                            <span class="badge bg-green-lt">Đang diễn ra</span>
-                                                        @break
+                                                                @case(2)
+                                                                    <span class="badge bg-green-lt">Đang diễn ra</span>
+                                                                @break
 
-                                                        @case(3)
-                                                            <span class="badge bg-red-lt">Đã kết thúc</span>
-                                                        @break
+                                                                @case(3)
+                                                                    <span class="badge bg-red-lt">Đã kết thúc</span>
+                                                                @break
 
-                                                        @case(4)
-                                                            <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi tour</span>
-                                                        @break
+                                                                @case(4)
+                                                                    <span class="badge bg-orange-lt">Còn 1 ngày tới ngày đi
+                                                                        tour</span>
+                                                                @break
 
-                                                        @default
-                                                        @break
-                                                    @endswitch
+                                                                @default
+                                                                @break
+                                                            @endswitch
+                                                        @elseif ($item->purchase_status == 6)
+                                                            <span class="badge bg-red-lt">Đã hủy đơn</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-muted-lt">Đơn chưa thanh toán</span>
+                                                    @endif
                                                 </td>
                                                 <td class="text-end">
                                                     @if (auth()->user()->can('edit bill') || auth()->user()->is_admin == 1)
@@ -395,16 +408,16 @@
                                         <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
                                     </li>
                                 @endfor
-                                @if ( $data->currentPage() < $data->lastPage() - 3)
+                                @if ($data->currentPage() < $data->lastPage() - 3)
                                     <li class="page-item">
                                         ...
                                     </li>
                                 @endif
                                 @if ($data->lastPage() != 1 && $data->currentPage() < $data->lastPage() - 2)
-                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link"
-                                        href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
-                                </li>
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link"
+                                            href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                    </li>
                                 @endif
                                 <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
