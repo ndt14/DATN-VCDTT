@@ -1,18 +1,20 @@
 import Loader from '../../../componenets/User/Loader';
 import { useGetFaqsQuery } from '../../../api/faqs';
 import { Faq } from '../../../interfaces/Faq';
+import SecondaryBanner from '../../../componenets/User/SecondaryBanner';
 
 
 const FaqsPage = () => {
    const {data} = useGetFaqsQuery();
    console.log(data);
    
-    const backgroundImageUrl = 'assets/images/inner-banner.jpg'; 
+   //  const backgroundImageUrl = 'assets/images/inner-banner.jpg'; 
 
-    const containerStyle = {
-      background: `url(${backgroundImageUrl})`,
-      backgroundSize: 'cover', 
-    };
+   //  const containerStyle = {
+   //    background: `url(${backgroundImageUrl})`,
+   //    backgroundSize: 'cover', 
+   //  };
+   const dataTitle = "Faqs"
   return (
     <>
     <Loader/>
@@ -20,7 +22,9 @@ const FaqsPage = () => {
        
        <main id="content" className="site-main">
           {/* <!-- Inner Banner html start--> */}
-          <section className="inner-banner-wrap">
+
+          <SecondaryBanner>{dataTitle}</SecondaryBanner>
+          {/* <section className="inner-banner-wrap">
              <div className="inner-baner-container" style={containerStyle}>
                 <div className="container">
                    <div className="inner-banner-content">
@@ -29,7 +33,7 @@ const FaqsPage = () => {
                 </div>
              </div>
              <div className="inner-shape"></div>
-          </section>
+          </section> */}
           {/* <!-- Inner Banner html end-->
           <!-- faq html start --> */}
           <div className="faq-page-section">

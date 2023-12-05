@@ -6,7 +6,7 @@ import {
 } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
-import { Button } from "antd";
+import { Button, Skeleton } from "antd";
 import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
@@ -17,6 +17,7 @@ import { ChangeEvent } from "react";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 // import { spawn } from "child_process";
 
 const MySwal = withReactContent(Swal);
@@ -24,7 +25,7 @@ const MySwal = withReactContent(Swal);
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
+  const { data: TourData, isLoading } = useGetBillsWithUserIDQuery(userId || "");
   const { data: userData } = useGetUserByIdQuery(userId || "");
   const [updateBill] = useUpdateBillMutation();
 
@@ -51,7 +52,7 @@ const UserTour = () => {
 
   const [hasFormChanged, setHasFormChanged] = useState(false);
 
-  const [selectedForm, setSelectedForm] = useState<number>(0); //id form hủy tour cho đơn hàng
+  const [selectedForm, setSelectedForm] = useState<number>(); //id form hủy tour cho đơn hàng
   const [selectedDetailModal, setSelectedDetailModal] = useState<
     number | null | undefined
   >(null);
@@ -199,26 +200,18 @@ const UserTour = () => {
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
+  const dataTitle = "Tour đã đặt"
 
   return (
+
     <div>
-      <section className="inner-banner-wrap">
-        <div
-          className="inner-baner-container"
-          style={{
-            backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
-          }}
-        >
-          <div className="container">
-            <div className="inner-banner-content">
-              <h1 className="inner-title">Thông tin tài khoản</h1>
-            </div>
-          </div>
-        </div>
-        <div className="inner-shape"></div>
-      </section>
+                <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
+        {isLoading ? (
+                    <Skeleton active />
+                  ) : (
           <div className="col-4">
             <div className="border">
               <div className="d-flex p-3">
@@ -260,10 +253,16 @@ const UserTour = () => {
               {/* End left panel */}
             </div>
           </div>
+
+                  )}
+          {isLoading ? (
+                    <Skeleton active />
+                  ) : (
           <div className="col-8">
             {/*  */}
-
+           
             <h3>Danh sách tour</h3>
+            
             {currentData?.map(
               ({
                 id,
@@ -662,11 +661,11 @@ const UserTour = () => {
                         </Modal.Body>
                         <Modal.Footer>
                           <Button onClick={handleModalCloseDetail}>
-                            Close
+                            Đóng
                           </Button>
-                          <Button onClick={handleModalCloseDetail}>
+                          {/* <Button onClick={handleModalCloseDetail}>
                             Save Changes
-                          </Button>
+                          </Button> */}
                         </Modal.Footer>
                       </Modal>
 
@@ -734,7 +733,7 @@ const UserTour = () => {
                               <div className="text-center">
                                 {/* Thêm nút "Chuyển khoản thành công" */}
                                 <button
-                                  className="btn btn-danger"
+                                  className="btn btn-danger mr-2"
                                   onClick={handleModalCloseQR}
                                 >
                                   Thoát
@@ -966,14 +965,14 @@ const UserTour = () => {
                       </div>
 
                       {/* Modal xác nhận hủy tour */}
-                      {selectedForm && (
+                      {/* {selectedForm && ( */}
                         <Modal
                           show={selectedForm == id}
                           onHide={handleModalCancelClose}
                         >
                           <Modal.Header closeButton>
                             <Modal.Title>
-                              Form xác nhận hoàn tiền {id}
+                              Form xác nhận hoàn tiền 
                             </Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
@@ -1057,12 +1056,12 @@ const UserTour = () => {
                           </Modal.Body>
                           <Modal.Footer>
                             <Button onClick={handleSubmit}>Gửi</Button>
-                            <Button onClick={handleModalCancelClose}>
+                            {/* <Button onClick={handleModalCancelClose}>
                               Save Changes
-                            </Button>
+                            </Button> */}
                           </Modal.Footer>
                         </Modal>
-                      )}
+                      {/* )} */}
 
                       <div
                         className="modal fade"
@@ -1101,7 +1100,7 @@ const UserTour = () => {
                 );
               }
             )}
-
+                 
             <ReactPaginate
               previousLabel={"<-"}
               nextLabel={"->"}
@@ -1112,6 +1111,7 @@ const UserTour = () => {
               activeClassName={"active"}
             />
           </div>
+                  )}
         </div>
       </section>
     </div>

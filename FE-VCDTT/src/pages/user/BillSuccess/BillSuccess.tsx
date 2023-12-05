@@ -5,6 +5,7 @@ import { Bill } from "../../../interfaces/Bill";
 // import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const BillSuccess = () => {
   const handlePrintPDF = () => {
@@ -146,25 +147,13 @@ const BillSuccess = () => {
   //   phone: "Số điện thoại:",
   // };
 
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
 
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
-  };
 
+const dataTitle = "Tình trạng thanh toán"
   return (
     <div>
-      <section className="inner-banner-wrap">
-        <div className="inner-baner-container" style={containerStyle}>
-          <div className="container">
-            <div className="inner-banner-content">
-              <h1 className="inner-title">Tình trạng thanh toán</h1>
-            </div>
-          </div>
-        </div>
-        <div className="inner-shape"></div>
-      </section>
+          <SecondaryBanner>{dataTitle}</SecondaryBanner>
+      
       <div className="container">
         {transactionStatus === "00" ? (
           <div>

@@ -28,6 +28,10 @@ const SettingApi = createApi({
             query: () => `/banner`,
             providesTags: ['Keyvalue']
         }),
+        getSubBanner: builder.query<Setting, void>({
+            query: () => `/keyvalue/subBanner`,
+            providesTags: ['Keyvalue']
+        }),
         getBankAccountName: builder.query<Setting, void>({
             query: () => `/keyvalue/bankAccountName`,
             providesTags: ['Keyvalue']
@@ -71,7 +75,8 @@ export const {
     useGetFaviconQuery,
     useGetWebPhoneNumber1Query,
     useGetWebTitleQuery,
-    useGetLoaderQuery
+    useGetLoaderQuery,
+    useGetSubBannerQuery
 
  } = SettingApi;
 export const settingReducer = SettingApi.reducer;

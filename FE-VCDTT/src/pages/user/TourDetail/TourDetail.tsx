@@ -21,6 +21,7 @@ import "dayjs/locale/en";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const MySwal = withReactContent(Swal);
 
@@ -111,12 +112,7 @@ const TourDetail = () => {
     }
     return true; // Vô hiệu hóa tất cả các ngày nếu current là null
   };
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
-
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
-  };
+  
   //
 
   const [productNumber, setProductNumber] = useState(1);
@@ -335,21 +331,19 @@ const TourDetail = () => {
   if (titleElement) {
     titleElement.innerText = tourData?.data?.tour.name + " - " + "VCDTT";
   }
+
+  //banner
+
+  const dataTitle = "Tour chi tiết"
   return (
     <>
       {/* <Loader /> */}
       <main id="content" className="site-main">
         {/* <!-- Inner Banner html start--> */}
-        <section className="inner-banner-wrap">
-          <div className="inner-baner-container" style={containerStyle}>
-            <div className="container">
-              <div className="inner-banner-content">
-                <h2 className="inner-title">Tour chi tiết</h2>
-              </div>
-            </div>
-          </div>
-          <div className="inner-shape"></div>
-        </section>
+
+        <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
+  
         {/* <!-- Inner Banner html end--> */}
         <div className="single-tour-section">
           <div className="container">
@@ -612,6 +606,7 @@ const TourDetail = () => {
                       >
                         {/* mô tả tour  */}
                         <div className="overview-content">
+                          
                           <div
                             className="mt-3"
                             dangerouslySetInnerHTML={{
@@ -629,9 +624,13 @@ const TourDetail = () => {
                         aria-labelledby="program-tab"
                       >
                         {/* lịch trình */}
-                        <div className="mt-3">
-                          {tourData?.data?.tour.pathway}
-                        </div>
+                        <div
+                            className="mt-3"
+                            dangerouslySetInnerHTML={{
+                              __html: tourData?.data?.tour.pathway,
+                            }}
+                          ></div>
+                       
                       </div>
                       <div
                         className="tab-pane"

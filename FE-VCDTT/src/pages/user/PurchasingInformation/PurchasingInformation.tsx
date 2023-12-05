@@ -20,6 +20,7 @@ import Modal from "react-bootstrap/Modal";
 // type Props = {};
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const MySwal = withReactContent(Swal);
 
@@ -432,29 +433,20 @@ const PurchasingInformation = () => {
     titleElement.innerText = "Xác nhận thông tin";
   }
   //
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
-
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
-  };
+ 
   const openWindow = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
   };
+
+  //banner
+  const dataTitle = "Thanh toán"
+
   return (
     <>
       <main id="content" className="site-main">
         {/* <!-- Inner Banner html start--> */}
-        <section className="inner-banner-wrap">
-          <div className="inner-baner-container" style={containerStyle}>
-            <div className="container">
-              <div className="inner-banner-content">
-                <h1 className="inner-title">Thanh toán</h1>
-              </div>
-            </div>
-          </div>
-          <div className="inner-shape"></div>
-        </section>
+        <SecondaryBanner>{dataTitle}</SecondaryBanner>
+       
         {/* <!-- Inner Banner html end--> */}
 
         {/*  */}

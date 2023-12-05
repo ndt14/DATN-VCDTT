@@ -421,7 +421,7 @@ const Header = () => {
                               </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                                  <a onClick={openWindow}>Đăng nhập admin</a>
+                                  <Link onClick={openWindow} to={""}>Đăng nhập admin</Link>
                                 </li>
                               ) : null}
 

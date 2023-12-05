@@ -6,13 +6,10 @@ import { Blog } from "../../../interfaces/Blog";
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const BlogsPage = () => {
-  const backgroundImageUrl = "assets/images/inner-banner.jpg";
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
-  };
+ 
 
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
@@ -51,22 +48,16 @@ const createSlugFromString = (inputString: any) => {
         .replace(/-+$/, '');
 };
 
+//banner
+const dataTitle = "Bài viết"
   return (
     <>
       <Loader />
       <div id="page" className="full-page">
         <main id="content" className="site-main">
           {/* <!-- Inner Banner html start--> */}
-          <section className="inner-banner-wrap">
-            <div className="inner-baner-container" style={containerStyle}>
-              <div className="container">
-                <div className="inner-banner-content">
-                  <h2 className="inner-title">Bài viết</h2>
-                </div>
-              </div>
-            </div>
-            <div className="inner-shape"></div>
-          </section>
+          <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
           {/* <!-- Inner Banner html end--> */}
           <div className="archive-section blog-archive">
             <div className="archive-inner">
