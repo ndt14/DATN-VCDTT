@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                                Overview
-                                                                                                </div> -->
+                                                                                                        Overview
+                                                                                                        </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -67,7 +67,7 @@
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt của khách hàng: {{ $items['name'] }}
                             </h2>
-                            
+
                         </div>
                         @csrf
                         <div class="card-body">
@@ -204,6 +204,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if ($items['purchase_status'] == 4 || $items['purchase_status'] == 5 || $items['purchase_status'] == 6)
+                                    <div class="row">
+                                        <div class="mb-3 col-9">
+                                            <div class="form-label">Lý do hủy tour</div>
+                                            <span name="cancel_reason">{{ $items['cancel_reason'] }}
+                                            </span>
+                                        </div>
+                                        <div class="mb-3 col-3">
+                                            <div class="form-label">Số tài khoản</div>
+                                            <span name="bank_number">{{ $items['bank_number'] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="hr-text fs-2">Chỉnh sửa thông tin</div>
                                 <div class="row">
                                     <div class="mb-3 col-9">
@@ -555,10 +569,10 @@
                                     });
 
                                     Swal.fire({
-                                            title: 'Lỗi!',
-                                            text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
-                                            icon: 'error'
-                                        });
+                                        title: 'Lỗi!',
+                                        text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
+                                        icon: 'error'
+                                    });
                                 }
 
                             });
