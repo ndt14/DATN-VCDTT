@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                                        Overview
-                                                                                                        </div> -->
+                                                                                                    Overview
+                                                                                                    </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -67,7 +67,8 @@
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt của khách hàng: {{ $items['name'] }}
                             </h2>
-
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo ms-auto"
+                                data-id="{{ $items['id'] }}">Sửa</button>
                         </div>
                         @csrf
                         <div class="card-body">
