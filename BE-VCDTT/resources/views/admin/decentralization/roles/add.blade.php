@@ -449,11 +449,6 @@
                                 title: 'Lỗi!',
                                 text: 'Đã xảy ra lỗi khi thực hiện thêm vai trò',
                                 icon: 'error'
-                            })
-                            .then((response) => {
-                                if (response) {
-                                    location.reload();
-                                }
                             });
                     }
 

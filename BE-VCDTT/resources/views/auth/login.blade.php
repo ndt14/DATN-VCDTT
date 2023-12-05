@@ -18,7 +18,7 @@
       <div class="card-body">
         <h2 class="h2 text-center mb-4">Đăng nhập</h2>
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('login') }}" method="POST" id="loginForm">
         @csrf  
       <div>
             {{-- <x-input-label for="email" :value="__('Email')" /> --}}
@@ -66,7 +66,7 @@
             </label>
           </div>
           <div class="form-footer">
-            <button type="submit" class="btn btn-indigo w-100">Đăng nhập</button>
+            <button type="submit" class="btn btn-submit btn-indigo w-100">Đăng nhập</button>
           </div>
         </form>
       </div>
@@ -74,6 +74,17 @@
   </div>
 @endSection
 @section('page_js')
+<script type="text/javascript">
+   document.getElementById('loginForm').addEventListener('submit', function (event) {
+        // Ngăn chặn việc submit lần thứ 2 của form
+        if (this.getAttribute('data-submitted') === 'true') {
+            event.preventDefault();
+        } else {
+            // Đặt thuộc tính data-submitted thành true để chỉ ra rằng form đã được submit
+            this.setAttribute('data-submitted', 'true');
+        }
+    });
+</script>
 <script type="text/javascript">
    var notiError = document.querySelector("#notiError");
    if(notiError) {
