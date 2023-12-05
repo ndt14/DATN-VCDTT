@@ -365,7 +365,7 @@
                     <tr>
                         <td style="width: 100%;">
                             <table role="presentation" cellspacing="0" cellpadding="0" width="auto"
-                                class="in-center" border="0" style="margin-bottom: 96px">
+                                class="in-center" border="0" style="margin-bottom: 30px">
                                 <tr>
                                     <td>
                                         <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
@@ -373,19 +373,21 @@
                                             hàng của bạn</a>
                                     </td>
                                 </tr>
-                                @if ($purchase_status == 3)
+                            </table>
+
+                            @if ($purchase_status == 3)
+                                <table role="presentation" cellspacing="0" cellpadding="0" width="auto"
+                                    class="in-center" border="0" style="margin-bottom: 96px">
                                     <tr>
                                         <td>
                                             <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
                                                 target="_blank"
-                                                href="http://datn-vcdtt.test:5173/user/view-bill/{{ $purchase_history_id }}">In
+                                                href="https://vcdtt.online/user/view-bill/{{ $purchase_history_id }}">In
                                                 đơn hàng</a>
                                         </td>
                                     </tr>
-                                @endif
-
-                            </table>
-
+                                </table>
+                            @endif
                         </td>
                     </tr>
                     <!-- end content -->
