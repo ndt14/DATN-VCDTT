@@ -57,10 +57,12 @@
                                 </path>
                                 <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
                             </svg>
+                            @php $count = 0 @endphp
                             @foreach ($user->unreadNotifications as $notification)
-                                @if ($notification)
+                                @while ($notification && $count == 0)
+                                    @php $count++ @endphp
                                     <span class="badge bg-red" id="notificationDot"></span>
-                                @endif
+                                @endwhile
                             @endforeach
                         </a>
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
@@ -232,7 +234,7 @@
                         data-bs-placement="top"
                         data-bs-title="Chưa đọc"></span>
                     </div>
-                    <div class="col text-truncate " style="max-width:850px; width: 850px">
+                    <div class="col text-truncate " style="width:925px; max-width: 925px">
                         <a onclick="markAsRead('` + id + `')"
                         href="javascript: viewPurchaseHistoryDetail(${data.purchase_history_id});"
                             class="text-body d-block">
