@@ -447,12 +447,12 @@
                                 </div>
 
                             </div>
-                            <div class="card-footer text-end">
+                            {{-- <div class="card-footer text-end">
                                 <div class="mb-3">
                                     <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
                                         data-id="{{ $items['id'] }}">Sửa</button>
                                 </div>
-                            </div>
+                            </div> --}}
                         </form>
                     </div>
                 </div>

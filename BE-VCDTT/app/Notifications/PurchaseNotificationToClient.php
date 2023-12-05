@@ -24,6 +24,12 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
     protected $table;
     protected $user_id;
     protected $payment_status;
+    protected $tour_child_price;
+    protected $child_count;
+    protected $tour_adult_price;
+    protected $adult_count;
+    protected $tour_name;
+
 
     /**
      * Create a new notification instance.
@@ -39,6 +45,11 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
         $this->address = $purchase_history->address;
         $this->user_id = $purchase_history->user_id;
         $this->payment_status = $purchase_history->payment_status;
+        $this->tour_child_price = $purchase_history->tour_child_price;
+        $this->child_count = $purchase_history->child_count;
+        $this->tour_adult_price = $purchase_history->tour_adult_price;
+        $this->adult_count = $purchase_history->adult_count;
+        $this->tour_name = $purchase_history->tour_name;
 
         if ($purchase_history->purchase_method == 1) {
             $this->purchase_method = 'Chuyển khoản online';
@@ -69,6 +80,7 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Đơn hàng mới')
             ->view('mail.paid', [
+                'tour_name' => $this->tour_name,
                 'status' => $this->status,
                 'name' => $this->name,
                 'email' => $this->email,
@@ -77,7 +89,12 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
                 'purchase_method' => $this->purchase_method,
                 'transaction_id' => $this->transaction_id,
                 'updated_at' => $this->updated_at,
-                'payment_status' => $this->payment_status
+                'payment_status' => $this->payment_status,
+                'tour_child_price' => $this->tour_child_price,
+                'child_count' => $this->child_count,
+                'tour_adult_price' => $this->tour_adult_price,
+                'adult_count' => $this->adult_count,
+                'user_id' => $this->user_id
             ]);
     }
 
