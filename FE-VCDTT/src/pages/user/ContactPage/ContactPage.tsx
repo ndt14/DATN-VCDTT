@@ -3,15 +3,11 @@ import { useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { useGetAddressQuery, useGetEmailWebQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
 import { Setting } from '../../../interfaces/Setting';
+import SecondaryBanner from '../../../componenets/User/SecondaryBanner';
 
 
 const ContactPage = () => {
-    const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg'; 
-
-    const containerStyle = {
-      background: `url(${backgroundImageUrl})`,
-      backgroundSize: 'cover', 
-    }
+    
     const form = useRef<HTMLFormElement>(null!);
 
     const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,6 +57,7 @@ const ContactPage = () => {
         });
       }
     }, [dataAddress]);
+    const dataTitle = "Liên hệ chúng tôi"
    
   return (
    <>
@@ -69,16 +66,9 @@ const ContactPage = () => {
         
         <main id="content" className="site-main">
            {/* <!-- Inner Banner html start--> */}
-           <section className="inner-banner-wrap">
-              <div className="inner-baner-container" style={containerStyle}>
-                 <div className="container">
-                    <div className="inner-banner-content">
-                       <h2 className="inner-title">Liên hệ chúng tôi</h2>
-                    </div>
-                 </div>
-              </div>
-              <div className="inner-shape"></div>
-           </section>
+          <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
+          
            {/* <!-- Inner Banner html end-->
            <!-- contact form html start --> */}
            <div className="contact-page-section">

@@ -85,7 +85,7 @@ function CashPaymentModal(props: { modalData: { formattedFinalPrice: any; }; sho
       <Modal.Footer>
         <div className="text-center">
           {/* Thêm nút "Chuyển khoản thành công" */}
-          <button className="btn btn-danger" onClick={props.onHide}>
+          <button className="btn btn-danger mr-2" onClick={props.onHide}>
             Thoát
           </button>
           <button onClick={updateBill} className="btn btn-success">

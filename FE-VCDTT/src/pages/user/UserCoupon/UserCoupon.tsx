@@ -11,6 +11,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import { useGetCouponByUserQuery } from "../../../api/coupon";
 import { Coupon } from "../../../interfaces/Coupon";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 
 const UserCoupon = () => {
@@ -69,24 +70,14 @@ const columns = [
     name: userName,
     email: userEmail,
   } = userData?.data?.user ?? {};
+
+  const dataTitle = "Mã giảm giá"
+
   return (
     <>
     <div>
-      <section className="inner-banner-wrap">
-        <div
-          className="inner-baner-container"
-          style={{
-            backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
-          }}
-        >
-          <div className="container">
-            <div className="inner-banner-content">
-              <h1 className="inner-title">Mã Giảm giá</h1>
-            </div>
-          </div>
-        </div>
-        <div className="inner-shape"></div>
-      </section>
+    <SecondaryBanner>{dataTitle}</SecondaryBanner>
+     
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
           <div className="col-4">

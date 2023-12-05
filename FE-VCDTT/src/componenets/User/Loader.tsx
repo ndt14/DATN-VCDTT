@@ -10,7 +10,7 @@ const Loader = () => {
     // Sử dụng setTimeout để đặt trạng thái isLoading thành false sau 2 giây
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // 2 giây
+    }, 1000); // 2 giây
 
     // Hủy bỏ timer khi component unmount
     return () => clearTimeout(timer);
