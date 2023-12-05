@@ -208,11 +208,6 @@
                             title: 'Lỗi!',
                             text: 'Đã xảy ra lỗi khi thực hiện cấp quyền',
                             icon: 'error'
-                        })
-                        .then((response) => {
-                            if (response) {
-                                location.reload();
-                            }
                         });
                 }
 

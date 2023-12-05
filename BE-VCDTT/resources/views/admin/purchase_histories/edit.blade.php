@@ -67,8 +67,7 @@
                             <h2 class="card-title">
                                 Chỉnh sửa đơn đặt: {{ $items['name'] }}
                             </h2>
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo ms-auto"
-                                data-id="{{ $items['id'] }}">Sửa</button>
+                            
                         </div>
                         @csrf
                         <div class="card-body">
@@ -471,7 +470,6 @@
         <!-- Cập nhật đơn hàng !-->
         <script>
             $(document).ready(function() {
-
                 $('#btnSubmitAdd').click(function(e) {
                     e.preventDefault();
 
@@ -562,10 +560,7 @@
                                             title: 'Lỗi!',
                                             text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
                                             icon: 'error'
-                                        })
-                                        .then(function(status) {
-                                            location.reload();
-                                        })
+                                        });
                                 }
 
                             });

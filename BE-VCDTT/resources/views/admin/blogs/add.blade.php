@@ -229,11 +229,6 @@
                                     title: 'Thành công!',
                                     text: response.message,
                                     icon: 'success'
-                                })
-                                .then((response) => {
-                                    if (response) {
-                                        location.reload();
-                                    }
                                 });
                         } else {
                             Swal.fire({

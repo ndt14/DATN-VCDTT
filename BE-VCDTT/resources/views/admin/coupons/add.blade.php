@@ -250,11 +250,6 @@
                                 title: 'Lỗi!',
                                 text: 'Đã xảy ra lỗi khi thực hiện thêm mã giảm giá',
                                 icon: 'error'
-                            })
-                            .then((response) => {
-                                if (response) {
-                                    location.reload();
-                                }
                             });
                     }
 
