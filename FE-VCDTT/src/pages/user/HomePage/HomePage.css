@@ -74,17 +74,19 @@ img {
 
 .text-description {
     /* Đặt chiều cao tối đa để chỉ hiển thị 2 dòng và ẩn phần còn lại */
-    max-height: 3em; /* Độ cao của 2 dòng text với line-height thông thường */
+    max-height: 3em;
+    /* Độ cao của 2 dòng text với line-height thông thường */
     overflow: hidden;
-    text-overflow: ellipsis; /* Thêm dấu ba chấm khi vượt quá chiều cao đã đặt */
+    text-overflow: ellipsis;
+    /* Thêm dấu ba chấm khi vượt quá chiều cao đã đặt */
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Số dòng tối đa hiển thị */
+    -webkit-line-clamp: 2;
+    /* Số dòng tối đa hiển thị */
     -webkit-box-orient: vertical;
-  }
-  
-  /* Style cho text từ API */
-  .text-from-api {
+}
+
+/* Style cho text từ API */
+.text-from-api {
     display: block;
     /* Thêm các style khác tùy thuộc vào thiết kế của bạn */
-  }
-  
+}

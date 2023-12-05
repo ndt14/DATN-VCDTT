@@ -25,6 +25,7 @@ import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import UserPolicy from "../pages/user/UserPolicy/UserPolicy";
+import BillPrint from "../pages/user/BillPrint/BillPrint";
 
 function ScrollToTopOnNavigation() {
   const { pathname } = useLocation();
@@ -77,6 +78,7 @@ const PublicRoutes = () => {
         <Route path="*" element={<NotFoundPage />}></Route>
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
         <Route path="user/policy/:id" element={<UserPolicy />} />
+        <Route path="user/view-bill/:id" element={<BillPrint />} />
       </Routes>
     </>
   );
