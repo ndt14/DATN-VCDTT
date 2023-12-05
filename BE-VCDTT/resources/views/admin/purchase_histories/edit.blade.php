@@ -205,6 +205,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if ($items['purchase_status'] == 4 || $items['purchase_status'] == 5 || $items['purchase_status'] == 6)
+                                    <div class="row">
+                                        <div class="mb-3 col-9">
+                                            <div class="form-label">Lý do hủy tour</div>
+                                            <span name="cancel_reason">{{ $items['cancel_reason'] }}
+                                            </span>
+                                        </div>
+                                        <div class="mb-3 col-3">
+                                            <div class="form-label">Số tài khoản</div>
+                                            <span name="bank_number">{{ $items['bank_number'] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="hr-text fs-2">Chỉnh sửa thông tin</div>
                                 <div class="row">
                                     <div class="mb-3 col-9">
