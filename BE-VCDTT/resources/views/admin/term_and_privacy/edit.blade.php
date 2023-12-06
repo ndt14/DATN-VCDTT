@@ -85,7 +85,7 @@
                                     @enderror
                                 </span>
                             </div>
-                            <input type="hidden" name="type" value="3">
+                            <input type="hidden" name="type" value="{{ $response->type }}">
                             <div class="mb-3">
                                 <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
