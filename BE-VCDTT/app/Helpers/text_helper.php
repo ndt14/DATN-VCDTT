@@ -9,7 +9,7 @@ function string_truncate($string, $length = 30) {
 }
 
 function time_format($time){
-    return \Carbon\Carbon::parse($time)->format('Y-m-d H:i:s');
+    return \Carbon\Carbon::parse($time)->setTimezone(env('APP_TIMEZONE'))->format('Y-m-d H:i:s');
 }
 
 function money_format($number)
