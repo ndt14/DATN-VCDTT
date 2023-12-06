@@ -4,8 +4,8 @@
 </div>
 <div class="card border-0 shadow-lg rounded-4 ">
     <div class="row g-0">
-        <div class="col d-flex flex-column">
-            <div class="card-body">
+        <div class="col d-flex flex-column" style="height: 35rem;">
+            <div class="card-body card-body-scrollable">
                 <h3 class="card-title">{{ $item['title'] }}</h3>
 
                 <div class="row g-3">
