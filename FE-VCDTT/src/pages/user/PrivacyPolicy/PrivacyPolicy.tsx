@@ -1,23 +1,33 @@
 import { useGetPrivacyQuery } from "../../../api/privacy";
 import { Privacy } from "../../../interfaces/Privacy";
-import { useGetBankNameQuery, useGetLogoQuery } from "../../../api/setting";
+import { Skeleton } from "antd";
 
 
 
 const PrivacyPolicy = () => {
-  const {data} = useGetPrivacyQuery();
+  const {data, isLoading} = useGetPrivacyQuery();
   console.log(data);
   const privacy = data?.data?.privacy;
-  const {data:logo} = useGetLogoQuery()
-  console.log(logo);
-  const {data:bankName} = useGetBankNameQuery()
-  console.log(bankName);
+
  return(
   <>
+
+
   <div className="container">
-    <h3 className="text-center">Chính sách & Điều khoản </h3>
-{
-  privacy?.map(({content}:Privacy)=>{
+    {/* <h3 className="text-center">Chính sách & Điều khoản </h3> */}
+    {isLoading ? (
+                <div>
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+              </div>
+ 
+
+              ) : (
+   <div>
+  {privacy?.map(({content}:Privacy)=>{
     return(
       <>
       <div>
@@ -31,9 +41,12 @@ const PrivacyPolicy = () => {
       </div>
       </>
     )
-  })
-}
+  })}
+
+
   </div>
+              )}
+              </div>
   </>
  )
 };

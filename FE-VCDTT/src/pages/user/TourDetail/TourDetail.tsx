@@ -61,10 +61,13 @@ const TourDetail = () => {
 
   //
   const { id } = useParams<{ id: string }>();
+  
+  
   // const tourId = parseInt(id);
 
   const { data: tourData, isLoading } = useGetTourByIdQuery(id || "");
-  console.log(tourData);
+  // console.log(tourData);
+  const idTour = tourData?.data.tour.id;
   const [tour, setTour] = useState(tourData);
 
   let tourId;
@@ -87,7 +90,7 @@ const TourDetail = () => {
   const imageGallery = tourData?.data?.images;
   const tourLimit = tourData?.data?.tour.tourist_count;
   const tourSale = tourData?.data?.tour.sale_percentage;
-  console.log(tourSale);
+  // console.log(tourSale);
 
   const tourPrice = (preSaleTourPrice * (100 - tourSale)) / 100;
   const tourChildPrice = (preSaleTourChildPrice * (100 - tourSale)) / 100;
@@ -128,7 +131,7 @@ const TourDetail = () => {
   }, [tourPrice]);
 
   const tourSameCategory = tourData?.data?.toursSameCate;
-  console.log(tourSameCategory);
+  // console.log(tourSameCategory);
 
   const handleProductNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -268,8 +271,9 @@ const TourDetail = () => {
   const purchase_history = TourHistoryData?.data?.purchase_history;
   if (purchase_history) {
     var foundPurchase = purchase_history.find(
-      (purchase: { tour_id: number }) => purchase.tour_id === Number(id)
+      (purchase: { tour_id: number }) => purchase.tour_id === Number(idTour)
     );
+
 
     // console.log(foundPurchase.purchase_status);
 
@@ -335,6 +339,8 @@ const TourDetail = () => {
   //banner
 
   const dataTitle = "Tour chi tiết"
+  
+  
   return (
     <>
       {/* <Loader /> */}
@@ -866,7 +872,8 @@ const TourDetail = () => {
                           {tourSale != 0 ? (
                             <div className="col-sm-7">
                               <label htmlFor="" className="h6">
-                                Người lớn(150cm trở lên)
+                              Người lớn({">"}= 10 tuổi)
+
                               </label>
                               <div className="">
                                 <span className="font-weight-bold mr-3 text-decoration-line-through">
@@ -882,7 +889,7 @@ const TourDetail = () => {
                               <div className="price"></div>
 
                               <label htmlFor="" className="h6">
-                                Trẻ em dưới 150cm
+                              Trẻ em dưới 10 tuổi
                               </label>
                               <div className="">
                                 <span className="font-weight-bold mr-3 text-decoration-line-through">
@@ -900,11 +907,11 @@ const TourDetail = () => {
                           ) : (
                             <div className="col-sm-7">
                               <label htmlFor="" className="h6">
-                                Người lớn(150cm trở lên)
+                                Người lớn({">"}= 10 tuổi)
                               </label>
                               <div className="price">{formattedTourPrice}</div>
                               <label htmlFor="" className="h6">
-                                Trẻ em dưới 150cm
+                                Trẻ em dưới 10 tuổi
                               </label>
                               <div className="price">
                                 {formattedTourChildPrice}
@@ -1024,7 +1031,7 @@ const TourDetail = () => {
               </div>
             </div>
             <div>
-              <h2>Tour tương tự </h2>
+              <h3>Tour tương tự </h3>
 
               <div className="row">
                 {tourSameCategory?.map(
@@ -1039,7 +1046,7 @@ const TourDetail = () => {
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
-                        <div className="col-lg-4 col-md-6" key={id}>
+                        <div className="col-lg-3 col-md-6" key={id}>
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
@@ -1106,7 +1113,7 @@ const TourDetail = () => {
                       );
                     } else {
                       return (
-                        <div className="col-lg-4 col-md-6" key={id}>
+                        <div className="col-lg-3 col-md-6" key={id}>
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>

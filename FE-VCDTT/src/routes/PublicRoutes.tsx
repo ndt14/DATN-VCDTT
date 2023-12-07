@@ -15,6 +15,7 @@ import {
   PrivacyPolicy,
   Search,
   UserCoupon,
+  ServicePage,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
@@ -77,6 +78,7 @@ const PublicRoutes = () => {
         <Route path="reset-password/:token" element={<ResetPasswordModal />} />
         <Route path="*" element={<NotFoundPage />}></Route>
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
+        <Route path="service_account" element={<ServicePage />} />
         <Route path="user/policy/:id" element={<UserPolicy />} />
         <Route path="user/view-bill/:id" element={<BillPrint />} />
       </Routes>
