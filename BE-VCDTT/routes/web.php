@@ -193,7 +193,7 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     Route::get('/printInvoice/{id}', [PurchaseHistoryController::class, 'printInvoice'])->name('printInvoice');
 });
 
-// Route::get('/test', [PurchaseHistoryController::class, 'test']);
+Route::get('/test', [PurchaseHistoryController::class, 'test']);
 
 
 

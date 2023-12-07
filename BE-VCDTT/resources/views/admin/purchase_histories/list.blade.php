@@ -266,9 +266,9 @@
                                                             @default
                                                             @break
                                                         @endswitch
-                                                    @else
+                                                    @elseif ($item->payment_status == 1)
                                                         @if ($item->purchase_status == 1)
-                                                            <span class="badge bg-green-lt">Quá hạn thanh toán</span>
+                                                            <span class="badge bg-muted-lt">Quá hạn thanh toán</span>
                                                         @else
                                                             <span class="badge bg-muted-lt">Đơn chưa thanh toán</span>
                                                         @endif
@@ -326,7 +326,7 @@
                                                             </svg>
                                                         </a>
                                                     @endif
-                                                    <a class="btn btn-icon btn-outline-red"
+                                                    {{-- <a class="btn btn-icon btn-outline-red"
                                                         href="{{ route('printInvoice', ['id' => $item->id]) }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                             class="icon icon-tabler icon-tabler-printer" width="24"
@@ -340,7 +340,7 @@
                                                             <path
                                                                 d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
                                                         </svg>
-                                                    </a>
+                                                    </a> --}}
                                                     {{-- @if (auth()->user()->can('delete bill') ||
     auth()->user()->is_admin == 1)
                                                         <a class="btn btn-icon btn-outline-red"
