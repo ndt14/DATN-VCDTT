@@ -57,6 +57,17 @@ class Tour extends Model
     {
         $tour = Tour::find($this->id);
         $categories = new Category();
+        $rating = Rating::where('tour_id', $tour->id)->get();
+        if(count($rating)>0){
+            $cout_star=0;
+            foreach($rating as $value){
+                $cout_star+=$value->star;
+            }
+            $avg_star = round($cout_star/count($rating),1);
+        }else{
+            $avg_star = 0;
+        }
+
         $data = [
             //tour
             'tour_id' => $tour->id,
@@ -72,8 +83,9 @@ class Tour extends Model
             'details' => $tour->details,
             'location' => $tour->location,
             'exact_location' => $tour->exact_location,
-            'pathway' => $tour->pathway,
+            'pathway' => string_truncate($tour->pathway, 5000),
             'view_count' => $tour->view_count,
+            'rating' => $avg_star,
             'created_at' => time_format($tour->created_at),
             'updated_at' => time_format($tour->updated_at),
         ];
