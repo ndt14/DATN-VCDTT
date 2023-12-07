@@ -4,6 +4,10 @@ import emailjs from '@emailjs/browser';
 import { useGetAddressQuery, useGetEmailWebQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
 import { Setting } from '../../../interfaces/Setting';
 import SecondaryBanner from '../../../componenets/User/SecondaryBanner';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 
 const ContactPage = () => {
@@ -28,13 +32,28 @@ const ContactPage = () => {
     
       // Email sending logic
       emailjs.sendForm('service_16qayq1', 'template_k4djrti', form.current, 'Fxm2qPKfOG7-dvxv8')
-        .then((result) => {
-          console.log(result.text);
-          alert('liên hệ thành công');
+        .then(() => {
+         //  console.log(result.text);
+         MySwal.fire({
+            text: "Liên hệ thành công.",
+            icon: "success",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
         })
-        .catch((error) => {
-          console.log(error.text);
-          alert('liên hệ không thành công');
+        .catch(() => {
+          
+          MySwal.fire({
+            text: "Liên hệ không thành công.",
+            icon: "warning",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
+         
         });
     };
     

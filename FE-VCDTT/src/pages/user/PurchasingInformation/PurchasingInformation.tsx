@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FormEvent, useRef } from "react";
 import "./PurchasingInformation.css";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
 import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
@@ -223,7 +223,13 @@ const PurchasingInformation = () => {
     checkCoupon(formCoupon)
       .then((response) => {
         if ("data" in response) {
-          alert(response?.data?.message);
+          MySwal.fire({
+            text: response?.data?.message,
+            icon: response?.data?.message =="Mã giảm giá hợp lệ" ? "success" :"warning",
+            // confirmButtonText: "OK",
+           
+          });
+          // alert(response?.data?.message);
 
           const discountPercent = response?.data?.coupon.percentage_price;
           const discountFixed = response?.data?.coupon.fixed_price;
@@ -335,12 +341,12 @@ const PurchasingInformation = () => {
       if (paymentMethod === "1") {
         setLoading(false);
         try {
-          await MySwal.fire({
-            title: "Chuyển khoản",
-            text: "Đặt tour thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
+          // await MySwal.fire({
+          //   title: "Chuyển khoản",
+          //   text: "Đặt tour thành công",
+          //   icon: "success",
+          //   confirmButtonText: "OK",
+          // });
           hideConfirmTourFormModal();
           setShowPaymentModal(true);
         } catch (error) {
@@ -349,12 +355,12 @@ const PurchasingInformation = () => {
       } else if (paymentMethod === "2") {
         setLoading(false);
         try {
-          await MySwal.fire({
-            title: "VNPAY",
-            text: "Đặt tour thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
+          // await MySwal.fire({
+          //   title: "VNPAY",
+          //   text: "Đặt tour thành công",
+          //   icon: "success",
+          //   confirmButtonText: "OK",
+          // });
           const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
           window.location.href = VnpayURL;
         } catch (error) {
@@ -437,7 +443,9 @@ const PurchasingInformation = () => {
   const openWindow = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
   };
-
+  const openWindow2 = () => {
+    window.open("https://vcdtt.online/service_account", "_blank");
+  };
   //banner
   const dataTitle = "Thanh toán"
 
@@ -645,7 +653,7 @@ const PurchasingInformation = () => {
                     {/* Button trigger modal xác nhận thông tin */}
                     {isSubmitDisabled ? (
                       <div>
-                        <button
+                        <Button
                           type="button"
                           data-toggle="modal"
                           data-target="#confirmTourForm"
@@ -653,7 +661,7 @@ const PurchasingInformation = () => {
                           disabled
                         >
                           Tiếp tục
-                        </button>
+                        </Button>
                         <p className="text-danger mt-2">
                           Hãy nhập đủ thông tin để tiếp tục
                         </p>
@@ -666,6 +674,7 @@ const PurchasingInformation = () => {
                               variant="primary"
                               onClick={handleShow}
                               disabled
+                              className="btn-continue"
                             >
                               Tiếp tục
                             </Button>
@@ -675,7 +684,7 @@ const PurchasingInformation = () => {
                           </div>
                         ) : (
                           <div>
-                            <Button variant="primary" onClick={handleShow}>
+                            <Button variant="primary" onClick={handleShow}  className="btn-continue">
                               Tiếp tục
                             </Button>
                           </div>
@@ -1022,9 +1031,12 @@ const PurchasingInformation = () => {
                         />
                         <span className="ml-2">
                           Tôi đồng ý với{" "}
-                          <a className="text-primary" onClick={openWindow}>
-                            chính sách
-                          </a>{" "}
+                          <Link to={""} className="text-primary" onClick={openWindow}>
+                            Chính sách
+                          </Link>{" "} và&ensp;
+                          <Link to={""} className="text-primary" onClick={openWindow2}>
+                            Điều khoản
+                          </Link>{" "}
                           của trang
                         </span>
                         <br />
@@ -1033,9 +1045,9 @@ const PurchasingInformation = () => {
                           <button
                             type="submit"
                             disabled
-                            className="btn btn-primary"
+                            className="btn btn-secondary"
                           >
-                            Xác nhận thanh toán
+                            Thanh toán
                           </button>
                         ) : (
                           <div>
@@ -1044,7 +1056,7 @@ const PurchasingInformation = () => {
                               className="btn btn-primary"
                               // disabled={loading}
                             >
-                              Xác nhận thanh toán
+                              Thanh toán
                               {loading == true ? (
                                 <Spin className="ml-2" />
                               ) : (
@@ -1057,7 +1069,7 @@ const PurchasingInformation = () => {
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleClose}>
-                        Close
+                        Đóng
                       </Button>
                     </Modal.Footer>
                   </Modal>
@@ -1107,7 +1119,7 @@ const PurchasingInformation = () => {
                     </div>
                   </div>
                   <div className="coupon-field">
-                    <h4>Nhập coupon</h4>
+                    <h4>Nhập mã giảm giá</h4>
                     {userLogIn == "true" ? (
                       <form onSubmit={handleCouponSubmit}>
                         <div className="form-group row">
@@ -1115,7 +1127,7 @@ const PurchasingInformation = () => {
                             type="text"
                             name="coupon_code"
                             placeholder="Nhập mã giảm giá"
-                            className="input-border col-8"
+                            className="input-border col-7 mr-2"
                             value={formCoupon.coupon_code}
                             onChange={handleCouponChange}
                           />
@@ -1126,7 +1138,7 @@ const PurchasingInformation = () => {
                             value={formCoupon.user_id}
                           />
                           <button className="btn-continue col-4" type="submit">
-                            Submit
+                            Xác nhận
                           </button>
                         </div>
                       </form>
