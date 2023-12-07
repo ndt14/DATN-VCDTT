@@ -154,7 +154,7 @@ Thống kê tour
     var options = {
         series: viewCountList,
         chart: {
-            width: 600,
+            height:300,
             type: 'pie',
         },
         labels: nameList,
@@ -184,7 +184,7 @@ Thống kê tour
     var options2 = {
         series: ratingList,
         chart: {
-            width: 700,
+            height:300,
             type: 'pie',
         },
         labels: nameList2,
