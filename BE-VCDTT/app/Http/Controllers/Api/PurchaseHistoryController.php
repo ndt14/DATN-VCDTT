@@ -418,16 +418,11 @@ class PurchaseHistoryController extends Controller
     //     return $pdf->download('Hóa đơn '. $item->name .'.pdf');
     // }
 
-    // public function test()
-    // {
-    //     $purchaseHistoryTourAnnounces = PurchaseHistory::where('payment_status', '=', '2')->where('purchase_status', '=', '3')->get();
-    //     if ($purchaseHistoryTourAnnounces) {
-    //         foreach ($purchaseHistoryTourAnnounces as $purchaseHistoryTourAnnounce) {
-    //             $tour_start_time_string = $purchaseHistoryTourAnnounce->tour_start_time;
-    //             $tour_start_time = Carbon::createFromFormat('d-m-Y', $tour_start_time_string);
-    //             echo $tour_start_time->format('Y-m-d');
-    //         }
-    //     };
-
-    // }
+    public function test()
+    {
+        $purchaseHistoryAutoOutdate = PurchaseHistory::select('name','deleted_at','updated_at','purchase_status')->where('purchase_status', '=', 1)
+            ->whereDate('updated_at', '>=', Carbon::now()->subDays(7)->toDateString())
+            ->where('deleted_at', '=', null)->get();
+        echo $purchaseHistoryAutoOutdate;
+    }
 }
