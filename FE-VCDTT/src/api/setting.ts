@@ -36,6 +36,18 @@ const SettingApi = createApi({
             query: () => `/keyvalue/bankAccountName`,
             providesTags: ['Keyvalue']
         }),
+        getBankContent: builder.query<Setting, void>({
+            query: () => `/keyvalue/bankingContent`,
+            providesTags: ['Keyvalue']
+        }),
+        getBankImage: builder.query<Setting, void>({
+            query: () => `/keyvalue/BankAccountQR`,
+            providesTags: ['Keyvalue']
+        }),
+        getBankNumber: builder.query<Setting, void>({
+            query: () => `/keyvalue/bankAccountNumber`,
+            providesTags: ['Keyvalue']
+        }),
         getEmailWeb: builder.query<Setting, void>({
             query: () => `/keyvalue/email`,
             providesTags: ['Keyvalue']
@@ -76,7 +88,10 @@ export const {
     useGetWebPhoneNumber1Query,
     useGetWebTitleQuery,
     useGetLoaderQuery,
-    useGetSubBannerQuery
+    useGetSubBannerQuery,
+    useGetBankContentQuery,
+    useGetBankImageQuery,
+    useGetBankNumberQuery
 
  } = SettingApi;
 export const settingReducer = SettingApi.reducer;

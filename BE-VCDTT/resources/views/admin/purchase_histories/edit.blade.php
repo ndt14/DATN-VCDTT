@@ -383,9 +383,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Tour giảm giá (%)</div>
-                                        <input name="tour_sale_percentage" type="text" class="form-control"
-                                            placeholder="Phần trưam giảm giá tour"
-                                            value="{{ $items['tour_sale_percentage'] }}">
+                                        <span name="tour_sale_percentage">{{ $items['tour_sale_percentage'] }}</span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_sale_percentage')
                                                 {{ $message }}
@@ -394,8 +392,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Mã giảm giá</div>
-                                        <input name="coupon_name" type="text" class="form-control"
-                                            placeholder="Nhập mã giảm giá" value="{{ $items['coupon_name'] }}">
+                                        <span name="coupon_name">{{ $items['coupon_name'] }}</span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_name')
                                                 {{ $message }}
@@ -404,9 +401,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Phần trăm giảm giá</div>
-                                        <input name="coupon_percentage" type="text" class="form-control"
-                                            placeholder="Nhập phần trăm giảm giá (mã giảm giá)"
-                                            value="{{ $items['coupon_percentage'] }}">
+                                        <span name="coupon_percentage">{{ $items['coupon_percentage'] }}</span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_percentage')
                                                 {{ $message }}
@@ -415,9 +410,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Số tiền giảm thẳng</div>
-                                        <input name="coupon_fixed" type="text" class="form-control"
-                                            placeholder="Số tiền giảm thẳng (mã giảm giá)"
-                                            value="{{ $items['coupon_fixed'] }}">
+                                        <span name="coupon_fixed" >{{ $items['coupon_fixed'] }}</span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_fixed')
                                                 {{ $message }}

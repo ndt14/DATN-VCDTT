@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import moment from "moment";
-import { message } from "antd";
 import { Skeleton } from "antd";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
@@ -20,8 +19,12 @@ import { FaRegListAlt } from "react-icons/fa";
 import "moment/locale/vi";
 import { User } from "../../../interfaces/User";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 dayjs.locale("vi");
 moment.locale("vi");
+
+const MySwal = withReactContent(Swal);
 
 const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -90,7 +93,14 @@ const UserProfile = () => {
     console.log(formValues);
     editUser(formValues)
       .then(() => {
-        message.success("Cập nhật thông tin thành công");
+        MySwal.fire({
+          text: "Sửa thông tin thành công",
+          icon: "success",
+          // confirmButtonText: "OK",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer: 2000
+        });
       })
       .catch((error) => {
         // Handle any errors here
@@ -162,9 +172,15 @@ const UserProfile = () => {
     if (
       passwordFormValues.new_password !== passwordFormValues.confirmNewPassword
     ) {
-      message.warning(
-        "Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp."
-      );
+      MySwal.fire({
+        text: "Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp.",
+        icon: "warning",
+        // confirmButtonText: "OK",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 2000
+      });
+     
       return;
     }
 
@@ -181,12 +197,28 @@ const UserProfile = () => {
           // Handle success case
           // const responseData = response.data;
           // Process responseData
-          message.success("Đổi mật khẩu thành công");
+          MySwal.fire({
+            text: "Đổi mật khẩu thành công",
+            icon: "success",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
+         
         } else if ("error" in response) {
           // Handle error case
           // const errorData = response.error;
           // Process errorData
-          message.warning("Sai mật khẩu");
+
+           MySwal.fire({
+            text: "Sai Mật khẩu",
+            icon: "warning",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
         }
 
         console.log(response);

@@ -15,9 +15,17 @@ const Footer = () => {
 
    //blog
    const { data: dataBlog } = useGetBlogsQuery();
-   console.log(dataBlog);
+  //  console.log(dataBlog);/
    const sortedDiscountedBlogs = _.orderBy(dataBlog?.data.blogs, ["id"]);
    const newBlogs = sortedDiscountedBlogs.slice(0, 2);
+
+
+   const openWindow = () => {
+    window.open("https://vcdtt.online/privacy_policy", "_blank");
+  };
+  const openWindow2 = () => {
+    window.open("https://vcdtt.online/service_account", "_blank");
+  };
   return (
     <>
           <MessengerChat/>
@@ -131,23 +139,24 @@ return(
       <div className="buttom-footer">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-5">
               <div className="footer-menu">
                 <ul>
                   <li>
                     {/* <a href="#">Chính sách</a> */}
-                    <Link to={"/privacy_policy"}>Chính sách</Link>
+                    <Link to={""} onClick={openWindow}>Chính sách & quyền riêng tư</Link>
+                    
                   </li>
                   <li>
-                    <a href="#">Thỏa thuận</a>
+                  <Link to={""} onClick={openWindow2}>Điều khoản & dịch vụ</Link>
                   </li>
                   <li>
-                    <Link to="faqs">FAQ</Link>
+                    <Link to="faqs">Faqs</Link>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className="col-md-4 text-center">
+            <div className="col-md-3 text-center">
               <div className="footer-logo">
                 <Link to="">
                 {dataLogo?.data.keyvalue.map(({value}:Setting)=>{
@@ -161,7 +170,7 @@ return(
                 </Link>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-3">
               <div className="copy-right text-right">
                 Copyright © 2023 VCDTT
               </div>

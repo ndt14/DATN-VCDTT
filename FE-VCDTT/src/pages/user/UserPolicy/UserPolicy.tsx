@@ -13,7 +13,7 @@ const UserPolicy = () => {
 
   return (
     <section className="container" style={{ marginTop: "150px" }}>
-      <h2>ĐIỀU KHOẢN</h2>
+      {/* <h2>ĐIỀU KHOẢN</h2> */}
 
       {isLoading ? (
         <div>

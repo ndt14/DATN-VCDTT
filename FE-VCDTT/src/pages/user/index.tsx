@@ -10,6 +10,7 @@ import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy";
 import BillDetail from "./BillDetail/BillDetail";
 import { Search } from "./SearchAlgolia/Search";
 import UserCoupon from "./UserCoupon/UserCoupon";
+import ServicePage from "./ServicePage/ServicePage";
 
 export { 
 HomePage,
@@ -23,5 +24,6 @@ PurchasingInformation,
 PrivacyPolicy,
 BillDetail,
 Search,
-UserCoupon
+UserCoupon,
+ServicePage
  };

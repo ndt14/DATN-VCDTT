@@ -6,7 +6,7 @@ import {
 } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
 import { Bill } from "../../../interfaces/Bill";
-import { Button, Skeleton } from "antd";
+import { Button, Skeleton, Spin } from "antd";
 import ReactPaginate from "react-paginate";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
@@ -14,10 +14,11 @@ import { FaRegListAlt } from "react-icons/fa";
 import Modal from "react-bootstrap/Modal";
 import { ChangeEvent } from "react";
 // import { CheckboxChangeEvent } from "antd";
-
+import { useGetBankAccountNameQuery, useGetBankContentQuery, useGetBankImageQuery, useGetBankNameQuery, useGetBankNumberQuery } from "../../../api/setting";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+import { Setting } from "../../../interfaces/Setting";
 // import { spawn } from "child_process";
 
 const MySwal = withReactContent(Swal);
@@ -110,19 +111,42 @@ const UserTour = () => {
     setHasFormChanged(true);
   };
 
+
+ 
+
   useEffect(() => {
     if (hasFormChanged) {
       updateBill(formValues)
         .then(() => {
-          alert("Cập nhật thông tin thành công");
-          setHasFormChanged(false);
-          window.location.reload();
+          return MySwal.fire({
+            title: "Bạn chắc chắn gửi?",
+            text: "Bạn sẽ không thể quay lại nếu gửi đi!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Tiếp tục gửi!",
+            cancelButtonText: "Quay lại",
+          });
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            await MySwal.fire({
+              title: "Gửi thành công vui lòng đợi admin xác nhận!",
+              icon: "success",
+              // timer: 6000,
+            });
+  
+            setHasFormChanged(false);
+            window.location.reload();
+          }
         })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [formValues, hasFormChanged]);
+  }, [hasFormChanged, formValues]);
+  
 
   const [checked, setChecked] = useState(false);
 
@@ -155,8 +179,12 @@ const UserTour = () => {
   const openPolicy = (id: number) => {
     window.open(`/user/policy/${id}`, "_blank");
   };
+ 
+  const [loading, setLoading] = useState(false);
 
   const confirmPayment = async (id: number) => {
+
+    setLoading(true)
     const data: Bill = {
       purchase_status: 2,
       payment_status: 2,
@@ -164,16 +192,31 @@ const UserTour = () => {
       id: id,
       data: undefined,
     };
+  
     console.log(data);
-
-    await updateBill(data).then(() => {
+  
+    try {
+      await updateBill(data);
+  
       MySwal.fire({
         text: "Chúng tôi đã nhận được xác nhận đã thanh toán của bạn. Admin sẽ xác nhận và cập nhật đơn hàng của bạn sớm nhất có thể",
         icon: "success",
-        confirmButtonText: "Tôi đã hiểu",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000
       });
-    });
+  
+      // Wait for 4000 milliseconds (4 seconds) before reloading
+      await new Promise(resolve => setTimeout(resolve, 4000));
+  
+      // Reload the window
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      // Handle errors if needed
+    }
   };
+  
 
   // const cancelTourRefund = async (id: number) => {
   //   const data: Bill = {
@@ -201,7 +244,12 @@ const UserTour = () => {
     titleElement.innerText = "Thông tin người dùng";
   }
   const dataTitle = "Tour đã đặt"
-
+//api  setting
+const {data: bankName} = useGetBankNameQuery();
+const {data: bankImage} = useGetBankImageQuery();
+const {data: bankNumber} = useGetBankNumberQuery();
+const {data: bankNameUse} = useGetBankAccountNameQuery();
+const {data: bankContent} = useGetBankContentQuery();
   return (
 
     <div>
@@ -628,14 +676,13 @@ const UserTour = () => {
                                             checked={checked}
                                             onChange={handleCheckboxChange}
                                           />
-                                          Đọc kỹ{" "}
-                                          <a
-                                            className="text-primary"
-                                            onClick={handleOpenPolicy}
-                                          >
-                                            chính sách hoàn tiền
-                                          </a>{" "}
-                                          của chúng tôi nếu bạn muốn hủy tour.
+                                          Đọc lại{" "}
+                                            <Link to={""}
+                                                className="text-primary"
+                                                onClick={handleOpenPolicy} >  
+                                              Chính sách & Điều khoản
+                                            </Link>{" "}
+                                            mà bạn đã đồng ý trước đó với chúng tôi nếu bạn muốn hủy tour và hoàn tiền.
                                         </div>
                                         {checked && id ? (
                                           <Button
@@ -704,22 +751,47 @@ const UserTour = () => {
                             <Modal.Body>
                               <div className="container">
                                 <div className="text-center">
-                                  <span className="fs-4 text-black fw-bold">
-                                    Ngân hàng MB BANK
-                                    <br />
-                                  </span>
-                                  {/* Hiển thị ảnh QR code */}
-                                  <img
-                                    src="https://baohothuonghieu.com/wp-content/uploads/2021/10/1536893974-QR-CODE-LA-GI-sblaw.jpeg"
-                                    alt="QR Code"
-                                  />
-                                </div>
+                                <span className="fs-4 text-black fw-bold">
+              Ngân hàng: 
+              {bankName?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>  {value}</span>
+                                         )
+                                         })} 
+               <br />
+            </span>
+            {/* Hiển thị ảnh QR code */}
 
-                                <div className="text-center mt-3">
-                                  <span className="fs-4 text-black fw-bold">
-                                    Người thụ hưởng: Nguyễn Đức Thịnh <br />
-                                    Số tài khoản : 0915220156
-                                  </span>
+            {bankImage?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                            
+                                             <img key={id}
+                                             src={value}
+                                             alt="QR Code"
+                                           />
+                                         )
+                                         })} 
+          
+          </div>
+
+          <div className="text-center mt-3">
+            <span className="fs-4 text-black fw-bold">
+              Người thụ hưởng: {bankNameUse?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>  {value}</span>
+                                         )
+                                         })}  <br />
+              Số tài khoản :{bankNumber?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>  {value}</span>
+                                         )
+                                         })}  <br />
+             Nội dung chuyển khoản :{bankContent?.data.keyvalue.map(({id,value}:Setting)=>{
+                                            return(
+                                             <span key={id}>  {value}</span>
+                                         )
+                                         })}                             
+            </span>
                                 </div>
                                 <div className="text-center mt-3">
                                   <span className="fs-4 text-danger fw-bold">
@@ -743,6 +815,11 @@ const UserTour = () => {
                                   className="btn btn-success"
                                 >
                                   Chuyển khoản thành công
+                                  {loading == true ? (
+                                <Spin className="ml-2" />
+                              ) : (
+                                <span></span>
+                              )}
                                 </button>
                               </div>
                             </Modal.Footer>
@@ -940,14 +1017,13 @@ const UserTour = () => {
                                               checked={checked}
                                               onChange={handleCheckboxChange}
                                             />
-                                            Đọc kỹ{" "}
-                                            <a
-                                              className="text-primary"
-                                              onClick={handleOpenPolicy}
-                                            >
-                                              chính sách hoàn tiền
-                                            </a>{" "}
-                                            của chúng tôi nếu bạn muốn hủy tour.
+                                            Đọc lại{" "}
+                                            <Link to={""}
+                                                className="text-primary"
+                                                onClick={handleOpenPolicy} >  
+                                              Chính sách & Điều khoản
+                                            </Link>{" "}
+                                            mà bạn đã đồng ý trước đó với chúng tôi nếu bạn muốn hủy tour và hoàn tiền.
                                           </div>
                                         </div>
                                       ) : (
@@ -1015,9 +1091,10 @@ const UserTour = () => {
                                       <div className=" ml-1 text-danger">*</div>
                                     </label>
                                     <input
-                                      type="number"
+                                      type="text"
                                       name="bank_number"
                                       className="input-border"
+                                      placeholder="Số tài khoản - Tên ngân hàng"
                                       onChange={handleInputChange}
                                     />
                                   </div>

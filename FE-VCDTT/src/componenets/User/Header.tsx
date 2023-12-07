@@ -146,16 +146,23 @@ const Header = () => {
           await MySwal.fire({
             text: "Đăng nhập thành công.",
             icon: "success",
-            confirmButtonText: "OK",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
           });
+
           startLogoutTimer();
           navigate("/");
         } else {
           MySwal.fire({
             text: "Đăng nhập thất bại.",
             icon: "warning",
-            confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
           });
+         
         }
       } else {
         // Handling the case where 'data' doesn't exist in the response
@@ -163,18 +170,34 @@ const Header = () => {
         MySwal.fire({
           text: "Đăng nhập thất bại",
           icon: "warning",
-          confirmButtonText: "OK",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer: 2000
+          // confirmButtonText: "OK",
         });
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập: ", error);
-      alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
+      MySwal.fire({
+        text: "Đăng nhập thất bại. Đã xảy ra lỗi kết nối.",
+        icon: "warning",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 2000
+        // confirmButtonText: "OK",
+      });
     }
   };
 
   const handleSignOut = () => {
     clearLogoutTimer();
-    alert("Đăng xuất thành công");
+    MySwal.fire({
+      text: "Đăng xuất thành công",
+      icon: "success",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000
+      // confirmButtonText: "OK",
+    });
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("billIdSuccess");
@@ -183,8 +206,15 @@ const Header = () => {
   };
 
   const timeOutSignOut = () => {
-    clearLogoutTimer();
-    alert("Hết thời hạn đăng nhập. Vui lòng đăng nhập lại");
+    clearLogoutTimer(); 
+     MySwal.fire({
+      text: "Hết thời hạn đăng nhập. Vui lòng đăng nhập lại",
+      icon: "warning",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000
+      // confirmButtonText: "OK",
+    });
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("billIdSuccess");
@@ -202,7 +232,12 @@ const Header = () => {
     };
 
     if (registerPassword !== confirmPassword) {
-      alert("Mật khẩu và xác nhận mật khẩu không khớp!");
+      MySwal.fire({
+        text: "Mật khẩu và xác nhận mật khẩu không khớp!",
+        icon: "warning",
+       
+        // confirmButtonText: "OK",
+      });
       return;
     }
 
@@ -217,9 +252,23 @@ const Header = () => {
           setIsLoggedIn(true);
           setShowSignIn(false);
           localStorage.setItem("user", JSON.stringify(userData));
-          alert("Đăng ký thành công");
+          MySwal.fire({
+            text: "Đăng ký thành công",
+            icon: "success",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+            // confirmButtonText: "OK",
+          });
         } else {
-          alert("Đăng ký thất bại");
+          MySwal.fire({
+            text: "Đăng ký thất bại, Email đã tồn tại",
+            icon: "warning",
+            // showCancelButton: false,
+            // showConfirmButton: false,
+            // timer: 2000
+            // confirmButtonText: "OK",
+          });
         }
       } else {
         // Handle error response
@@ -257,25 +306,28 @@ const Header = () => {
   if (typeof preParseUserData === "string") {
     userData = JSON.parse(preParseUserData);
   }
-  console.log(userData);
+  // console.log(userData);
 
   const userName = userData?.name;
-  console.log(userName);
+  // console.log(userName);
 
   const is_admin = userData?.is_admin;
 
   const openWindow = () => {
     window.open("https://admin.vcdtt.online", "_blank");
   };
+  const openWindow2 = () => {
+    window.open("https://vcdtt.online/privacy_policy", "_blank");
 
+  };
   //google login
 
   const { data: dataGoogle } = useGetLoginGoogleQuery();
-  console.log(dataGoogle);
+  // console.log(dataGoogle);
 
   const [, setLoading] = useState(true);
   const [, setError] = useState(null);
-  const [data, setData] = useState<any>({});
+  const [, setData] = useState<any>({});
 
   // Sau khi nhận được dữ liệu từ API Google
   const handleGoogleLoginSuccess = (googleUserData: {
@@ -288,7 +340,14 @@ const Header = () => {
 
     // Đánh dấu người dùng đã đăng nhập thành công
     setIsLoggedIn(true);
-
+    MySwal.fire({
+      text: "Vào hệ thống thành công",
+      icon: "success",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000
+      // confirmButtonText: "OK",
+    });
     // Chuyển hướng đến trang người dùng
     navigate("/"); // Đổi thành URL của trang người dùng của bạn
   };
@@ -327,7 +386,7 @@ const Header = () => {
         });
     }
   }, [location]);
-  console.log("data", data);
+  // console.log("data", data);
 
   //end google
   return (
@@ -518,7 +577,7 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info">
+                            <button className="border-0 bg-white text-info" onClick={handleSwapToSignUpForm}>
                               Chưa có tài khoản? Đăng ký
                             </button>
                             <button
@@ -650,10 +709,10 @@ const Header = () => {
                                   {registrationFormik.errors.c_password}
                                 </div>
                               )}
-                            <input type="checkbox" />
-                            <span className="ml-2">
-                              Tôi đồng ý với{" "}
-                              <Link to={"/privacy_policy"}>Chính sách</Link> của
+                            {/* <input type="checkbox" /> */}
+                            <span className="ml-2 text-muted">
+                              Bạn bấm vào đăng ký tức là bạn đã đồng ý với{" "}
+                              <Link to={""} onClick={openWindow2}>Chính sách & quyền riêng tư</Link> của
                               trang
                             </span>
                             <button
@@ -664,7 +723,7 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info">
+                            <button className="border-0 bg-white text-info" onClick={handleSwapToSignInForm}>
                               Đã có tài khoản? Đăng nhập
                             </button>
                           </div>
@@ -675,7 +734,7 @@ const Header = () => {
                             <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                               <BsGoogle />
 
-                              <span className="mx-2">Đăng nhập với Google</span>
+                              <span className="mx-2">Đăng ký với Google</span>
                             </button>
                           </a>
                         </div>
