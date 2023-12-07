@@ -30,7 +30,6 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
     protected $adult_count;
     protected $tour_name;
 
-
     /**
      * Create a new notification instance.
      */
@@ -50,6 +49,7 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
         $this->tour_adult_price = $purchase_history->tour_adult_price;
         $this->adult_count = $purchase_history->adult_count;
         $this->tour_name = $purchase_history->tour_name;
+        $this->purchase_status = $purchase_history->purchase_status;
 
         if ($purchase_history->purchase_method == 1) {
             $this->purchase_method = 'Chuyển khoản online';
@@ -94,7 +94,8 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
                 'child_count' => $this->child_count,
                 'tour_adult_price' => $this->tour_adult_price,
                 'adult_count' => $this->adult_count,
-                'user_id' => $this->user_id
+                'user_id' => $this->user_id,
+                'purchase_status' => $this->purchase_status
             ]);
     }
 
