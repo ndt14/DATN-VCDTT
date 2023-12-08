@@ -8,6 +8,8 @@ import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+import { AiFillEye } from "react-icons/ai";
+import { Rate } from "antd";
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -22,9 +24,9 @@ const UserTour = () => {
   const userName = userData?.data?.user.name;
   const userEmail = userData?.data?.user.email;
 
-  const handleFavorite = (id: number) => {
+  const handleFavoriteRemove = (id: number) => {
     const info = {
-      user_id: userId,
+      user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
     updateTourFavorite(info).then(() => {
@@ -32,22 +34,49 @@ const UserTour = () => {
     });
   };
 
-  const handleClick =
-    (id: number) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClickRemove =
+    (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
-      handleFavorite(id);
+      if (typeof id === "number") {
+        handleFavoriteRemove(id);
+      } else {
+        // Handle the case when id is undefined
+        // console.log("Invalid id");
+      }
     };
+  const removeVietnameseSigns = (str: any) => {
+    str = str.toLowerCase();
+    // Chuyển đổi các ký tự có dấu thành không dấu
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, "a");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, "e");
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, "i");
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, "o");
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, "u");
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, "y");
+    return str;
+  };
+
+  const createSlugFromString = (inputString: any) => {
+    const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
+    return stringWithoutVietnameseSigns
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
 
   const titleElement = document.querySelector("title");
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
-  const dataTitle = "Tour yêu thích"
-  
+  const dataTitle = "Tour yêu thích";
+
   return (
     <div>
-          <SecondaryBanner>{dataTitle}</SecondaryBanner>
-     
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
           <div className="col-4">
@@ -67,12 +96,12 @@ const UserTour = () => {
               </div>
               <hr />
               {/* Left panel */}
-              <div className="shadow-lg">
+              <div className="">
                 <nav className="nav flex-column ">
-                  <Link className="nav-link" to={"/user/profile"}>
+                  <Link className="nav-link text-black" to={"/user/profile"}>
                     <IoPersonOutline /> Thông tin cá nhân
                   </Link>
-                  <Link className="nav-link active" to={"/user/tours"}>
+                  <Link className="nav-link text-black" to={"/user/tours"}>
                     <FaRegListAlt /> Tour đã đặt
                   </Link>
                   <Link
@@ -82,7 +111,7 @@ const UserTour = () => {
                   >
                     <FaRegHeart /> Tour yêu thích
                   </Link>
-                  <Link className="nav-link" to={"/user/coupon"}>
+                  <Link className="nav-link text-black" to={"/user/coupon"}>
                     <FaRegListAlt /> Mã Giảm giá
                   </Link>
                 </nav>
@@ -102,18 +131,32 @@ const UserTour = () => {
                   main_img,
                   view_count,
                   adult_price,
+                  star,
                 }: Tour) => {
                   return (
                     <div className="col-lg-6 col-md-6" key={id}>
                       <div className="package-wrap">
                         <figure className="feature-image">
-                          <Link to={`/tours/${id}`}>
-                            <img className="w-full" src={main_img} alt="" />
+                          <Link
+                            to={`/tours/${id}-${createSlugFromString(
+                              name
+                            )}.html`}
+                          >
+                            <img
+                              className="w-full img-fixed"
+                              src={main_img}
+                              alt=""
+                            />
                           </Link>
                         </figure>
-                        <div className="package-price">
-                          <h6>
-                            <span>{adult_price} đ </span> / người
+                        <div className="package-price badge">
+                          <h6 className="">
+                            <span>
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(adult_price)}{" "}
+                            </span>{" "}
                           </h6>
                         </div>
                         <div className="package-content-wrap">
@@ -121,33 +164,44 @@ const UserTour = () => {
                           <div className="package-content">
                             <div className="text-container">
                               <h3 className="margin-top-12 text-content">
-                                <Link className="mt-12" to={`/tours/${id}`}>
+                                <Link
+                                  className="mt-12"
+                                  to={`/tours/${id}-${createSlugFromString(
+                                    name
+                                  )}.html`}
+                                >
                                   {name}
                                 </Link>
                               </h3>
                             </div>
                             <div className="review-area">
-                              <span className="review-text">
-                                ({view_count} reviews)
-                              </span>
                               <div
-                                className="rating-start"
-                                title="Rated 5 out of 5"
+                                className=""
+                                title={`Rated ${star} out of 5`}
                               >
-                                <span className="w-3/5"></span>
+                                <span className="w-90">
+                                  <Rate allowHalf disabled value={star} />
+                                </span>{" "}
+                                <span className="review-text">
+                                  ({view_count} <AiFillEye size={25} />)
+                                </span>
                               </div>
                             </div>
                             <div className="text-description">
-                              <p className="text-content">{details}</p>
+                              <span
+                                className="text-from-api"
+                                dangerouslySetInnerHTML={{
+                                  __html: details,
+                                }}
+                              ></span>
                             </div>
 
                             <div className="btn-wrap">
                               <a
-                                onClick={() => handleClick(id || 0)}
-                                href="#"
-                                className="button-text width-6"
+                                onClick={handleClickRemove(id)}
+                                className="button-text width-6 text-pink"
                               >
-                                Thêm vào yêu thích
+                                Đã thích
                                 <i className="far fa-heart"></i>
                               </a>
                             </div>

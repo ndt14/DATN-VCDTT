@@ -39,7 +39,6 @@ const SearchBar = () => {
     const value = (event.target as HTMLInputElement).value;
     setInputValue(value);
   };
-  
 
   return (
     <>
@@ -56,10 +55,10 @@ const SearchBar = () => {
             onSubmit={handleSearch}
             className="input-search"
           />
-        </div>
 
-        <div className="search-results mt-4">
-          {inputValue && <InstantSearchHits hitComponent={HitItem} />}
+          <div className="search-results mt-4">
+            {inputValue && <InstantSearchHits hitComponent={HitItem} />}
+          </div>
         </div>
       </InstantSearch>
     </>
@@ -71,28 +70,30 @@ const HitItem = ({ hit }: any) => {
   const removeVietnameseSigns = (str: any) => {
     str = str.toLowerCase();
     // Chuyển đổi các ký tự có dấu thành không dấu
-    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, 'a');
-    str = str.replace(/đ/g, 'd');
-    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, 'e');
-    str = str.replace(/í|ì|ĩ|ỉ|ị/g, 'i');
-    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, 'o');
-    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, 'u');
-    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, 'y');
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, "a");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, "e");
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, "i");
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, "o");
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, "u");
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, "y");
     return str;
-};
+  };
 
-const createSlugFromString = (inputString: any) => {
+  const createSlugFromString = (inputString: any) => {
     const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
     return stringWithoutVietnameseSigns
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-};
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
   return (
     <div className="mt-2">
-      <Link to={`/tours/${hit.objectID}-${createSlugFromString(hit.name)}.html`}>
+      <Link
+        to={`/tours/${hit.objectID}-${createSlugFromString(hit.name)}.html`}
+      >
         <div className="d-flex">
           <div className="mr-2  my-2 h6 col-lg-5">
             <h6>{hit.name}</h6>

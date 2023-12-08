@@ -61,8 +61,7 @@ const TourDetail = () => {
 
   //
   const { id } = useParams<{ id: string }>();
-  
-  
+
   // const tourId = parseInt(id);
 
   const { data: tourData, isLoading } = useGetTourByIdQuery(id || "");
@@ -115,7 +114,7 @@ const TourDetail = () => {
     }
     return true; // Vô hiệu hóa tất cả các ngày nếu current là null
   };
-  
+
   //
 
   const [productNumber, setProductNumber] = useState(1);
@@ -274,7 +273,6 @@ const TourDetail = () => {
       (purchase: { tour_id: number }) => purchase.tour_id === Number(idTour)
     );
 
-
     // console.log(foundPurchase.purchase_status);
 
     if (foundPurchase) {
@@ -338,9 +336,8 @@ const TourDetail = () => {
 
   //banner
 
-  const dataTitle = "Tour chi tiết"
-  
-  
+  const dataTitle = "Tour chi tiết";
+
   return (
     <>
       {/* <Loader /> */}
@@ -349,7 +346,6 @@ const TourDetail = () => {
 
         <SecondaryBanner>{dataTitle}</SecondaryBanner>
 
-  
         {/* <!-- Inner Banner html end--> */}
         <div className="single-tour-section">
           <div className="container">
@@ -517,8 +513,8 @@ const TourDetail = () => {
                   </div>
 
                   <div className="tab-container">
-                  <ul className="nav nav-tabs" id="myTab" role="tablist">
-                    <li className="nav-item active">
+                    <ul className="nav nav-tabs" id="myTab" role="tablist">
+                      <li className="nav-item active">
                         <a
                           className="nav-link active"
                           id="price-tab"
@@ -543,9 +539,8 @@ const TourDetail = () => {
                         >
                           Mô Tả
                         </a>
-                       
                       </li>
-                     
+
                       <li className="nav-item">
                         <a
                           className="nav-link"
@@ -612,7 +607,6 @@ const TourDetail = () => {
                       >
                         {/* mô tả tour  */}
                         <div className="overview-content">
-                          
                           <div
                             className="mt-3"
                             dangerouslySetInnerHTML={{
@@ -631,12 +625,11 @@ const TourDetail = () => {
                       >
                         {/* lịch trình */}
                         <div
-                            className="mt-3"
-                            dangerouslySetInnerHTML={{
-                              __html: tourData?.data?.tour.pathway,
-                            }}
-                          ></div>
-                       
+                          className="mt-3"
+                          dangerouslySetInnerHTML={{
+                            __html: tourData?.data?.tour.pathway,
+                          }}
+                        ></div>
                       </div>
                       <div
                         className="tab-pane"
@@ -699,7 +692,9 @@ const TourDetail = () => {
                                                 title={`Rated ${star} sao trên 5 sao tối đa`}
                                               >
                                                 <span className="w-90">
-                                                  {renderStarRating(star as number)}
+                                                  {renderStarRating(
+                                                    star as number
+                                                  )}
                                                 </span>
                                               </div>
                                             </div>
@@ -707,7 +702,7 @@ const TourDetail = () => {
                                           <p
                                             className=""
                                             dangerouslySetInnerHTML={{
-                                              __html: content||""
+                                              __html: content || "",
                                             }}
                                           ></p>
                                         </div>
@@ -835,13 +830,17 @@ const TourDetail = () => {
                   ) : (
                     <div className="package-price">
                       <h5 className="price rounded-2">
-                        <span className="text-decoration-line-through mr-3">
-                          {" "}
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(preSaleTourPrice)}{" "}
-                        </span>
+                        {tourSale > 0 ? (
+                          <span className="text-decoration-line-through mr-3">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(preSaleTourPrice)}{" "}
+                          </span>
+                        ) : (
+                          <span></span>
+                        )}
+
                         <span className=""> {formattedTourPrice} </span>
                       </h5>
                       {/* {tourSale != 0 ? (
@@ -872,8 +871,7 @@ const TourDetail = () => {
                           {tourSale != 0 ? (
                             <div className="col-sm-7">
                               <label htmlFor="" className="h6">
-                              Người lớn({">"}= 10 tuổi)
-
+                                Người lớn({">"}= 10 tuổi)
                               </label>
                               <div className="">
                                 <span className="font-weight-bold mr-3 text-decoration-line-through">
@@ -889,7 +887,7 @@ const TourDetail = () => {
                               <div className="price"></div>
 
                               <label htmlFor="" className="h6">
-                              Trẻ em dưới 10 tuổi
+                                Trẻ em dưới 10 tuổi
                               </label>
                               <div className="">
                                 <span className="font-weight-bold mr-3 text-decoration-line-through">
@@ -1046,7 +1044,7 @@ const TourDetail = () => {
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
-                        <div className="col-lg-3 col-md-6" key={id}>
+                        <div className="col-lg-4 col-md-6" key={id}>
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
@@ -1113,7 +1111,7 @@ const TourDetail = () => {
                       );
                     } else {
                       return (
-                        <div className="col-lg-3 col-md-6" key={id}>
+                        <div className="col-lg-4 col-md-6" key={id}>
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
