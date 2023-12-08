@@ -14,7 +14,13 @@ import { FaRegListAlt } from "react-icons/fa";
 import Modal from "react-bootstrap/Modal";
 import { ChangeEvent } from "react";
 // import { CheckboxChangeEvent } from "antd";
-import { useGetBankAccountNameQuery, useGetBankContentQuery, useGetBankImageQuery, useGetBankNameQuery, useGetBankNumberQuery } from "../../../api/setting";
+import {
+  useGetBankAccountNameQuery,
+  useGetBankContentQuery,
+  useGetBankImageQuery,
+  useGetBankNameQuery,
+  useGetBankNumberQuery,
+} from "../../../api/setting";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
@@ -26,7 +32,9 @@ const MySwal = withReactContent(Swal);
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-  const { data: TourData, isLoading } = useGetBillsWithUserIDQuery(userId || "");
+  const { data: TourData, isLoading } = useGetBillsWithUserIDQuery(
+    userId || ""
+  );
   const { data: userData } = useGetUserByIdQuery(userId || "");
   const [updateBill] = useUpdateBillMutation();
 
@@ -111,9 +119,6 @@ const UserTour = () => {
     setHasFormChanged(true);
   };
 
-
- 
-
   useEffect(() => {
     if (hasFormChanged) {
       updateBill(formValues)
@@ -136,7 +141,7 @@ const UserTour = () => {
               icon: "success",
               // timer: 6000,
             });
-  
+
             setHasFormChanged(false);
             window.location.reload();
           }
@@ -146,7 +151,6 @@ const UserTour = () => {
         });
     }
   }, [hasFormChanged, formValues]);
-  
 
   const [checked, setChecked] = useState(false);
 
@@ -179,12 +183,11 @@ const UserTour = () => {
   const openPolicy = (id: number) => {
     window.open(`/user/policy/${id}`, "_blank");
   };
- 
+
   const [loading, setLoading] = useState(false);
 
   const confirmPayment = async (id: number) => {
-
-    setLoading(true)
+    setLoading(true);
     const data: Bill = {
       purchase_status: 2,
       payment_status: 2,
@@ -192,23 +195,23 @@ const UserTour = () => {
       id: id,
       data: undefined,
     };
-  
+
     console.log(data);
-  
+
     try {
       await updateBill(data);
-  
+
       MySwal.fire({
         text: "Chúng tôi đã nhận được xác nhận đã thanh toán của bạn. Admin sẽ xác nhận và cập nhật đơn hàng của bạn sớm nhất có thể",
         icon: "success",
         showCancelButton: false,
         showConfirmButton: false,
-        timer: 4000
+        timer: 4000,
       });
-  
+
       // Wait for 4000 milliseconds (4 seconds) before reloading
-      await new Promise(resolve => setTimeout(resolve, 4000));
-  
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
       // Reload the window
       window.location.reload();
     } catch (error) {
@@ -216,7 +219,6 @@ const UserTour = () => {
       // Handle errors if needed
     }
   };
-  
 
   // const cancelTourRefund = async (id: number) => {
   //   const data: Bill = {
@@ -243,246 +245,244 @@ const UserTour = () => {
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
-  const dataTitle = "Tour đã đặt"
-//api  setting
-const {data: bankName} = useGetBankNameQuery();
-const {data: bankImage} = useGetBankImageQuery();
-const {data: bankNumber} = useGetBankNumberQuery();
-const {data: bankNameUse} = useGetBankAccountNameQuery();
-const {data: bankContent} = useGetBankContentQuery();
+  const dataTitle = "Tour đã đặt";
+  //api  setting
+  const { data: bankName } = useGetBankNameQuery();
+  const { data: bankImage } = useGetBankImageQuery();
+  const { data: bankNumber } = useGetBankNumberQuery();
+  const { data: bankNameUse } = useGetBankAccountNameQuery();
+  const { data: bankContent } = useGetBankContentQuery();
   return (
-
     <div>
-                <SecondaryBanner>{dataTitle}</SecondaryBanner>
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
 
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
-        {isLoading ? (
-                    <Skeleton active />
-                  ) : (
-          <div className="col-4">
-            <div className="border">
-              <div className="d-flex p-3">
-                <div>
-                  <img
-                    style={{ width: "70px" }}
-                    src="../../../../assets/images/travel.png"
-                    alt=""
-                  />
-                </div>
-                <div>
-                  <h3>{userName} </h3>
-                  <p>{userEmail}</p>
-                </div>
-              </div>
-              <hr />
-              {/* Left panel */}
-
-              <nav className="nav flex-column">
-                <Link className="nav-link" to={"/user/profile"}>
-                  <IoPersonOutline />
-                  Thông tin cá nhân
-                </Link>
-                <Link
-                  className="nav-link text-white"
-                  style={{ backgroundColor: "#1677FF" }}
-                  to={"/user/tours"}
-                >
-                  <FaRegListAlt /> Tour đã đặt
-                </Link>
-                <Link className="nav-link" to={"/user/favorite"}>
-                  <FaRegHeart /> Tour yêu thích
-                </Link>
-                <Link className="nav-link" to={"/user/coupon"}>
-                  <FaRegListAlt /> Mã Giảm giá
-                </Link>
-              </nav>
-
-              {/* End left panel */}
-            </div>
-          </div>
-
-                  )}
           {isLoading ? (
-                    <Skeleton active />
-                  ) : (
-          <div className="col-8">
-            {/*  */}
-           
-            <h3>Danh sách tour</h3>
-            
-            {currentData?.map(
-              ({
-                id,
-                name,
-                tour_name,
-                email,
-                adult_count,
-                child_count,
-                tour_adult_price,
-                tour_child_price,
-                coupon_percentage,
-                coupon_fixed,
-                tour_start_time,
-                tour_end_time,
-                transaction_id,
-                payment_status,
-                purchase_method,
-                purchase_status,
-                phone_number,
-                tour_status,
-                tour_image,
-                comfirm_click,
-              }: Bill) => {
-                const handleGoToPayment = () => {
-                  if (id) {
-                    goToPayment(id);
+            <Skeleton active />
+          ) : (
+            <div className="col-4">
+              <div className="border">
+                <div className="d-flex p-3">
+                  <div>
+                    <img
+                      style={{ width: "70px" }}
+                      src="../../../../assets/images/travel.png"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <h3>{userName} </h3>
+                    <p>{userEmail}</p>
+                  </div>
+                </div>
+                <hr />
+                {/* Left panel */}
+
+                <nav className="nav flex-column">
+                  <Link className="nav-link text-black" to={"/user/profile"}>
+                    <IoPersonOutline />
+                    Thông tin cá nhân
+                  </Link>
+                  <Link
+                    className="nav-link text-white"
+                    style={{ backgroundColor: "#1677FF" }}
+                    to={"/user/tours"}
+                  >
+                    <FaRegListAlt /> Tour đã đặt
+                  </Link>
+                  <Link className="nav-link text-black" to={"/user/favorite"}>
+                    <FaRegHeart /> Tour yêu thích
+                  </Link>
+                  <Link className="nav-link text-black" to={"/user/coupon"}>
+                    <FaRegListAlt /> Mã Giảm giá
+                  </Link>
+                </nav>
+
+                {/* End left panel */}
+              </div>
+            </div>
+          )}
+          {isLoading ? (
+            <Skeleton active />
+          ) : (
+            <div className="col-8">
+              {/*  */}
+
+              <h3>Danh sách tour</h3>
+
+              {currentData?.map(
+                ({
+                  id,
+                  name,
+                  tour_name,
+                  email,
+                  adult_count,
+                  child_count,
+                  tour_adult_price,
+                  tour_child_price,
+                  coupon_percentage,
+                  coupon_fixed,
+                  tour_start_time,
+                  tour_end_time,
+                  transaction_id,
+                  payment_status,
+                  purchase_method,
+                  purchase_status,
+                  phone_number,
+                  tour_status,
+                  tour_image,
+                  comfirm_click,
+                }: Bill) => {
+                  const handleGoToPayment = () => {
+                    if (id) {
+                      goToPayment(id);
+                    }
+                  };
+                  // const handleCancelTour = () => {
+                  //   if (id) {
+                  //     cancelTour(id);
+                  //   }
+                  // };
+                  // const handleCancelTourRefund = () => {
+                  //   if (id) {
+                  //     cancelTourRefund(id);
+                  //   }
+                  // };
+                  const handleConfirmPayment = () => {
+                    if (id) {
+                      confirmPayment(id);
+                    }
+                  };
+                  const handleOpenPolicy = () => {
+                    if (id) {
+                      openPolicy(id);
+                    }
+                  };
+                  const handleSubmit = () => {
+                    if (id) {
+                      submit(id);
+                    }
+                  };
+                  // const handleModalCancelOpen = () => {
+                  //   if (id) {
+                  //     modalCancelOpen(id);
+                  //   }
+                  // };
+                  const handleModalOpenDetail = () => {
+                    if (id) {
+                      modalOpenDetail(id);
+                    }
+                  };
+                  const modalCancelOpen = (id: number) => {
+                    setSelectedForm(id);
+                    setSelectedDetailModal(0);
+                  };
+
+                  const modalOpenQR = (id: number) => {
+                    setShowQR(id);
+                  };
+
+                  // console.log(coupon_fixed);
+                  // console.log(coupon_percentage);
+                  let billStatus;
+                  if (purchase_status === 1) {
+                    billStatus = "Tự động hủy do quá hạn";
+                  } else if (purchase_status === 2) {
+                    billStatus = "Chưa phê duyệt thanh toán";
+                  } else if (purchase_status === 3) {
+                    billStatus = "Đã phê duyệt thanh toán";
+                  } else if (purchase_status === 4) {
+                    billStatus = "Chưa phê duyệt hủy tour";
+                  } else if (purchase_status === 5) {
+                    billStatus = "Đã phê duyệt hủy tour, chưa hoàn tiền";
+                  } else if (purchase_status === 6) {
+                    billStatus = "Đã hủy thành công";
+                  } else if (purchase_status === 7) {
+                    billStatus = "Chuyển khoản thiếu";
+                  } else if (purchase_status === 8) {
+                    billStatus = "Chuyển khoản thừa";
                   }
-                };
-                // const handleCancelTour = () => {
-                //   if (id) {
-                //     cancelTour(id);
-                //   }
-                // };
-                // const handleCancelTourRefund = () => {
-                //   if (id) {
-                //     cancelTourRefund(id);
-                //   }
-                // };
-                const handleConfirmPayment = () => {
-                  if (id) {
-                    confirmPayment(id);
+
+                  let paymentStatus;
+                  if (payment_status == 1) {
+                    paymentStatus = "Chưa thanh toán";
+                  } else if (payment_status == 2) {
+                    paymentStatus = "Đã thanh toán";
                   }
-                };
-                const handleOpenPolicy = () => {
-                  if (id) {
-                    openPolicy(id);
+
+                  let tourStatus;
+                  if (tour_status == 1) {
+                    tourStatus = "Chưa tới ngày đi";
+                  } else if (tour_status == 2) {
+                    tourStatus = "Đang diễn ra";
+                  } else if (tour_status == 3) {
+                    tourStatus = "Tour đã kết thúc";
+                  } else if (tour_status == 4) {
+                    tourStatus = "Còn 1 ngày trước ngày đi tour";
                   }
-                };
-                const handleSubmit = () => {
-                  if (id) {
-                    submit(id);
-                  }
-                };
-                // const handleModalCancelOpen = () => {
-                //   if (id) {
-                //     modalCancelOpen(id);
-                //   }
-                // };
-                const handleModalOpenDetail = () => {
-                  if (id) {
-                    modalOpenDetail(id);
-                  }
-                };
-                const modalCancelOpen = (id: number) => {
-                  setSelectedForm(id);
-                  setSelectedDetailModal(0);
-                };
+                  // console.log(coupon_fixed);
 
-                const modalOpenQR = (id: number) => {
-                  setShowQR(id);
-                };
+                  const finalPrice = coupon_fixed
+                    ? (adult_count ?? 0) * (tour_adult_price ?? 0) +
+                      (child_count ?? 0) * (tour_child_price ?? 0) -
+                      coupon_fixed
+                    : ((adult_count ?? 0) * (tour_adult_price ?? 0) +
+                        (child_count ?? 0) * (tour_child_price ?? 0)) *
+                      (1 - (coupon_percentage ?? 0) / 100);
+                  const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(finalPrice);
 
-                // console.log(coupon_fixed);
-                // console.log(coupon_percentage);
-                let billStatus;
-                if (purchase_status === 1) {
-                  billStatus = "Tự động hủy do quá hạn";
-                } else if (purchase_status === 2) {
-                  billStatus = "Chưa phê duyệt thanh toán";
-                } else if (purchase_status === 3) {
-                  billStatus = "Đã phê duyệt thanh toán";
-                } else if (purchase_status === 4) {
-                  billStatus = "Chưa phê duyệt hủy tour";
-                } else if (purchase_status === 5) {
-                  billStatus = "Đã phê duyệt hủy tour, chưa hoàn tiền";
-                } else if (purchase_status === 6) {
-                  billStatus = "Đã hủy thành công";
-                } else if (purchase_status === 7) {
-                  billStatus = "Chuyển khoản thiếu";
-                } else if (purchase_status === 8) {
-                  billStatus = "Chuyển khoản thừa";
-                }
+                  return (
+                    <div className="p-3 my-3 shadow row" key={id}>
+                      <div className="col-8">
+                        <p>
+                          Mã đơn: <span className="fw-bold">{id}</span>
+                        </p>
+                        <div>
+                          {purchase_method == 2 ? (
+                            <p>
+                              Mã giao dịch VNPAY:{" "}
+                              <span className="fw-bold">{transaction_id}</span>
+                            </p>
+                          ) : (
+                            <span></span>
+                          )}
+                        </div>
+                        <p>
+                          Tên tour: <span className="fw-bold">{tour_name}</span>
+                        </p>
+                        <p>
+                          Giá:{" "}
+                          <span className="fw-bold">{formattedFinalPrice}</span>
+                        </p>
+                        <p>
+                          Phương thức thanh toán:{" "}
+                          {purchase_method == 1 ? (
+                            <span className="fw-bold">
+                              Chuyển khoản ngân hàng
+                            </span>
+                          ) : (
+                            <span className="fw-bold">VNPAY</span>
+                          )}
+                        </p>
+                        <p>
+                          Trạng thái đơn hàng:{" "}
+                          <span className="fw-bold">{billStatus}</span>
+                        </p>
+                        <p>
+                          Trạng thái thanh toán:{" "}
+                          <span className="fw-bold">{paymentStatus}</span>
+                        </p>
 
-                let paymentStatus;
-                if (payment_status == 1) {
-                  paymentStatus = "Chưa thanh toán";
-                } else if (payment_status == 2) {
-                  paymentStatus = "Đã thanh toán";
-                }
+                        <p>
+                          Trạng thái tour:{" "}
+                          <span className="fw-bold">{tourStatus}</span>
+                        </p>
 
-                let tourStatus;
-                if (tour_status == 1) {
-                  tourStatus = "Chưa tới ngày đi";
-                } else if (tour_status == 2) {
-                  tourStatus = "Đang diễn ra";
-                } else if (tour_status == 3) {
-                  tourStatus = "Tour đã kết thúc";
-                } else if (tour_status == 4) {
-                  tourStatus = "Còn 1 ngày trước ngày đi tour";
-                }
-                // console.log(coupon_fixed);
-
-                const finalPrice = coupon_fixed
-                  ? (adult_count ?? 0) * (tour_adult_price ?? 0) +
-                    (child_count ?? 0) * (tour_child_price ?? 0) -
-                    coupon_fixed
-                  : ((adult_count ?? 0) * (tour_adult_price ?? 0) +
-                      (child_count ?? 0) * (tour_child_price ?? 0)) *
-                    (1 - (coupon_percentage ?? 0) / 100);
-                const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(finalPrice);
-
-                return (
-                  <div className="p-3 my-3 shadow row" key={id}>
-                    <div className="col-8">
-                      <p>
-                        Mã đơn: <span className="fw-bold">{id}</span>
-                      </p>
-                      <div>
-                        {purchase_method == 2 ? (
-                          <p>
-                            Mã giao dịch VNPAY:{" "}
-                            <span className="fw-bold">{transaction_id}</span>
-                          </p>
-                        ) : (
-                          <span></span>
-                        )}
-                      </div>
-                      <p>
-                        Tên tour: <span className="fw-bold">{tour_name}</span>
-                      </p>
-                      <p>
-                        Giá:{" "}
-                        <span className="fw-bold">{formattedFinalPrice}</span>
-                      </p>
-                      <p>
-                        Phương thức thanh toán:{" "}
-                        {purchase_method == 1 ? (
-                          <span className="fw-bold">
-                            Chuyển khoản ngân hàng
-                          </span>
-                        ) : (
-                          <span className="fw-bold">VNPAY</span>
-                        )}
-                      </p>
-                      <p>
-                        Trạng thái đơn hàng:{" "}
-                        <span className="fw-bold">{billStatus}</span>
-                      </p>
-                      <p>
-                        Trạng thái thanh toán:{" "}
-                        <span className="fw-bold">{paymentStatus}</span>
-                      </p>
-
-                      <p>
-                        Trạng thái tour:{" "}
-                        <span className="fw-bold">{tourStatus}</span>
-                      </p>
-
-                      {/* <button
+                        {/* <button
                         type="button"
                         data-toggle="modal"
                         data-target={`#bill-${id}`}
@@ -490,371 +490,37 @@ const {data: bankContent} = useGetBankContentQuery();
                       >
                         Chi tiết
                       </button> */}
-                      <Button
-                        onClick={handleModalOpenDetail}
-                        className="bg-primary text-white button"
-                        // onHide={handleModalCancelClose}
-                      >
-                        Chi tiết
-                      </Button>
-                      {/*  */}
-                      {purchase_status == 3 ? (
-                        <Button className="ml-2">
-                          <Link to={`/user/view-bill/${id}`}>Xem hóa đơn</Link>
+                        <Button
+                          onClick={handleModalOpenDetail}
+                          className="bg-primary text-white button"
+                          // onHide={handleModalCancelClose}
+                        >
+                          Chi tiết
                         </Button>
-                      ) : (
-                        <span></span>
-                      )}
-                      <Modal
-                        show={selectedDetailModal == id}
-                        onHide={handleModalCloseDetail}
-                        size="lg"
-                      >
-                        <Modal.Header closeButton>
-                          <h3
-                            className="modal-title text-primary"
-                            id="exampleModalLabel"
-                          >
-                            Chi tiết đơn hàng số <span>{id}</span>
-                          </h3>
-                        </Modal.Header>
-                        <Modal.Body>
-                          <div className="modal-body">
-                            <h3>Thông tin khách hàng</h3>
-                            <p>
-                              Họ và tên: <span className="fw-bold">{name}</span>
-                            </p>
-                            <p>
-                              Số điện thoại:{" "}
-                              <span className="fw-bold">{phone_number}</span>
-                            </p>
-                            <p>
-                              Email: <span className="fw-bold">{email}</span>
-                            </p>
-                            <hr className="mb-3" />
-                            <h3>Thông tin tour</h3>
-                            <div>
-                              {purchase_method == 1 ? (
-                                <div>
-                                  <p>
-                                    Mã số thanh toán VNPAY:{" "}
-                                    <span className="fw-bold">
-                                      {transaction_id ? (
-                                        <span>{transaction_id}</span>
-                                      ) : (
-                                        <span>Chưa có</span>
-                                      )}
-                                    </span>
-                                  </p>
-                                </div>
-                              ) : (
-                                <div></div>
-                              )}
-                            </div>
-
-                            <p>
-                              Tên tour:{" "}
-                              <span className="fw-bold">{tour_name}</span>
-                            </p>
-                            <p>
-                              Phương thức thanh toán:{" "}
-                              {purchase_method == 1 ? (
-                                <span className="fw-bold">
-                                  Chuyển khoản ngân hàng
-                                </span>
-                              ) : (
-                                <span className="fw-bold">VNPAY</span>
-                              )}
-                            </p>
-                            <div className="d-flex justify-content-between mb-3">
-                              <div>
-                                Số lượng trẻ em:{" "}
-                                <span className="fw-bold">{child_count}</span>
-                              </div>
-                              <div>
-                                Số lượng người lớn:{" "}
-                                <span className="fw-bold">{adult_count}</span>
-                              </div>
-                            </div>
-                            {coupon_fixed != 0 && coupon_fixed != null ? (
-                              <div>
-                                <p>
-                                  Coupon:{" "}
-                                  <span className="fw-bold">
-                                    Giảm {coupon_fixed}đ
-                                  </span>
-                                </p>
-                              </div>
-                            ) : (
-                              <div>
-                                {coupon_percentage != null ? (
-                                  <p>
-                                    Coupon:{" "}
-                                    <span className="fw-bold">
-                                      Giảm {coupon_percentage}%
-                                    </span>
-                                  </p>
-                                ) : (
-                                  <p>
-                                    Coupon:{" "}
-                                    <span className="fw-bold">Không có</span>
-                                  </p>
-                                )}
-                              </div>
-                            )}
-
-                            <p>
-                              Giá tour:{" "}
-                              <span className="fw-bold">
-                                {formattedFinalPrice}
-                              </span>
-                            </p>
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                Ngày bắt đầu tour:{" "}
-                                <span className="fw-bold">
-                                  {tour_start_time}
-                                </span>
-                              </p>
-                              <p>
-                                Ngày kết thúc tour:{" "}
-                                <span className="fw-bold">{tour_end_time}</span>
-                              </p>
-                            </div>
-                            <p>
-                              Trạng thái đơn hàng:{" "}
-                              <span className="fw-bold text-danger">
-                                {billStatus}
-                              </span>
-                            </p>
-                            <p>
-                              Trạng thái thanh toán:{" "}
-                              <span className="fw-bold text-danger">
-                                {paymentStatus}
-                              </span>
-                            </p>
-                            <p>
-                              Trạng thái tour:{" "}
-                              <span className="fw-bold text-danger">
-                                {tourStatus}
-                              </span>
-                            </p>
-
-                            {purchase_method == 2 &&
-                            payment_status == 1 &&
-                            tour_status == 1 ? (
-                              <button
-                                className="btn-continue mr-2"
-                                onClick={handleGoToPayment}
-                              >
-                                Thanh toán VNPAY
-                              </button>
-                            ) : (
-                              <div>
-                                {purchase_status == 6 ? (
-                                  <div></div>
-                                ) : (
-                                  <div></div>
-                                )}
-                              </div>
-                            )}
-                            {payment_status == 1 && tour_status == 1 ? (
-                              <p className="text-danger">
-                                Đơn hàng sẽ tự động hủy sau 24 tiếng nếu bạn
-                                không thanh toán
-                              </p>
-                            ) : (
-                              <span>
-                                {purchase_status == 3 ? (
-                                  <div>
-                                    {tour_status == 1 ? (
-                                      <div>
-                                        <div>
-                                          <input
-                                            className="mr-1"
-                                            type="checkbox"
-                                            checked={checked}
-                                            onChange={handleCheckboxChange}
-                                          />
-                                          Đọc lại{" "}
-                                            <Link to={""}
-                                                className="text-primary"
-                                                onClick={handleOpenPolicy} >  
-                                              Chính sách & Điều khoản
-                                            </Link>{" "}
-                                            mà bạn đã đồng ý trước đó với chúng tôi nếu bạn muốn hủy tour và hoàn tiền.
-                                        </div>
-                                        {checked && id ? (
-                                          <Button
-                                            className="btn-continue"
-                                            onClick={() => modalCancelOpen(id)}
-                                          >
-                                            Hủy tour
-                                          </Button>
-                                        ) : (
-                                          <div></div>
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <div></div>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div></div>
-                                )}
-                              </span>
-                            )}
-                          </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <Button onClick={handleModalCloseDetail}>
-                            Đóng
+                        {/*  */}
+                        {purchase_status == 3 ? (
+                          <Button className="ml-2">
+                            <Link to={`/user/view-bill/${id}`}>
+                              Xem hóa đơn
+                            </Link>
                           </Button>
-                          {/* <Button onClick={handleModalCloseDetail}>
-                            Save Changes
-                          </Button> */}
-                        </Modal.Footer>
-                      </Modal>
-
-                      {payment_status == 1 &&
-                      purchase_status == 2 &&
-                      purchase_method == 1 &&
-                      comfirm_click == 1 ? (
-                        <span>
-                          {id ? (
-                            <Button
-                              className=" btn-success ml-3 rounded-md"
-                              // onClick={handleModalOpenQR(id)}
-                              onClick={() => modalOpenQR(id)}
+                        ) : (
+                          <span></span>
+                        )}
+                        <Modal
+                          show={selectedDetailModal == id}
+                          onHide={handleModalCloseDetail}
+                          size="lg"
+                        >
+                          <Modal.Header closeButton>
+                            <h3
+                              className="modal-title text-primary"
+                              id="exampleModalLabel"
                             >
-                              Xác nhận đã chuyển khoản
-                            </Button>
-                          ) : (
-                            <span></span>
-                          )}
-
-                          {/* Modal chuyển khoản QR */}
-                          <Modal
-                            show={showQR == id}
-                            onHide={handleModalCloseQR}
-                            backdrop="static"
-                            keyboard={false}
-                          >
-                            <Modal.Header>
-                              <Modal.Title>
-                                <div className="text-center">
-                                  Vui lòng quét qr hoặc chuyển khoản cho thông
-                                  tin dưới đây
-                                </div>
-                              </Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                              <div className="container">
-                                <div className="text-center">
-                                <span className="fs-4 text-black fw-bold">
-              Ngân hàng: 
-              {bankName?.data.keyvalue.map(({id,value}:Setting)=>{
-                                            return(
-                                             <span key={id}>  {value}</span>
-                                         )
-                                         })} 
-               <br />
-            </span>
-            {/* Hiển thị ảnh QR code */}
-
-            {bankImage?.data.keyvalue.map(({id,value}:Setting)=>{
-                                            return(
-                                            
-                                             <img key={id}
-                                             src={value}
-                                             alt="QR Code"
-                                           />
-                                         )
-                                         })} 
-          
-          </div>
-
-          <div className="text-center mt-3">
-            <span className="fs-4 text-black fw-bold">
-              Người thụ hưởng: {bankNameUse?.data.keyvalue.map(({id,value}:Setting)=>{
-                                            return(
-                                             <span key={id}>  {value}</span>
-                                         )
-                                         })}  <br />
-              Số tài khoản :{bankNumber?.data.keyvalue.map(({id,value}:Setting)=>{
-                                            return(
-                                             <span key={id}>  {value}</span>
-                                         )
-                                         })}  <br />
-             Nội dung chuyển khoản :{bankContent?.data.keyvalue.map(({id,value}:Setting)=>{
-                                            return(
-                                             <span key={id}>  {value}</span>
-                                         )
-                                         })}                             
-            </span>
-                                </div>
-                                <div className="text-center mt-3">
-                                  <span className="fs-4 text-danger fw-bold">
-                                    Số tiền bạn phải chuyển là:{" "}
-                                    {formattedFinalPrice}
-                                  </span>
-                                </div>
-                              </div>
-                            </Modal.Body>
-                            <Modal.Footer>
-                              <div className="text-center">
-                                {/* Thêm nút "Chuyển khoản thành công" */}
-                                <button
-                                  className="btn btn-danger mr-2"
-                                  onClick={handleModalCloseQR}
-                                >
-                                  Thoát
-                                </button>
-                                <button
-                                  onClick={handleConfirmPayment}
-                                  className="btn btn-success"
-                                >
-                                  Chuyển khoản thành công
-                                  {loading == true ? (
-                                <Spin className="ml-2" />
-                              ) : (
-                                <span></span>
-                              )}
-                                </button>
-                              </div>
-                            </Modal.Footer>
-                          </Modal>
-                        </span>
-                      ) : (
-                        <span></span>
-                      )}
-
-                      {/* Modal chi tiết đơn hàng */}
-                      <div
-                        className="modal fade"
-                        id={`bill-${id}`}
-                        role="dialog"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                      >
-                        <div className="modal-dialog" role="document">
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h3
-                                className="modal-title text-primary"
-                                id="exampleModalLabel"
-                              >
-                                Chi tiết đơn hàng số <span>{id}</span>
-                              </h3>
-                              <button
-                                type="button"
-                                className="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                              >
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
+                              Chi tiết đơn hàng số <span>{id}</span>
+                            </h3>
+                          </Modal.Header>
+                          <Modal.Body>
                             <div className="modal-body">
                               <h3>Thông tin khách hàng</h3>
                               <p>
@@ -946,9 +612,20 @@ const {data: bankContent} = useGetBankContentQuery();
                                   {formattedFinalPrice}
                                 </span>
                               </p>
-
-                              <p>Ngày bắt đầu tour: {tour_start_time}</p>
-                              <p>Ngày kết thúc tour: {tour_end_time}</p>
+                              <div className="d-flex justify-content-between">
+                                <p>
+                                  Ngày bắt đầu tour:{" "}
+                                  <span className="fw-bold">
+                                    {tour_start_time}
+                                  </span>
+                                </p>
+                                <p>
+                                  Ngày kết thúc tour:{" "}
+                                  <span className="fw-bold">
+                                    {tour_end_time}
+                                  </span>
+                                </p>
+                              </div>
                               <p>
                                 Trạng thái đơn hàng:{" "}
                                 <span className="fw-bold text-danger">
@@ -997,6 +674,25 @@ const {data: bankContent} = useGetBankContentQuery();
                                     <div>
                                       {tour_status == 1 ? (
                                         <div>
+                                          <div>
+                                            <input
+                                              className="mr-1"
+                                              type="checkbox"
+                                              checked={checked}
+                                              onChange={handleCheckboxChange}
+                                            />
+                                            Đọc lại{" "}
+                                            <Link
+                                              to={""}
+                                              className="text-primary"
+                                              onClick={handleOpenPolicy}
+                                            >
+                                              Chính sách & Điều khoản
+                                            </Link>{" "}
+                                            mà bạn đã đồng ý trước đó với chúng
+                                            tôi nếu bạn muốn hủy tour và hoàn
+                                            tiền.
+                                          </div>
                                           {checked && id ? (
                                             <Button
                                               className="btn-continue"
@@ -1009,22 +705,6 @@ const {data: bankContent} = useGetBankContentQuery();
                                           ) : (
                                             <div></div>
                                           )}
-
-                                          <div>
-                                            <input
-                                              className="mr-1"
-                                              type="checkbox"
-                                              checked={checked}
-                                              onChange={handleCheckboxChange}
-                                            />
-                                            Đọc lại{" "}
-                                            <Link to={""}
-                                                className="text-primary"
-                                                onClick={handleOpenPolicy} >  
-                                              Chính sách & Điều khoản
-                                            </Link>{" "}
-                                            mà bạn đã đồng ý trước đó với chúng tôi nếu bạn muốn hủy tour và hoàn tiền.
-                                          </div>
                                         </div>
                                       ) : (
                                         <div></div>
@@ -1036,20 +716,368 @@ const {data: bankContent} = useGetBankContentQuery();
                                 </span>
                               )}
                             </div>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button onClick={handleModalCloseDetail}>
+                              Đóng
+                            </Button>
+                            {/* <Button onClick={handleModalCloseDetail}>
+                            Save Changes
+                          </Button> */}
+                          </Modal.Footer>
+                        </Modal>
+
+                        {payment_status == 1 &&
+                        purchase_status == 2 &&
+                        purchase_method == 1 &&
+                        comfirm_click == 1 ? (
+                          <span>
+                            {id ? (
+                              <Button
+                                className=" btn-success ml-3 rounded-md"
+                                // onClick={handleModalOpenQR(id)}
+                                onClick={() => modalOpenQR(id)}
+                              >
+                                Xác nhận đã chuyển khoản
+                              </Button>
+                            ) : (
+                              <span></span>
+                            )}
+
+                            {/* Modal chuyển khoản QR */}
+                            <Modal
+                              show={showQR == id}
+                              onHide={handleModalCloseQR}
+                              backdrop="static"
+                              keyboard={false}
+                            >
+                              <Modal.Header>
+                                <Modal.Title>
+                                  <div className="text-center">
+                                    Vui lòng quét qr hoặc chuyển khoản cho thông
+                                    tin dưới đây
+                                  </div>
+                                </Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                <div className="container">
+                                  <div className="text-center">
+                                    <span className="fs-4 text-black fw-bold">
+                                      Ngân hàng:
+                                      {bankName?.data.keyvalue.map(
+                                        ({ id, value }: Setting) => {
+                                          return <span key={id}> {value}</span>;
+                                        }
+                                      )}
+                                      <br />
+                                    </span>
+                                    {/* Hiển thị ảnh QR code */}
+
+                                    {bankImage?.data.keyvalue.map(
+                                      ({ id, value }: Setting) => {
+                                        return (
+                                          <img
+                                            key={id}
+                                            src={value}
+                                            alt="QR Code"
+                                          />
+                                        );
+                                      }
+                                    )}
+                                  </div>
+
+                                  <div className="text-center mt-3">
+                                    <span className="fs-4 text-black fw-bold">
+                                      Người thụ hưởng:{" "}
+                                      {bankNameUse?.data.keyvalue.map(
+                                        ({ id, value }: Setting) => {
+                                          return <span key={id}> {value}</span>;
+                                        }
+                                      )}{" "}
+                                      <br />
+                                      Số tài khoản :
+                                      {bankNumber?.data.keyvalue.map(
+                                        ({ id, value }: Setting) => {
+                                          return <span key={id}> {value}</span>;
+                                        }
+                                      )}{" "}
+                                      <br />
+                                      Nội dung chuyển khoản :
+                                      {bankContent?.data.keyvalue.map(
+                                        ({ id, value }: Setting) => {
+                                          return <span key={id}> {value}</span>;
+                                        }
+                                      )}
+                                    </span>
+                                  </div>
+                                  <div className="text-center mt-3">
+                                    <span className="fs-4 text-danger fw-bold">
+                                      Số tiền bạn phải chuyển là:{" "}
+                                      {formattedFinalPrice}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <div className="text-center">
+                                  {/* Thêm nút "Chuyển khoản thành công" */}
+                                  <button
+                                    className="btn btn-danger mr-2"
+                                    onClick={handleModalCloseQR}
+                                  >
+                                    Thoát
+                                  </button>
+                                  <button
+                                    onClick={handleConfirmPayment}
+                                    className="btn btn-success"
+                                  >
+                                    Chuyển khoản thành công
+                                    {loading == true ? (
+                                      <Spin className="ml-2" />
+                                    ) : (
+                                      <span></span>
+                                    )}
+                                  </button>
+                                </div>
+                              </Modal.Footer>
+                            </Modal>
+                          </span>
+                        ) : (
+                          <span></span>
+                        )}
+
+                        {/* Modal chi tiết đơn hàng */}
+                        <div
+                          className="modal fade"
+                          id={`bill-${id}`}
+                          role="dialog"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h3
+                                  className="modal-title text-primary"
+                                  id="exampleModalLabel"
+                                >
+                                  Chi tiết đơn hàng số <span>{id}</span>
+                                </h3>
+                                <button
+                                  type="button"
+                                  className="close"
+                                  data-dismiss="modal"
+                                  aria-label="Close"
+                                >
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div className="modal-body">
+                                <h3>Thông tin khách hàng</h3>
+                                <p>
+                                  Họ và tên:{" "}
+                                  <span className="fw-bold">{name}</span>
+                                </p>
+                                <p>
+                                  Số điện thoại:{" "}
+                                  <span className="fw-bold">
+                                    {phone_number}
+                                  </span>
+                                </p>
+                                <p>
+                                  Email:{" "}
+                                  <span className="fw-bold">{email}</span>
+                                </p>
+                                <hr className="mb-3" />
+                                <h3>Thông tin tour</h3>
+                                <div>
+                                  {purchase_method == 1 ? (
+                                    <div>
+                                      <p>
+                                        Mã số thanh toán VNPAY:{" "}
+                                        <span className="fw-bold">
+                                          {transaction_id ? (
+                                            <span>{transaction_id}</span>
+                                          ) : (
+                                            <span>Chưa có</span>
+                                          )}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  ) : (
+                                    <div></div>
+                                  )}
+                                </div>
+
+                                <p>
+                                  Tên tour:{" "}
+                                  <span className="fw-bold">{tour_name}</span>
+                                </p>
+                                <p>
+                                  Phương thức thanh toán:{" "}
+                                  {purchase_method == 1 ? (
+                                    <span className="fw-bold">
+                                      Chuyển khoản ngân hàng
+                                    </span>
+                                  ) : (
+                                    <span className="fw-bold">VNPAY</span>
+                                  )}
+                                </p>
+                                <div className="d-flex justify-content-between mb-3">
+                                  <div>
+                                    Số lượng trẻ em:{" "}
+                                    <span className="fw-bold">
+                                      {child_count}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    Số lượng người lớn:{" "}
+                                    <span className="fw-bold">
+                                      {adult_count}
+                                    </span>
+                                  </div>
+                                </div>
+                                {coupon_fixed != 0 && coupon_fixed != null ? (
+                                  <div>
+                                    <p>
+                                      Coupon:{" "}
+                                      <span className="fw-bold">
+                                        Giảm {coupon_fixed}đ
+                                      </span>
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    {coupon_percentage != null ? (
+                                      <p>
+                                        Coupon:{" "}
+                                        <span className="fw-bold">
+                                          Giảm {coupon_percentage}%
+                                        </span>
+                                      </p>
+                                    ) : (
+                                      <p>
+                                        Coupon:{" "}
+                                        <span className="fw-bold">
+                                          Không có
+                                        </span>
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+
+                                <p>
+                                  Giá tour:{" "}
+                                  <span className="fw-bold">
+                                    {formattedFinalPrice}
+                                  </span>
+                                </p>
+
+                                <p>Ngày bắt đầu tour: {tour_start_time}</p>
+                                <p>Ngày kết thúc tour: {tour_end_time}</p>
+                                <p>
+                                  Trạng thái đơn hàng:{" "}
+                                  <span className="fw-bold text-danger">
+                                    {billStatus}
+                                  </span>
+                                </p>
+                                <p>
+                                  Trạng thái thanh toán:{" "}
+                                  <span className="fw-bold text-danger">
+                                    {paymentStatus}
+                                  </span>
+                                </p>
+                                <p>
+                                  Trạng thái tour:{" "}
+                                  <span className="fw-bold text-danger">
+                                    {tourStatus}
+                                  </span>
+                                </p>
+
+                                {purchase_method == 2 &&
+                                payment_status == 1 &&
+                                tour_status == 1 ? (
+                                  <button
+                                    className="btn-continue mr-2"
+                                    onClick={handleGoToPayment}
+                                  >
+                                    Thanh toán VNPAY
+                                  </button>
+                                ) : (
+                                  <div>
+                                    {purchase_status == 6 ? (
+                                      <div></div>
+                                    ) : (
+                                      <div></div>
+                                    )}
+                                  </div>
+                                )}
+                                {payment_status == 1 && tour_status == 1 ? (
+                                  <p className="text-danger">
+                                    Đơn hàng sẽ tự động hủy sau 24 tiếng nếu bạn
+                                    không thanh toán
+                                  </p>
+                                ) : (
+                                  <span>
+                                    {purchase_status == 3 ? (
+                                      <div>
+                                        {tour_status == 1 ? (
+                                          <div>
+                                            {checked && id ? (
+                                              <Button
+                                                className="btn-continue"
+                                                onClick={() =>
+                                                  modalCancelOpen(id)
+                                                }
+                                              >
+                                                Hủy tour
+                                              </Button>
+                                            ) : (
+                                              <div></div>
+                                            )}
+
+                                            <div>
+                                              <input
+                                                className="mr-1"
+                                                type="checkbox"
+                                                checked={checked}
+                                                onChange={handleCheckboxChange}
+                                              />
+                                              Đọc lại{" "}
+                                              <Link
+                                                to={""}
+                                                className="text-primary"
+                                                onClick={handleOpenPolicy}
+                                              >
+                                                Chính sách & Điều khoản
+                                              </Link>{" "}
+                                              mà bạn đã đồng ý trước đó với
+                                              chúng tôi nếu bạn muốn hủy tour và
+                                              hoàn tiền.
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <div></div>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <div></div>
+                                    )}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Modal xác nhận hủy tour */}
-                      {/* {selectedForm && ( */}
+                        {/* Modal xác nhận hủy tour */}
+                        {/* {selectedForm && ( */}
                         <Modal
                           show={selectedForm == id}
                           onHide={handleModalCancelClose}
                         >
                           <Modal.Header closeButton>
-                            <Modal.Title>
-                              Form xác nhận hoàn tiền 
-                            </Modal.Title>
+                            <Modal.Title>Form xác nhận hoàn tiền</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <form>
@@ -1138,17 +1166,17 @@ const {data: bankContent} = useGetBankContentQuery();
                             </Button> */}
                           </Modal.Footer>
                         </Modal>
-                      {/* )} */}
+                        {/* )} */}
 
-                      <div
-                        className="modal fade"
-                        id={`bill-cancel-${id}`}
-                        role="dialog"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                      ></div>
+                        <div
+                          className="modal fade"
+                          id={`bill-cancel-${id}`}
+                          role="dialog"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        ></div>
 
-                      {/* {payment_status == 0 ? (
+                        {/* {payment_status == 0 ? (
                       <div>
                         <p>
                           Trạng thái:{" "}
@@ -1169,26 +1197,26 @@ const {data: bankContent} = useGetBankContentQuery();
                         </p>
                       </div>
                     )} */}
+                      </div>
+                      <div className="col-4">
+                        <img src={tour_image} alt="" />
+                      </div>
                     </div>
-                    <div className="col-4">
-                      <img src={tour_image} alt="" />
-                    </div>
-                  </div>
-                );
-              }
-            )}
-                 
-            <ReactPaginate
-              previousLabel={"<-"}
-              nextLabel={"->"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-            />
-          </div>
-                  )}
+                  );
+                }
+              )}
+
+              <ReactPaginate
+                previousLabel={"<-"}
+                nextLabel={"->"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+              />
+            </div>
+          )}
         </div>
       </section>
     </div>
