@@ -2,13 +2,22 @@ import Loader from "../../../componenets/User/Loader";
 import { useGetBlogByIdQuery } from "../../../api/blogs";
 import { useParams } from "react-router-dom";
 import moment from "moment";
+import { useGetSubBannerQuery } from "../../../api/setting";
+import { Setting } from "../../../interfaces/Setting";
 
 const BlogDetail = () => {
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
+  const { data: dataBanner } = useGetSubBannerQuery();
+  let backgroundImageUrl = ''; // Define the variable outside the map function
+
+  if (dataBanner?.data.keyvalue) {
+      backgroundImageUrl = dataBanner.data.keyvalue.map(({ value }: Setting) => {
+          return value;
+      })[0]; // Assuming you want the first value, adjust as needed
+  }
 
   const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
+      background: `url(${backgroundImageUrl})`,
+      backgroundSize: 'cover',
   };
   const { id } = useParams<{ id: string }>();
 
