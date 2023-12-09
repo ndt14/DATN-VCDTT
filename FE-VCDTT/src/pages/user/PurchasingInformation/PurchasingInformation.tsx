@@ -1122,12 +1122,12 @@ const PurchasingInformation = () => {
                     <h4>Nhập mã giảm giá</h4>
                     {userLogIn == "true" ? (
                       <form onSubmit={handleCouponSubmit}>
-                        <div className="form-group row">
+                        <div className="form-group row justify-content-center">
                           <input
                             type="text"
                             name="coupon_code"
                             placeholder="Nhập mã giảm giá"
-                            className="input-border col-7 mr-2"
+                            className="input-border col-11"
                             value={formCoupon.coupon_code}
                             onChange={handleCouponChange}
                           />
@@ -1137,7 +1137,7 @@ const PurchasingInformation = () => {
                             className="input-border"
                             value={formCoupon.user_id}
                           />
-                          <button className="btn-continue col-4" type="submit">
+                          <button className="btn-continue col-11 mt-2" type="submit">
                             Xác nhận
                           </button>
                         </div>

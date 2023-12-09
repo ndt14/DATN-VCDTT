@@ -9,8 +9,6 @@ import { useState } from "react";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const BlogsPage = () => {
- 
-
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
   };
@@ -23,33 +21,32 @@ const BlogsPage = () => {
     (currentPage + 1) * itemsPerPage
   ) || []) as Blog[];
 
-
   //slug
   const removeVietnameseSigns = (str: any) => {
     str = str.toLowerCase();
     // Chuyển đổi các ký tự có dấu thành không dấu
-    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, 'a');
-    str = str.replace(/đ/g, 'd');
-    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, 'e');
-    str = str.replace(/í|ì|ĩ|ỉ|ị/g, 'i');
-    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, 'o');
-    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, 'u');
-    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, 'y');
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, "a");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, "e");
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, "i");
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, "o");
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, "u");
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, "y");
     return str;
-};
+  };
 
-const createSlugFromString = (inputString: any) => {
+  const createSlugFromString = (inputString: any) => {
     const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
     return stringWithoutVietnameseSigns
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-};
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
 
-//banner
-const dataTitle = "Bài viết"
+  //banner
+  const dataTitle = "Bài viết";
   return (
     <>
       <Loader />
@@ -66,22 +63,30 @@ const dataTitle = "Bài viết"
                   <div className="col-lg-8 primary right-sidebar">
                     {/* Call API */}
                     <div className="grid row">
-                      {currentData?.map(({ id, main_img, title, short_desc }: Blog) => {
-                        return (
-                          <div className="grid-item col-md-6" key={id}>
-                            <article className="post">
-                              <figure className="feature-image">
-                              <Link to={`${id}-${createSlugFromString(title)}.html`}>
-
-                                  <img src={main_img} alt="" />
-                                </Link>
-                              </figure>
-                              <div className="entry-content">
-                                <Link to={`${id}-${createSlugFromString(title)}.html`}>
-                                  <h3>{title}</h3>
-                                </Link>
-                                <div className="entry-meta">
-                                  {/* <span className="byline">
+                      {currentData?.map(
+                        ({ id, main_img, title, short_desc }: Blog) => {
+                          return (
+                            <div className="grid-item col-md-6" key={id}>
+                              <article className="post">
+                                <figure className="feature-image">
+                                  <Link
+                                    to={`${id}-${createSlugFromString(
+                                      title
+                                    )}.html`}
+                                  >
+                                    <img src={main_img} alt="" />
+                                  </Link>
+                                </figure>
+                                <div className="entry-content">
+                                  <Link
+                                    to={`${id}-${createSlugFromString(
+                                      title
+                                    )}.html`}
+                                  >
+                                    <h3>{title}</h3>
+                                  </Link>
+                                  <div className="entry-meta">
+                                    {/* <span className="byline">
                                     <a href="#">Demoteam</a>
                                   </span>
                                   <span className="posted-on">
@@ -90,8 +95,8 @@ const dataTitle = "Bài viết"
                                   <span className="comments-link">
                                     <a href="#">No Comments</a>
                                   </span> */}
-                                </div>
-                                <div className="text-description">
+                                  </div>
+                                  <div className="text-description">
                                     <span
                                       className="text-from-api"
                                       dangerouslySetInnerHTML={{
@@ -99,24 +104,26 @@ const dataTitle = "Bài viết"
                                       }}
                                     ></span>
                                   </div>
-                                <a href="#" className="button-text">
-                                  Đọc tiếp ...
-                                </a>
-                              </div>
-                            </article>
-                          </div>
-                        );
-                      })}
+                                  <a href="#" className="button-text">
+                                    Đọc tiếp ...
+                                  </a>
+                                </div>
+                              </article>
+                            </div>
+                          );
+                        }
+                      )}
+                      <ReactPaginate
+                        previousLabel={"<-"}
+                        nextLabel={"->"}
+                        breakLabel={"..."}
+                        pageCount={pageCount}
+                        onPageChange={handlePageChange}
+                        containerClassName={"pagination"}
+                        activeClassName={"active"}
+                      />
                     </div>
-                    <ReactPaginate
-                      previousLabel={"<-"}
-                      nextLabel={"->"}
-                      breakLabel={"..."}
-                      pageCount={pageCount}
-                      onPageChange={handlePageChange}
-                      containerClassName={"pagination"}
-                      activeClassName={"active"}
-                    />
+
                     {/* <!-- blog post item html end -->
                            <!-- pagination html start--> */}
                     {/* <div className="post-navigation-wrap">
@@ -146,8 +153,14 @@ const dataTitle = "Bài viết"
                     </div> */}
                     {/* <!-- pagination html start--> */}
                   </div>
-                  <div className="col-lg-4 secondary">
-                    <img src="https://graphics.vietnamprinting.com/wp-content/uploads/2020/01/mau-banner-dich-vu-du-lich-vietnamprinting-muabannhanh.jpg" alt="" />
+                  <div
+                    className="col-lg-4 secondary"
+                    style={{ height: "1000px" }}
+                  >
+                    <img
+                      src="https://graphics.vietnamprinting.com/wp-content/uploads/2020/01/mau-banner-dich-vu-du-lich-vietnamprinting-muabannhanh.jpg"
+                      alt=""
+                    />
                     {/* <img src="https://graphics.vietnamprinting.com/wp-content/uploads/2020/01/mau-banner-dich-vu-du-lich-vietnamprinting-muabannhanh.jpg" alt="" /> */}
                     {/* <div className="sidebar">
                       <aside className="widget author_widget">

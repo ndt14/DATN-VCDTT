@@ -99,7 +99,7 @@ const UserProfile = () => {
           // confirmButtonText: "OK",
           showCancelButton: false,
           showConfirmButton: false,
-          timer: 2000
+          timer: 2000,
         });
       })
       .catch((error) => {
@@ -178,9 +178,9 @@ const UserProfile = () => {
         // confirmButtonText: "OK",
         showCancelButton: false,
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
       });
-     
+
       return;
     }
 
@@ -203,21 +203,20 @@ const UserProfile = () => {
             // confirmButtonText: "OK",
             showCancelButton: false,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
           });
-         
         } else if ("error" in response) {
           // Handle error case
           // const errorData = response.error;
           // Process errorData
 
-           MySwal.fire({
+          MySwal.fire({
             text: "Sai Mật khẩu",
             icon: "warning",
             // confirmButtonText: "OK",
             showCancelButton: false,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
           });
         }
 
@@ -249,12 +248,12 @@ const UserProfile = () => {
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
-  const dataTitle = "Thông tin tài khoản"
+  const dataTitle = "Thông tin tài khoản";
 
   return (
     <div>
-          <SecondaryBanner>{dataTitle}</SecondaryBanner>
-    
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
           <div className="col-4">
@@ -302,13 +301,16 @@ const UserProfile = () => {
                   >
                     <IoPersonOutline /> Thông tin cá nhân
                   </Link>
-                  <Link className="nav-link active" to={"/user/tours"}>
+                  <Link
+                    className="nav-link active text-black"
+                    to={"/user/tours"}
+                  >
                     <FaRegListAlt /> Tour đã đặt
                   </Link>
-                  <Link className="nav-link" to={"/user/favorite"}>
+                  <Link className="nav-link text-black" to={"/user/favorite"}>
                     <FaRegHeart /> Tour yêu thích
                   </Link>
-                  <Link className="nav-link" to={"/user/coupon"}>
+                  <Link className="nav-link text-black" to={"/user/coupon"}>
                     <FaRegListAlt /> Mã Giảm giá
                   </Link>
                 </nav>
@@ -339,15 +341,28 @@ const UserProfile = () => {
                     Email: <span className="fw-bold">{userEmail}</span>
                   </p>
                   <p>
-                    Địa chỉ: <span className="fw-bold">{userAddress}</span>
+                    Địa chỉ:{" "}
+                    {userAddress ? (
+                      <span className="fw-bold">{userAddress}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Số điện thoại:{" "}
-                    <span className="fw-bold">{phoneNumber}</span>
+                    {phoneNumber ? (
+                      <span className="fw-bold">{phoneNumber}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Ngày tháng năm sinh:{" "}
-                    <span className="fw-bold">{formattedDate}</span>
+                    {userDateOfBirth ? (
+                      <span className="fw-bold">{formattedDate}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Giới tính: <span className="fw-bold">{gender}</span>

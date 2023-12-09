@@ -37,16 +37,32 @@ Mã giảm giã bị xoá
                             <h3 class="card-title">Mã giảm giá</h3> <a href="{{ route('coupon.trash') }}"
                                 style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span
                                     style="color: black;">|</span> Thùng rác</a>
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    <a href="{{ url('/coupon') }}" class="btn btn-default d-none d-sm-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M5 12l14 0"></path>
+                                            <path d="M5 12l4 4"></path>
+                                            <path d="M5 12l4 -4"></path>
+                                        </svg>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                            Show
-                                            <div class="mx-2 d-inline-block">
-                                                <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                            </div>
-                                            entries
-                                        </div>-->
+                                                Show
+                                                <div class="mx-2 d-inline-block">
+                                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                </div>
+                                                entries
+                                            </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -60,7 +76,7 @@ Mã giảm giã bị xoá
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="keyword" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm</button>
@@ -136,8 +152,8 @@ Mã giảm giã bị xoá
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                                stroke-linejoin="round">
+                                                                stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none">
                                                                 </path>
                                                                 <path d="M4 7l16 0"></path>
