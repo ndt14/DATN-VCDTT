@@ -49,7 +49,7 @@ class DashboardController extends Controller
         }
 
         //
-        $paidPurchase = PurchaseHistory::where('payment_status',2)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
+        $paidPurchase = PurchaseHistory::where('payment_status',2)->where('purchase_status',3)->whereIn('tour_status',[2,3])->get();
 
         $data['PPCToday']=0;$data['PPCWeek']=0;$data['PPCMonth']=0;$data['PPCYear']=0;
         foreach ($paidPurchase as $PP){
@@ -94,6 +94,7 @@ class DashboardController extends Controller
             return $a->star > 0;
         })->slice(0, 5);
         $data['tourR'] = $tourRatings;
+
         //chart
         $months = [0,0,0,0,0,0,0,0,0,0,0,0];
         foreach ($total as $d) {
