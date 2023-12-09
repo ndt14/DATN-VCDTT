@@ -27,6 +27,7 @@ import { NoResultsBoundary } from "./Noresults";
 import { PriceSlider } from "./PriceSider";
 import { AiFillEye } from "react-icons/ai";
 import { Rate } from "antd";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 
 const searchClient = algoliasearch(
@@ -64,24 +65,12 @@ export function Search() {
   if (titleElement) {
     titleElement.innerText = "Tìm kiếm tour";
   }
+
+  const dataTitle = "Tìm kiếm tour";
   return (
     <>
       <div>
-        <section className="inner-banner-wrap">
-          <div
-            className="inner-baner-container"
-            style={{
-              backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
-            }}
-          >
-            <div className="container">
-              <div className="inner-banner-content">
-                <h1 className="inner-title">Tìm kiếm tour</h1>
-              </div>
-            </div>
-          </div>
-          <div className="inner-shape"></div>
-        </section>
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
         <div className="container">
           <div className="row">
             <InstantSearch
@@ -199,12 +188,34 @@ type HitProps = {
 };
 
 function Hit({ hit }: HitProps) {
+  const removeVietnameseSigns = (str: any) => {
+    str = str.toLowerCase();
+    // Chuyển đổi các ký tự có dấu thành không dấu
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, "a");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, "e");
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, "i");
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, "o");
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, "u");
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, "y");
+    return str;
+  };
+
+  const createSlugFromString = (inputString: any) => {
+    const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
+    return stringWithoutVietnameseSigns
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
   return (
     // <article>
     <div className="" key={hit.objectID}>
     <div className="package-wrap">
       <figure className="feature-image">
-        <Link to={`/tours/${hit.objectID}`}>
+        <Link to={`/tours/${hit.objectID}-${createSlugFromString( hit.name )}.html`}>
           <img
             className="w-full img-fixed"
             src={hit.main_img}

@@ -20,6 +20,12 @@ import { useGetBannerQuery } from "../../../api/setting";
 import { Setting } from "../../../interfaces/Setting";
 import SearchBar from "../../../componenets/User/SearchBar";
 
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const HomePage = () => {
   //
 
@@ -97,8 +103,18 @@ const HomePage = () => {
       user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
-    updateTourFavorite(info).then(() => {
-      alert("Thêm vào yêu thích thành công");
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Thêm vào yêu thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
     });
   };
 
@@ -107,8 +123,18 @@ const HomePage = () => {
       user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
-    updateTourFavorite(info).then(() => {
-      alert("Bỏ thích thành công");
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Bỏ thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
     });
   };
 
@@ -417,7 +443,7 @@ const HomePage = () => {
                                     </div>
 
                                     <div className="btn-wrap">
-                                      <a
+                                      <a href="#"
                                         onClick={handleClickAdd(id)}
                                         className="button-text width-6"
                                       >
@@ -994,7 +1020,7 @@ const HomePage = () => {
 
                                     <div className="btn-wrap">
                                       <a
-                                        href="#"
+                                       
                                         className="button-text width-6 text-pink"
                                         onClick={handleClickRemove(id)}
                                       >
@@ -1227,7 +1253,7 @@ const HomePage = () => {
                                   </div>
 
                                   <div className="btn-wrap">
-                                    <a
+                                    <a  href="#"
                                       onClick={handleClickRemove(id)}
                                       className="button-text width-6 text-pink"
                                     >
@@ -1324,7 +1350,7 @@ const HomePage = () => {
                                   </div>
 
                                   <div className="btn-wrap">
-                                    <a
+                                    <a  href="#"
                                       onClick={handleClickAdd(id)}
                                       className="button-text width-6"
                                     >

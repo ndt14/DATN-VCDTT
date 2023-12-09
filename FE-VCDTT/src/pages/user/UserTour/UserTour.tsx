@@ -285,12 +285,13 @@ const UserTour = () => {
                     Thông tin cá nhân
                   </Link>
                   <Link
-                    className="nav-link text-white"
-                    style={{ backgroundColor: "#1677FF" }}
-                    to={"/user/tours"}
-                  >
-                    <FaRegListAlt /> Tour đã đặt
-                  </Link>
+  className="nav-link text-white "
+  style={{ backgroundColor: "#1677FF" }}
+  to={"/user/tours"}
+>
+  <FaRegListAlt /> Tour đã đặt
+</Link>
+
                   <Link className="nav-link text-black" to={"/user/favorite"}>
                     <FaRegHeart /> Tour yêu thích
                   </Link>

@@ -10,6 +10,10 @@ import { FaRegListAlt } from "react-icons/fa";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 import { AiFillEye } from "react-icons/ai";
 import { Rate } from "antd";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const UserTour = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -29,8 +33,18 @@ const UserTour = () => {
       user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
-    updateTourFavorite(info).then(() => {
-      alert("Bỏ thích thành công");
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Bỏ thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
     });
   };
 
@@ -197,7 +211,7 @@ const UserTour = () => {
                             </div>
 
                             <div className="btn-wrap">
-                              <a
+                              <a  href="#"
                                 onClick={handleClickRemove(id)}
                                 className="button-text width-6 text-pink"
                               >
