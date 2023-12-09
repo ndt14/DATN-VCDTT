@@ -39,19 +39,36 @@
                             @if (auth()->user()->is_admin == 1 ||
                                     auth()->user()->can('delete bill'))
                                 <a href="{{ route('purchase_histories.trash') }}"
-                                    style="padding-left: 5px; text-decoration: none; color: black;"><span
+                                    style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span
                                         style="color: black;">|</span> Thùng rác</a>
                             @endif
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    <a href="{{ url('/purchase-history') }}"
+                                        class="btn btn-default d-none d-sm-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M5 12l14 0"></path>
+                                            <path d="M5 12l4 4"></path>
+                                            <path d="M5 12l4 -4"></path>
+                                        </svg>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                                    Show
-                                                    <div class="mx-2 d-inline-block">
-                                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                                    </div>
-                                                    entries
-                                                    </div>-->
+                                                        Show
+                                                        <div class="mx-2 d-inline-block">
+                                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                        </div>
+                                                        entries
+                                                        </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -143,7 +160,7 @@
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="{{ request()->query('keyword') }}"
-                                                class="form-control" placeholder="Keyword">
+                                                class="form-control" placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -482,7 +499,7 @@
                             .then(() => {
                                 // Chuyển hướng sau khi hiển thị modal
                                 window.location.href =
-                                '/purchase-history/trash'; // Thay đổi đúng route của bạn
+                                    '/purchase-history/trash'; // Thay đổi đúng route của bạn
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)
