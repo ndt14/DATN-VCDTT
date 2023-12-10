@@ -336,18 +336,18 @@ class PurchaseHistoryController extends Controller
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAsRead(string $id)
+    public function purchaseHistoryMarkAsRead(string $user_id, string $id)
     {
-        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        $user = User::where('id', $user_id)->first(); //lúc sau đổi thành tìm theo role
         $notification = $user->notifications->where('id', $id)->first();
         $notification->markAsRead();
         // return redirect()->back();
         return response()->json(['message' => 'Đã đọc', 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAllAsRead()
+    public function purchaseHistoryMarkAllAsRead(string $user_id)
     {
-        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        $user = User::where('id', $user_id)->first(); //lúc sau đổi thành tìm theo role
         foreach ($user->unreadnotifications as $notification) {
             $notification->markAsRead();
         }

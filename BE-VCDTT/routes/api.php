@@ -138,8 +138,8 @@ Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('r
 Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy'])->name('allocation.delete');
 
 
-Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
-Route::get('/purchase-history/mark-all-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAllAsRead']);
+Route::get('/purchase-history/mark-as-read/{user_id}/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
+Route::get('/purchase-history/mark-all-as-read/{user_id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAllAsRead']);
 
 //Page
 Route::get('/page', [TermAndPrivacyController::class, 'index']);
