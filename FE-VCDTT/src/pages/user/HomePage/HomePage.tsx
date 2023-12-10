@@ -4,7 +4,6 @@ import TinySlider from "tiny-slider-react";
 import "tiny-slider/dist/tiny-slider.css";
 // import TextContainer from "./TextContainer";
 
-
 import { useGetToursQuery } from "../../../api/tours";
 import { Tour } from "../../../interfaces/Tour";
 import { Link } from "react-router-dom";
@@ -21,13 +20,19 @@ import { useGetBannerQuery } from "../../../api/setting";
 import { Setting } from "../../../interfaces/Setting";
 import SearchBar from "../../../componenets/User/SearchBar";
 
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const HomePage = () => {
   //
 
   //
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { data, isLoading } = useGetToursQuery();
-  console.log(data);
+  // console.log(data);
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
   };
@@ -46,11 +51,20 @@ const HomePage = () => {
     autoplayButtonOutput: false,
   };
 
+  const settings3 = {
+    lazyload: false,
+    nav: false,
+    mouseDrag: true,
+    items: 1,
+    autoplay: true,
+    autoplayButtonOutput: false,
+  };
+
   //tour nổi bật
   // Sắp xếp danh sách tour theo view_count giảm dần
   const sortedTours = _.orderBy(data?.data.tours, ["view_count"], ["desc"]);
   const featuredTours = sortedTours.slice(0, 4);
-  console.log(featuredTours);
+  // console.log(featuredTours);
 
   //tour giảm giá
   const sortedDiscountedTours = _.orderBy(
@@ -69,7 +83,7 @@ const HomePage = () => {
     userData = JSON.parse(preParseUserData);
   }
   const userId = userData && userData.id ? userData.id : null;
-  console.log(typeof userId);
+  // console.log(typeof userId);
 
   const { data: favoriteData } = useGetTourFavoriteByIdQuery(userId || "");
   useEffect(() => {
@@ -84,24 +98,64 @@ const HomePage = () => {
 
   //
   const [updateTourFavorite] = useUpdateFavoriteMutation();
-  const handleFavorite = (id: number) => {
+  const handleFavoriteAdd = (id: number) => {
     const info = {
       user_id: userId !== null ? parseInt(userId) : 0,
       tour_id: id,
     };
-    updateTourFavorite(info).then(() => {
-      alert("Bỏ thích thành công");
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Thêm vào yêu thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
     });
   };
 
-  const handleClick =
+  const handleFavoriteRemove = (id: number) => {
+    const info = {
+      user_id: userId !== null ? parseInt(userId) : 0,
+      tour_id: id,
+    };
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Bỏ thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
+    });
+  };
+
+  const handleClickAdd =
     (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
       if (typeof id === "number") {
-        handleFavorite(id);
+        handleFavoriteAdd(id);
       } else {
         // Handle the case when id is undefined
-        console.log("Invalid id");
+        // console.log("Invalid id");
+      }
+    };
+  const handleClickRemove =
+    (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      if (typeof id === "number") {
+        handleFavoriteRemove(id);
+      } else {
+        // Handle the case when id is undefined
+        // console.log("Invalid id");
       }
     };
 
@@ -113,35 +167,34 @@ const HomePage = () => {
   const removeVietnameseSigns = (str: any) => {
     str = str.toLowerCase();
     // Chuyển đổi các ký tự có dấu thành không dấu
-    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, 'a');
-    str = str.replace(/đ/g, 'd');
-    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, 'e');
-    str = str.replace(/í|ì|ĩ|ỉ|ị/g, 'i');
-    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, 'o');
-    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, 'u');
-    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, 'y');
+    str = str.replace(/á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/g, "a");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/g, "e");
+    str = str.replace(/í|ì|ĩ|ỉ|ị/g, "i");
+    str = str.replace(/ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/g, "o");
+    str = str.replace(/ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/g, "u");
+    str = str.replace(/ý|ỳ|ỹ|ỷ|ỵ/g, "y");
     return str;
-};
+  };
 
-const createSlugFromString = (inputString: any) => {
+  const createSlugFromString = (inputString: any) => {
     const stringWithoutVietnameseSigns = removeVietnameseSigns(inputString);
     return stringWithoutVietnameseSigns
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-};
-
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
 
   //blog
   const { data: dataBlog } = useGetBlogsQuery();
-  console.log(dataBlog);
+  // console.log(dataBlog);
   const sortedDiscountedBlogs = _.orderBy(dataBlog?.data.blogs, ["id"]);
   const newBlogs = sortedDiscountedBlogs.slice(0, 3);
 
   //banner
-  const {data: dataBanner} = useGetBannerQuery();
+  const { data: dataBanner } = useGetBannerQuery();
   return (
     <>
       <Loader />
@@ -152,22 +205,17 @@ const createSlugFromString = (inputString: any) => {
           <div className="home-slider d-none d-md-block">
             <div className="home-banner-items">
               <div className="banner-inner-wrap">
-              <Carousel autoplay>
-                  {
-                    dataBanner?.data.banner.map(({url}: Setting)=>{
-                      return (
-                        <>
-                        <Carousel >
-                        <img src={url} alt="" />
+                <Carousel autoplay>
+                  {dataBanner?.data.banner.map(({ url }: Setting) => {
+                    return (
+                      <>
+                        <Carousel>
+                          <img src={url} alt="" />
                         </Carousel>
-                     
-                         
- 
-                        </>
-                      )
-                    })
-                  }
-                  </Carousel>
+                      </>
+                    );
+                  })}
+                </Carousel>
               </div>
               <div className="banner-content-wrap">
                 <div className="container"></div>
@@ -205,7 +253,15 @@ const createSlugFromString = (inputString: any) => {
             </div>
           </div>
         </div>
-        <section className="package-section">
+
+        <div className="container d-block d-sm-none">
+          <div className="trip-search-inner white-bg d-flex">
+            <SearchBar />
+          </div>
+        </div>
+
+        {/*  */}
+        <section className="package-section d-none d-xl-block d-xxl-none">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -238,7 +294,11 @@ const createSlugFromString = (inputString: any) => {
                             <div className="col-lg-4 col-md-6" key={id}>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -264,7 +324,9 @@ const createSlugFromString = (inputString: any) => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -299,7 +361,8 @@ const createSlugFromString = (inputString: any) => {
                                     <div className="btn-wrap">
                                       <a
                                         href="#"
-                                        className="button-text width-6"
+                                        className="button-text width-6 text-pink"
+                                        onClick={handleClickRemove(id)}
                                       >
                                         Đã thích
                                         <i className="far fa-heart"></i>
@@ -315,7 +378,11 @@ const createSlugFromString = (inputString: any) => {
                             <div className="col-lg-4 col-md-6" key={id}>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -341,7 +408,130 @@ const createSlugFromString = (inputString: any) => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
+                                        >
+                                          {name}
+                                        </Link>
+                                      </h3>
+                                    </div>
+                                    <div className="review-area">
+                                      <div
+                                        className=""
+                                        title={`Rated ${star} out of 5`}
+                                      >
+                                        <span className="w-90">
+                                          <Rate
+                                            allowHalf
+                                            disabled
+                                            value={star}
+                                          />
+                                        </span>{" "}
+                                        <span className="review-text">
+                                          ({view_count} <AiFillEye size={25} />)
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="text-description">
+                                      <span
+                                        className="text-from-api"
+                                        dangerouslySetInnerHTML={{
+                                          __html: details,
+                                        }}
+                                      ></span>
+                                    </div>
+
+                                    <div className="btn-wrap">
+                                      <a href="#"
+                                        onClick={handleClickAdd(id)}
+                                        className="button-text width-6"
+                                      >
+                                        Thêm vào yêu thích
+                                        <i className="far fa-heart"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                      }
+                    )}
+                  </TinySlider>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Mobile */}
+        <section className="package-section d-block d-sm-none">
+          <div className="container">
+            <div className="section-heading text-center">
+              <div className="row">
+                <div className="col-lg-8 offset-lg-2">
+                  <h5 className="dash-style">
+                    KHÁM PHÁ CÁC ĐỊA DANH NỔI TIẾNG
+                  </h5>
+                  <h2 className="">TOUR NỔI BẬT</h2>
+                </div>
+              </div>
+            </div>
+            <div className="package-inner">
+              <div className="row">
+                {isLoading ? (
+                  <Skeleton active />
+                ) : (
+                  <TinySlider settings={settings3}>
+                    {featuredTours?.map(
+                      ({
+                        id,
+                        name,
+                        details,
+                        main_img,
+                        view_count,
+                        adult_price,
+                        star,
+                      }: Tour) => {
+                        if (idArray.includes(id as number)) {
+                          return (
+                            <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="package-wrap">
+                                <figure className="feature-image">
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
+                                    <img
+                                      className="w-full img-fixed"
+                                      src={main_img}
+                                      alt=""
+                                    />
+                                  </Link>
+                                </figure>
+                                <div className="package-price badge">
+                                  <h6 className="">
+                                    <span>
+                                      {" "}
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(adult_price)}{" "}
+                                    </span>
+                                  </h6>
+                                </div>
+                                <div className="package-content-wrap">
+                                  {/* <div className="package-meta text-center"></div> */}
+                                  <div className="package-content">
+                                    <div className="text-container">
+                                      <h3 className="margin-top-12 text-content">
+                                        <Link
+                                          className="mt-12"
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -375,7 +565,91 @@ const createSlugFromString = (inputString: any) => {
 
                                     <div className="btn-wrap">
                                       <a
-                                        onClick={handleClick(id)}
+                                        href="#"
+                                        className="button-text width-6 text-pink"
+                                        onClick={handleClickRemove(id)}
+                                      >
+                                        Đã thích
+                                        <i className="far fa-heart"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="package-wrap">
+                                <figure className="feature-image">
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
+                                    <img
+                                      className="w-full img-fixed"
+                                      src={main_img}
+                                      alt=""
+                                    />
+                                  </Link>
+                                </figure>
+                                <div className="package-price badge">
+                                  <h6 className="">
+                                    <span>
+                                      {" "}
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(adult_price)}{" "}
+                                    </span>
+                                  </h6>
+                                </div>
+                                <div className="package-content-wrap">
+                                  {/* <div className="package-meta text-center"></div> */}
+                                  <div className="package-content">
+                                    <div className="text-container">
+                                      <h3 className="margin-top-12 text-content">
+                                        <Link
+                                          className="mt-12"
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
+                                        >
+                                          {name}
+                                        </Link>
+                                      </h3>
+                                    </div>
+                                    <div className="review-area">
+                                      <div
+                                        className=""
+                                        title={`Rated ${star} out of 5`}
+                                      >
+                                        <span className="w-90">
+                                          <Rate
+                                            allowHalf
+                                            disabled
+                                            value={star}
+                                          />
+                                        </span>{" "}
+                                        <span className="review-text">
+                                          ({view_count} <AiFillEye size={25} />)
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="text-description">
+                                      <span
+                                        className="text-from-api"
+                                        dangerouslySetInnerHTML={{
+                                          __html: details,
+                                        }}
+                                      ></span>
+                                    </div>
+
+                                    <div className="btn-wrap">
+                                      <a
+                                        onClick={handleClickAdd(id)}
                                         className="button-text width-6"
                                       >
                                         Thêm vào yêu thích
@@ -396,10 +670,11 @@ const createSlugFromString = (inputString: any) => {
             </div>
           </div>
         </section>
+
         {/*  */}
 
         {/*  */}
-        <section className="special-section">
+        <section className="special-section d-none d-xl-block d-xxl-none">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -439,7 +714,11 @@ const createSlugFromString = (inputString: any) => {
                               </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -468,7 +747,9 @@ const createSlugFromString = (inputString: any) => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -503,7 +784,8 @@ const createSlugFromString = (inputString: any) => {
                                     <div className="btn-wrap">
                                       <a
                                         href="#"
-                                        className="button-text width-6"
+                                        className="button-text width-6 text-pink"
+                                        onClick={handleClickRemove(id)}
                                       >
                                         Đã thích
                                         <i className="far fa-heart"></i>
@@ -527,7 +809,11 @@ const createSlugFromString = (inputString: any) => {
                               </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
-                                  <Link to={`/tours/${id}-${createSlugFromString(name)}.html`}>
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
                                     <img
                                       className="w-full img-fixed"
                                       src={main_img}
@@ -562,7 +848,9 @@ const createSlugFromString = (inputString: any) => {
                                       <h3 className="margin-top-12 text-content">
                                         <Link
                                           className="mt-12"
-                                          to={`/tours/${id}-${createSlugFromString(name)}.html`}
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
                                         >
                                           {name}
                                         </Link>
@@ -597,7 +885,250 @@ const createSlugFromString = (inputString: any) => {
                                     <div className="btn-wrap">
                                       <a
                                         href="#"
+                                        onClick={handleClickAdd(id)}
                                         className="button-text width-6"
+                                      >
+                                        Thêm vào yêu thích
+                                        <i className="far fa-heart"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                      }
+                    )}
+                  </TinySlider>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="special-section d-block d-sm-none">
+          <div className="container">
+            <div className="section-heading text-center">
+              <div className="row">
+                <div className="col-lg-8 offset-lg-2">
+                  <h5 className="dash-style">TOUR ĐỀ XUẤT & GIẢM GIÁ</h5>
+                  <h2>TOUR GIẢM GIÁ</h2>
+                </div>
+              </div>
+            </div>
+            <div className="special-inner">
+              <div className="row">
+                {isLoading ? (
+                  <Skeleton active />
+                ) : (
+                  <TinySlider settings={settings3}>
+                    {saleTours?.map(
+                      ({
+                        id,
+                        name,
+                        details,
+                        main_img,
+                        view_count,
+                        adult_price,
+                        star,
+                        sale_percentage,
+                      }: Tour) => {
+                        if (idArray.includes(id as number)) {
+                          return (
+                            <div className="col-lg-4 col-md-6" key={id}>
+                              {sale_percentage > 0 ? (
+                                <div className="bg-primary text-white position-absolute discount badge ">
+                                  <span
+                                    className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                    style={{ height: "100%" }}
+                                  >
+                                    -{sale_percentage}%
+                                  </span>
+                                </div>
+                              ) : (
+                                <span></span>
+                              )}
+                              <div className="package-wrap">
+                                <figure className="feature-image">
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
+                                    <img
+                                      className="w-full img-fixed"
+                                      src={main_img}
+                                      alt=""
+                                    />
+                                  </Link>
+                                </figure>
+                                <div className="package-price badge">
+                                  <h6 className="">
+                                    <span>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
+                                    </span>{" "}
+                                  </h6>
+                                </div>
+                                <div className="package-content-wrap">
+                                  {/* <div className="package-meta text-center"></div> */}
+                                  <div className="package-content">
+                                    <div className="text-container">
+                                      <h3 className="margin-top-12 text-content">
+                                        <Link
+                                          className="mt-12"
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
+                                        >
+                                          {name}
+                                        </Link>
+                                      </h3>
+                                    </div>
+                                    <div className="review-area">
+                                      <div
+                                        className=""
+                                        title={`Rated ${star} out of 5`}
+                                      >
+                                        <span className="w-90">
+                                          <Rate
+                                            allowHalf
+                                            disabled
+                                            value={star}
+                                          />
+                                        </span>{" "}
+                                        <span className="review-text">
+                                          ({view_count} <AiFillEye size={25} />)
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="text-description">
+                                      <span
+                                        className=""
+                                        dangerouslySetInnerHTML={{
+                                          __html: details,
+                                        }}
+                                      ></span>
+                                    </div>
+
+                                    <div className="btn-wrap">
+                                      <a
+                                       
+                                        className="button-text width-6 text-pink"
+                                        onClick={handleClickRemove(id)}
+                                      >
+                                        Đã thích
+                                        <i className="far fa-heart"></i>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                {sale_percentage > 0 ? (
+                                  <div className="bg-primary text-white position-absolute discount badge ">
+                                    <span
+                                      className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                      style={{ height: "100%" }}
+                                    >
+                                      -{sale_percentage}%
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <span></span>
+                                )}
+                              </div>
+                              <div className="package-wrap">
+                                <figure className="feature-image">
+                                  <Link
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
+                                    <img
+                                      className="w-full img-fixed"
+                                      src={main_img}
+                                      alt=""
+                                    />
+                                  </Link>
+                                </figure>
+                                <div className="package-price badge">
+                                  <h6 className="">
+                                    <span>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
+                                    </span>{" "}
+                                    {/* <span>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(adult_price)}{" "}
+                                    </span>{" "} */}
+                                  </h6>
+                                </div>
+                                <div className="package-content-wrap">
+                                  {/* <div className="package-meta text-center"></div> */}
+                                  <div className="package-content">
+                                    <div className="text-container">
+                                      <h3 className="margin-top-12 text-content">
+                                        <Link
+                                          className="mt-12"
+                                          to={`/tours/${id}-${createSlugFromString(
+                                            name
+                                          )}.html`}
+                                        >
+                                          {name}
+                                        </Link>
+                                      </h3>
+                                    </div>
+                                    <div className="review-area">
+                                      <div
+                                        className=""
+                                        title={`Rated ${star} out of 5`}
+                                      >
+                                        <span className="w-90">
+                                          <Rate
+                                            allowHalf
+                                            disabled
+                                            value={star}
+                                          />
+                                        </span>{" "}
+                                        <span className="review-text">
+                                          ({view_count} <AiFillEye size={25} />)
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="text-description">
+                                      <span
+                                        className=""
+                                        dangerouslySetInnerHTML={{
+                                          __html: details,
+                                        }}
+                                      ></span>
+                                    </div>
+
+                                    <div className="btn-wrap">
+                                      <a
+                                        className="button-text width-6"
+                                        onClick={handleClickAdd(id)}
                                       >
                                         Thêm vào yêu thích
                                         <i className="far fa-heart"></i>
@@ -644,90 +1175,26 @@ const createSlugFromString = (inputString: any) => {
                       view_count,
                       adult_price,
                       star,
+                      sale_percentage,
                     }: Tour) => {
                       if (idArray.includes(id as number)) {
                         return (
                           <div className="col-lg-4 col-md-6" key={id}>
-                            <div className="package-wrap">
-                              <figure className="feature-image">
-                                <Link  to={`/tours/${id}-${createSlugFromString(name)}.html`}
->
-                                  <img
-                                    className="w-full img-fixed"
-                                    src={main_img}
-                                    alt=""
-                                  />
-                                </Link>
-                              </figure>
-                              <div className="package-price badge">
-                                <h6 className="">
-                                  <span>
-                                    {new Intl.NumberFormat("vi-VN", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    }).format(adult_price)}{" "}
-                                  </span>{" "}
-                                </h6>
-                              </div>
-                              <div className="package-content-wrap">
-                                {/* <div className="package-meta text-center"></div> */}
-                                <div className="package-content">
-                                  <div className="text-container">
-                                    <h3 className="margin-top-12 text-content">
-                                      <Link
-                                        className="mt-12"
-                                        to={`/tours/${id}-${createSlugFromString(name)}.html`}
-
-                                      >
-                                        {name}
-                                      </Link>
-                                    </h3>
-                                  </div>
-                                  <div className="review-area">
-                                    <span className="review-text">
-                                      ({view_count} <AiFillEye size={25} />)
-                                    </span>
-                                    <div
-                                      className="rating-start"
-                                      title="Rated 5 out of 5"
-                                    >
-                                      <span className="w-3/5"></span>
-                                    </div>
-                                  </div>
-                                  <div className="text-description">
-                                    <span
-                                      className="text-from-api"
-                                      dangerouslySetInnerHTML={{
-                                        __html: details,
-                                      }}
-                                    ></span>
-                                  </div>
-
-                                  <div className="btn-wrap">
-                                    <a
-                                      onClick={handleClick(id)}
-                                      className="button-text width-6"
-                                    >
-                                      Đã thích
-                                      <i className="far fa-heart"></i>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
+                            <div className="bg-primary text-white position-absolute discount badge ">
+                              <span
+                                className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                style={{ height: "100%" }}
+                              >
+                                -{sale_percentage}%
+                              </span>
                             </div>
-                          </div>
-                        );
-                      } else {
-                        return (
-                          
-                          <div
-                            className="col-lg-4 col-md-6 position-relative"
-                            key={id}
-                          >
                             <div className="package-wrap">
                               <figure className="feature-image">
-                                <Link  to={`/tours/${id}-${createSlugFromString(name)}.html`}
->
+                                <Link
+                                  to={`/tours/${id}-${createSlugFromString(
+                                    name
+                                  )}.html`}
+                                >
                                   <img
                                     className="w-full img-fixed"
                                     src={main_img}
@@ -741,7 +1208,10 @@ const createSlugFromString = (inputString: any) => {
                                     {new Intl.NumberFormat("vi-VN", {
                                       style: "currency",
                                       currency: "VND",
-                                    }).format(adult_price)}{" "}
+                                    }).format(
+                                      (adult_price * (100 - sale_percentage)) /
+                                        100
+                                    )}{" "}
                                   </span>{" "}
                                 </h6>
                               </div>
@@ -752,8 +1222,9 @@ const createSlugFromString = (inputString: any) => {
                                     <h3 className="margin-top-12 text-content">
                                       <Link
                                         className="mt-12"
-                                        to={`/tours/${id}-${createSlugFromString(name)}.html`}
-
+                                        to={`/tours/${id}-${createSlugFromString(
+                                          name
+                                        )}.html`}
                                       >
                                         {name}
                                       </Link>
@@ -782,8 +1253,105 @@ const createSlugFromString = (inputString: any) => {
                                   </div>
 
                                   <div className="btn-wrap">
-                                    <a
-                                      onClick={handleClick(id as number)}
+                                    <a  href="#"
+                                      onClick={handleClickRemove(id)}
+                                      className="button-text width-6 text-pink"
+                                    >
+                                      Đã thích
+                                      <i className="far fa-heart"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div
+                            className="col-lg-4 col-md-6 position-relative"
+                            key={id}
+                          >
+                            {sale_percentage > 0 ? (
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
+                            ) : (
+                              <span></span>
+                            )}
+
+                            <div className="package-wrap">
+                              <figure className="feature-image">
+                                <Link
+                                  to={`/tours/${id}-${createSlugFromString(
+                                    name
+                                  )}.html`}
+                                >
+                                  <img
+                                    className="w-full img-fixed"
+                                    src={main_img}
+                                    alt=""
+                                  />
+                                </Link>
+                              </figure>
+                              <div className="package-price badge">
+                                <h6 className="">
+                                  <span>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(
+                                      (adult_price * (100 - sale_percentage)) /
+                                        100
+                                    )}{" "}
+                                  </span>{" "}
+                                </h6>
+                              </div>
+                              <div className="package-content-wrap">
+                                {/* <div className="package-meta text-center"></div> */}
+                                <div className="package-content">
+                                  <div className="text-container">
+                                    <h3 className="margin-top-12 text-content">
+                                      <Link
+                                        className="mt-12"
+                                        to={`/tours/${id}-${createSlugFromString(
+                                          name
+                                        )}.html`}
+                                      >
+                                        {name}
+                                      </Link>
+                                    </h3>
+                                  </div>
+                                  <div className="review-area">
+                                    <div
+                                      className=""
+                                      title={`Rated ${star} out of 5`}
+                                    >
+                                      <span className="w-90">
+                                        <Rate allowHalf disabled value={star} />
+                                      </span>{" "}
+                                      <span className="review-text">
+                                        ({view_count} <AiFillEye size={25} />)
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="text-description">
+                                    <span
+                                      className="text-from-api"
+                                      dangerouslySetInnerHTML={{
+                                        __html: details,
+                                      }}
+                                    ></span>
+                                  </div>
+
+                                  <div className="btn-wrap">
+                                    <a  href="#"
+                                      onClick={handleClickAdd(id)}
                                       className="button-text width-6"
                                     >
                                       Thêm vào yêu thích
@@ -826,7 +1394,7 @@ const createSlugFromString = (inputString: any) => {
           </div>
         </section>
         {/*  */}
-       
+
         {/* <!-- best html end -->
             <!-- Home client section html start --> */}
 
@@ -852,7 +1420,7 @@ const createSlugFromString = (inputString: any) => {
                     <article className="post">
                       <figure className="feature-image">
                         <Link to={`blogs/${id}`}>
-                          <img src={main_img} alt="" />
+                          <img src={main_img} alt="" className="img-fixed" />
                         </Link>
                       </figure>
                       <div className="entry-content">
@@ -860,14 +1428,13 @@ const createSlugFromString = (inputString: any) => {
                           <Link to={`blogs/${id}`}>{title}</Link>
                         </h3>
                         <div className="text-description">
-                                    <span
-                                      className="text-from-api"
-                                      dangerouslySetInnerHTML={{
-                                        __html: short_desc,
-                                      }}
-                                    ></span>
-                                  </div>
-
+                          <span
+                            className="text-from-api"
+                            dangerouslySetInnerHTML={{
+                              __html: short_desc,
+                            }}
+                          ></span>
+                        </div>
                       </div>
                     </article>
                   </div>

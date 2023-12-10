@@ -157,6 +157,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::get('/image/trash', [ImageController::class, 'trash'])->name('image.trash');
+    Route::get('/image/restore/{id}', [ImageController::class, 'restore'])->name('image.restore');
+    Route::delete('/image/destroy-forever/{id}', [ImageController::class, 'destroyForever'])->name('image.forever');
     Route::get('/image/image-list', [ImageController::class, 'imageList']);
     Route::get('/image/image-show', [ImageController::class, 'imageShow']);
     Route::get('/image/banner-edit', [ImageController::class, 'bannerEdit']);

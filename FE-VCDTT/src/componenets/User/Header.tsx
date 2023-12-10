@@ -27,6 +27,8 @@ import { useGetLogoQuery } from "../../api/setting.js";
 import { Setting } from "../../interfaces/Setting.js";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 const MySwal = withReactContent(Swal);
 
@@ -149,7 +151,7 @@ const Header = () => {
             // confirmButtonText: "OK",
             showCancelButton: false,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
           });
 
           startLogoutTimer();
@@ -160,9 +162,8 @@ const Header = () => {
             icon: "warning",
             showCancelButton: false,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
           });
-         
         }
       } else {
         // Handling the case where 'data' doesn't exist in the response
@@ -172,7 +173,7 @@ const Header = () => {
           icon: "warning",
           showCancelButton: false,
           showConfirmButton: false,
-          timer: 2000
+          timer: 2000,
           // confirmButtonText: "OK",
         });
       }
@@ -182,7 +183,7 @@ const Header = () => {
         icon: "warning",
         showCancelButton: false,
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
         // confirmButtonText: "OK",
       });
     }
@@ -195,7 +196,7 @@ const Header = () => {
       icon: "success",
       showCancelButton: false,
       showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
       // confirmButtonText: "OK",
     });
     setIsLoggedIn(false);
@@ -206,13 +207,13 @@ const Header = () => {
   };
 
   const timeOutSignOut = () => {
-    clearLogoutTimer(); 
-     MySwal.fire({
+    clearLogoutTimer();
+    MySwal.fire({
       text: "Hết thời hạn đăng nhập. Vui lòng đăng nhập lại",
       icon: "warning",
       showCancelButton: false,
       showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
       // confirmButtonText: "OK",
     });
     setIsLoggedIn(false);
@@ -235,7 +236,7 @@ const Header = () => {
       MySwal.fire({
         text: "Mật khẩu và xác nhận mật khẩu không khớp!",
         icon: "warning",
-       
+
         // confirmButtonText: "OK",
       });
       return;
@@ -257,7 +258,7 @@ const Header = () => {
             icon: "success",
             showCancelButton: false,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
             // confirmButtonText: "OK",
           });
         } else {
@@ -318,7 +319,6 @@ const Header = () => {
   };
   const openWindow2 = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
-
   };
   //google login
 
@@ -345,7 +345,7 @@ const Header = () => {
       icon: "success",
       showCancelButton: false,
       showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
       // confirmButtonText: "OK",
     });
     // Chuyển hướng đến trang người dùng
@@ -389,6 +389,7 @@ const Header = () => {
   // console.log("data", data);
 
   //end google
+
   return (
     <>
       <header id="masthead" className="site-header header-primary">
@@ -480,7 +481,9 @@ const Header = () => {
                               </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                                  <Link onClick={openWindow} to={""}>Đăng nhập admin</Link>
+                                  <Link onClick={openWindow} to={""}>
+                                    Đăng nhập admin
+                                  </Link>
                                 </li>
                               ) : null}
 
@@ -577,7 +580,10 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info" onClick={handleSwapToSignUpForm}>
+                            <button
+                              className="border-0 bg-white text-info"
+                              onClick={handleSwapToSignUpForm}
+                            >
                               Chưa có tài khoản? Đăng ký
                             </button>
                             <button
@@ -712,8 +718,10 @@ const Header = () => {
                             {/* <input type="checkbox" /> */}
                             <span className="ml-2 text-muted">
                               Bạn bấm vào đăng ký tức là bạn đã đồng ý với{" "}
-                              <Link to={""} onClick={openWindow2}>Chính sách & quyền riêng tư</Link> của
-                              trang
+                              <Link to={""} onClick={openWindow2}>
+                                Chính sách & quyền riêng tư
+                              </Link>{" "}
+                              của trang
                             </span>
                             <button
                               type="submit"
@@ -723,7 +731,10 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info" onClick={handleSwapToSignInForm}>
+                            <button
+                              className="border-0 bg-white text-info"
+                              onClick={handleSwapToSignInForm}
+                            >
                               Đã có tài khoản? Đăng nhập
                             </button>
                           </div>
@@ -753,7 +764,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className=" d-block d-sm-none bg-white" style={{ zIndex: "99" }}>
+        <div className="d-block d-sm-none bg-white" style={{ zIndex: "99" }}>
           <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
               <Navbar.Brand href="/">
@@ -765,42 +776,93 @@ const Header = () => {
                 />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
+              <Navbar.Collapse
+                id="basic-navbar-nav d-flex justify-content-end"
+                style={{ textAlign: "right" }}
+              >
+                <Nav
+                  className="me-auto shadow bg-secondary"
+                  style={{ float: "right", width: "50%" }}
+                >
                   {isLoggedIn ? (
-                    <NavDropdown title={userName} id="basic-nav-dropdown">
-                      <NavDropdown.Item href="#action/3.1">
-                        Thông tin cá nhân
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.2">
-                        Tour đã mua
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.3">
-                        Tour yêu thích
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item href="#action/3.4">
-                        Đăng xuất
-                      </NavDropdown.Item>
-                    </NavDropdown>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        className="w-100 text-end bg-white text-primary border-0 fs-3 fw-bold rounded-0"
+                        variant="secondary"
+                        id="dropdown-basic"
+                      >
+                        {userName}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu
+                        className="text-end border-0 rounded-0"
+                        style={{ background: "#DEE2E6" }}
+                      >
+                        <Dropdown.Item>
+                          <Link to={"/user/profile"}>Thông tin cá nhân</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/tours"}>Tour đã mua</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/favorite"}>Tour yêu thích</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/coupon"}> Kho mã giảm giá</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOut}>
+                          Đăng xuất
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   ) : (
-                    <button className=" border-0" onClick={handleShowSignIn}>
+                    <button
+                      className="border-0 bg-sec button-primary"
+                      onClick={handleShowSignIn}
+                    >
                       Đăng nhập/Đăng ký
                     </button>
                   )}
+                  <hr />
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/`}>Trang chủ</Link>
+                  </button>
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/blogs`}>Bài viết</Link>
+                  </button>
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/contact`}>Liên hệ</Link>
+                  </button>
+                  <hr />
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      className="w-100 text-end bg-white text-primary border-0 rounded-0"
+                      variant="secondary"
+                      id="dropdown-basic"
+                    >
+                      Danh mục
+                    </Dropdown.Toggle>
 
-                  <Nav.Link className="text-primary" href="">
-                    Trang chủ
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="#link">
-                    Danh mục
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="#link">
-                    Bài viết
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="/contact">
-                    Liên hệ
-                  </Nav.Link>
+                    <Dropdown.Menu
+                      className="shadow text-end text-end border-0 rounded-0"
+                      style={{ background: "#DEE2E6" }}
+                    >
+                      {dataCate?.data.categoriesParent.map(
+                        ({ id, name }: Category) => {
+                          return (
+                            <Dropdown.Item key={id}>
+                              <Link
+                                to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                              >
+                                {name}
+                              </Link>
+                              {/* <a href="destination.html"></a> */}
+                            </Dropdown.Item>
+                          );
+                        }
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </Nav>
               </Navbar.Collapse>
             </Container>

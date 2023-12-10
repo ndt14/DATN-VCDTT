@@ -73,6 +73,10 @@ const SettingApi = createApi({
             query: () => `/keyvalue/loadingScreen`,
             providesTags: ['Keyvalue']
         }),
+        getLinkFacebook: builder.query<Setting, void>({
+            query: () => `/keyvalue/facebookLink`,
+            providesTags: ['Keyvalue']
+        }),
     })
 });
 
@@ -91,7 +95,8 @@ export const {
     useGetSubBannerQuery,
     useGetBankContentQuery,
     useGetBankImageQuery,
-    useGetBankNumberQuery
+    useGetBankNumberQuery,
+    useGetLinkFacebookQuery
 
  } = SettingApi;
 export const settingReducer = SettingApi.reducer;

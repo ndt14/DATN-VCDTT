@@ -1,11 +1,13 @@
 import Loader from '../../../componenets/User/Loader';
 import { useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-import { useGetAddressQuery, useGetEmailWebQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
+import { useGetAddressQuery, useGetEmailWebQuery, useGetLinkFacebookQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
 import { Setting } from '../../../interfaces/Setting';
 import SecondaryBanner from '../../../componenets/User/SecondaryBanner';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { Link } from 'react-router-dom';
+
 
 const MySwal = withReactContent(Swal);
 
@@ -60,6 +62,7 @@ const ContactPage = () => {
     const {data: dataPhone} = useGetWebPhoneNumber1Query()
     const {data: dataEmail} = useGetEmailWebQuery()
     const {data: dataAddress} = useGetAddressQuery()
+    const {data: dataLinkFb} = useGetLinkFacebookQuery()
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
@@ -77,7 +80,15 @@ const ContactPage = () => {
       }
     }, [dataAddress]);
     const dataTitle = "Liên hệ chúng tôi"
-   
+   //link fb
+  const value= dataLinkFb?.data.keyvalue.map(({value}:Setting)=>{
+      
+     return value
+   })
+   const openWindow = () => {
+      window.open(value, "_blank");
+    };
+
   return (
    <>
    <Loader/>
@@ -163,7 +174,9 @@ const ContactPage = () => {
                              <div className="contct-social social-links">
                                 <h3>Theo dõi chúng tôi trên mạng xã hội</h3>
                                 <ul >
-                                   <li><a href="#"><i className="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+
+                               
+                                   <li><Link to={""} className="text-primary" onClick={openWindow}><i className="fab fa-facebook-f" aria-hidden="true"></i></Link></li>
                                   
                                 </ul>
                              </div>

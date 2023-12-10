@@ -40,19 +40,25 @@ class LoginRequest extends FormRequest
     public function authenticate(): bool
     {
         $this->ensureIsNotRateLimited();
-    
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
+        $credentials = $this->only('email', 'password');
+
+        // Thêm kiểm tra trường "status" vào đây
+        $credentials['status'] = 1;
+
+        if (!Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
             RateLimiter::clear($this->throttleKey());
-    
+
             return false;
         }
-    
+
         RateLimiter::clear($this->throttleKey());
-    
+
         return true;
     }
-    
+
+
 
     public function exists_user()
     {
@@ -66,7 +72,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -87,7 +93,7 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
 
     public function messages()

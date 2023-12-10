@@ -37,7 +37,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Blog</h3>
+                            <h3 class="card-title">Bài viết</h3>
                             @if (auth()->user()->is_admin == 1 ||
                                     auth()->user()->can('delete post'))
                                 <a href="{{ route('blog.trash') }}"
@@ -124,7 +124,7 @@
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword"
                                                 value="{{ request()->query('keyword') }}" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
