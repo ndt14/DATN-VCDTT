@@ -18,12 +18,15 @@ class DashboardController extends Controller
     }
     public function totalEarnDashboard(Request $request){
         $data = [];
-        $purchaseHistory = PurchaseHistory::where('payment_status',2)->where('purchase_status',3)->get();
+        //
+        $data['UVCount'] = Count(PurchaseHistory::where('purchase_status',2)->get());
 
+        //
+        $purchaseHistory = PurchaseHistory::where('payment_status',2)->where('purchase_status',3)->whereIn('tour_status',[2,3])->get();
         $total=[];
         foreach($purchaseHistory as $purchaseHistory){
             $final['price'] = $purchaseHistory->tour_child_price * $purchaseHistory->child_count + $purchaseHistory->tour_adult_price * $purchaseHistory->adult_count;
-            $final['price'] = $final['price']- ($final['price']/ 100 * ($purchaseHistory->coupon_percentage ?? 0 + $purchaseHistory->tour_sale_percentage ?? 0) - $purchaseHistory->coupon_percentage == null ? ($purchaseHistory->coupon_fixed ?? 0) : 0);
+            $final['price'] = $final['price'] - ($purchaseHistory->coupon_percentage == null ? ($purchaseHistory->coupon_fixed ?? 0) : 0) - ($final['price'] / 100 * ($purchaseHistory->coupon_percentage ?? 0 + $purchaseHistory->tour_sale_percentage ?? 0));
             $final['time'] =  date("d-m-Y",strtotime($purchaseHistory->created_at));
             array_push($total, $final);
         }
@@ -45,9 +48,8 @@ class DashboardController extends Controller
         }
         }
 
-        $data['UVCount'] = Count(PurchaseHistory::where('payment_status',2)->where('purchase_status',1)->get());
         //
-        $paidPurchase = PurchaseHistory::where('payment_status',2)->whereIn('purchase_status',[2, 3, 4, 5, 10])->get();
+        $paidPurchase = PurchaseHistory::where('payment_status',2)->where('purchase_status',3)->whereIn('tour_status',[2,3])->get();
 
         $data['PPCToday']=0;$data['PPCWeek']=0;$data['PPCMonth']=0;$data['PPCYear']=0;
         foreach ($paidPurchase as $PP){
@@ -92,6 +94,7 @@ class DashboardController extends Controller
             return $a->star > 0;
         })->slice(0, 5);
         $data['tourR'] = $tourRatings;
+
         //chart
         $months = [0,0,0,0,0,0,0,0,0,0,0,0];
         foreach ($total as $d) {
@@ -118,13 +121,12 @@ class DashboardController extends Controller
         ->whereNotIn('email', User::select('email'))
         ->count();
 
-        $maleCount = User::where('is_admin', 2)->where('gender', 1)->count();
-        $femaleCount = User::where('is_admin', 2)->where('gender', 2)->count();
-        $otherCount = User::where('is_admin', 2)->where('gender', 3)->count();
+        $counts = User::where('is_admin', '!=', 1)->orWhereNull('is_admin')->whereIn('gender', [1, 2, 3])->selectRaw('gender, COUNT(*) as count')->groupBy('gender')->pluck('count', 'gender');
+
         $data['genderDP'] = [
-            $maleCount,
-            $femaleCount,
-            $otherCount,
+            $counts->get(1, 0),
+            $counts->get(2, 0),
+            $counts->get(3, 0),
         ];
         $now = date('Y-m-d');
         $ageGroups = [
@@ -149,7 +151,7 @@ class DashboardController extends Controller
             $endYear = date('Y-m-d', strtotime('-45 years', strtotime($now)));
         }
 
-        $count = User::where('is_admin', 2)->whereBetween('date_of_birth', [$startYear, $endYear])->count();
+        $count = User::where('is_admin', '!=', 1)->orWhereNull('is_admin')->whereBetween('date_of_birth', [$startYear, $endYear])->count();
         }
 
         unset($count); // Remove reference to avoid potential issues
@@ -157,9 +159,6 @@ class DashboardController extends Controller
         $data['ageDP'] = $ageGroups;
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.user',compact('data'));
-    }
-    public function webSetting(Request $request){
-
     }
 }
 

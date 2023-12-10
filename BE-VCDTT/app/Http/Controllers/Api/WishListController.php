@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TourResource;
 use App\Http\Resources\WishListResource;
+use App\Models\Rating;
 use App\Models\Tour;
 use App\Models\WishList;
 use Illuminate\Http\Request;
@@ -32,6 +33,17 @@ class WishListController extends Controller
     {
         $listWish = WishList::select('tour_id')->where('user_id', $request->id)->get();
         $listTour = Tour::whereIn('id', $listWish)->get();
+        foreach ($listTour as $tour) {
+            $listRatings = Rating::where('tour_id', $tour->id)->orderBy('id', 'desc')->get();
+            $star = 0;
+            $t = 0;
+            foreach ($listRatings as $c) {
+                $star += $c->star;
+                $t++;
+            }
+            $tour->star = $star / ($t == 0 ? 1 : $t);
+            $tour->starCount = $t;
+        }
         return response()->json(
             [
                 'data' => [
