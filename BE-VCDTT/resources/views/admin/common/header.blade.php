@@ -276,7 +276,7 @@
     });
 
     let markAsRead = function(id) {
-        axios.get(`/api/purchase-history/mark-as-read/${id}`)
+        axios.get(`/api/purchase-history/mark-as-read/${user.id}/${id}`)
             .then(function(response) {
                 readNoti(id);
             })
@@ -299,7 +299,7 @@
     };
 
     let markAllAsRead = function() {
-        axios.get(`/api/purchase-history/mark-all-as-read`)
+        axios.get(`/api/purchase-history/mark-all-as-read/${user.id}`)
             .then(function(response) {
                 document.getElementsByName('notification-unread').forEach(
                     (element) => {
