@@ -8,40 +8,39 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { Tour } from "../../../interfaces/Tour";
 import { NotFoundPage } from "..";
+import CryptoJS from "crypto-js";
 
 const BillPrint = () => {
-  const { id } = useParams<{ id: string | undefined }>();
-  console.log(typeof id);
+  const { id } = useParams<{ id: string }>();
+  const secretKey = "123456";
+  const decryptId = (encryptedId: string) => {
+    const decryptedBytes = CryptoJS.AES.decrypt(encryptedId, secretKey);
+    const decryptedId = decryptedBytes.toString(CryptoJS.enc.Utf8);
+    return parseInt(decryptedId, 10);
+  };
+
+  if (typeof id === "undefined") {
+    // Xử lý khi giá trị id không tồn tại
+    return null; // Hoặc thực hiện xử lý khác tùy theo yêu cầu của bạn
+  }
+
+  const decryptedOrderId = decryptId(id);
+  console.log(decryptedOrderId);
   let billId: number = 0;
   if (id === undefined) {
     // Handle the case when id is undefined
     // For example, you can set a default value or show an error message
   } else {
-    billId = parseInt(id);
-    // Rest of your code using billId
+    billId = Number(decryptedOrderId);
   }
-  const { data: billData } = useGetBillByIdQuery(id || "");
+  console.log(billId);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { data: billData } = useGetBillByIdQuery(decryptedOrderId || "");
   // console.log(billData?.data.purchase_history);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-
-  // const totalAdultPrice =
-  //   billData?.data?.purchase_history?.tour_adult_price *
-  //   billData?.data?.purchase_history?.adult_count;
-  // const totalChildPrice =
-  //   billData?.data.purchase_history.tour_child_price *
-  //   billData?.data.purchase_history.child_count;
-  // const totalPrice = totalAdultPrice + totalChildPrice;
-  // const discount = billData?.data.purchase_history.coupon_percentage
-  //   ? billData?.data.purchase_history.coupon_percentage
-  //   : billData?.data.purchase_history.coupon_fixed;
-  // const finalPrice = billData?.data.purchase_history.coupon_percentage
-  //   ? totalPrice * (1 - discount / 100)
-  //   : totalPrice - discount;
-  // const formattedFinalPrice = new Intl.NumberFormat("vi-VN", {
-  //   style: "currency",
-  //   currency: "VND",
-  // }).format(finalPrice);
+  console.log(userId);
 
   const handlePrintPDF = () => {
     const input = document.getElementById("pdfBill");
@@ -69,16 +68,28 @@ const BillPrint = () => {
 
   useEffect(() => {
     if (billsData) {
-      // Handle the data when it is available
       const bills = billsData.data.purchase_history;
       console.log(bills);
-      // Do something with favoriteTours
       const array = bills.map((item: Tour) => item.id);
       setIdArray(array);
     }
   }, [billsData]);
   console.log(idArray);
-  if (idArray.includes(billId)) {
+  const isBillIdIncluded = idArray.includes(billId);
+  console.log(isBillIdIncluded);
+
+  // const secretKey = "123456";
+
+  // const encryptId = (id: number) => {
+  //   const encrypted = CryptoJS.AES.encrypt(id.toString(), secretKey).toString();
+  //   return encrypted;
+  // };
+  // const encryptedOrderId = encryptId(billId);
+  // console.log(encryptedOrderId);
+
+  // Hàm giải mã id đơn hàng
+
+  if (decryptedOrderId) {
     return (
       <div className="container">
         <div>
@@ -97,7 +108,6 @@ const BillPrint = () => {
             <div className="border p-5">
               {/* <p>Mã thanh toán: {transactionId}</p> */}
               <div className="d-flex justify-content-between">
-                {/* <h2>Hóa đơn</h2> */}
                 <div>{/* <h3>VCDTT</h3> */}</div>
               </div>
               <div className="d-flex justify-content-between">
@@ -120,6 +130,10 @@ const BillPrint = () => {
                     <span className="font-weight-bold">
                       {billData?.data.purchase_history.phone_number}
                     </span>
+                  </p>
+                  <p>
+                    Mã đơn hàng:{" "}
+                    <span className="font-weight-bold">{decryptedOrderId}</span>
                   </p>
                 </div>
                 <div>
@@ -289,12 +303,7 @@ const BillPrint = () => {
       </div>
     );
   } else {
-    return (
-      <NotFoundPage />
-      // <div>
-      //   <h1>Đơn hàng</h1>
-      // </div>
-    );
+    return <NotFoundPage />;
   }
 };
 

@@ -20,7 +20,6 @@ import { useGetBannerQuery } from "../../../api/setting";
 import { Setting } from "../../../interfaces/Setting";
 import SearchBar from "../../../componenets/User/SearchBar";
 
-
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -288,10 +287,19 @@ const HomePage = () => {
                         view_count,
                         adult_price,
                         star,
+                        sale_percentage,
                       }: Tour) => {
                         if (idArray.includes(id as number)) {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link
@@ -309,12 +317,15 @@ const HomePage = () => {
                                 <div className="package-price badge">
                                   <h6 className="">
                                     <span>
-                                      {" "}
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
-                                      }).format(adult_price)}{" "}
-                                    </span>
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
+                                    </span>{" "}
                                   </h6>
                                 </div>
                                 <div className="package-content-wrap">
@@ -376,6 +387,14 @@ const HomePage = () => {
                         } else {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link
@@ -393,12 +412,15 @@ const HomePage = () => {
                                 <div className="package-price badge">
                                   <h6 className="">
                                     <span>
-                                      {" "}
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: "VND",
-                                      }).format(adult_price)}{" "}
-                                    </span>
+                                      }).format(
+                                        (adult_price *
+                                          (100 - sale_percentage)) /
+                                          100
+                                      )}{" "}
+                                    </span>{" "}
                                   </h6>
                                 </div>
                                 <div className="package-content-wrap">
@@ -443,7 +465,8 @@ const HomePage = () => {
                                     </div>
 
                                     <div className="btn-wrap">
-                                      <a href="#"
+                                      <a
+                                        href="#"
                                         onClick={handleClickAdd(id)}
                                         className="button-text width-6"
                                       >
@@ -704,14 +727,18 @@ const HomePage = () => {
                         if (idArray.includes(id as number)) {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
-                              <div className="bg-primary text-white position-absolute discount badge ">
-                                <span
-                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
-                                  style={{ height: "100%" }}
-                                >
-                                  -{sale_percentage}%
-                                </span>
-                              </div>
+                              {sale_percentage > 0 ? (
+                                <div className="bg-primary text-white position-absolute discount badge ">
+                                  <span
+                                    className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                    style={{ height: "100%" }}
+                                  >
+                                    -{sale_percentage}%
+                                  </span>
+                                </div>
+                              ) : (
+                                <span></span>
+                              )}
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link
@@ -799,14 +826,18 @@ const HomePage = () => {
                         } else {
                           return (
                             <div className="col-lg-4 col-md-6" key={id}>
-                              <div className="bg-primary text-white position-absolute discount badge ">
-                                <span
-                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
-                                  style={{ height: "100%" }}
-                                >
-                                  -{sale_percentage}%
-                                </span>
-                              </div>
+                              {sale_percentage > 0 ? (
+                                <div className="bg-primary text-white position-absolute discount badge ">
+                                  <span
+                                    className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                    style={{ height: "100%" }}
+                                  >
+                                    -{sale_percentage}%
+                                  </span>
+                                </div>
+                              ) : (
+                                <span></span>
+                              )}
                               <div className="package-wrap">
                                 <figure className="feature-image">
                                   <Link
@@ -1020,7 +1051,6 @@ const HomePage = () => {
 
                                     <div className="btn-wrap">
                                       <a
-                                       
                                         className="button-text width-6 text-pink"
                                         onClick={handleClickRemove(id)}
                                       >
@@ -1180,14 +1210,18 @@ const HomePage = () => {
                       if (idArray.includes(id as number)) {
                         return (
                           <div className="col-lg-4 col-md-6" key={id}>
-                            <div className="bg-primary text-white position-absolute discount badge ">
-                              <span
-                                className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
-                                style={{ height: "100%" }}
-                              >
-                                -{sale_percentage}%
-                              </span>
-                            </div>
+                            {sale_percentage > 0 ? (
+                              <div className="bg-primary text-white position-absolute discount badge ">
+                                <span
+                                  className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                  style={{ height: "100%" }}
+                                >
+                                  -{sale_percentage}%
+                                </span>
+                              </div>
+                            ) : (
+                              <span></span>
+                            )}
                             <div className="package-wrap">
                               <figure className="feature-image">
                                 <Link
@@ -1253,7 +1287,8 @@ const HomePage = () => {
                                   </div>
 
                                   <div className="btn-wrap">
-                                    <a  href="#"
+                                    <a
+                                      href="#"
                                       onClick={handleClickRemove(id)}
                                       className="button-text width-6 text-pink"
                                     >
@@ -1350,7 +1385,8 @@ const HomePage = () => {
                                   </div>
 
                                   <div className="btn-wrap">
-                                    <a  href="#"
+                                    <a
+                                      href="#"
                                       onClick={handleClickAdd(id)}
                                       className="button-text width-6"
                                     >
