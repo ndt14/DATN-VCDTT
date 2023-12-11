@@ -57,17 +57,17 @@ class AutoMail extends Command
 
                 //remind client about tour cancelling
                 if ($tour_start_time == (Carbon::today()->addDays(7)->toDateString()) && $purchaseHistoryTourAnnounce->mail_announced_7_days_left != 1) {
-                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('1'));
+                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('1',$purchaseHistoryTourAnnounce));
                     $purchaseHistoryTourAnnounce->update([
                         'mail_announced_7_days_left' => 1                                                 //turn off tour cancelling + mail
                     ]);
                 } elseif ($tour_start_time == Carbon::now()->addDays(1)->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 4) {
-                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('2'));
+                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('2',$purchaseHistoryTourAnnounce));
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 4                                                   //turn off tour cancelling + mail
                     ]);
                 } elseif ($tour_start_time == Carbon::now()->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 2) {
-                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('3'));
+                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('3',$purchaseHistoryTourAnnounce));
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 2                                                    //wish client best experiences
                     ]);
@@ -76,7 +76,7 @@ class AutoMail extends Command
                         'tour_status' => 2                                                   //thank you mail
                     ]);
                 } elseif ($tour_end_time == Carbon::now()->subDays(1)->toDateString() && $purchaseHistoryTourAnnounce->tour_status != 3) {
-                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('4'));
+                    $purchaseHistoryTourAnnounce->notify(new AnnouncementMailToClient('4',$purchaseHistoryTourAnnounce));
                     $purchaseHistoryTourAnnounce->update([
                         'tour_status' => 3                                                    //thank you mail
                     ]);
