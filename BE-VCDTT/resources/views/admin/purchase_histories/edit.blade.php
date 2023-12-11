@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                                    Overview
-                                                                                                    </div> -->
+                                                                                                                Overview
+                                                                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý đơn đặt
                     </h1>
@@ -82,10 +82,8 @@
                                             $items['payment_status'] == 2 ||
                                                 $items['purchase_method'] == 2 ||
                                                 $items['purchase_status'] == 9 ||
-                                                $items['purchase_status'] == 1) disabled @endif>
-                                        @if ($items['payment_status'] == 1)
-                                            <option>-----Trạng thái thanh toán-----</option>
-                                        @endif
+                                                $items['purchase_status'] == 1 ||
+                                                $items['user_id'] != null) disabled @endif>
                                         <option @if ($items['payment_status'] == 1) selected @endif value="1">Người dùng
                                             chưa thanh toán
                                         </option>
@@ -122,10 +120,22 @@
                                                             Khách chuyển thừa
                                                         </option>
                                                     @endif
+                                                    @if ($items['user_id'] == null)
+                                                        <option @if ($items['purchase_status'] == 6) selected @endif value="6">
+                                                            Đã
+                                                            hủy tour thành công
+                                                        </option>
+                                                    @endif
                                                 @elseif ($items['purchase_status'] == 3)
                                                     <option @if ($items['purchase_status'] == 3) selected @endif value="3">Đã
                                                         phê duyệt
                                                     </option>
+                                                    @if ($items['user_id'] == null)
+                                                        <option @if ($items['purchase_status'] == 6) selected @endif value="6">
+                                                            Đã
+                                                            hủy tour thành công
+                                                        </option>
+                                                    @endif
                                                 @elseif ($items['purchase_status'] == 4 || $items['purchase_status'] == 5)
                                                     <option @if ($items['purchase_status'] == 4) selected @endif value="4">Đang
                                                         đợi phê duyệt hủy tour
@@ -150,6 +160,7 @@
 
                                                 @default
                                             @endswitch
+
                                         </select>
                                     </div>
                                     <div class="mb-3 col-4">
@@ -410,7 +421,7 @@
                                     </div>
                                     <div class="mb-3 col-3">
                                         <div class="form-label">Số tiền giảm thẳng</div>
-                                        <span name="coupon_fixed" >{{ $items['coupon_fixed'] }}</span>
+                                        <span name="coupon_fixed">{{ $items['coupon_fixed'] }}</span>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('coupon_fixed')
                                                 {{ $message }}

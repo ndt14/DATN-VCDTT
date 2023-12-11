@@ -69,7 +69,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         $this->updated_at = $purchase_history->updated_at;
         switch ($this->purchase_history->purchase_status) {
             case '1':
-                $this->status = 'Đơn hàng của bạn mới bị hủy do hết hạn thanh toán';
+                $this->status = 'Đơn hàng (tour ' . $purchase_history->tour_name . ') của bạn mới bị hủy do hết hạn thanh toán';
                 break;
             case '2':
                 $this->status = 'Bạn vừa thanh toán đơn hàng của bạn! Vui lòng chờ xác nhận đơn hàng.';
@@ -81,13 +81,13 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                 $this->status = "Yêu cầu hủy tour " . $purchase_history->tour_name . " của bạn đã được phê duyệt. Vui lòng liên hệ với CSKH để được hoàn tiền";
                 break;
             case '6':
-                $this->status = "Chúng tôi đã hoàn tiền cho bạn. Vui lòng kiểm tra tài khoản của bạn. Nếu có gì thắc mắc, vui lòng liên hệ CSKH để được tư vấn";
+                $this->status = "Chúng tôi đã hoàn tiền tour ". $purchase_history->tour_name . " cho bạn. Vui lòng kiểm tra tài khoản của bạn. Nếu có gì thắc mắc, vui lòng liên hệ CSKH để được tư vấn";
                 break;
             case '7':
-                $this->status = "Bạn đã chuyển thiếu tiền cho chúng tôi, vui lòng liên hệ cho CSKH để được giúp đỡ";
+                $this->status = "Bạn đã chuyển thiếu tiền cho tour " . $purchase_history->tour_name . ", vui lòng liên hệ cho CSKH để được giúp đỡ";
                 break;
             case '8':
-                $this->status = "Bạn đã chuyển thừa tiền cho chúng tôi, vui lòng liên hệ cho CSKH để được giúp đỡ";
+                $this->status = "Bạn đã chuyển thừa tiền cho tour " . $purchase_history->tour_name . ", vui lòng liên hệ cho CSKH để được giúp đỡ";
                 break;
             default:
                 break;
@@ -128,9 +128,10 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                     'tour_adult_price' => $this->tour_adult_price,
                     'adult_count' => $this->adult_count,
                     'purchase_status' => $this->purchase_status,
-                    'purchase_history_id' => $this->purchase_history_id
+                    'purchase_history_id' => $this->purchase_history_id,
+                    'user_id' => $this->user_id
                 ]);
-        } else{
+        } else {
             return (new MailMessage)
                 ->subject('Cập nhật trạng thái đơn hàng')
                 ->view('mail.client', [

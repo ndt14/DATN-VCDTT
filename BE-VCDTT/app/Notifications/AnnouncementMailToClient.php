@@ -19,24 +19,24 @@ class AnnouncementMailToClient extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct($mail_type)
+    public function __construct($mail_type,$purchaseHistory)
     {
         //
         $this->mail_type = $mail_type;
         switch ($mail_type) {
             case '1':
                 $this->subject = "Nhắc lịch đi tour";
-                $this->line = "Chỉ còn 1 tuần nữa là đến ngày đi tour. Chúc quý khách chuẩn bị thật tốt cho chuyến đi lần này!";
+                $this->line = "Chỉ còn 1 tuần nữa là đến ngày đi tour " .$purchaseHistory->tour_name. ". Chúc quý khách chuẩn bị thật tốt cho chuyến đi lần này!";
                 $this->warning = "Lưu ý, quý khách chỉ được hủy tour trước 1 ngày đi tour. Nếu có bất kỳ thắc mắc nào, xin vui lòng liên hệ CSKH để được tư vấn";
                 break;
             case '2':
                 $this->subject = "Nhắc lịch đi tour";
-                $this->line = "Chỉ còn 1 ngày nữa là đến ngày đi tour. Chúc quý khách một chuyến đi thượng lộ bình an!";
+                $this->line = "Chỉ còn 1 ngày nữa là đến ngày đi tour " .$purchaseHistory->tour_name. ". Chúc quý khách một chuyến đi thượng lộ bình an!";
                 $this->warning = "Lưu ý, quý khách đã hết hạn hủy tour. Nếu có bất kỳ thắc mắc nào, xin vui lòng liên hệ CSKH để được tư vấn";
                 break;
             case '3':
                 $this->subject = "Nhắc lịch đi tour";
-                $this->line = "Hôm nay là ngày tour xuất phát. Chúc quý khách một chuyến đi thượng lộ bình an!";
+                $this->line = "Hôm nay là ngày tour " .$purchaseHistory->tour_name. " xuất phát. Chúc quý khách một chuyến đi thượng lộ bình an!";
                 $this->warning = "";
                 break;
             case '4':
