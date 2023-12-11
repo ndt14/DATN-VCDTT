@@ -26,6 +26,7 @@ import withReactContent from "sweetalert2-react-content";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 import { Setting } from "../../../interfaces/Setting";
 // import { spawn } from "child_process";
+import CryptoJS from "crypto-js";
 
 const MySwal = withReactContent(Swal);
 
@@ -285,12 +286,12 @@ const UserTour = () => {
                     Thông tin cá nhân
                   </Link>
                   <Link
-  className="nav-link text-white "
-  style={{ backgroundColor: "#1677FF" }}
-  to={"/user/tours"}
->
-  <FaRegListAlt /> Tour đã đặt
-</Link>
+                    className="nav-link text-white "
+                    style={{ backgroundColor: "#1677FF" }}
+                    to={"/user/tours"}
+                  >
+                    <FaRegListAlt /> Tour đã đặt
+                  </Link>
 
                   <Link className="nav-link text-black" to={"/user/favorite"}>
                     <FaRegHeart /> Tour yêu thích
@@ -435,6 +436,20 @@ const UserTour = () => {
                     style: "currency",
                     currency: "VND",
                   }).format(finalPrice);
+                  //Mã hóa id
+                  const secretKey = "123456";
+                  const encryptId = (id: number | undefined) => {
+                    if (typeof id === "undefined") {
+                      throw new Error("Invalid id");
+                    }
+                    const encrypted = CryptoJS.AES.encrypt(
+                      id.toString(),
+                      secretKey
+                    ).toString();
+                    return encrypted;
+                  };
+                  const encryptedOrderId = encryptId(id);
+                  console.log(encryptedOrderId);
 
                   return (
                     <div className="p-3 my-3 shadow row" key={id}>
@@ -501,7 +516,11 @@ const UserTour = () => {
                         {/*  */}
                         {purchase_status == 3 ? (
                           <Button className="ml-2">
-                            <Link to={`/user/view-bill/${id}`}>
+                            <Link
+                              to={`/user/view-bill/${encodeURIComponent(
+                                encryptedOrderId
+                              )}`}
+                            >
                               Xem hóa đơn
                             </Link>
                           </Button>

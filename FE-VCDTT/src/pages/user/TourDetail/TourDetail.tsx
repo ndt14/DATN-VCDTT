@@ -337,6 +337,12 @@ const TourDetail = () => {
   //banner
 
   const dataTitle = "Tour chi tiết";
+  console.log(typeof productNumber);
+  const saveBillData = () => {
+    localStorage.setItem("adult", JSON.stringify(productNumber));
+    localStorage.setItem("child", JSON.stringify(productChildNumber));
+    localStorage.setItem("start_date", JSON.stringify(dateTour));
+  };
 
   return (
     <>
@@ -1009,6 +1015,7 @@ const TourDetail = () => {
                                       productNumber + productChildNumber >
                                       tourLimit
                                     }
+                                    onClick={saveBillData}
                                     className="btn-continue"
                                   >
                                     Đặt tour

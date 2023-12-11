@@ -33,10 +33,10 @@ const BillSuccess = () => {
   const transactionStatus = searchParams.get("vnp_TransactionStatus");
   const transactionId = searchParams.get("vnp_TransactionNo");
   console.log(transactionId);
-  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "");
-  const userData = JSON.parse(localStorage.getItem("user") || "");
-  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "");
-  const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "");
+  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "{}");
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "{}");
+  const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "{}");
   const userName = loginStatus == true ? userData.name : tempUserData.name;
   // const userAddress = loginStatus == true? userData.address: tempUserData.address
   const userEmail = loginStatus == true ? userData.email : tempUserData.email;
@@ -147,13 +147,11 @@ const BillSuccess = () => {
   //   phone: "Số điện thoại:",
   // };
 
-
-
-const dataTitle = "Tình trạng thanh toán"
+  const dataTitle = "Tình trạng thanh toán";
   return (
     <div>
-          <SecondaryBanner>{dataTitle}</SecondaryBanner>
-      
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <div className="container">
         {transactionStatus === "00" ? (
           <div>
