@@ -15,6 +15,7 @@ class AnnouncementMailToClient extends Notification implements ShouldQueue
     protected $subject;
     protected $line;
     protected $warning;
+    protected $name;
 
     /**
      * Create a new notification instance.
@@ -22,6 +23,7 @@ class AnnouncementMailToClient extends Notification implements ShouldQueue
     public function __construct($mail_type,$purchaseHistory)
     {
         //
+        $this->name = $purchaseHistory->name;
         $this->mail_type = $mail_type;
         switch ($mail_type) {
             case '1':
@@ -64,10 +66,11 @@ class AnnouncementMailToClient extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject($this->subject)
-            ->greeting('Xin chào!')
-            ->line($this->line)
-            ->line($this->warning)
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+            ->view('mail.auto', [
+                'name' => $this->name,
+                'line' => $this->line,
+                'warning' => $this->warning
+            ]);
     }
 
     /**
