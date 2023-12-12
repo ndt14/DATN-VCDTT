@@ -341,16 +341,6 @@ const UserTour = () => {
                       goToPayment(id);
                     }
                   };
-                  // const handleCancelTour = () => {
-                  //   if (id) {
-                  //     cancelTour(id);
-                  //   }
-                  // };
-                  // const handleCancelTourRefund = () => {
-                  //   if (id) {
-                  //     cancelTourRefund(id);
-                  //   }
-                  // };
                   const handleConfirmPayment = () => {
                     if (id) {
                       confirmPayment(id);
@@ -366,11 +356,6 @@ const UserTour = () => {
                       submit(id);
                     }
                   };
-                  // const handleModalCancelOpen = () => {
-                  //   if (id) {
-                  //     modalCancelOpen(id);
-                  //   }
-                  // };
                   const handleModalOpenDetail = () => {
                     if (id) {
                       modalOpenDetail(id);
@@ -384,9 +369,6 @@ const UserTour = () => {
                   const modalOpenQR = (id: number) => {
                     setShowQR(id);
                   };
-
-                  // console.log(coupon_fixed);
-                  // console.log(coupon_percentage);
                   let billStatus;
                   if (purchase_status === 1) {
                     billStatus = "Tự động hủy do quá hạn";
@@ -436,18 +418,34 @@ const UserTour = () => {
                     style: "currency",
                     currency: "VND",
                   }).format(finalPrice);
-                  //Mã hóa id
-                  const secretKey = "123456";
-                  const encryptId = (id: number | undefined) => {
-                    if (typeof id === "undefined") {
-                      throw new Error("Invalid id");
+
+                  const encryptId = (id: number | undefined): string => {
+                    const key = "i47Mm0anr583zFb0SdXHCjX19rETnZ85kBkOQlRpH78";
+                    const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV
+                    let ciphertext;
+                    // Convert the ID to ciphertext using AES encryption
+                    if (id !== undefined) {
+                      ciphertext = CryptoJS.AES.encrypt(
+                        id.toString(),
+                        CryptoJS.enc.Base64.parse(key),
+                        {
+                          iv: iv,
+                        }
+                      ).toString();
                     }
-                    const encrypted = CryptoJS.AES.encrypt(
-                      id.toString(),
-                      secretKey
-                    ).toString();
-                    return encrypted;
+
+                    // Create an object to store the IV and ciphertext
+                    const encrypted = {
+                      iv: CryptoJS.enc.Base64.stringify(iv),
+                      value: ciphertext,
+                    };
+
+                    // Convert the encrypted object to a JSON string and base64 encode it
+                    const encodedEncrypted = btoa(JSON.stringify(encrypted));
+
+                    return encodedEncrypted;
                   };
+
                   const encryptedOrderId = encryptId(id);
                   console.log(encryptedOrderId);
 
@@ -455,7 +453,8 @@ const UserTour = () => {
                     <div className="p-3 my-3 shadow row" key={id}>
                       <div className="col-8">
                         <p>
-                          Mã đơn: <span className="fw-bold">{id}</span>
+                          Mã đơn:{" "}
+                          <span className="fw-bold">{encryptedOrderId}</span>
                         </p>
                         <div>
                           {purchase_method == 2 ? (
