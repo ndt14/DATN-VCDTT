@@ -12,20 +12,75 @@ import CryptoJS from "crypto-js";
 
 const BillPrint = () => {
   const { id } = useParams<{ id: string }>();
-  const secretKey = "123456";
-  const decryptId = (encryptedId: string) => {
-    const decryptedBytes = CryptoJS.AES.decrypt(encryptedId, secretKey);
-    const decryptedId = decryptedBytes.toString(CryptoJS.enc.Utf8);
-    return parseInt(decryptedId, 10);
+  // const secretKey = "i47Mm0anr583zFb0SdXHCjX19rETnZ85kBkOQlRpH78";
+  const encryptId = (id: number) => {
+    const key = "i47Mm0anr583zFb0SdXHCjX19rETnZ85kBkOQlRpH78";
+    const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV
+
+    // Convert the ID to ciphertext using AES encryption
+    const ciphertext = CryptoJS.AES.encrypt(
+      id.toString(),
+      CryptoJS.enc.Base64.parse(key),
+      {
+        iv: iv,
+      }
+    ).toString();
+
+    // Create an object to store the IV and ciphertext
+    const encrypted = {
+      iv: CryptoJS.enc.Base64.stringify(iv),
+      value: ciphertext,
+    };
+
+    // Convert the encrypted object to a JSON string and base64 encode it
+    const encodedEncrypted = btoa(JSON.stringify(encrypted));
+
+    return encodedEncrypted;
   };
+  const encryptIdUrl = encryptId(15);
+  console.log(encryptIdUrl);
+
+  const decryptIdUrl = (id: string) => {
+    const key = "i47Mm0anr583zFb0SdXHCjX19rETnZ85kBkOQlRpH78";
+    const decodedEncrypted = atob(id);
+    const parsedEncrypted = JSON.parse(decodedEncrypted);
+    // console.log("Laravel encryption result", parsedEncrypted);
+    // IV is base64 encoded in Laravel, expected as WordArray in cryptojs
+    const iv = CryptoJS.enc.Base64.parse(parsedEncrypted.iv);
+    // Value (cipher text) is also base64 encoded in Laravel, same in cryptojs
+    const value = parsedEncrypted.value;
+    // Key is base64 encoded in Laravel, WordArray expected in cryptojs
+    const parsedKey = CryptoJS.enc.Base64.parse(key);
+    const decrypted = CryptoJS.AES.decrypt(value, parsedKey, {
+      iv: iv,
+    });
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    console.log(decryptedText);
+    return decryptedText;
+  };
+  const decryptedOrderId = decryptIdUrl(id || "");
+  console.log(id);
+  console.log(decryptedOrderId);
+
+  // const decryptId = (encryptedId: string) => {
+  //   const decryptedBytes = CryptoJS.AES.decrypt(encryptedId, secretKey);
+  //   // const decrypted = CryptoJS.AES.decrypt(value, key, {
+  //   //   iv: iv,
+  //   // });
+  //   const decryptedId = decryptedBytes.toString(CryptoJS.enc.Utf8);
+  //   // const decryptedId = CryptoJS.AES.decrypt(
+  //   //   { ciphertext: encrypted },
+  //   //   CryptoJS.enc.Utf8.parse(secretKey),
+  //   //   { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+  //   // );
+  //   return parseInt(decryptedId, 10);
+  // };
 
   if (typeof id === "undefined") {
     // Xử lý khi giá trị id không tồn tại
     return null; // Hoặc thực hiện xử lý khác tùy theo yêu cầu của bạn
   }
 
-  const decryptedOrderId = decryptId(id);
-  console.log(decryptedOrderId);
   let billId: number = 0;
   if (id === undefined) {
     // Handle the case when id is undefined
@@ -33,14 +88,13 @@ const BillPrint = () => {
   } else {
     billId = Number(decryptedOrderId);
   }
-  console.log(billId);
+  // console.log(billId);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data: billData } = useGetBillByIdQuery(decryptedOrderId || "");
   // console.log(billData?.data.purchase_history);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-  console.log(userId);
 
   const handlePrintPDF = () => {
     const input = document.getElementById("pdfBill");
@@ -60,34 +114,22 @@ const BillPrint = () => {
           console.error("Error generating PDF:", error);
         });
     }
+    const [idArray, setIdArray] = useState<number[]>([]);
+    const { data: billsData } = useGetBillsWithUserIDQuery(userId || "");
+    console.log(billsData);
+
+    useEffect(() => {
+      if (billsData) {
+        const bills = billsData.data.purchase_history;
+        console.log(bills);
+        const array = bills.map((item: Tour) => item.id);
+        setIdArray(array);
+      }
+    }, [billsData]);
+    console.log(idArray);
+    const isBillIdIncluded = idArray.includes(billId);
+    console.log(isBillIdIncluded);
   };
-
-  const [idArray, setIdArray] = useState<number[]>([]);
-  const { data: billsData } = useGetBillsWithUserIDQuery(userId || "");
-  console.log(billsData);
-
-  useEffect(() => {
-    if (billsData) {
-      const bills = billsData.data.purchase_history;
-      console.log(bills);
-      const array = bills.map((item: Tour) => item.id);
-      setIdArray(array);
-    }
-  }, [billsData]);
-  console.log(idArray);
-  const isBillIdIncluded = idArray.includes(billId);
-  console.log(isBillIdIncluded);
-
-  // const secretKey = "123456";
-
-  // const encryptId = (id: number) => {
-  //   const encrypted = CryptoJS.AES.encrypt(id.toString(), secretKey).toString();
-  //   return encrypted;
-  // };
-  // const encryptedOrderId = encryptId(billId);
-  // console.log(encryptedOrderId);
-
-  // Hàm giải mã id đơn hàng
 
   if (decryptedOrderId) {
     return (
