@@ -87,6 +87,6 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
 
     public function broadcastOn()
     {
-        return new PrivateChannel('datn-vcdtt-development'.$this->admin_id);
+        return new PrivateChannel('datn-vcdtt-development.'.$this->admin_id);
     }
 }
