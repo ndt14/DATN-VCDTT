@@ -26,15 +26,16 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
     protected $name;
     protected $purchase_method;
     protected $admin_id;
+    protected $line;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory,$admin_id)
+    public function __construct($purchaseHistory, $admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
-        if ($purchaseHistory->purchase_method == 1){
+        if ($purchaseHistory->purchase_method == 1) {
             $this->transaction_id = '';
         } else {
             $this->transaction_id = 'Mã hóa đơn: ' . $purchaseHistory->transaction_id;
@@ -44,6 +45,7 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
         $this->name = $purchaseHistory->name;
         $this->purchase_method = $purchaseHistory->purchase_method;
         $this->admin_id = $admin_id;
+        $this->line = "Khách hàng " . $this->name . " vừa thanh toán đơn hàng của họ. " . $this->transaction_id . " .Vui lòng kiểm tra tài khoản của bạn và phê duyệt cho khách hàng.";
     }
 
     /**
@@ -53,7 +55,7 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
      */
     public function via(object $notifiable): array
     {
-        return ['mail','database','broadcast'];
+        return ['mail', 'database', 'broadcast'];
     }
 
     /**
@@ -62,10 +64,10 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Khách hàng thanh toán đơn hàng')
-                    ->greeting('Xin chào Admin!')
-                    ->line('Khách hàng ' . $this->name . ' vừa thanh toán đơn hàng của họ. ' . $this->transaction_id . ' .Vui lòng kiểm tra tài khoản của bạn và phê duyệt cho khách hàng')
-                    ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+            ->subject('Khách hàng thanh toán tour ' . $this->tour_name)
+            ->view('mail.admin', [
+                'line' => $this->line
+            ]);
     }
 
     /**
@@ -86,6 +88,6 @@ class ComfirmPaymentAdmin extends Notification implements ShouldQueue, ShouldBro
 
     public function broadcastOn()
     {
-        return new PrivateChannel('datn-vcdtt-development.'.$this->admin_id);
+        return new PrivateChannel('datn-vcdtt-development.' . $this->admin_id);
     }
 }

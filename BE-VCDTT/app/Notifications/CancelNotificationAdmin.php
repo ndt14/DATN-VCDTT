@@ -16,7 +16,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CancelNotificationAdmin extends Notification implements ShouldQueue,ShouldBroadcast
+class CancelNotificationAdmin extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $payment_status;
@@ -28,11 +28,12 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
     protected $paid;
     protected $refund;
     protected $admin_id;
+    protected $line;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory,$admin_id)
+    public function __construct($purchaseHistory, $admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
@@ -44,6 +45,7 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
         $this->paid = ($this->payment_status == 2) ? ' sau khi đã thanh toán. ' : '.';
         $this->refund = ($this->payment_status == 2) ? ' và liên hệ với khách hàng.' : '.';
         $this->admin_id = $admin_id;
+        $this->line = 'Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . $this->paid . 'Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng';
     }
 
     /**
@@ -63,10 +65,9 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
     {
         return (new MailMessage)
             ->subject('Khách Hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name)
-            ->greeting('Xin chào!')
-            ->line('Khách hàng ' . $this->name . ' đã hủy tour ' . $this->tour_name . $this->paid . 'Vui lòng kiểm tra trong mục quản lý đơn hàng và liên hệ với khách hàng')
-            ->line('Cảm ơn đã sử dụng dịch vụ của chúng tôi!')
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+            ->view('mail.admin', [
+                'line' => $this->line
+            ]);
     }
 
     /**
@@ -87,6 +88,6 @@ class CancelNotificationAdmin extends Notification implements ShouldQueue,Should
 
     public function broadcastOn()
     {
-        return new PrivateChannel('datn-vcdtt-development'.$this->admin_id);
+        return new PrivateChannel('datn-vcdtt-development.' . $this->admin_id);
     }
 }

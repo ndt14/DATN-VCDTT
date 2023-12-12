@@ -17,6 +17,9 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $token;
+    protected $url;
+    protected $line;
+
     /**
      * Create a new notification instance.
      *
@@ -46,11 +49,14 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     {
         //Đây chỉ là link tạm thời để test chức năng. Sau này sẽ bảo ae fe sửa link để gửi trong mail cho khách
         //link dẫn đến trang đổi password
-        $url = 'http://datn-vcdtt.test:5173/reset-password/' . $this->token;
+        $this->url = 'https://vcdtt.online/reset-password/' . $this->token;
+        $this->line = 'Bạn nhận được mail này vì có một yêu cầu đổi mật khẩu cho tài khoản của bạn. Nếu không phải là bạn, vui lòng bỏ qua email này!';
 
         return (new MailMessage)
-            ->line('Bạn nhận được mail này vì có một yêu cầu đổi mật khẩu cho tài khoản của bạn')
-            ->action('Đổi mật khẩu', url($url))
-            ->line('Nếu không phải là bạn, vui lòng bỏ qua email này');
+            ->subject('Yêu cầu đổi mật khẩu')
+            ->view('mail.reset-password', [
+                'url' => $this->url,
+                'line' => $this->line
+            ]);
     }
 }
