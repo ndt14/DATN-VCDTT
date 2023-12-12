@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="col-4 mb-3">
-                    <div class="form-label">Trạng thái dơn hàng</div>
+                    <div class="form-label">Trạng thái đơn hàng</div>
                     @switch($item['purchase_status'])
                         @case(1)
                             <span class="badge bg-muted-lt">Tự động hủy do quá hạn</span>
@@ -116,15 +116,15 @@
                 <div class="col-auto px-3">
                     <div class="form-label">Giới tính</div>
                     @switch ($item['gender'])
-                        @case(0)
+                        @case(1)
                             Nam
                         @break
 
-                        @case(1)
+                        @case(2)
                             Nữ
                         @break
 
-                        @case(2)
+                        @case(3)
                             Không xác định
                         @break
                     @endswitch

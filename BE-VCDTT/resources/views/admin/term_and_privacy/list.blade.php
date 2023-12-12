@@ -137,10 +137,10 @@
                                                 <td class="text-center">
                                                     @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                            data-bs-placement="top" data-bs-title="Đang hoạt động"></span>
                                                     @else
                                                         <span class="badge bg-red" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                            data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                                     @endif
                                                 </td>
                                                 <td>
