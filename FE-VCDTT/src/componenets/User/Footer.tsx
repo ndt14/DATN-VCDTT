@@ -6,6 +6,8 @@ import { useGetBlogsQuery } from "../../api/blogs";
 import _ from "lodash";
 import { Blog } from "../../interfaces/Blog";
 import moment from "moment";
+import { useGetFaqsQuery } from "../../api/faqs";
+import { Faq } from "../../interfaces/Faq";
 
 const Footer = () => {
   const {data: dataPhone} = useGetWebPhoneNumber1Query()
@@ -18,7 +20,10 @@ const Footer = () => {
   //  console.log(dataBlog);/
    const sortedDiscountedBlogs = _.orderBy(dataBlog?.data.blogs, ["id"]);
    const newBlogs = sortedDiscountedBlogs.slice(0, 2);
-
+//faq
+const {data: dataFaq} = useGetFaqsQuery();
+const sortedDiscountedFaqs = _.orderBy(dataFaq?.data.faqs, ["id"]);
+   const newFaqs = sortedDiscountedFaqs.slice(0, 3);
 
    const openWindow = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
@@ -39,7 +44,7 @@ const Footer = () => {
       <div className="top-footer">
         <div className="container">
           <div className="row">
-            <div className="col-lg-4 col-md-6">
+            <div className="col-lg-3 col-md-6">
               <aside className="widget widget_text">
                 <h3 className="widget-title">Về VCDTT</h3>
                 <div className="textwidget widget-text">
@@ -57,7 +62,7 @@ const Footer = () => {
                 </div> */}
               </aside>
             </div>
-            <div className="col-lg-4 col-md-6">
+            <div className="col-lg-3 col-md-6">
               <aside className="widget widget_text">
                 <h3 className="widget-title">THÔNG TIN LIÊN HỆ</h3>
                 <div className="textwidget widget-text">
@@ -100,7 +105,7 @@ const Footer = () => {
                 </div>
               </aside>
             </div>
-            <div className="col-lg-4 col-md-6">
+            <div className="col-lg-3 col-md-6">
               <aside className="widget widget_recent_post">
                 <h3 className="widget-title">BÀI VIẾT MỚI NHẤT</h3>
                 {newBlogs?.map(({ id, title, created_at }: Blog) => {
@@ -108,9 +113,9 @@ return(
   <ul key={id}>
   <li className="mt-2">
     <h5>
-      <a href="#">
+      <Link to={`blogs/${id}`}>
        {title}
-      </a>
+      </Link>
     </h5>
     <div className="entry-meta">
       <span className="post-on">
@@ -118,6 +123,33 @@ return(
                                                 "DD/MM/YYYY"
                                               )}</a>
       </span>
+      {/* <span className="comments-link">
+        <a href="#">No Comments</a>
+      </span> */}
+    </div>
+  </li>
+ 
+</ul>
+)
+
+})}
+               
+              </aside>
+            </div>
+            <div className="col-lg-3 col-md-6">
+              <aside className="widget widget_recent_post">
+                <h3 className="widget-title">Các câu hỏi thường gặp</h3>
+                {newFaqs?.map(({ id, question }: Faq) => {
+return(
+  <ul key={id}>
+  <li className="mt-2">
+    <h5>
+      <Link to="/faqs">
+       {question}
+      </Link>
+    </h5>
+    <div className="entry-meta">
+      
       {/* <span className="comments-link">
         <a href="#">No Comments</a>
       </span> */}

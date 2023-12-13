@@ -9,6 +9,7 @@ import { useGetCouponByUserQuery } from "../../../api/coupon";
 import { Coupon } from "../../../interfaces/Coupon";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
+
 const UserCoupon = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
@@ -60,6 +61,18 @@ const UserCoupon = () => {
       title: "Ngày hết hạn",
       dataIndex: "expiration_date",
       key: "expiration_date",
+      render: (text: any ) => {
+        const currentDate = new Date();
+        const expirationDate = new Date(text); // Chuyển đổi ngày hết hạn thành kiểu Date
+    
+        const isExpired = expirationDate < currentDate; // So sánh ngày hết hạn với ngày hiện tại
+    
+        return {
+          children: (
+            <span style={{ color: isExpired ? "red" : "inherit" }}>{text}</span>
+          ),
+        };
+      },
     },
   ];
   // const userName = userData?.data?.user.name;
@@ -79,7 +92,7 @@ const UserCoupon = () => {
 
         <section className="container" style={{ marginBottom: "200px" }}>
           <div className="row">
-            <div className="col-4">
+            <div className="col-md-4">
               <div className="border">
                 {isLoading ? (
                   <Skeleton active />
@@ -140,8 +153,8 @@ const UserCoupon = () => {
               </div>
             </div>
 
-            <div className="col-8">
-              <h2 className="font-bold text-2xl">Quản lý mã giảm giá</h2>
+            <div className="col-md-8">
+              <h3 className="font-bold text-2xl">Quản lý mã giảm giá</h3>
               <Table dataSource={dataSource} columns={columns} />
             </div>
           </div>

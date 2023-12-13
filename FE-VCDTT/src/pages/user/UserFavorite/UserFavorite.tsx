@@ -93,7 +93,7 @@ const UserTour = () => {
 
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="border">
               <div className="d-flex p-3">
                 <div>
@@ -134,7 +134,7 @@ const UserTour = () => {
               {/* End left panel */}
             </div>
           </div>
-          <div className="col-8">
+          <div className="col-md-8">
             <h3>Tour yêu thích</h3>
             <div className="row">
               {tourFavorite?.map(

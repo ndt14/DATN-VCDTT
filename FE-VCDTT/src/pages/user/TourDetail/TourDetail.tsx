@@ -563,19 +563,6 @@ const TourDetail = () => {
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          id="review-tab"
-                          data-toggle="tab"
-                          href="#review"
-                          role="tab"
-                          aria-controls="review"
-                          aria-selected="false"
-                        >
-                          Đánh Giá
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link"
                           id="map-tab"
                           data-toggle="tab"
                           href="#map"
@@ -586,6 +573,20 @@ const TourDetail = () => {
                           Bản Đồ
                         </a>
                       </li>
+                      <li className="nav-item">
+                        <a
+                          className="nav-link"
+                          id="review-tab"
+                          data-toggle="tab"
+                          href="#review"
+                          role="tab"
+                          aria-controls="review"
+                          aria-selected="false"
+                        >
+                          Đánh Giá
+                        </a>
+                      </li>
+                     
                     </ul>
                     <div className="tab-content" id="myTabContent">
                       <div
@@ -636,6 +637,23 @@ const TourDetail = () => {
                             __html: tourData?.data?.tour.pathway,
                           }}
                         ></div>
+                      </div>
+                      <div
+                        className="tab-pane"
+                        id="map"
+                        role="tabpanel"
+                        aria-labelledby="map-tab"
+                      >
+                        <div className="map-area">
+                          <iframe
+                            ref={iframeRef}
+                            width="600"
+                            height="450"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
+                        </div>
                       </div>
                       <div
                         className="tab-pane"
@@ -807,23 +825,7 @@ const TourDetail = () => {
                           </div>
                         </div>
                       </div>
-                      <div
-                        className="tab-pane"
-                        id="map"
-                        role="tabpanel"
-                        aria-labelledby="map-tab"
-                      >
-                        <div className="map-area">
-                          <iframe
-                            ref={iframeRef}
-                            width="600"
-                            height="450"
-                            style={{ border: 0 }}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          ></iframe>
-                        </div>
-                      </div>
+                     
                     </div>
                   </div>
                 </div>
@@ -948,6 +950,11 @@ const TourDetail = () => {
                             <i className="fa fa-plus"></i>
                           </a> */}
                           </div>
+                          <div className="col-sm-12 mt-2">
+                            <label htmlFor="" className="h6">
+                              Độ dài chuyến đi: {tourData?.data?.tour.duration} ngày
+                            </label>
+                          </div>
 
                           <div className="col-sm-5 mt-2">
                             <label htmlFor="" className="h6">
@@ -959,6 +966,8 @@ const TourDetail = () => {
                               disabledDate={disabledDate}
                             />
                           </div>
+
+                         
 
                           <div className="col-sm-12">
                             {productNumber + productChildNumber > tourLimit ? (
