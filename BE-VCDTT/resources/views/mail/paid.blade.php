@@ -387,7 +387,7 @@
                                     <td>
                                         <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
                                             target="_blank"
-                                            href="https://vcdtt.online/user/view-bill/{{ $purchase_history_id }}">In
+                                            href="https://vcdtt.online/user/view-bill/{{ Crypt::encryptString($purchase_history_id) }}">In
                                             đơn hàng</a>
                                     </td>
                                 </tr>
