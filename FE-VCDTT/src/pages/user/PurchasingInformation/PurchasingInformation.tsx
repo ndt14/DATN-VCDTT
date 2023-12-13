@@ -636,13 +636,7 @@ const PurchasingInformation = () => {
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
-                      <div className="col-sm-6">
-                        <p>Giá bạn phải trả</p>
-                      </div>
-
-                      <div className="col-sm-6">
-                        <p>{formattedResultPrice}</p>
-                      </div>
+                     
 
                       <div className="col-sm-6">
                         <p>Trẻ em({productChildNumber}x)</p>
@@ -672,7 +666,13 @@ const PurchasingInformation = () => {
                         )}
                         <div></div>
                       </div>
+                      <div className="col-sm-6">
+                        <p>Giá bạn phải trả</p>
+                      </div>
 
+                      <div className="col-sm-6">
+                        <p>{formattedResultPrice}</p>
+                      </div>
                       {userLogIn == "true" &&
                       lastPrice !== couponData.finalPrice ? (
                         <div className="col-sm-6">
@@ -981,11 +981,13 @@ const PurchasingInformation = () => {
                     {userLogIn == "true" ? (
                       <form onSubmit={handleCouponSubmit}>
                         <div className="form-group row justify-content-center">
+                      <div className="col-sm-8">
+
                           <input
                             type="text"
                             name="coupon_code"
                             placeholder="Nhập mã giảm giá"
-                            className="input-border col-11"
+                            className="input-border"
                             value={formCoupon.coupon_code}
                             onChange={handleCouponChange}
                           />
@@ -995,12 +997,16 @@ const PurchasingInformation = () => {
                             className="input-border"
                             value={formCoupon.user_id}
                           />
+                          </div>
+                      <div className="col-sm-4">
+
                           <button
-                            className="btn-continue col-11 mt-2"
+                            className="btn-continue"
                             type="submit"
                           >
                             Xác nhận
                           </button>
+                          </div>
                         </div>
                       </form>
                     ) : (

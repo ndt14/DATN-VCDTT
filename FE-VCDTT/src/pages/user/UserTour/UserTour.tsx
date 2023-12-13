@@ -262,7 +262,7 @@ const UserTour = () => {
           {isLoading ? (
             <Skeleton active />
           ) : (
-            <div className="col-4">
+            <div className="col-md-4">
               <div className="border">
                 <div className="d-flex p-3">
                   <div>
@@ -308,7 +308,7 @@ const UserTour = () => {
           {isLoading ? (
             <Skeleton active />
           ) : (
-            <div className="col-8">
+            <div className="col-md-8">
               {/*  */}
 
               <h3>Danh sách tour</h3>
@@ -454,7 +454,7 @@ const UserTour = () => {
                       <div className="col-8">
                         <p>
                           Mã đơn:{" "}
-                          <span className="fw-bold">{encryptedOrderId}</span>
+                          <span className="fw-bold">{id}</span>
                         </p>
                         <div>
                           {purchase_method == 2 ? (

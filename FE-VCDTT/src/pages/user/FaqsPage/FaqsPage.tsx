@@ -90,7 +90,12 @@ const FaqsPage = () => {
         aria-labelledby={`heading${id}`}
         data-parent="#accordionOne"
       >
-        <div className="card-body">{answer}</div>
+        <div className="card-body">  <p
+                                            className=""
+                                            dangerouslySetInnerHTML={{
+                                              __html: answer||""
+                                            }}
+                                          ></p></div>
       </div>
     </div>
   );

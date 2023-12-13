@@ -424,11 +424,11 @@ const Header = () => {
                         ({ id, name }: Category) => {
                           return (
                             <li key={id}>
-                              <Link
-                                to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                              <a
+                                href={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
                               >
                                 {name}
-                              </Link>
+                              </a>
                               {/* <a href="destination.html"></a> */}
                             </li>
                           );
@@ -768,12 +768,19 @@ const Header = () => {
           <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
               <Navbar.Brand href="/">
-                <img
+              {dataLogo?.data.keyvalue.map(({ value }: Setting) => {
+                    return (
+                      <>
+                           <img
                   className="white-logo"
-                  src="../../../assets/images/VCDTT_logo-removebg-preview.png"
+                  src={value}
                   alt="logo"
                   style={{ width: "120px" }}
                 />
+                      </>
+                    );
+                  })}
+             
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse
@@ -851,11 +858,11 @@ const Header = () => {
                         ({ id, name }: Category) => {
                           return (
                             <Dropdown.Item key={id}>
-                              <Link
-                                to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                              <a
+                                href={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
                               >
                                 {name}
-                              </Link>
+                              </a>
                               {/* <a href="destination.html"></a> */}
                             </Dropdown.Item>
                           );
