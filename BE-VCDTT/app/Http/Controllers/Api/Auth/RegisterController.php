@@ -32,6 +32,7 @@ class RegisterController extends Controller
             return response()->json(['message' => 'Email đã được sử dụng', 'status' => 400]);
         }
         $input['password'] = bcrypt($input['password']);
+        $input['status'] = 1;
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;

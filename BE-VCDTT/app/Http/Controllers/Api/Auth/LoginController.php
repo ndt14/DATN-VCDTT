@@ -11,6 +11,8 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+         // Thêm kiểm tra trường "status" vào đây
+         $credentials['status'] = 1;
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('api-token')->plainTextToken;
