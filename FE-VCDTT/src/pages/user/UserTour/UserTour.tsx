@@ -111,7 +111,7 @@ const UserTour = () => {
   };
 
   const submit = async (id: number) => {
-    console.log(id);
+    // console.log(id);
     await setFormValues((prevFormValues) => ({
       ...prevFormValues,
       id: id,
@@ -447,14 +447,12 @@ const UserTour = () => {
                   };
 
                   const encryptedOrderId = encryptId(id);
-                  console.log(encryptedOrderId);
 
                   return (
                     <div className="p-3 my-3 shadow row" key={id}>
                       <div className="col-8">
                         <p>
-                          Mã đơn:{" "}
-                          <span className="fw-bold">{id}</span>
+                          Mã đơn: <span className="fw-bold">{id}</span>
                         </p>
                         <div>
                           {purchase_method == 2 ? (

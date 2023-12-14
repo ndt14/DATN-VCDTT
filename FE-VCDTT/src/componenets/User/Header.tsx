@@ -776,6 +776,7 @@ const Header = () => {
                         src={value}
                         alt="logo"
                         style={{ width: "120px" }}
+                        key={value}
                       />
                     </>
                   );

@@ -339,7 +339,7 @@ const TourDetail = () => {
   //banner
 
   const dataTitle = "Tour chi tiết";
-  console.log(typeof productNumber);
+
   const saveBillData = () => {
     localStorage.setItem("adult", JSON.stringify(productNumber));
     localStorage.setItem("child", JSON.stringify(productChildNumber));
@@ -479,9 +479,9 @@ const TourDetail = () => {
                             alt="Third slide"
                           />
                         </div> */}
-                        {imageGallery?.map(({ url }: any) => {
+                        {imageGallery?.map(({ url, index }: any) => {
                           return (
-                            <div className="carousel-item ">
+                            <div key={index} className="carousel-item ">
                               <img
                                 className="d-block img-tour-detail"
                                 src={url}
