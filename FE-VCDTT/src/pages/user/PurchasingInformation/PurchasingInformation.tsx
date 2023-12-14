@@ -175,12 +175,16 @@ const PurchasingInformation = () => {
       method: null,
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên"),
+      name: Yup.string()
+        .required("Nhập tên")
+        .min(5, "Tên phải chứa ít nhất 5 ký tự")
+        .max(20, "Tên không được vượt quá 20 ký tự"),
       email: Yup.string()
         .email("Sai định dạng email")
-        .required("Email không được để trống"),
+        .required("Email không được để trống")
+        .matches(/^0\d{9}$/, "Sai định dạng số điện thoại"),
       phone_number: Yup.string().required("Nhập số điện thoại"),
-      honorific: Yup.string().required("Please select an option"),
+      honorific: Yup.string().required("Chọn giới tính"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -636,8 +640,6 @@ const PurchasingInformation = () => {
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
-                     
-
                       <div className="col-sm-6">
                         <p>Trẻ em({productChildNumber}x)</p>
                         <p>Người lớn ({productNumber}x)</p>
@@ -981,31 +983,26 @@ const PurchasingInformation = () => {
                     {userLogIn == "true" ? (
                       <form onSubmit={handleCouponSubmit}>
                         <div className="form-group row justify-content-center">
-                      <div className="col-sm-8">
-
-                          <input
-                            type="text"
-                            name="coupon_code"
-                            placeholder="Nhập mã giảm giá"
-                            className="input-border"
-                            value={formCoupon.coupon_code}
-                            onChange={handleCouponChange}
-                          />
-                          <input
-                            type="hidden"
-                            name="user_id"
-                            className="input-border"
-                            value={formCoupon.user_id}
-                          />
+                          <div className="col-sm-8">
+                            <input
+                              type="text"
+                              name="coupon_code"
+                              placeholder="Nhập mã giảm giá"
+                              className="input-border"
+                              value={formCoupon.coupon_code}
+                              onChange={handleCouponChange}
+                            />
+                            <input
+                              type="hidden"
+                              name="user_id"
+                              className="input-border"
+                              value={formCoupon.user_id}
+                            />
                           </div>
-                      <div className="col-sm-4">
-
-                          <button
-                            className="btn-continue"
-                            type="submit"
-                          >
-                            Xác nhận
-                          </button>
+                          <div className="col-sm-4">
+                            <button className="btn-continue" type="submit">
+                              Xác nhận
+                            </button>
                           </div>
                         </div>
                       </form>

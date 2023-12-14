@@ -260,7 +260,7 @@ const HomePage = () => {
         </div>
 
         {/*  */}
-        <section className="package-section d-none d-xl-block d-xxl-none">
+        <section className="package-section d-none d-lg-block">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -697,7 +697,7 @@ const HomePage = () => {
         {/*  */}
 
         {/*  */}
-        <section className="special-section d-none d-xl-block d-xxl-none">
+        <section className="special-section d-none d-lg-block">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">

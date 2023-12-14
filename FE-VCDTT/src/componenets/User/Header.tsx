@@ -395,7 +395,7 @@ const Header = () => {
       <header id="masthead" className="site-header header-primary">
         {/* <!-- header html start --> */}
         <div className="top-header"></div>
-        <div className="bottom-header d-none d-lg-block d-sm-none">
+        <div className="bottom-header d-none d-md-block">
           <div className="container d-flex justify-content-between align-items-center">
             <div className="site-identity">
               <h1 className="site-title">
@@ -411,7 +411,7 @@ const Header = () => {
                 </Link>
               </h1>
             </div>
-            <div className="main-navigation d-none d-lg-block">
+            <div className="main-navigation d-none d-md-block">
               <nav id="navigation" className="navigation">
                 <ul>
                   <li className="menu-item-has-children none">
@@ -461,7 +461,7 @@ const Header = () => {
                 <div>
                   {/* Hiển thị tên tài khoản sau khi đăng nhập thành công */}
                   <div className="user-profile">
-                    <div className="main-navigation d-none d-lg-block">
+                    <div className="main-navigation ">
                       <nav id="navigation" className="navigation">
                         <ul>
                           <li className="menu-item-has-children">
@@ -764,28 +764,29 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="d-block d-sm-none bg-white" style={{ zIndex: "99" }}>
+        <div className="d-block d-md-none bg-white" style={{ zIndex: "99" }}>
           <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
               <Navbar.Brand href="/">
-              {dataLogo?.data.keyvalue.map(({ value }: Setting) => {
-                    return (
-                      <>
-                           <img
-                  className="white-logo"
-                  src={value}
-                  alt="logo"
-                  style={{ width: "120px" }}
-                />
-                      </>
-                    );
-                  })}
-             
+                {dataLogo?.data.keyvalue.map(({ value }: Setting) => {
+                  return (
+                    <>
+                      <img
+                        className="white-logo"
+                        src={value}
+                        alt="logo"
+                        style={{ width: "120px" }}
+                      />
+                    </>
+                  );
+                })}
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
               <Navbar.Collapse
-                id="basic-navbar-nav d-flex justify-content-end"
+                id="basic-navbar-nav "
                 style={{ textAlign: "right" }}
+                className=""
               >
                 <Nav
                   className="me-auto shadow bg-secondary"
