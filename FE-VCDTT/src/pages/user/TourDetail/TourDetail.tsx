@@ -973,11 +973,11 @@ const TourDetail = () => {
                             </div>
                           ) : (
                             <div className="col-sm-7">
-                              <label htmlFor="" className="h6">
+                              <label htmlFor="" className="fs-5 fw-bold">
                                 Người lớn({">"}= 10 tuổi)
                               </label>
                               <div className="price">{formattedTourPrice}</div>
-                              <label htmlFor="" className="h6">
+                              <label htmlFor="" className="fs-5 fw-bold">
                                 Trẻ em dưới 10 tuổi
                               </label>
                               <div className="price">
@@ -1012,14 +1012,14 @@ const TourDetail = () => {
                           </a> */}
                           </div>
                           <div className="col-sm-12 mt-2">
-                            <label htmlFor="" className="h6">
+                            <label htmlFor="" className="fs-5 fw-bold">
                               Độ dài chuyến đi: {tourData?.data?.tour.duration}{" "}
                               ngày
                             </label>
                           </div>
 
                           <div className="col-sm-5 mt-2">
-                            <label htmlFor="" className="h6">
+                            <label htmlFor="" className="fs-5 fw-bold">
                               Chọn ngày đi
                             </label>
 

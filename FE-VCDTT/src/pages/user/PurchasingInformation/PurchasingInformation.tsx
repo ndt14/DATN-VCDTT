@@ -15,6 +15,7 @@ import { useGetUserByIdQuery } from "../../../api/user";
 import { Spin } from "antd";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import Tooltip from "antd";
 // import { setTimeout } from "timers/promises";
 
 // type Props = {};
@@ -38,7 +39,7 @@ const PurchasingInformation = () => {
   if (split && split.length >= 1) {
     tourId = parseInt(split[0]);
   }
-  console.log(tourId);
+  // console.log(tourId);
 
   const { data: tourData } = useGetTourByIdQuery(tourId || "");
   const tour_sale = tourData?.data.tour.sale_percentage;
@@ -47,7 +48,7 @@ const PurchasingInformation = () => {
     (tourData?.data.tour.child_price * (100 - tour_sale)) / 100;
   const productNumber = localStorage.getItem("adult");
   const productChildNumber = localStorage.getItem("child");
-  console.log(typeof productNumber);
+  // console.log(typeof productNumber);
   const adult_count = parseInt(productNumber !== null ? productNumber : "", 10);
   const child_count = parseInt(
     productChildNumber !== null ? productChildNumber : "",
@@ -77,7 +78,7 @@ const PurchasingInformation = () => {
     style: "currency",
     currency: "VND",
   }).format(lastPrice);
-  console.log(productNumber);
+  // console.log(productNumber);
   const parts = splitDate?.split("-");
   let formattedDate = "";
   if (parts && parts.length === 3) {
@@ -164,6 +165,7 @@ const PurchasingInformation = () => {
   const userGender = userAPIData?.data.user.gender;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
+  const phoneRegExp = /^0\d{9}$/;
   const formik = useFormik<FormValues>({
     initialValues: {
       name: userName || "",
@@ -181,9 +183,10 @@ const PurchasingInformation = () => {
         .max(20, "Tên không được vượt quá 20 ký tự"),
       email: Yup.string()
         .email("Sai định dạng email")
-        .required("Email không được để trống")
-        .matches(/^0\d{9}$/, "Sai định dạng số điện thoại"),
-      phone_number: Yup.string().required("Nhập số điện thoại"),
+        .required("Email không được để trống"),
+      phone_number: Yup.string()
+        .required("Nhập số điện thoại")
+        .matches(phoneRegExp, "Sai định dạng số điện thoại"),
       honorific: Yup.string().required("Chọn giới tính"),
     }),
     onSubmit: (values) => {
@@ -204,6 +207,8 @@ const PurchasingInformation = () => {
     }
   }, [userAPIData]);
   const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  // console.log(Object.keys(formik.errors).length);
+
   // Coupon
   const [couponData, setCouponData] = useState<{
     percentage: number | null;
@@ -233,7 +238,7 @@ const PurchasingInformation = () => {
 
   useEffect(() => {
     let FPrice = totalAdultPrice + totalChildPrice;
-    console.log(FPrice);
+    // console.log(FPrice);
 
     if (couponData.percentage && couponData.percentage > 0) {
       FPrice = FPrice - (FPrice / 100) * couponData.percentage;
@@ -260,7 +265,7 @@ const PurchasingInformation = () => {
     style: "currency",
     currency: "VND",
   }).format(couponData.finalPrice);
-  console.log(couponData);
+  // console.log(couponData);
 
   const handleCouponSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -524,7 +529,7 @@ const PurchasingInformation = () => {
                           </select>
                           {formik.touched.honorific &&
                             formik.errors.honorific && (
-                              <p className="text-danger">
+                              <p className="text-danger mt-2">
                                 {formik.errors.honorific}
                               </p>
                             )}
@@ -546,7 +551,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.name && formik.errors.name && (
-                            <p className="text-danger">{formik.errors.name}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.name}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -567,7 +574,7 @@ const PurchasingInformation = () => {
                           />
                           {formik.touched.phone_number &&
                             formik.errors.phone_number && (
-                              <p className="text-danger">
+                              <p className="mt-2 text-danger">
                                 {formik.errors.phone_number}
                               </p>
                             )}
@@ -589,7 +596,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.email && formik.errors.email && (
-                            <p className="text-danger">{formik.errors.email}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.email}
+                            </p>
                           )}
                         </div>
                         {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
@@ -607,7 +616,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.email && formik.errors.email && (
-                            <p className="text-danger">{formik.errors.email}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.email}
+                            </p>
                           )}
                         </div>
                         {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
@@ -981,9 +992,9 @@ const PurchasingInformation = () => {
                   <div className="coupon-field">
                     <h4>Nhập mã giảm giá</h4>
                     {userLogIn == "true" ? (
-                      <form onSubmit={handleCouponSubmit}>
+                      <form className="" onSubmit={handleCouponSubmit}>
                         <div className="form-group row justify-content-center">
-                          <div className="col-sm-8">
+                          <div className="col-sm-8 position-relative">
                             <input
                               type="text"
                               name="coupon_code"
@@ -998,6 +1009,20 @@ const PurchasingInformation = () => {
                               className="input-border"
                               value={formCoupon.user_id}
                             />
+                            <button
+                              type="button"
+                              className="btn text-danger position-absolute"
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="Xem danh sách coupon của bạn ở Kho Mã Giảm Giá "
+                              style={{
+                                width: "48px",
+                                height: "48px",
+                                right: "15px",
+                              }}
+                            >
+                              !!!
+                            </button>
                           </div>
                           <div className="col-sm-4">
                             <button className="btn-continue" type="submit">
