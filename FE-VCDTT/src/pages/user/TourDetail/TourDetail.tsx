@@ -22,6 +22,7 @@ import "dayjs/locale/en";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+import { useUpdateFavoriteMutation } from "../../../api/favorite";
 
 const MySwal = withReactContent(Swal);
 
@@ -50,16 +51,7 @@ const TourDetail = () => {
     setIsDateSelected(true);
     // localStorage.setItem("dateTour", dateString);
   };
-  // const settings = {
-  //   lazyload: false,
-  //   nav: false,
-  //   mouseDrag: true,
-  //   items: 3,
-  //   autoplay: true,
-  //   autoplayButtonOutput: false,
-  // };
 
-  //
   const { id } = useParams<{ id: string }>();
 
   // const tourId = parseInt(id);
@@ -329,21 +321,92 @@ const TourDetail = () => {
 
   //SEO
 
-  const titleElement = document.querySelector("title");
-  if (titleElement) {
-    titleElement.innerText = tourData?.data?.tour.name + " - " + "VCDTT";
-  }
+  // const titleElement = document.querySelector("title");
+  // if (titleElement) {
+  //   if (isLoading == true) {
+  //     titleElement.innerText = "Đang tải";
+  //   } else {
+  //     titleElement.innerText = tourData?.data?.tour.name + " - " + "VCDTT";
+  //   }
+  // }
+  useEffect(() => {
+    const title = isLoading
+      ? "Đang tải"
+      : tourData?.data?.tour.name + " - VCDTT";
+    document.title = title;
+  }, [isLoading, tourData]);
 
   //banner
 
   const dataTitle = "Tour chi tiết";
-  console.log(typeof productNumber);
+
   const saveBillData = () => {
     localStorage.setItem("adult", JSON.stringify(productNumber));
     localStorage.setItem("child", JSON.stringify(productChildNumber));
     localStorage.setItem("start_date", JSON.stringify(dateTour));
   };
 
+  const handleFavoriteAdd = (id: number) => {
+    const info = {
+      user_id: userId !== null ? parseInt(userId) : 0,
+      tour_id: id,
+    };
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Thêm vào yêu thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
+    });
+  };
+
+  const [updateTourFavorite] = useUpdateFavoriteMutation();
+  const handleFavoriteRemove = (id: number) => {
+    const info = {
+      user_id: userId !== null ? parseInt(userId) : 0,
+      tour_id: id,
+    };
+    updateTourFavorite(info).then(async () => {
+      MySwal.fire({
+        text: "Bỏ thích thành công",
+        icon: "success",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // Reload the window
+      window.location.reload();
+    });
+  };
+
+  const handleClickAdd =
+    (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      if (typeof id === "number") {
+        handleFavoriteAdd(id);
+      } else {
+        // Handle the case when id is undefined
+        // console.log("Invalid id");
+      }
+    };
+  const handleClickRemove =
+    (id: number | undefined) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      if (typeof id === "number") {
+        handleFavoriteRemove(id);
+      } else {
+        // Handle the case when id is undefined
+        // console.log("Invalid id");
+      }
+    };
   return (
     <>
       {/* <Loader /> */}
@@ -416,9 +479,9 @@ const TourDetail = () => {
                             alt="Third slide"
                           />
                         </div> */}
-                        {imageGallery?.map(({ url }: any) => {
+                        {imageGallery?.map(({ url, index }: any) => {
                           return (
-                            <div className="carousel-item ">
+                            <div key={index} className="carousel-item ">
                               <img
                                 className="d-block img-tour-detail"
                                 src={url}
@@ -586,7 +649,6 @@ const TourDetail = () => {
                           Đánh Giá
                         </a>
                       </li>
-                     
                     </ul>
                     <div className="tab-content" id="myTabContent">
                       <div
@@ -825,7 +887,6 @@ const TourDetail = () => {
                           </div>
                         </div>
                       </div>
-                     
                     </div>
                   </div>
                 </div>
@@ -878,7 +939,7 @@ const TourDetail = () => {
                         <div className="row">
                           {tourSale != 0 ? (
                             <div className="col-sm-7">
-                              <label htmlFor="" className="h6">
+                              <label htmlFor="" className="fs-5 fw-bold">
                                 Người lớn({">"}= 10 tuổi)
                               </label>
                               <div className="">
@@ -894,7 +955,7 @@ const TourDetail = () => {
                               </div>
                               <div className="price"></div>
 
-                              <label htmlFor="" className="h6">
+                              <label htmlFor="" className="fs-5 fw-bold mt-2">
                                 Trẻ em dưới 10 tuổi
                               </label>
                               <div className="">
@@ -952,7 +1013,8 @@ const TourDetail = () => {
                           </div>
                           <div className="col-sm-12 mt-2">
                             <label htmlFor="" className="h6">
-                              Độ dài chuyến đi: {tourData?.data?.tour.duration} ngày
+                              Độ dài chuyến đi: {tourData?.data?.tour.duration}{" "}
+                              ngày
                             </label>
                           </div>
 
@@ -966,8 +1028,6 @@ const TourDetail = () => {
                               disabledDate={disabledDate}
                             />
                           </div>
-
-                         
 
                           <div className="col-sm-12">
                             {productNumber + productChildNumber > tourLimit ? (
@@ -1057,10 +1117,23 @@ const TourDetail = () => {
                     view_count,
                     adult_price,
                     star,
+                    sale_percentage,
                   }: Tour) => {
                     if (idArray.includes(id as number)) {
                       return (
                         <div className="col-lg-4 col-md-6" key={id}>
+                          {sale_percentage > 0 ? (
+                            <div className="bg-primary text-white position-absolute discount badge ">
+                              <span
+                                className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                style={{ height: "100%" }}
+                              >
+                                -{sale_percentage}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span></span>
+                          )}
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
@@ -1077,8 +1150,10 @@ const TourDetail = () => {
                                   {new Intl.NumberFormat("vi-VN", {
                                     style: "currency",
                                     currency: "VND",
-                                  }).format(adult_price)}{" "}
-                                  / người
+                                  }).format(
+                                    (adult_price * (100 - sale_percentage)) /
+                                      100
+                                  )}{" "}
                                 </span>{" "}
                               </h6>
                             </div>
@@ -1115,7 +1190,11 @@ const TourDetail = () => {
                                 </div>
 
                                 <div className="btn-wrap">
-                                  <a href="#" className="button-text width-6">
+                                  <a
+                                    href="#"
+                                    onClick={handleClickRemove(id)}
+                                    className="button-text width-6"
+                                  >
                                     Đã thích
                                     <i className="far fa-heart"></i>
                                   </a>
@@ -1128,6 +1207,18 @@ const TourDetail = () => {
                     } else {
                       return (
                         <div className="col-lg-4 col-md-6" key={id}>
+                          {sale_percentage > 0 ? (
+                            <div className="bg-primary text-white position-absolute discount badge ">
+                              <span
+                                className="fs-4 font-weight-bold font-italic d-flex align-items-center justify-content-center"
+                                style={{ height: "100%" }}
+                              >
+                                -{sale_percentage}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span></span>
+                          )}
                           <div className="package-wrap">
                             <figure className="feature-image">
                               <Link to={`/tours/${id}`}>
@@ -1144,8 +1235,10 @@ const TourDetail = () => {
                                   {new Intl.NumberFormat("vi-VN", {
                                     style: "currency",
                                     currency: "VND",
-                                  }).format(adult_price)}{" "}
-                                  / người
+                                  }).format(
+                                    (adult_price * (100 - sale_percentage)) /
+                                      100
+                                  )}{" "}
                                 </span>{" "}
                               </h6>
                             </div>
@@ -1182,7 +1275,11 @@ const TourDetail = () => {
                                 </div>
 
                                 <div className="btn-wrap">
-                                  <a href="#" className="button-text width-6">
+                                  <a
+                                    href="#"
+                                    onClick={handleClickAdd(id)}
+                                    className="button-text width-6"
+                                  >
                                     Thêm vào yêu thích
                                     <i className="far fa-heart"></i>
                                   </a>

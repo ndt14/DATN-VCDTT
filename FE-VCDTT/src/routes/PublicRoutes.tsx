@@ -45,7 +45,7 @@ const PublicRoutes = () => {
         <Route path="/" element={<LayOutClient />}>
           <Route index element={<HomePage />} />
           <Route path="tours" element={<HomePage />} />
-          <Route path="tours/:id?" element={<TourDetail />} />
+          <Route path="tours/:id" element={<TourDetail />} />
           <Route
             path="check_order_information/:id?"
             element={<PurchasingInformation />}

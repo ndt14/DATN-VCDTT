@@ -58,9 +58,9 @@ const BillPrint = () => {
     console.log(decryptedText);
     return decryptedText;
   };
-  const decryptedOrderId = decryptIdUrl(id || "");
+  const decryptedId = decryptIdUrl(id || "");
   console.log(id);
-  console.log(decryptedOrderId);
+  console.log(decryptedId);
 
   // const decryptId = (encryptedId: string) => {
   //   const decryptedBytes = CryptoJS.AES.decrypt(encryptedId, secretKey);
@@ -86,12 +86,12 @@ const BillPrint = () => {
     // Handle the case when id is undefined
     // For example, you can set a default value or show an error message
   } else {
-    billId = Number(decryptedOrderId);
+    billId = Number(decryptedId);
   }
   // console.log(billId);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data: billData } = useGetBillByIdQuery(decryptedOrderId || "");
+  const { data: billData } = useGetBillByIdQuery(decryptedId || "");
   // console.log(billData?.data.purchase_history);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
@@ -131,7 +131,7 @@ const BillPrint = () => {
     console.log(isBillIdIncluded);
   };
 
-  if (decryptedOrderId) {
+  if (decryptedId) {
     return (
       <div className="container">
         <div>
@@ -175,7 +175,7 @@ const BillPrint = () => {
                   </p>
                   <p>
                     Mã đơn hàng:{" "}
-                    <span className="font-weight-bold">{decryptedOrderId}</span>
+                    <span className="font-weight-bold">{decryptedId}</span>
                   </p>
                 </div>
                 <div>
