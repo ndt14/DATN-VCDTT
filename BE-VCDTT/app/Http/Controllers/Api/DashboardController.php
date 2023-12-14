@@ -113,12 +113,12 @@ class DashboardController extends Controller
     }
     public function userDashboard(Request $request){
         //
-        $data['userCount'] = Count(User::where('is_admin',2)->get());
+        $data['userCount'] = Count(User::where('is_admin', '!=', 1)->orWhereNull('is_admin')->get());
         //
-        $data['userBannedCount'] =  Count(User::where('is_admin',2)->where('status',3)->get());
+        $data['userBannedCount'] =  Count(User::where('is_admin', '!=', 1)->orWhereNull('is_admin')->where('status',3)->get());
         // chua dang ky
         $data['notRegCount'] = PurchaseHistory::select('email')
-        ->whereNotIn('email', User::select('email'))
+        ->whereNotIn('email', User::select('email')->where('is_admin', '!=', 1)->orWhereNull('is_admin'))
         ->count();
 
         $counts = User::where('is_admin', '!=', 1)->orWhereNull('is_admin')->whereIn('gender', [1, 2, 3])->selectRaw('gender, COUNT(*) as count')->groupBy('gender')->pluck('count', 'gender');
