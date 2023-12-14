@@ -5,9 +5,9 @@
 @section('content')
     <div class="page-body">
         <div class="container-xl">
-            <div class="row">
+            <div class="row row-cards g-3">
                 @if ($data->UVCount && $data->UVCount > 0)
-                    <div class="row">
+                    <div class="col-12">
                         <div class="card border-0 bg-yellow shadow-lg  rounded-4 p-1 pt-3 mb-3">
                             <a class="nav-link text-center text-white" href="/purchase-history?purchase_status=2">
                                 <h3>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="card">
+                <div class="card border-0 rounded-4 mb-4 col-12">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -53,13 +53,31 @@
                             <div class="tab-pane active" id="tabs-daily-5" role="tabpanel">
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng tiền đã thu được</h3>
                                             {{ money_format($data->today) }}
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCToday }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCToday }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCToday }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCToday }}
                                         </div>
@@ -69,13 +87,31 @@
                             <div class="tab-pane" id="tabs-weekly-5" role="tabpanel">
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng tiền đã thu được</h3>
                                             {{ money_format($data->week) }}
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCWeek }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCWeek }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCWeek }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCWeek }}
                                         </div>
@@ -85,13 +121,31 @@
                             <div class="tab-pane" id="tabs-monthly-5" role="tabpanel">
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng tiền đã thu được</h3>
                                             {{ money_format($data->month) }}
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCMonth }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCMonth }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCMonth }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCMonth }}
                                         </div>
@@ -101,13 +155,31 @@
                             <div class="tab-pane" id="tabs-yearly-5" role="tabpanel">
                                 <div class="row">
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng tiền đã thu được</h3>
                                             {{ money_format($data->year) }}
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCYear }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCYear }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
+                                            <h3>Tổng số tour đã bán</h3>
+                                            {{ $data->PPCYear }}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card rounded-4 p-4 pt-3">
                                             <h3>Tổng số tour đã bán</h3>
                                             {{ $data->PPCYear }}
                                         </div>
@@ -117,31 +189,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="row  shadow-lg rounded-4 p-4 pt-3 mt-4">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>5 Tour được chú ý nhất</h3>
-                        @if ($data->tourVC == [])
-                            <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
-                        @else
-                            <div id="chartpie"></div>
-                        @endif
-                    </div>
+                <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
+                    <h3>5 Tour được chú ý nhất</h3>
+                    @if ($data->tourVC == [])
+                        <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
+                    @else
+                        <div id="chartpie"></div>
+                    @endif
                 </div>
-                <div class="row  shadow-lg rounded-4 p-4 pt-3 mt-4">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>5 Tour được đánh giá cao nhất</h3>
-                        @if ($data->tourR == [])
-                            <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
-                        @else
-                            <div id="chartpie2"></div>
-                        @endif
-                    </div>
+                <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
+                    <h3>5 Tour được đánh giá cao nhất</h3>
+                    @if ($data->tourR == [])
+                        <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
+                    @else
+                        <div id="chartpie2"></div>
+                    @endif
                 </div>
-                <div class="col-12 mt-4">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
-                        <div id="chart" style="min-height: 365px;"></div>
-                    </div>
+                <div class="card border-0 rounded-4 mb-4 p-4 pt-3">
+                    <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
+                    <div id="chart" style="min-height: 365px;"></div>
                 </div>
             </div>
 
