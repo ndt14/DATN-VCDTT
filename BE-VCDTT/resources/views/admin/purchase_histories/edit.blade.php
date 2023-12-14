@@ -455,7 +455,9 @@
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Thời gian kết thúc</div>
                                         <input name="tour_end_time" type="text" placeholder="Nhập điểm kết thúc tour"
-                                            class="form-control" value="{{ $items['tour_end_time'] }}" disabled>
+                                            class="form-control" value="{{
+                                                \Carbon\Carbon::createFromFormat('d-m-Y',$items['tour_start_time'])->addDays($items['tour_duration'])->format('d-m-Y');
+                                            }}" disabled>
                                         <span class="text-danger d-flex justify-content-start">
                                             @error('tour_end_time')
                                                 {{ $message }}
