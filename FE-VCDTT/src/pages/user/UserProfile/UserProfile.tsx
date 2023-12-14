@@ -291,7 +291,7 @@ const UserProfile = () => {
 
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="border">
               {isLoading ? (
                 <Skeleton active />
