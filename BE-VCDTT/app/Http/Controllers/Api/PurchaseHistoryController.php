@@ -366,6 +366,9 @@ class PurchaseHistoryController extends Controller
                         return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::where('code', $code)->first();
+                        if ($coupon->status == 1) {
+                            return response()->json(['message' => 'Vui lòng đợi đến ngày mã hoạt động', 'status' => 500]);
+                        }
                         if ($coupon->status == 3) {
                             return response()->json(['message' => 'Mã này đã hết hạn', 'status' => 500]);
                         }

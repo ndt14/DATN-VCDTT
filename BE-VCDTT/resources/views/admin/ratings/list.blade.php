@@ -224,8 +224,8 @@ Dánh sách đánh giá {{ $data->tour->name ?? 'test' }}
                                     bản ghi</p>
 
                                     <ul class="pagination m-0 ms-auto">
-                                        <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
-                                            <a class="page-link" href="{{ $data->previousPageUrl() }}" tabindex="-1"
+                                        <li class="page-item {{ $data->ratings->currentPage() != 1 ? '' : 'disabled' }}">
+                                            <a class="page-link" href="{{ $data->ratings->previousPageUrl() }}" tabindex="-1"
                                                 aria-disabled="true">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                                     height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -234,32 +234,32 @@ Dánh sách đánh giá {{ $data->tour->name ?? 'test' }}
                                                     <path d="M15 6l-6 6l6 6"></path>
                                                 </svg>prev</a>
                                         </li>
-                                        <li class="page-item {{ $data->currentPage() == 1 ? 'active' : '' }}">
-                                            <a class="page-link" href="{{ $data->url(1) }}">1</a>
+                                        <li class="page-item {{ $data->ratings->currentPage() == 1 ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $data->ratings->url(1) }}">1</a>
                                         </li>
-                                        @if (1 + 2 != $data->currentPage() && $data->currentPage() > 4)
+                                        @if (1 + 2 != $data->ratings->currentPage() && $data->ratings->currentPage() > 4)
                                             <li class="page-item">
                                                 ...
                                             </li>
                                         @endif
-                                        @for ($page = max(2, $data->currentPage() - 2); $page <= $data->currentPage() + 2 && $page <= $data->lastPage(); $page++)
-                                            <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                                <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
+                                        @for ($page = max(2, $data->ratings->currentPage() - 2); $page <= $data->ratings->currentPage() + 2 && $page <= $data->ratings->lastPage(); $page++)
+                                            <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $data->ratings->url($page) }}">{{ $page }}</a>
                                             </li>
                                         @endfor
-                                        @if ( $data->currentPage() < $data->lastPage() - 3)
+                                        @if ( $data->ratings->currentPage() < $data->ratings->lastPage() - 3)
                                             <li class="page-item">
                                                 ...
                                             </li>
                                         @endif
-                                        @if ($data->lastPage() != 1 && $data->currentPage() < $data->lastPage() - 2)
-                                        <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        @if ($data->ratings->lastPage() != 1 && $data->ratings->currentPage() < $data->ratings->lastPage() - 2)
+                                        <li class="page-item {{ $page == $data->ratings->currentPage() ? 'active' : '' }}">
                                             <a class="page-link"
-                                                href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                                href="{{ $data->ratings->url($data->ratings->lastPage()) }}">{{ $data->ratings->lastPage() }}</a>
                                         </li>
                                         @endif
-                                        <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
-                                            <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
+                                        <li class="page-item {{ $data->ratings->currentPage() != $data->ratings->lastPage() ? '' : 'disabled' }}">
+                                            <a class="page-link" href="{{ $data->ratings->nextPageUrl() }}">Next
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
                                                     height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
