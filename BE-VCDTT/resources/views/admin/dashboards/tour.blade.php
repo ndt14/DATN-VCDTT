@@ -37,8 +37,9 @@
             background-color: #2ecc71;
             /* Màu xanh lá */
         }
+
         .status-dot-green:hover {
-           cursor: pointer;
+            cursor: pointer;
             /* Màu xanh lá */
         }
 
@@ -46,6 +47,7 @@
             background-color: #7f8c8d;
             /* Màu xám */
         }
+
         .status-dot-gray:hover {
             cursor: pointer;
             /* Màu xám */
@@ -247,20 +249,22 @@
                             <div class="col-3">
                                 <div class="card rounded-4 p-4 pt-3 custom-card">
                                     <h3>Tổng tất cả tiền</h3>
-                                    <p>1000.000.VNĐ</p>
+                                    <p>{{ money_format($data->total_total)}}</p>
                                 </div>
                             </div>
 
                             <div class="col-3">
                                 <div class="card rounded-4 p-4 pt-3 custom-card">
                                     <h3>Tổng số thành viên</h3>
-                                    <p>{{$data->users}}</p>
+                                    <p class="show_num_user">{{ $data->users }}</p>
                                     <!-- Phần tử chứa cả hai ô tròn -->
                                     <div class="status-dots">
                                         <!-- Ô tròn xanh -->
-                                        <div class="status-dot status-dot-green btnActive" data-bs-toggle="tooltip" data-bs-placement="top" title="Đang hoạt động"></div>
+                                        <div class="status-dot status-dot-green btnActive" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Đang hoạt động"></div>
                                         <!-- Ô tròn xám -->
-                                        <div class="status-dot status-dot-gray btnUnActive" data-bs-toggle="tooltip" data-bs-placement="top" title="Không hoạt động"></div>
+                                        <div class="status-dot status-dot-gray btnUnActive" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Không hoạt động"></div>
                                     </div>
                                 </div>
                             </div>
@@ -268,13 +272,15 @@
                             <div class="col-3">
                                 <div class="card rounded-4 p-4 pt-3 custom-card">
                                     <h3>Tổng số bài viết</h3>
-                                    <p>1000.000.VNĐ</p>
+                                    <p class="show_num_blog">{{ $data->blogs }}</p>
                                     <!-- Phần tử chứa cả hai ô tròn -->
                                     <div class="status-dots">
                                         <!-- Ô tròn xanh -->
-                                        <div class="status-dot status-dot-green" data-bs-toggle="tooltip" data-bs-placement="top" title="Đang hoạt động"></div>
+                                        <div class="status-dot status-dot-green btnActive2" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Đang hoạt động"></div>
                                         <!-- Ô tròn xám -->
-                                        <div class="status-dot status-dot-gray" data-bs-toggle="tooltip" data-bs-placement="top" title="Không hoạt động"></div>
+                                        <div class="status-dot status-dot-gray btnUnActive2" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Không hoạt động"></div>
                                     </div>
                                 </div>
                             </div>
@@ -323,33 +329,95 @@
     </div>
 @endsection
 @section('page_js')
+    <script>
+        var btnActive = document.querySelector('.btnActive');
+        var btnUnActive = document.querySelector('.btnUnActive');
 
-<script>
-    var btnActive = document.querySelector('.btnActive');
-    var btnUnActive = document.querySelector('.btnUnActive');
-    
-    btnActive.addEventListener('click', ()  => {
+        btnActive.addEventListener('click', () => {
+            var data = {
+                status: 1
+            };
+            $.ajax({
+                url: "{{ route('dashboard.user.getData') }}",
+                type: 'GET',
+                data: data,
+                success: function(response) {
+                    var show = document.querySelector(".show_num_user");
+                    show.innerHTML = response + " (hoạt động)";
+                },
+                error: function(e) {
+                    console.log(e);
+                }
 
-        $.ajax({
-            url: "{{route('')}}",
-            type: 'GET',
-            data: '',
-            success: function() {
-                
-            },
-            error: function() {
-
-            }
+            })
 
         })
-        
-    })
 
-    btnUnActive.addEventListener('click', () => {
+        btnUnActive.addEventListener('click', () => {
+            var data = {
+                status: 'other'
+            };
+            $.ajax({
+                url: "{{ route('dashboard.user.getData') }}",
+                type: 'GET',
+                data: data,
+                success: function(response) {
+                    var show = document.querySelector(".show_num_user");
+                    show.innerHTML = response + " (không hoạt động)";
+                },
+                error: function(e) {
+                    console.log(e);
+                }
 
+            })
 
-    })
-</script>
+        })
+    </script>
+
+    <script>
+        var btnActive2 = document.querySelector('.btnActive2');
+        var btnUnActive2 = document.querySelector('.btnUnActive2');
+
+        btnActive2.addEventListener('click', () => {
+            var data = {
+                status: 1
+            };
+            $.ajax({
+                url: "{{ route('dashboard.blog.getData') }}",
+                type: 'GET',
+                data: data,
+                success: function(response) {
+                    var show = document.querySelector(".show_num_blog");
+                    show.innerHTML = response + " (hoạt động)";
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+
+            })
+
+        })
+
+        btnUnActive2.addEventListener('click', () => {
+            var data = {
+                status: 'other'
+            };
+            $.ajax({
+                url: "{{ route('dashboard.blog.getData') }}",
+                type: 'GET',
+                data: data,
+                success: function(response) {
+                    var show = document.querySelector(".show_num_blog");
+                    show.innerHTML = response + " (không hoạt động)";
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+
+            })
+
+        })
+    </script>
     <script>
         // Apexjs tôi đã để bên javascript là js chung cho tất cả rồi nha, ông không cần gọi lại nó nữa đâu
 
