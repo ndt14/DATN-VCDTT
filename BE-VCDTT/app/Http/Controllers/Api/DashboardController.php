@@ -106,7 +106,8 @@ class DashboardController extends Controller
             }
         }
         $data['chart']=$months;
-        //
+        // Tổng số user
+        $data['users'] = User::whereNull('deleted_at')->count();
 
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.tour',compact('data'));

@@ -24,6 +24,7 @@
         }
     </style>
     @yield('page_css')
+    @yield('db_css')
     @yield('select2_css')
 </head>
 
