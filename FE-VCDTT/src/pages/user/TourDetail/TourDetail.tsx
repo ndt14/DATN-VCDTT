@@ -27,8 +27,8 @@ import { useUpdateFavoriteMutation } from "../../../api/favorite";
 const MySwal = withReactContent(Swal);
 
 const TourDetail = () => {
-  const [dateTour, setDateTour] = useState<string>(" ");
-  const [isDateSelected, setIsDateSelected] = useState(false);
+  const [dateTour, setDateTour] = useState<string>("");
+  // const [isDateSelected, setIsDateSelected] = useState(false);
   const [idArray] = useState<number[]>([]);
 
   const [addRating] = useAddRatingMutation();
@@ -48,9 +48,9 @@ const TourDetail = () => {
   const userName = user.name;
   const onChange: DatePickerProps["onChange"] = (_date, dateString) => {
     setDateTour(dateString);
-    setIsDateSelected(true);
-    // localStorage.setItem("dateTour", dateString);
+    // setIsDateSelected(true);
   };
+  console.log(dateTour);
 
   const { id } = useParams<{ id: string }>();
 
@@ -938,7 +938,7 @@ const TourDetail = () => {
                       <form className="booking-form">
                         <div className="row">
                           {tourSale != 0 ? (
-                            <div className="col-sm-7">
+                            <div className="col-7 col-xs-5">
                               <label htmlFor="" className="fs-5 fw-bold">
                                 Người lớn({">"}= 10 tuổi)
                               </label>
@@ -972,7 +972,7 @@ const TourDetail = () => {
                               <div className="price"></div>
                             </div>
                           ) : (
-                            <div className="col-sm-7">
+                            <div className="col-7 col-xs-5">
                               <label htmlFor="" className="fs-5 fw-bold">
                                 Người lớn({">"}= 10 tuổi)
                               </label>
@@ -986,7 +986,7 @@ const TourDetail = () => {
                             </div>
                           )}
 
-                          <div className="col-sm-5 mt-2">
+                          <div className="col-5 col-xs-5 mt-2">
                             {/* <a className="minus-btn mr-2" href="#">
                             <i className="fa fa-minus"></i>
                           </a> */}
@@ -1019,7 +1019,7 @@ const TourDetail = () => {
                           </div>
 
                           <div className="col-sm-5 mt-2">
-                            <label htmlFor="" className="fs-5 fw-bold">
+                            <label htmlFor="" className="fs-5 fw-bold mr-2">
                               Chọn ngày đi
                             </label>
 
@@ -1053,7 +1053,7 @@ const TourDetail = () => {
                             </label>
                           </div>
                           <div className="col-sm-12">
-                            {isDateSelected ? (
+                            {dateTour !== "" ? (
                               <div className="form-group submit-btn">
                                 <Link
                                   to={`/check_order_information/${id}`}
