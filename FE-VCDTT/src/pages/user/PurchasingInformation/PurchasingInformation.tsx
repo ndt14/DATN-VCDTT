@@ -15,7 +15,7 @@ import { useGetUserByIdQuery } from "../../../api/user";
 import { Spin } from "antd";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Tooltip from "antd";
+
 // import { setTimeout } from "timers/promises";
 
 // type Props = {};

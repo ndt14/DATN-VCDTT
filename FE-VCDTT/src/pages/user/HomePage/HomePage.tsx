@@ -68,9 +68,11 @@ const HomePage = () => {
   //tour giảm giá
   const sortedDiscountedTours = _.orderBy(
     data?.data.tours,
-    ["tourist_count"],
+    ["sale_percentage"],
     ["desc"]
   );
+  console.log(sortedDiscountedTours);
+
   const saleTours = sortedDiscountedTours.slice(0, 4);
 
   //
