@@ -168,8 +168,7 @@ class CategoryController extends Controller
             // $update_tour_to_cate = TourToCategory::where('cate_id', $category->id)->whereIn('tour_id', $tourIds)->update(['deleted_at' => now()]);
 
             if (count($tourIds) > 0) {
-                foreach ($tourIds as $id_tour) {
-
+                foreach ($tourIds as $id_tour) {    
                     $check_cate_other_of_tour = DB::table('tours_to_categories')->where('cate_id', '<>', $category->id)->where('tour_id', $id_tour)->exists();
 
                     if (!$check_cate_other_of_tour) {
@@ -196,13 +195,21 @@ class CategoryController extends Controller
                             TourToCategory::where('tour_id', $id_tour)->where('cate_id', $category->id)->withTrashed()->update(['tours_to_categories.cate_id' => $id_cate, 'id_cate_before' => $category->id]);
                         }
                     }
-
+                    $this_tour = Tour::find($id_tour);
+                    if($this_tour) {
+                        $categories = TourToCategory::where('tour_id', $id_tour)->where('deleted_at',  null)->get();
+                        $categoriesArray = [];
+                        foreach($categories as $item){
+                            $categoriesArray[] = $item->cate_id;
+                        }
+                        $this_tour->setCategoriesArray($categoriesArray);
+                        $this_tour->save();
+                    }
                 }
             }
 
             if (count($blogIds) > 0) {
                 foreach ($blogIds as $id_blog) {
-
                     $check_cate_other_of_blog = DB::table('blogs_to_categories')->where('cate_id', '<>', $category->id)->where('blog_id', $id_blog)->exists();
 
                     if (!$check_cate_other_of_blog) {
@@ -265,7 +272,16 @@ class CategoryController extends Controller
                     if ($check__tour) {
                         $delete_tour_to_cate_item = TourToCategory::where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->forceDelete();
                     }
-
+                    $this_tour = Tour::find($tour_id);
+                    if($this_tour) {
+                        $categories = TourToCategory::where('tour_id', $tour_id)->where('deleted_at',  null)->get();
+                        $categoriesArray = [];
+                        foreach($categories as $item){
+                            $categoriesArray[] = $item->cate_id;
+                        }
+                        $this_tour->setCategoriesArray($categoriesArray);
+                        $this_tour->save();
+                    }
                 }
             }
             if (count($blogIds) > 0) {
@@ -410,6 +426,19 @@ class CategoryController extends Controller
                             $update_tour_to_cate_item = DB::table('tours_to_categories')->where('tour_id', $tour_id)->where('cate_id', $unclassified->id)->where('id_cate_before', $id)->update(['cate_id' => $data->id, 'id_cate_before' => NULL]);
                         }
 
+                        $this_tour = Tour::find($tour_id);
+                        if($this_tour) {
+                            $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+                            $categoriesArray = [];
+                            if($categories){
+                                foreach($categories as $item){
+                                    $categoriesArray[] = $item->cate_id;
+                                }
+                            }
+                            $this_tour->setCategoriesArray($categoriesArray);
+                            $this_tour->save();
+                        }
+                        
                     }
                 }
                 if (count($blogIds) > 0) {

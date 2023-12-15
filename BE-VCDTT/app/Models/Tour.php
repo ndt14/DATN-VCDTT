@@ -103,17 +103,19 @@ class Tour extends Model
                     $data['parent_category'][] = $categoriesParent->name;
                 }
                 else{
-                    $categoriesChild = Category::where('id', $cate)->first();
-                    $parentList = Category::where('id', $categoriesChild->parent_id)->get();
-                    foreach($parentList as $parent){
-                        if(!in_array( $parent->name.' > '. $categoriesChild->name,$data['category']['lvl1'])){
-                            $data['category']['lvl1'][] = $parent->name.' > '. $categoriesChild->name;
-                        }
-                        if(!in_array( $parent->name,$data['category']['lvl0'])){
-                            $data['category']['lvl0'][] = $parent->name;
+                        
+                        $categoriesChild = Category::withTrashed()->find($cate);
+                        $parentList = Category::where('id', $categoriesChild->parent_id)->get();
+                        foreach($parentList as $parent){
+                            if(!in_array( $parent->name.' > '. $categoriesChild->name,$data['category']['lvl1'])){
+                                $data['category']['lvl1'][] = $parent->name.' > '. $categoriesChild->name;
+                            }
+                            if(!in_array( $parent->name,$data['category']['lvl0'])){
+                                $data['category']['lvl0'][] = $parent->name;
+                            }
                         }
                     }
-                }
+
             }
         }
         return $data;
