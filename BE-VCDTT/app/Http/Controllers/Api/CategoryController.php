@@ -135,9 +135,24 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, string $id)
     {
         $category = Category::find($id);
+
         if ($category) {
             $cate_upd = $category->update($request->all());
-
+            $tourIds = $category->tours()->withTrashed()->pluck('tours.id')->toArray();
+            foreach ($tourIds as $tour_id) {
+                $this_tour = Tour::find($tour_id);
+                if($this_tour) {
+                    $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+                    $categoriesArray = [];
+                    if($categories){
+                        foreach($categories as $item){
+                            $categoriesArray[] = $item->cate_id;
+                        }
+                    }
+                    $this_tour->setCategoriesArray($categoriesArray);
+                    $this_tour->save();
+                }
+            }
             if ($cate_upd) {
                 return response()->json(
                     ['message' => 'Cập nhật thành công', 'status' => 200]
