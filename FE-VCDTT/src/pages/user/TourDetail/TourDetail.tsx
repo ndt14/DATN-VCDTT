@@ -50,7 +50,7 @@ const TourDetail = () => {
     setDateTour(dateString);
     // setIsDateSelected(true);
   };
-  console.log(dateTour);
+  // console.log(dateTour);
 
   const { id } = useParams<{ id: string }>();
 
@@ -99,7 +99,7 @@ const TourDetail = () => {
   const disabledDate = (current: Dayjs | null): boolean => {
     if (current) {
       const currentDate = dayjs().startOf("day");
-      const futureDate = currentDate.add(5, "day");
+      const futureDate = currentDate.add(3, "day");
       return (
         current.isBefore(currentDate) || current.diff(futureDate, "day") <= 0
       );
@@ -133,7 +133,7 @@ const TourDetail = () => {
       // Update the price based on the new product number
       const newPrice = newProductNumber * tourPrice; // Assuming the price increases by 10 for each product
       setPrice(newPrice);
-      console.log(newPrice);
+      // console.log(newPrice);
     }
   };
   const handleProductChildNumberChange = (
@@ -213,11 +213,11 @@ const TourDetail = () => {
           star: ratingData.star,
           created_at: new Date().toLocaleString(), // You can format the date accordingly
         };
-        console.log(newRating);
+        // console.log(newRating);
 
         // Create a copy of the existing ratings and add the new rating
         const updatedRatings = [...tourData?.data.listRatings, newRating];
-        console.log(updatedRatings);
+        // console.log(updatedRatings);
 
         // Update the component's state with the new ratings
         setTour((prevTour: Tour | undefined) => {
@@ -248,7 +248,7 @@ const TourDetail = () => {
       }
     } else {
       // Handle incomplete rating data, e.g., show an error message
-      console.error("Please fill in all rating details");
+      // console.error("Please fill in all rating details");
     }
   };
   useEffect(() => {

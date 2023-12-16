@@ -92,7 +92,6 @@ const UserProfile = () => {
         .required("Nhập số điện thoại")
         .matches(phoneRegExp, "Sai định dạng số điện thoại"),
       gender: Yup.string().required("Chọn giới tính"),
-      date_of_birth: Yup.string().required("Nhập ngày sinh"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -119,6 +118,7 @@ const UserProfile = () => {
     }
   }, [userData]);
   const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  console.log(Object.keys(formik.errors).length);
 
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

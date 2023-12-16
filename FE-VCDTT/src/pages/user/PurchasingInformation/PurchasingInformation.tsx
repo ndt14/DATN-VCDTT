@@ -105,25 +105,31 @@ const PurchasingInformation = () => {
 
   // Check số tour người dùng đã đặt
   const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
+  // console.log(TourData);
+
   const [idArray, setIdArray] = useState<number[]>([]);
   useEffect(() => {
     if (TourData) {
       const tourIdPurchased = TourData.data.purchase_history;
 
       const array = tourIdPurchased.map(
-        (item: { tour_id: number }) => item.tour_id
+        (item: { purchase_status: number }) => item.purchase_status
       );
       setIdArray(array);
     }
-  }, []);
+  }, [TourData]);
   // console.log(idArray);
-  const count = idArray.reduce((accumulator, currentValue) => {
-    if (currentValue === tourId) {
-      return accumulator + 1;
+  let count = 0;
+  for (let i = 0; i < idArray.length; i++) {
+    if (idArray[i] === 2) {
+      count++;
     }
-    return accumulator;
-  }, 0);
+  }
   // console.log(count);
+
+  //Kiểm tra số tour có trạng thái là admin chưa duyệt thanh toán
+
+  //
 
   //validate
   interface FormValues {
@@ -718,7 +724,7 @@ const PurchasingInformation = () => {
                       </div>
                     ) : (
                       <div>
-                        {count >= 100 ? (
+                        {count >= 3 ? (
                           <div>
                             <Button
                               variant="primary"
@@ -729,7 +735,10 @@ const PurchasingInformation = () => {
                               Tiếp tục
                             </Button>
                             <p className="text-danger mt-2">
-                              Bạn đã vượt quá giới hạn số lần đặt tour này
+                              Số lượng tour chưa thanh toán / chưa được duyêt
+                              thanh toán của bạn đã vượt quá giới hạn. Vui lòng
+                              thanh toán và đợi chúng tôi xét duyệt để tiếp tục
+                              đặt được tour
                             </p>
                           </div>
                         ) : (
