@@ -9,10 +9,10 @@
                 <h3 class="card-title">{{ $item['title'] }}</h3>
 
                 <div class="row g-3">
-                    <div class="col-md">
+                    {{-- <div class="col-md">
                         <div class="form-label">Số lượt xem</div>
                         <span class="badge bg-blue me-1 text-light">{{ $item['view_count'] }}</span>
-                    </div>
+                    </div> --}}
                     <div class="col-md">
                         <div class="form-label">Trang thái</div>
                         @if($item['status'] == 0)

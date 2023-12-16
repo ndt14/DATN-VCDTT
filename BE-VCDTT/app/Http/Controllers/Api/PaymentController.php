@@ -17,7 +17,7 @@ class PaymentController extends Controller
         // dd($finalPrice);
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://vcdtt.online/vnpay"; //vnpay_url : "https://localhost/vnpay_php/vnpay_return.php"
+        $vnp_Returnurl = "https://vcdtt.online/vnpay"; //vnpay_url : "http://datn-vcdtt.test:5173/vnpay"
         $vnp_TmnCode = "SE3S8FW2"; //Mã website tại VNPAY
         $vnp_HashSecret = "KLEUGTZDAKRFAFIDTJEWEBTJSWRJETJT"; //Chuỗi bí mật
 
