@@ -45,12 +45,6 @@ class UserRequest extends FormRequest
                         $rule = [
                             'name' => 'required',
                             'email' => 'required',
-                            'password' => 'required',
-                            'phone_number' => 'required',
-                            'date_of_birth' => 'required',
-                            'address' => 'required',
-                            'gender' => 'required',
-                            'image' => 'required',
                             'status' => 'required'
                         ];
                     break;
