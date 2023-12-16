@@ -31,6 +31,7 @@ class GoogleLoginController extends Controller
             $user = User::create([
                 'name' => $googleUser->name,
                 'email' => $googleUser->email,
+                'status' => 1,
                 'google_id' => $googleUser->id
             ]);
             $token = $user->createToken('api-token')->plainTextToken;
