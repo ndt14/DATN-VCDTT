@@ -568,10 +568,12 @@
                             var id = category.id
                             id = +id
                             if (categories_data.includes(id)) {
-                                var option = $('<option selected></option>').val(id).text(
-                                    category.name);
+                                var option = $('<option selected></option>').val(id).text(category.name);
                             } else {
                                 var option = $('<option></option>').val(id).text(category.name);
+                            }
+                            if(category.child.length > 0){
+                                option.prop('disabled', true);
                             }
                             selectCatogories.append(option);
                             $.each(category.child, function(index, childCategory) {

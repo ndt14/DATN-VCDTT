@@ -447,10 +447,14 @@
                     success: function(response) {
                         //gender category
                         let selectCatogories = $('#select-category');
+
                         $.each(response.data.categoriesParent, function(index, category) {
                             let id = category.id
                             id = +id
                             let option = $('<option></option>').val(id).text(category.name);
+                            if(category.child.length > 0){
+                                option.prop('disabled', true);
+                            }
                             selectCatogories.append(option);
                             $.each(category.child, function(index, childCategory) {
                                 let chlidId = childCategory.id;

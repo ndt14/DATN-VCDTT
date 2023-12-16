@@ -9,6 +9,7 @@ use App\Http\Resources\TourResource;
 use App\Models\PurchaseHistory;
 use App\Models\Rating;
 use App\Models\Tour;
+use App\Models\TourToCategory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -78,6 +79,18 @@ class RatingController extends Controller
     public function store(RatingRequest $request)
     {
         $check = PurchaseHistory::where('tour_id', $request->tour_id)->where('user_id', $request->user_id)->orderBy('id', 'desc')->first();
+        $this_tour = Tour::find($request->tour_id);
+        if($this_tour) {
+            $categories = TourToCategory::where('tour_id', $request->tour_id)->whereNull('deleted_at')->get();
+            $categoriesArray = [];
+            if($categories){
+                foreach($categories as $item){
+                    $categoriesArray[] = $item->cate_id;
+                }
+            }
+            $this_tour->setCategoriesArray($categoriesArray);
+            $this_tour->save();
+        }
         if ($check->tour_status == 3) {
             if ($request->star) {
                 $newRating = Rating::create($request->all());
@@ -159,6 +172,20 @@ class RatingController extends Controller
     {
         $input = $request->all();
         $rating = Rating::find($id);
+        $tour_id = $rating->tour_id;
+        $this_tour = Tour::find($tour_id);
+        if($this_tour) {
+            $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+            $categoriesArray = [];
+            if($categories){
+                foreach($categories as $item){
+                    $categoriesArray[] = $item->cate_id;
+                }
+            }
+            $this_tour->setCategoriesArray($categoriesArray);
+            $this_tour->save();
+        }
+
         if (!$rating) {
             return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
@@ -185,6 +212,20 @@ class RatingController extends Controller
 
         $rating = Rating::find($id);
 
+        $tour_id = $rating->tour_id;
+        $this_tour = Tour::find($tour_id);
+        if($this_tour) {
+            $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+            $categoriesArray = [];
+            if($categories){
+                foreach($categories as $item){
+                    $categoriesArray[] = $item->cate_id;
+                }
+            }
+            $this_tour->setCategoriesArray($categoriesArray);
+            $this_tour->save();
+        }
+        
         if ($rating) {
             $deleteRating = $rating->delete();
             if (!$deleteRating) {
@@ -199,6 +240,21 @@ class RatingController extends Controller
     public function destroyForever(string $id)
     {
         $rating = Rating::withTrashed()->find($id);
+
+        $tour_id = $rating->tour_id;
+        $this_tour = Tour::find($tour_id);
+        if($this_tour) {
+            $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+            $categoriesArray = [];
+            if($categories){
+                foreach($categories as $item){
+                    $categoriesArray[] = $item->cate_id;
+                }
+            }
+            $this_tour->setCategoriesArray($categoriesArray);
+            $this_tour->save();
+        }
+
         if ($rating) {
             $delete_rating =  $rating->forceDelete();
             if ($delete_rating) {
@@ -332,6 +388,21 @@ class RatingController extends Controller
 
         if ($id) {
             $data = Rating::withTrashed()->find($id);
+
+            $tour_id = $data->tour_id;
+            $this_tour = Tour::find($tour_id);
+            if($this_tour) {
+                $categories = TourToCategory::where('tour_id', $tour_id)->whereNull('deleted_at')->get();
+                $categoriesArray = [];
+                if($categories){
+                    foreach($categories as $item){
+                        $categoriesArray[] = $item->cate_id;
+                    }
+                }
+                $this_tour->setCategoriesArray($categoriesArray);
+                $this_tour->save();
+            }
+
             if ($data) {
                 $data->restore();
             }
