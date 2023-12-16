@@ -26,7 +26,7 @@ class ImageController extends Controller
                         ->get();
         foreach($data as $item){
             if($item->tour_id){
-                $item->tour_name = Tour::find($item->tour_id)->name;
+                $item->tour_name = Tour::withTrashed()->find($item->tour_id)->name ? Tour::withTrashed()->find($item->tour_id)->name : '';
             } else {
                 $item->tour_name = 'Ảnh tự do';
             }
