@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\DashboardResource;
+use stdClass;
+use Carbon\Carbon;
 use App\Models\Blog;
-use App\Models\PurchaseHistory;
-use App\Models\Rating;
 use App\Models\Tour;
 use App\Models\User;
+use App\Models\Rating;
 use Illuminate\Http\Request;
+use Spatie\Analytics\Period;
+use App\Models\PurchaseHistory;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use PHPUnit\Framework\Constraint\Count;
+use Spatie\Analytics\Facades\Analytics;
+use App\Http\Resources\DashboardResource;
 
 class DashboardController extends Controller
 {
@@ -107,7 +112,7 @@ class DashboardController extends Controller
         }
         $tourRatings = collect($tourRatings);
         $tourRatings = $tourRatings->sortByDesc(function ($item) {
-            return [$item['star'], $item['starCount']];
+            return $item['star'];
         });
         $tourRatings = $tourRatings->filter(function ($a) {
             return $a->star > 0;
@@ -129,9 +134,67 @@ class DashboardController extends Controller
         $data['users'] = User::whereNull('deleted_at')->count();
         // Tổng số bài viết
         $data['blogs'] = Blog::whereNull('deleted_at')->count();
+
+        //Số lượt xem page
+        $date = '2016-08-13';
+        $startDate = Carbon::createFromFormat('Y-m-d', $date);
+        $today = Carbon::now();
+
+        $analytics = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate, $today));
+        $yesterdayData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate, $today->subDay()));
+        $twoDaysBeforeData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate, $today->subDays(2)));
+        $threeDaysBeforeData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate,  $today->subDays(3)));
+        $fourDaysBeforeData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate,  $today->subDays(4)));
+        $fiveDaysBeforeData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate,  $today->subDays(5)));
+        $sixDaysBeforeData = Analytics::fetchTotalVisitorsAndPageViews(Period::create($startDate,  $today->subDays(6)));
+
+        $data['totalViews'] = new stdClass();
+        $data['totalViews']->sixDaysBefore = 0;
+        $data['totalViews']->fiveDaysBefore = 0;
+        $data['totalViews']->fourDaysBefore = 0;
+        $data['totalViews']->threeDaysBefore = 0;
+        $data['totalViews']->twoDaysBefore = 0;
+        $data['totalViews']->yesterday = 0;
+        $data['totalViews']->totalViews = 0;
+
+        foreach ($analytics as $analytic) {
+            $data['totalViews']->totalViews += $analytic['screenPageViews'];
+        }
+        foreach ($yesterdayData as $yesterday) {
+            $data['totalViews']->yesterday += $yesterday['screenPageViews'];
+        }
+        foreach ($twoDaysBeforeData as $twoDaysBefore) {
+            $data['totalViews']->twoDaysBefore += $twoDaysBefore['screenPageViews'];
+        }
+        foreach ($threeDaysBeforeData as $threeDaysBefore) {
+            $data['totalViews']->threeDaysBefore += $threeDaysBefore['screenPageViews'];
+        }
+        foreach ($fourDaysBeforeData as $fourDaysBefore) {
+            $data['totalViews']->fourDaysBefore += $fourDaysBefore['screenPageViews'];
+        }
+        foreach ($fiveDaysBeforeData as $fiveDaysBefore) {
+            $data['totalViews']->fiveDaysBefore += $fiveDaysBefore['screenPageViews'];
+        }
+        foreach ($sixDaysBeforeData as $sixDaysBefore) {
+            $data['totalViews']->sixDaysBefore += $sixDaysBefore['screenPageViews'];
+        }
+
+        //Top 5 tour có doanh thu cao nhất
+        $data['chartTop5ToursBySale'] = Tour::join('purchase_histories', 'tours.name', '=', 'purchase_histories.tour_name')
+            ->select(
+                'tours.name',
+                DB::raw('SUM((purchase_histories.child_count * tours.child_price) + (purchase_histories.adult_count * tours.adult_price)) as total_tour_price')
+            )
+            ->where('purchase_histories.payment_status', 2)
+            ->where('purchase_histories.purchase_status', 3)
+            ->groupBy('tours.name')
+            ->orderBy('total_tour_price', 'desc')
+            ->get(5);
+
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.tour', compact('data'));
     }
+
     public function userDashboard(Request $request)
     {
         //
@@ -204,4 +267,3 @@ class DashboardController extends Controller
         }
     }
 }
-

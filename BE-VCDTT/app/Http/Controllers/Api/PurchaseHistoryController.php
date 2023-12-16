@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\UsedCoupon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Spatie\Analytics\Period;
 use App\Models\TermAndPrivacy;
 use App\Models\PurchaseHistory;
 use Illuminate\Support\Collection;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Analytics\Facades\Analytics;
 use App\Notifications\ComfirmPaymentAdmin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CancelNotificationAdmin;
@@ -423,9 +425,6 @@ class PurchaseHistoryController extends Controller
 
     public function test()
     {
-        $purchaseHistoryAutoOutdate = PurchaseHistory::select('name','deleted_at','updated_at','purchase_status')->where('purchase_status', '=', 1)
-            ->whereDate('updated_at', '>=', Carbon::now()->subDays(7)->toDateString())
-            ->where('deleted_at', '=', null)->get();
-        echo $purchaseHistoryAutoOutdate;
+
     }
 }

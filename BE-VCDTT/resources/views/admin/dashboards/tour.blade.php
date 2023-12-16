@@ -249,7 +249,7 @@
                             <div class="col-3">
                                 <div class="card rounded-4 p-4 pt-3 custom-card">
                                     <h3>Tổng tất cả tiền</h3>
-                                    <p>{{ money_format($data->total_total)}}</p>
+                                    <p>{{ money_format($data->total_total) }}</p>
                                 </div>
                             </div>
 
@@ -288,7 +288,7 @@
                             <div class="col-3">
                                 <div class="card rounded-4 p-4 pt-3 custom-card">
                                     <h3>Tổng số lượt truy cập</h3>
-                                    <p>1000.000.VNĐ</p>
+                                    <p>{{ $data->totalViews->totalViews }}</p>
                                 </div>
                             </div>
                         </div>
@@ -296,21 +296,33 @@
                 </div>
 
                 <!--- end !--->
-                <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                    <h3>5 Tour được chú ý nhất</h3>
-                    @if ($data->tourVC == [])
-                        <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
-                    @else
-                        <div id="chartpie"></div>
-                    @endif
+                <div class="row">
+                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
+                        <h3>5 Tour được chú ý nhất</h3>
+                        @if ($data->tourVC == [])
+                            <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
+                        @else
+                            <div id="chartTop5ToursRemarkable"></div>
+                        @endif
+                    </div>
+                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
+                        <h3>5 Tour được đánh giá cao nhất</h3>
+                        @if ($data->tourR == [])
+                            <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
+                        @else
+                            <div id="chartTop5RatedTours"></div>
+                        @endif
+                    </div>
                 </div>
-                <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
-                    <h3>5 Tour được đánh giá cao nhất</h3>
-                    @if ($data->tourR == [])
-                        <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
-                    @else
-                        <div id="chartpie2"></div>
-                    @endif
+                <div class="row">
+                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
+                        <h3>5 tour có doanh số cao nhất</h3>
+                        <div id="chartTourSale" style="min-height: 365px;"></div>
+                    </div>
+                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
+                        <h3>Số lượt truy cập theo ngày</h3>
+                        <div id="chartPageViewsByDay" style="min-height: 365px;"></div>
+                    </div>
                 </div>
                 <div class="card border-0 rounded-4 mb-4 p-4 pt-3">
                     <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
@@ -413,74 +425,78 @@
                 error: function(e) {
                     console.log(e);
                 }
-
             })
-
         })
     </script>
     <script>
         // Apexjs tôi đã để bên javascript là js chung cho tất cả rồi nha, ông không cần gọi lại nó nữa đâu
 
-        var chartPieInfo = @json($data).tourVC;
+        // //chartPie 1
+        // var chartPieInfo = @json($data).tourVC;
         // console.log(chartPieInfo);
-        const nameList = Object.values(chartPieInfo).map(({
-            name
-        }) => name);
-        const viewCountList = Object.values(chartPieInfo).map(({
-            view_count
-        }) => view_count);
-        var options = {
-            series: viewCountList,
-            chart: {
-                height: 300,
-                type: 'pie',
-            },
-            labels: nameList,
-            responsive: [{
-                breakpoint: 200,
-                options: {
-                    chart: {
-                        width: 200
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }]
-        };
-        var chartpie = new ApexCharts(document.querySelector("#chartpie"), options);
-        chartpie.render();
-        var chartPieInfo2 = @json($data).tourR;
-        // console.log(chartPieInfo2);
-        const nameList2 = Object.values(chartPieInfo2).map(({
-            name,
-            starCount
-        }) => `${name} (${starCount} lượt đánh giá)`);
-        const ratingList = Object.values(chartPieInfo2).map(({
-            star
-        }) => star);
-        var options2 = {
-            series: ratingList,
-            chart: {
-                height: 300,
-                type: 'pie',
-            },
-            labels: nameList2,
-            responsive: [{
-                breakpoint: 200,
-                options: {
-                    chart: {
-                        width: 200
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }]
-        };
-        var chartpie2 = new ApexCharts(document.querySelector("#chartpie2"), options2);
-        chartpie2.render();
+        // const nameList = Object.values(chartPieInfo).map(({
+        //     name
+        // }) => name);
+        // const viewCountList = Object.values(chartPieInfo).map(({
+        //     view_count
+        // }) => view_count);
+        // console.log(nameList);
+        // console.log(viewCountList);
+        // var options = {
+        //     series: viewCountList,
+        //     chart: {
+        //         height: 300,
+        //         type: 'pie',
+        //     },
+        //     labels: nameList,
+        //     responsive: [{
+        //         breakpoint: 200,
+        //         options: {
+        //             chart: {
+        //                 width: 200
+        //             },
+        //             legend: {
+        //                 position: 'bottom'
+        //             }
+        //         }
+        //     }]
+        // };
+        // var chartpie = new ApexCharts(document.querySelector("#chartpie"), options);
+        // chartpie.render();
 
+        // //chartPie2
+        // var chartPieInfo2 = @json($data).tourR;
+        // console.log(chartPieInfo2);
+        // const nameList2 = Object.values(chartPieInfo2).map(({
+        //     name,
+        //     starCount
+        // }) => `${name} (${starCount} lượt đánh giá)`);
+        // const ratingList = Object.values(chartPieInfo2).map(({
+        //     star
+        // }) => star);
+        // var options2 = {
+        //     series: ratingList,
+        //     chart: {
+        //         height: 300,
+        //         type: 'pie',
+        //     },
+        //     labels: nameList2,
+        //     responsive: [{
+        //         breakpoint: 200,
+        //         options: {
+        //             chart: {
+        //                 width: 200
+        //             },
+        //             legend: {
+        //                 position: 'bottom'
+        //             }
+        //         }
+        //     }]
+        // };
+        // var chartpie2 = new ApexCharts(document.querySelector("#chartpie2"), options2);
+        // chartpie2.render();
+
+        //chartiInfo
         var chartInfo = @json($data).chart;
         // console.log(chartInfo);
         var options = {
@@ -528,13 +544,268 @@
                         return val + " Triệu VNĐ"
                     }
                 }
+            },
+        };
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+
+        //chartTourSale
+        var chartTop5ToursBySale = @json($data).chartTop5ToursBySale;
+        var chartNameTop5ToursBySale = chartTop5ToursBySale.map(item => item.name);
+        var chartPriceTop5ToursBySale = chartTop5ToursBySale.map(item => item.total_tour_price);
+        var options = {
+            series: [{
+                name: 'Số tiền thu được từ tour',
+                data: chartPriceTop5ToursBySale
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: chartNameTop5ToursBySale
+            },
+            yaxis: {
+                title: {
+                    text: '(Triệu VNĐ)'
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " Triệu VNĐ"
+                    }
+                }
+            },
+            colors: [
+                function({
+                    value,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    switch (dataPointIndex) {
+                        case 0:
+                            return '#267EC3';
+                        case 1:
+                            return '#26D467';
+                        case 2:
+                            return '#A2E526';
+                        case 3:
+                            return '#A02A24';
+                        case 4:
+                            return '#AB7DBE';
+                        default:
+                            return 0;
+                    }
+                }
+            ]
+        };
+        var chart = new ApexCharts(document.querySelector("#chartTourSale"), options);
+        chart.render();
+
+        //chartTop5ToursRemarkable
+        var chartTop5ToursRemarkable = @json($data).tourVC;
+        var chartNameTop5ToursRemarkable = chartTop5ToursRemarkable.map(item => item.name);
+        var chartVCTop5ToursRemarkable = chartTop5ToursRemarkable.map(item => item.view_count);
+
+        var options = {
+            series: [{
+                data: chartVCTop5ToursRemarkable,
+                name: "Số lượt xem"
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: chartNameTop5ToursRemarkable
+            },
+            colors: [
+                function({
+                    value,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    switch (dataPointIndex) {
+                        case 0:
+                            return '#267EC3';
+                        case 1:
+                            return '#26D467';
+                        case 2:
+                            return '#A2E526';
+                        case 3:
+                            return '#A02A24';
+                        case 4:
+                            return '#AB7DBE';
+                        default:
+                            return 0;
+                    }
+                }
+            ]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartTop5ToursRemarkable"), options);
+        chart.render();
+
+        //chartTop5RatedTours
+        var chartTop5RatedTours = @json($data).tourR;
+        const chartTop5RatedToursArray = Object.keys(chartTop5RatedTours).map(key => chartTop5RatedTours[key]);
+        chartTop5RatedToursArray.sort((a, b) => b.star - a.star);
+
+        var chartNameTop5RatedTours = chartTop5RatedToursArray.map(item => item.name);
+        var chartRatingTop5RatedTours = chartTop5RatedToursArray.map(item => item.star);
+        var options = {
+            series: [{
+                data: chartRatingTop5RatedTours,
+                name: "Trung bình đánh giá",
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                colors: ['#F44336']
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: chartNameTop5RatedTours
+            },
+            colors: [
+                function({
+                    value,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    switch (dataPointIndex) {
+                        case 0:
+                            return '#267EC3';
+                        case 1:
+                            return '#26D467';
+                        case 2:
+                            return '#A2E526';
+                        case 3:
+                            return '#A02A24';
+                        case 4:
+                            return '#AB7DBE';
+                        default:
+                            return 0;
+                    }
+                }
+            ]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartTop5RatedTours"), options);
+        chart.render();
+
+        //chartPageViewsByDay
+        var chartPageViewsByDay = @json($data).totalViews;
+        // console.log(chartPageViewsByDay);
+        var chartPageViewsByDayArray = Object.values(chartPageViewsByDay);
+
+        const today = new Date();
+        const yesterday = new Date();
+        const dayBeforeYesterday = new Date();
+        const threeDaysBeforeYesterday = new Date();
+        const fourDaysBeforeYesterday = new Date();
+        const fiveDaysBeforeYesterday = new Date();
+        const sixDaysBeforeYesterday = new Date();
+
+        // Ngày hôm nay
+        const todayString = today.toLocaleDateString();
+
+        // Ngày hôm qua
+        yesterday.setDate(today.getDate() - 1);
+        const yesterdayString = yesterday.toLocaleDateString();
+
+        // Ngày hôm kia
+        dayBeforeYesterday.setDate(today.getDate() - 2);
+        const dayBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
+
+        // 3 ngày trước
+        dayBeforeYesterday.setDate(today.getDate() - 3);
+        const threeDaysBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
+
+        // 4 ngày trước
+        dayBeforeYesterday.setDate(today.getDate() - 4);
+        const fourDaysBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
+
+        // 5 ngày trước
+        dayBeforeYesterday.setDate(today.getDate() - 5);
+        const fiveDaysBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
+
+        // 6 ngày trước
+        dayBeforeYesterday.setDate(today.getDate() - 6);
+        const sixDaysBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
+        console.log(sixDaysBeforeTodayString)
+
+        var options = {
+            series: [{
+                name: "Lượt truy cập",
+                data: chartPageViewsByDayArray
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                },
+            },
+            xaxis: {
+                categories: [sixDaysBeforeTodayString, fiveDaysBeforeTodayString, fourDaysBeforeTodayString,
+                    threeDaysBeforeTodayString, dayBeforeTodayString, yesterdayString, todayString,
+                ],
             }
         };
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        var chart = new ApexCharts(document.querySelector("#chartPageViewsByDay"), options);
         chart.render();
     </script>
-    {{-- <script type="text/javascript">
-//
-</script> --}}
 @endSection
