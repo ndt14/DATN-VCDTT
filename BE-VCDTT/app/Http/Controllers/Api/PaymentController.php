@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $vnp_OrderType = "Traveling"; //$_POST['order_type'];
         $vnp_Amount = $finalPrice * 100; //$_POST['amount]' * 100;
         $vnp_Locale = "VN"; //$_POST['language'];
-        $vnp_BankCode = "NCB"; //$_POST['bank_code'];
+        $vnp_BankCode = ""; //$_POST['bank_code'];
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
         // //Add Params of 2.0.1 Version
         // $vnp_ExpireDate = $_POST['txtexpire'];
