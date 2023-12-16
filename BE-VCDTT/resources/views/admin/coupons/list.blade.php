@@ -214,14 +214,14 @@
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status == 1)
+                                                    @if ($item->status == 2)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Hoạt động"></span>
-                                                    @elseif ($item->status == 2)
+                                                    @elseif ($item->status == 1)
                                                         <span class="badge bg-secondary" data-bs-toggle="tooltip"
                                                             data-bs-placement="top"
                                                             data-bs-title="Không hoạt động"></span>
-                                                    @else
+                                                    @elseif ($item->status == 3)
                                                         <span class="badge bg-red" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Hết hạn"></span>
                                                     @endif
