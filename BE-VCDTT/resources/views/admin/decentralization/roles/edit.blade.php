@@ -447,28 +447,27 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        console.log(response);
                         // // xử lý response từ server
-                        // if (response.status === 200) {
+                        if (response.status === 200) {
 
-                        //     // Hiển thị SweetAlert khi thành công
-                        //     Swal.fire({
-                        //             title: 'Thành công!',
-                        //             text: response.message,
-                        //             icon: 'success'
-                        //         })
-                        //         .then(function(response) {
-                        //             if (response) {
-                        //                 location.reload();
-                        //             }
-                        //         })
-                        // } else {
-                        //     Swal.fire({
-                        //         title: 'Lỗi!',
-                        //         text: 'Cập nhật vai trò không thành công',
-                        //         icon: 'error'
-                        //     });
-                        // }
+                            // Hiển thị SweetAlert khi thành công
+                            Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then(function(response) {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                })
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Cập nhật vai trò không thành công',
+                                icon: 'error'
+                            });
+                        }
 
                     },
                     error: function(xhr, status, error) {

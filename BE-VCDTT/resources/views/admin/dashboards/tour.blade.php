@@ -772,7 +772,7 @@
         // 6 ngày trước
         dayBeforeYesterday.setDate(today.getDate() - 6);
         const sixDaysBeforeTodayString = dayBeforeYesterday.toLocaleDateString();
-        console.log(sixDaysBeforeTodayString)
+        // console.log(sixDaysBeforeTodayString)
 
         var options = {
             series: [{
