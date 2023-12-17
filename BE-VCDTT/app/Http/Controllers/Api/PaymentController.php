@@ -17,7 +17,7 @@ class PaymentController extends Controller
         // dd($finalPrice);
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://vcdtt.online/vnpay"; //vnpay_url : "https://localhost/vnpay_php/vnpay_return.php"
+        $vnp_Returnurl = "https://vcdtt.online/vnpay"; //vnpay_url : "http://datn-vcdtt.test:5173/vnpay"
         $vnp_TmnCode = "SE3S8FW2"; //Mã website tại VNPAY
         $vnp_HashSecret = "KLEUGTZDAKRFAFIDTJEWEBTJSWRJETJT"; //Chuỗi bí mật
 
@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $vnp_OrderType = "Traveling"; //$_POST['order_type'];
         $vnp_Amount = $finalPrice * 100; //$_POST['amount]' * 100;
         $vnp_Locale = "VN"; //$_POST['language'];
-        $vnp_BankCode = "NCB"; //$_POST['bank_code'];
+        $vnp_BankCode = ""; //$_POST['bank_code'];
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
         // //Add Params of 2.0.1 Version
         // $vnp_ExpireDate = $_POST['txtexpire'];

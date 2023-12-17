@@ -100,7 +100,7 @@
                                                 'title' => 'Tiêu đề',
                                                 'author' => 'Tác giả',
                                                 'short_desc' => 'Mô tả ngắn',
-                                                'view_count' => 'Số lượt xem',
+                                                // 'view_count' => 'Số lượt xem',
                                                 'created_at' => 'Ngày tạo',
                                                 'updated_at' => 'Ngày sửa',
                                             ];
@@ -166,9 +166,9 @@
                                                 <td>
                                                     {!! string_truncate($item->short_desc, 50) !!}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     {{ $item->view_count }}
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     {{ time_format($item->created_at) }}
                                                 </td>

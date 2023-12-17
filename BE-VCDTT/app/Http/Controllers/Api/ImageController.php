@@ -26,7 +26,7 @@ class ImageController extends Controller
                         ->get();
         foreach($data as $item){
             if($item->tour_id){
-                $item->tour_name = Tour::find($item->tour_id)->name;
+                    $item->tour_name = Tour::withTrashed()->find($item->tour_id) ? Tour::withTrashed()->find($item->tour_id)->name : '';
             } else {
                 $item->tour_name = 'Ảnh tự do';
             }
@@ -37,7 +37,6 @@ class ImageController extends Controller
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
         $data->setPath(request()->url())->appends(['limit' => $perPage]);
-
         return view('admin.images.list', compact('data'));
     }
     public function trash(Request $request)
