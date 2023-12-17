@@ -84,7 +84,7 @@ const UserProfile = () => {
       name: Yup.string()
         .required("Nhập tên")
         .min(5, "Tên phải chứa ít nhất 5 ký tự")
-        .max(20, "Tên không được vượt quá 20 ký tự"),
+        .max(30, "Tên không được vượt quá 30 ký tự"),
       email: Yup.string()
         .email("Sai định dạng email")
         .required("Email không được để trống"),
