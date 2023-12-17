@@ -75,11 +75,11 @@ class RoleController extends Controller
         $role = Role::find($id);
         $role->syncPermissions($data['permission']);
         $user = DB::table('model_has_roles')->where('role_id', $id)->select('model_id')->get()->pluck('model_id')->toArray();
+        // return response()->json(['success' => true, 'message' => 'Cập nhật vai trò thành công', 'status' => 200, 'data' => $user]);
         if (!empty($user)) {
           if (count(array_map('intval', $data['permission'])) > count($role_has_permissions_before)) {
             // sự khác biệt khi tăng quyền (thêm)
             $compare_arrays = array_diff(array_map('intval', $data['permission']), $role_has_permissions_before);
-
             foreach ($user as $user_id) {
 
               $user_item = User::find($user_id);
