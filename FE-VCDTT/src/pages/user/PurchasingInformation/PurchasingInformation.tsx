@@ -40,6 +40,8 @@ const PurchasingInformation = () => {
     tourId = parseInt(split[0]);
   }
   // console.log(tourId);
+  const [checkCount, setCheckCount] = useState<number>(0);
+  useEffect(() => {}, [checkCount]);
 
   const { data: tourData } = useGetTourByIdQuery(tourId || "");
   const tour_sale = tourData?.data.tour.sale_percentage;
@@ -186,7 +188,7 @@ const PurchasingInformation = () => {
       name: Yup.string()
         .required("Nhập tên")
         .min(5, "Tên phải chứa ít nhất 5 ký tự")
-        .max(20, "Tên không được vượt quá 20 ký tự"),
+        .max(30, "Tên không được vượt quá 30 ký tự"),
       email: Yup.string()
         .email("Sai định dạng email")
         .required("Email không được để trống"),
@@ -389,8 +391,12 @@ const PurchasingInformation = () => {
     console.log(couponData.couponName);
 
     let billID: number | undefined = undefined;
+
     try {
+      let index = 0;
       const response = await addBill(variables);
+      index = index + 1;
+      setCheckCount(index);
       if ("data" in response) {
         billID = response.data.data.purchase_history.id;
         // Continue handling the successful response
@@ -520,7 +526,10 @@ const PurchasingInformation = () => {
                     <div className="row">
                       <div className="col-sm-4">
                         <div className="form-group">
-                          <label>Danh xưng</label>
+                          <label>
+                            Danh xưng{" "}
+                            <span className=" ml-1 text-danger">*</span>
+                          </label>
                           <select
                             className="input-border"
                             name="honorific"
@@ -657,7 +666,7 @@ const PurchasingInformation = () => {
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
-                      <div className="col-sm-6">
+                      <div className="col-6">
                         <p>Trẻ em({productChildNumber}x)</p>
                         <p>Người lớn ({productNumber}x)</p>
                         {lastPrice !== couponData.finalPrice ? (
@@ -667,7 +676,7 @@ const PurchasingInformation = () => {
                         )}
                       </div>
 
-                      <div className="col-sm-6">
+                      <div className="col-6">
                         <p>{formattedTourChildPrice}</p>
                         <p>{formattedTourPrice}</p>
                         {formattedFinalPrice !== formattedResultPrice ? (
@@ -685,11 +694,11 @@ const PurchasingInformation = () => {
                         )}
                         <div></div>
                       </div>
-                      <div className="col-sm-6">
+                      <div className="col-6">
                         <p>Giá bạn phải trả</p>
                       </div>
 
-                      <div className="col-sm-6">
+                      <div className="col-6">
                         <p>{formattedResultPrice}</p>
                       </div>
                       {userLogIn == "true" &&
