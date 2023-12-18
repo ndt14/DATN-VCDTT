@@ -82,10 +82,101 @@
             // })
             .finally(function() {});
     };
-    // $(document).ready(function() {
-    //     var notiBox = document.getElementById('notificationBox')
-    //     if ($(notiBox).scrollTop() == $(notiBox).height()) {
 
-    //     }
-    // });
+    //lăn chuột để tải thông báo
+    // Trang bắt đầu
+    var page = 3;
+
+    let loadNotifications = function() {
+        axios.get(`api/get-notifications/${user.id}?page=` + page)
+            .then(function(response) {
+                // Thêm thông báo vào box
+                checkRequest = response.data.notifications.last_page;
+                console.log();
+                notificationsArray = response.data.notifications.data;
+                notificationsArray.forEach(function(notification) {
+                    var id = notification.id;
+                    if (notification.data.purchase_method == 2) {
+                        if (notification.data.transaction_id == null) {
+                            var purchaseMethodText = 'Mã giao dịch VN Pay:';
+                        } else {
+                            var purchaseMethodText = 'Mã giao dịch VN Pay:' + notification
+                                .data.transaction_id;
+                        }
+                    } else {
+                        var purchaseMethodText = 'Khách hàng chuyển khoản online:';
+                    }
+
+                    if (notification.read_at == null) {
+                        var readNotiCheck = `<div class="col-auto">
+                        <span class="badge bg-danger" name="notification-unread" id="notification-` + id + `" data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Chưa đọc"></span>
+                    </div>`
+                    } else {
+                        var readNotiCheck =
+                            `<div class="col-auto"><span class="badge bg-success"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top" data-bs-title="Đã đọc"
+                            id="notification-` + id + `"></span></div>`
+                    }
+
+
+                    var moreNotificationHtml = `
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    ` + readNotiCheck + `
+                    <div class="col text-truncate " style="width:925px; max-width: 925px">
+                        <a onclick="markAsRead('` + id + `')"
+                        href="javascript: viewPurchaseHistoryDetail(${notification.data.purchase_history_id});"
+                            class="text-body d-block">
+                            ` + purchaseMethodText + `
+                        </a>
+                        <div class="d-block text-secondary mt-n1">
+                            <span
+                                class="text-wrap">${notification.data.data}</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <a data-bs-toggle="tooltip" data-bs-placement="right"
+                            data-bs-title="Đánh dấu là đã đọc"
+                            href="javascript: markAsRead('` + id + `')"><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="icon icon-tabler icon-tabler-checks"
+                                width="30" height="24" viewBox="0 0 24 24"
+                                stroke-width="5" stroke="paleGreen" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                </path>
+                                <path d="M7 12l5 5l10 -10"></path>
+                                <path d="M2 12l5 5m5 -5l5 -5"></path>
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
+        `;
+                    $('.notification').append(moreNotificationHtml);
+                });
+
+                // Tăng số trang
+                page++;
+
+                // Kiểm tra nếu đã cuộn đến cuối
+                // if (page < response.data.lastPage) {
+                //     if ($('#notificationBox').scrollTop() + $('#notificationBox').innerHeight() >= $(
+                //             '#notificationBox')[0].scrollHeight) {
+                //         loadNotifications();
+                //     }
+                // }
+            });
+    }
+    $(document).ready(function() {
+        $('#notificationBox').scroll(function(response) {
+            // Kiểm tra nếu đã cuộn đến cuối
+            if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                // Tải thêm thông báo
+                loadNotifications();
+            }
+        });
+    });
 </script>

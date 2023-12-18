@@ -146,7 +146,6 @@
                                     @else
                                         <span class="col text-truncate">Không có thông báo</span>
                                     @endif
-
                                 </div>
                             </div>
                         </div>
