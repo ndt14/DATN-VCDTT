@@ -124,7 +124,7 @@
                                                 'created_at' => 'Ngày tạo',
                                             ];
                                         @endphp
-                                        <div class="col-auto">
+                                        <div class="col-auto d-none">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="searchCol">
                                                 @if (!request()->query('searchCol'))

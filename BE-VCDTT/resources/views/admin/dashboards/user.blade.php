@@ -6,22 +6,20 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tabs-daily-5" role="tabpanel">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người dùng đã đăng ký tài khoản</h3>
-                                            {{ $data->userCount }}
-                                        </div>
+                <div class="card bg-body border-0">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-daily-5" role="tabpanel">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card shadow-lg rounded-4 p-4 pt-3">
+                                        <h3>Số người dùng đã đăng ký tài khoản</h3>
+                                        {{ $data->userCount }}
                                     </div>
-                                    <div class="col">
-                                        <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                                            <h3>Số người đã sử dụng dịch vụ chưa đăng ký tài khoản</h3>
-                                            {{ $data->notRegCount }}
-                                        </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow-lg rounded-4 p-4 pt-3">
+                                        <h3>Số người đã sử dụng dịch vụ chưa đăng ký tài khoản</h3>
+                                        {{ $data->notRegCount }}
                                     </div>
                                 </div>
                             </div>
@@ -29,9 +27,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row shadow-lg rounded-4 p-4 pt-3 mt-4">
+            <div class="row rounded-4 pt-3 mt-4">
                 <div class="col">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                    <div class="card shadow-lg rounded-4 p-4 pt-3">
                         <h3>Giới tính người dùng sử dụng web</h3>
                         @if ($data->genderDP == [0, 0, 0])
                             <p class="text-orange">Có vẻ chưa người dùng nào nhập đủ thông tin cho hệ thống.</p>
@@ -41,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
+                    <div class="card shadow-lg rounded-4 p-4 pt-3">
                         <h3>Độ tuổi người dùng sử dụng web</h3>
                         @php
                             $ageDP = $data->ageDP;
