@@ -258,7 +258,7 @@
                                         <label class="form-label">Email</label>
                                         <input type="email" name="email" class="form-control"
                                             placeholder="Email người đặt tour" value="{{ $items['email'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="email">
                                             @error('email')
                                                 {{ $message }}
                                             @enderror
@@ -269,7 +269,7 @@
                                         <input type="text" name="phone_number" class="form-control"
                                             placeholder="Nhập số điện thoại người đặt tour"
                                             value="{{ $items['phone_number'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="phone_number">
                                             @error('phone_number')
                                                 {{ $message }}
                                             @enderror
@@ -294,7 +294,7 @@
                                         <div class="form-label">Tên tour</div>
                                         <input name="tour_name" type="text" placeholder="Nhập tên tour"
                                             class="form-control" value="{{ $items['tour_name'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="tour_name">
                                             @error('tour_name')
                                                 {{ $message }}
                                             @enderror
@@ -304,7 +304,7 @@
                                         <div class="form-label">Độ dài tour</div>
                                         <input name="tour_duration" type="text" placeholder="Nhập độ dài tour"
                                             class="form-control" value="{{ $items['tour_duration'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="tour_duration">
                                             @error('tour_duration')
                                                 {{ $message }}
                                             @enderror
@@ -444,9 +444,9 @@
                                 <div class="row">
                                     <div class="mb-3 col-6">
                                         <div class="form-label">Thời gian bắt đầu</div>
-                                        <input name="tour_start_time" type="text" placeholder="Nhập điểm khởi hành tour"
+                                        <input name="tour_start_time" type="text" placeholder="DD-MM-YY"
                                             class="form-control" value="{{ $items['tour_start_time'] }}">
-                                        <span class="text-danger d-flex justify-content-start">
+                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="tour_start_time">
                                             @error('tour_start_time')
                                                 {{ $message }}
                                             @enderror
@@ -577,7 +577,7 @@
 
                                     Swal.fire({
                                         title: 'Lỗi!',
-                                        text: 'Đã xảy ra lỗi khi thực hiện sửa faq',
+                                        text: 'Đã xảy ra lỗi khi thực hiện cập nhật đơn đặt',
                                         icon: 'error'
                                     });
                                 }

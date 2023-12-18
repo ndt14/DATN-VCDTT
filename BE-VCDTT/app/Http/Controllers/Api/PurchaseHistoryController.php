@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\PurchaseHistoryRequest;
 use PDF;
 use Carbon\Carbon;
 use Pusher\Pusher;
@@ -286,7 +287,7 @@ class PurchaseHistoryController extends Controller
         return view('admin.purchase_histories.list', compact('data'));
     }
 
-    public function purchaseHistoryManagementEdit(Request $request, string $id)
+    public function purchaseHistoryManagementEdit(PurchaseHistoryRequest $request, string $id)
     {
         $items = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         if ($request->isMethod('POST')) {
