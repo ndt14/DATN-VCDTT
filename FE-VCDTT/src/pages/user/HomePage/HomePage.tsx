@@ -86,7 +86,9 @@ const HomePage = () => {
   const userId = userData && userData.id ? userData.id : null;
   // console.log(typeof userId);
 
-  const { data: favoriteData } = useGetTourFavoriteByIdQuery(userId || "");
+  const { data: favoriteData, refetch } = useGetTourFavoriteByIdQuery(
+    userId || ""
+  );
   useEffect(() => {
     if (favoriteData) {
       // Handle the data when it is available
@@ -112,10 +114,11 @@ const HomePage = () => {
         showConfirmButton: false,
         timer: 4000,
       });
+      refetch();
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Reload the window
-      window.location.reload();
+      // window.location.reload();
     });
   };
 
@@ -132,10 +135,11 @@ const HomePage = () => {
         showConfirmButton: false,
         timer: 4000,
       });
+      refetch();
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Reload the window
-      window.location.reload();
+      // window.location.reload();
     });
   };
 
