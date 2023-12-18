@@ -21,6 +21,7 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     protected $status;
     protected $name;
     protected $user_id;
+    protected $gender;
 
     /**
      * Create a new notification instance.
@@ -29,12 +30,13 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     {
         //
         $this->user_id = $purchaseHistory->id;
+        $this->name = $purchaseHistory->name;
         if ($purchaseHistory->gender == 1) {
-            $this->name = 'ông ' . $purchaseHistory->name;
+            $this->gender = 'ông ';
         } elseif ($purchaseHistory->gender == 2) {
-            $this->name = 'bà ' . $purchaseHistory->name;
+            $this->gender = 'bà ';
         } else{
-            $this->name = 'ông/bà ' . $purchaseHistory->name;
+            $this->gender = 'ông/bà ';
         }
         $this->tour_name = $purchaseHistory->tour_name;
         if ($purchaseHistory->payment_status == 1) {
@@ -66,7 +68,8 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
             ->view('mail.client', [
                 'status' => $this->status,
                 'user_id' => $this->user_id,
-                'name' => $this->name
+                'name' => $this->name,
+                'gender' => $this->gender
             ]);
     }
 

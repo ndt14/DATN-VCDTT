@@ -248,7 +248,7 @@
                                     <td style="font-size: 15px; line-height: 20px; color: #222222;">
                                         <div
                                             style="margin: 0 0 10px; font-size: 32px; line-height: 30px; color: #222222; font-weight: normal;">
-                                            Xin chào <span style="color: #0D6EFD;">{{ $name }}!</span></div>
+                                            Xin chào <span style="color: #0D6EFD;">{{ $gender }}{{ $name }}!</span></div>
                                     </td>
                                 </tr>
                             </table>
@@ -273,7 +273,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="1" width="auto"
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="auto"
                                 class="in-center" style="margin-bottom: 38px;">
                                 <tr>
                                     <td style="padding: 20px 0;">
