@@ -132,7 +132,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <div class="form-label">Trạng thái</div>
+                                {{-- <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
                                         <input type="radio" class="custom-control-input"
@@ -152,7 +152,7 @@
                                             {{ $message }}
                                         @enderror
                                     </span>
-                                </div>
+                                </div> --}}
                             </div>
                             {{-- Cho danh muc - tour --}}
 
