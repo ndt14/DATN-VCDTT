@@ -9,6 +9,7 @@ import html2canvas from "html2canvas";
 import { Tour } from "../../../interfaces/Tour";
 import { NotFoundPage } from "..";
 import CryptoJS from "crypto-js";
+import Loader from "../../../componenets/User/Loader";
 
 const BillPrint = () => {
   const { id } = useParams<{ id: string }>();
@@ -133,216 +134,226 @@ const BillPrint = () => {
 
   if (decryptedId) {
     return (
-      <div className="container">
-        <div>
-          <div className="my-3">
-            <button className="btn-continue text-light mr-3">
-              <Link className="text-light" to={"/"}>
-                Trở về trang chủ
-              </Link>
-            </button>
+      <>
+        <Loader />
+        <div className="container">
+          <div>
+            <div className="my-3">
+              <button className="btn-continue text-light mr-3">
+                <Link className="text-light" to={"/"}>
+                  Trở về trang chủ
+                </Link>
+              </button>
 
-            <button className="btn-continue" onClick={handlePrintPDF}>
-              Xem đơn PDF
-            </button>
-          </div>
-          <div id="pdfBill">
-            <div className="border p-5">
-              {/* <p>Mã thanh toán: {transactionId}</p> */}
-              <div className="d-flex justify-content-between">
-                <div>{/* <h3>VCDTT</h3> */}</div>
-              </div>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h3>Đơn vị mua hàng</h3>
-                  <p>
-                    Họ và tên:{" "}
-                    <span className="font-weight-bold">
-                      {billData?.data.purchase_history.name}
-                    </span>
-                  </p>
-                  <p>
-                    Email:{" "}
-                    <span className="font-weight-bold">
-                      {billData?.data.purchase_history.email}
-                    </span>
-                  </p>
-                  <p>
-                    Số điện thoại:{" "}
-                    <span className="font-weight-bold">
-                      {billData?.data.purchase_history.phone_number}
-                    </span>
-                  </p>
-                  <p>
-                    Mã đơn hàng:{" "}
-                    <span className="font-weight-bold">{decryptedId}</span>
-                  </p>
+              <button className="btn-continue" onClick={handlePrintPDF}>
+                Xem đơn PDF
+              </button>
+            </div>
+            <div id="pdfBill">
+              <div className="border p-5">
+                {/* <p>Mã thanh toán: {transactionId}</p> */}
+                <div className="d-flex justify-content-between">
+                  <div>{/* <h3>VCDTT</h3> */}</div>
                 </div>
-                <div>
-                  <h3>Đơn vị bán hàng</h3>
-                  <h3>VCDTT</h3>
-                  <img
-                    style={{ width: "150px" }}
-                    src="../../../../assets/images/VCDTT_logo-removebg-preview.png"
-                    alt=""
-                  />
-                  {billData?.data.purchase_history.purchase_method == 1 ? (
-                    <div>
-                      <p>
-                        Phương thức thanh toán:{" "}
-                        <span className="fw-bold">Chuyển khoản ngân hàng</span>{" "}
-                      </p>
-                    </div>
-                  ) : (
-                    <div>
-                      <p>
-                        Phương thức thanh toán:{" "}
-                        <span className="fw-bold">VNPAY</span>{" "}
-                      </p>
-                      <p>
-                        Mã số thanh toán VNPAY:{" "}
-                        <span className="fw-bold">
-                          {billData?.data.purchase_history.transaction_id}
-                        </span>
-                      </p>
-                    </div>
-                  )}
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <h3>Đơn vị mua hàng</h3>
+                    <p>
+                      Họ và tên:{" "}
+                      <span className="font-weight-bold">
+                        {billData?.data.purchase_history.name}
+                      </span>
+                    </p>
+                    <p>
+                      Email:{" "}
+                      <span className="font-weight-bold">
+                        {billData?.data.purchase_history.email}
+                      </span>
+                    </p>
+                    <p>
+                      Số điện thoại:{" "}
+                      <span className="font-weight-bold">
+                        {billData?.data.purchase_history.phone_number}
+                      </span>
+                    </p>
+                    <p>
+                      Mã đơn hàng:{" "}
+                      <span className="font-weight-bold">{decryptedId}</span>
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Đơn vị bán hàng</h3>
+                    <h3>VCDTT</h3>
+                    <img
+                      style={{ width: "150px" }}
+                      src="../../../../assets/images/VCDTT_logo-removebg-preview.png"
+                      alt=""
+                    />
+                    {billData?.data.purchase_history.purchase_method == 1 ? (
+                      <div>
+                        <p>
+                          Phương thức thanh toán:{" "}
+                          <span className="fw-bold">
+                            Chuyển khoản trực tiếp
+                          </span>{" "}
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>
+                          Phương thức thanh toán:{" "}
+                          <span className="fw-bold">VNPAY</span>{" "}
+                        </p>
+                        <p>
+                          Mã số thanh toán VNPAY:{" "}
+                          <span className="fw-bold">
+                            {billData?.data.purchase_history.transaction_id}
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="mt-5">
-                <p>
-                  Tên tour:{" "}
-                  <span className="font-weight-bold fs-4">
-                    {billData?.data.purchase_history.tour_name}
-                  </span>
-                </p>
-                <div className="d-flex justify-content-between"></div>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Số lượng</th>
-                      <th scope="col">Đơn giá</th>
-                      <th scope="col">Thành tiền</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">Người lớn</th>
-                      <td>{billData?.data.purchase_history.adult_count}</td>
-                      <td>
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data.purchase_history.tour_adult_price
-                        )}
-                      </td>
-                      <td>
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data?.purchase_history?.tour_adult_price *
-                            billData?.data?.purchase_history?.adult_count
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Trẻ em</th>
-                      <td>{billData?.data.purchase_history.child_count}</td>
-                      <td>
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data.purchase_history.tour_child_price
-                        )}
-                      </td>
-                      <td>
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data.purchase_history.tour_child_price *
-                            billData?.data.purchase_history.child_count
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Tổng</th>
-                      <td className="text-end" colSpan={3}>
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data?.purchase_history?.tour_adult_price *
-                            billData?.data?.purchase_history?.adult_count +
+                <div className="mt-5">
+                  <p>
+                    Tên tour:{" "}
+                    <span className="font-weight-bold fs-4">
+                      {billData?.data.purchase_history.tour_name}
+                    </span>
+                  </p>
+                  <div className="d-flex justify-content-between"></div>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Thành tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Người lớn</th>
+                        <td>{billData?.data.purchase_history.adult_count}</td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data.purchase_history.tour_adult_price
+                          )}
+                        </td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data?.purchase_history?.tour_adult_price *
+                              billData?.data?.purchase_history?.adult_count
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Trẻ em</th>
+                        <td>{billData?.data.purchase_history.child_count}</td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data.purchase_history.tour_child_price
+                          )}
+                        </td>
+                        <td>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
                             billData?.data.purchase_history.tour_child_price *
                               billData?.data.purchase_history.child_count
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Tổng</th>
+                        <td className="text-end" colSpan={3}>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data?.purchase_history?.tour_adult_price *
+                              billData?.data?.purchase_history?.adult_count +
+                              billData?.data.purchase_history.tour_child_price *
+                                billData?.data.purchase_history.child_count
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Coupon</th>
+                        {billData?.data.purchase_history.coupon_percentage !=
+                        null ? (
+                          <td className="text-end" colSpan={3}>
+                            -{" "}
+                            {billData?.data.purchase_history.coupon_percentage}%
+                          </td>
+                        ) : (
+                          <td className="text-end" colSpan={3}>
+                            - {billData?.data.purchase_history.coupon_fixed}
+                          </td>
                         )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Coupon</th>
-                      {billData?.data.purchase_history.coupon_percentage !=
-                      null ? (
-                        <td className="text-end" colSpan={3}>
-                          - {billData?.data.purchase_history.coupon_percentage}%
-                        </td>
-                      ) : (
-                        <td className="text-end" colSpan={3}>
-                          - {billData?.data.purchase_history.coupon_fixed}
-                        </td>
-                      )}
-                    </tr>
-                    <tr>
-                      <th scope="row">Giá cuối</th>
-                      <td
-                        className="text-end fs-3 fw-bold text-primary"
-                        colSpan={3}
-                      >
-                        {new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          billData?.data.purchase_history.coupon_percentage
-                            ? (billData?.data?.purchase_history
-                                ?.tour_adult_price *
-                                billData?.data?.purchase_history?.adult_count +
-                                billData?.data.purchase_history
-                                  .tour_child_price *
-                                  billData?.data.purchase_history.child_count) *
-                                (1 -
+                      </tr>
+                      <tr>
+                        <th scope="row">Giá cuối</th>
+                        <td
+                          className="text-end fs-3 fw-bold text-primary"
+                          colSpan={3}
+                        >
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(
+                            billData?.data.purchase_history.coupon_percentage
+                              ? (billData?.data?.purchase_history
+                                  ?.tour_adult_price *
+                                  billData?.data?.purchase_history
+                                    ?.adult_count +
+                                  billData?.data.purchase_history
+                                    .tour_child_price *
+                                    billData?.data.purchase_history
+                                      .child_count) *
+                                  (1 -
+                                    (billData?.data.purchase_history
+                                      .coupon_percentage
+                                      ? billData?.data.purchase_history
+                                          .coupon_percentage
+                                      : billData?.data.purchase_history
+                                          .coupon_fixed) /
+                                      100)
+                              : billData?.data?.purchase_history
+                                  ?.tour_adult_price *
+                                  billData?.data?.purchase_history
+                                    ?.adult_count +
+                                  billData?.data.purchase_history
+                                    .tour_child_price *
+                                    billData?.data.purchase_history
+                                      .child_count -
                                   (billData?.data.purchase_history
                                     .coupon_percentage
                                     ? billData?.data.purchase_history
                                         .coupon_percentage
                                     : billData?.data.purchase_history
-                                        .coupon_fixed) /
-                                    100)
-                            : billData?.data?.purchase_history
-                                ?.tour_adult_price *
-                                billData?.data?.purchase_history?.adult_count +
-                                billData?.data.purchase_history
-                                  .tour_child_price *
-                                  billData?.data.purchase_history.child_count -
-                                (billData?.data.purchase_history
-                                  .coupon_percentage
-                                  ? billData?.data.purchase_history
-                                      .coupon_percentage
-                                  : billData?.data.purchase_history
-                                      .coupon_fixed)
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                                        .coupon_fixed)
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   } else {
     return <NotFoundPage />;

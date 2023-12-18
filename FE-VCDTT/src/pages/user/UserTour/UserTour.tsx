@@ -475,7 +475,7 @@ const UserTour = () => {
                           Phương thức thanh toán:{" "}
                           {purchase_method == 1 ? (
                             <span className="fw-bold">
-                              Chuyển khoản ngân hàng
+                              Chuyển khoản trực tiếp
                             </span>
                           ) : (
                             <span className="fw-bold">VNPAY</span>
@@ -580,7 +580,7 @@ const UserTour = () => {
                                 Phương thức thanh toán:{" "}
                                 {purchase_method == 1 ? (
                                   <span className="fw-bold">
-                                    Chuyển khoản ngân hàng
+                                    Chuyển khoản trực tiếp
                                   </span>
                                 ) : (
                                   <span className="fw-bold">VNPAY</span>
@@ -934,7 +934,7 @@ const UserTour = () => {
                                   Phương thức thanh toán:{" "}
                                   {purchase_method == 1 ? (
                                     <span className="fw-bold">
-                                      Chuyển khoản ngân hàng
+                                      Chuyển khoản trực tiếp
                                     </span>
                                   ) : (
                                     <span className="fw-bold">VNPAY</span>

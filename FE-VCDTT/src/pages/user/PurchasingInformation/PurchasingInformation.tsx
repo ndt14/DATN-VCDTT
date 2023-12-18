@@ -40,8 +40,6 @@ const PurchasingInformation = () => {
     tourId = parseInt(split[0]);
   }
   // console.log(tourId);
-  const [checkCount, setCheckCount] = useState<number>(0);
-  useEffect(() => {}, [checkCount]);
 
   const { data: tourData } = useGetTourByIdQuery(tourId || "");
   const tour_sale = tourData?.data.tour.sale_percentage;
@@ -106,28 +104,28 @@ const PurchasingInformation = () => {
   //
 
   // Check số tour người dùng đã đặt
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
-  // console.log(TourData);
+  const { data: TourData, refetch } = useGetBillsWithUserIDQuery(userId || "");
+
+  console.log(TourData);
 
   const [idArray, setIdArray] = useState<number[]>([]);
   useEffect(() => {
     if (TourData) {
       const tourIdPurchased = TourData.data.purchase_history;
-
       const array = tourIdPurchased.map(
         (item: { purchase_status: number }) => item.purchase_status
       );
       setIdArray(array);
     }
   }, [TourData]);
-  // console.log(idArray);
+  console.log(idArray);
   let count = 0;
   for (let i = 0; i < idArray.length; i++) {
     if (idArray[i] === 2) {
       count++;
     }
   }
-  // console.log(count);
+  console.log(count);
 
   //Kiểm tra số tour có trạng thái là admin chưa duyệt thanh toán
 
@@ -393,25 +391,17 @@ const PurchasingInformation = () => {
     let billID: number | undefined = undefined;
 
     try {
-      let index = 0;
       const response = await addBill(variables);
-      index = index + 1;
-      setCheckCount(index);
+
       if ("data" in response) {
         billID = response.data.data.purchase_history.id;
         // Continue handling the successful response
       }
       localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-
+      refetch();
       if (paymentMethod === "1") {
         setLoading(false);
         try {
-          // await MySwal.fire({
-          //   title: "Chuyển khoản",
-          //   text: "Đặt tour thành công",
-          //   icon: "success",
-          //   confirmButtonText: "OK",
-          // });
           hideConfirmTourFormModal();
           setShowPaymentModal(true);
         } catch (error) {
@@ -497,6 +487,11 @@ const PurchasingInformation = () => {
     titleElement.innerText = "Xác nhận thông tin";
   }
   //
+  //
+
+  const showCouponPage = () => {
+    window.open("https://vcdtt.online/user/coupon", "_blank");
+  };
 
   const openWindow = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
@@ -1032,12 +1027,13 @@ const PurchasingInformation = () => {
                               className="btn text-danger position-absolute"
                               data-toggle="tooltip"
                               data-placement="bottom"
-                              title="Xem danh sách coupon của bạn ở Kho Mã Giảm Giá "
+                              title="Ấn vào để xem danh sách coupon của bạn ở Kho Mã Giảm Giá "
                               style={{
                                 width: "48px",
                                 height: "48px",
                                 right: "15px",
                               }}
+                              onClick={showCouponPage}
                             >
                               !!!
                             </button>

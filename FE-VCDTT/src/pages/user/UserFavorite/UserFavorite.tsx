@@ -136,97 +136,102 @@ const UserTour = () => {
           </div>
           <div className="col-md-8">
             <h3>Tour yêu thích</h3>
-            <div className="row">
-              {tourFavorite?.map(
-                ({
-                  id,
-                  name,
-                  details,
-                  main_img,
-                  view_count,
-                  adult_price,
-                  star,
-                }: Tour) => {
-                  return (
-                    <div className="col-lg-6 col-md-6" key={id}>
-                      <div className="package-wrap">
-                        <figure className="feature-image">
-                          <Link
-                            to={`/tours/${id}-${createSlugFromString(
-                              name
-                            )}.html`}
-                          >
-                            <img
-                              className="w-full img-fixed"
-                              src={main_img}
-                              alt=""
-                            />
-                          </Link>
-                        </figure>
-                        <div className="package-price badge">
-                          <h6 className="">
-                            <span>
-                              {new Intl.NumberFormat("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(adult_price)}{" "}
-                            </span>{" "}
-                          </h6>
-                        </div>
-                        <div className="package-content-wrap">
-                          {/* <div className="package-meta text-center"></div> */}
-                          <div className="package-content">
-                            <div className="text-container">
-                              <h3 className="margin-top-12 text-content">
-                                <Link
-                                  className="mt-12"
-                                  to={`/tours/${id}-${createSlugFromString(
-                                    name
-                                  )}.html`}
-                                >
-                                  {name}
-                                </Link>
-                              </h3>
-                            </div>
-                            <div className="review-area">
-                              <div
-                                className=""
-                                title={`Rated ${star} out of 5`}
-                              >
-                                <span className="w-90">
-                                  <Rate allowHalf disabled value={star} />
-                                </span>{" "}
-                                <span className="review-text">
-                                  ({view_count} <AiFillEye size={25} />)
-                                </span>
+            {tourFavorite == "" ? (
+              <p>Hiện bạn chưa có tour yêu thích nào</p>
+            ) : (
+              <div className="row">
+                {tourFavorite?.map(
+                  ({
+                    id,
+                    name,
+                    details,
+                    main_img,
+                    view_count,
+                    adult_price,
+                    star,
+                  }: Tour) => {
+                    return (
+                      <div className="col-lg-6 col-md-6" key={id}>
+                        <div className="package-wrap">
+                          <figure className="feature-image">
+                            <Link
+                              to={`/tours/${id}-${createSlugFromString(
+                                name
+                              )}.html`}
+                            >
+                              <img
+                                className="w-full img-fixed"
+                                src={main_img}
+                                alt=""
+                              />
+                            </Link>
+                          </figure>
+                          <div className="package-price badge">
+                            <h6 className="">
+                              <span>
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(adult_price)}{" "}
+                              </span>{" "}
+                            </h6>
+                          </div>
+                          <div className="package-content-wrap">
+                            {/* <div className="package-meta text-center"></div> */}
+                            <div className="package-content">
+                              <div className="text-container">
+                                <h3 className="margin-top-12 text-content">
+                                  <Link
+                                    className="mt-12"
+                                    to={`/tours/${id}-${createSlugFromString(
+                                      name
+                                    )}.html`}
+                                  >
+                                    {name}
+                                  </Link>
+                                </h3>
                               </div>
-                            </div>
-                            <div className="text-description">
-                              <span
-                                className="text-from-api"
-                                dangerouslySetInnerHTML={{
-                                  __html: details,
-                                }}
-                              ></span>
-                            </div>
+                              <div className="review-area">
+                                <div
+                                  className=""
+                                  title={`Rated ${star} out of 5`}
+                                >
+                                  <span className="w-90">
+                                    <Rate allowHalf disabled value={star} />
+                                  </span>{" "}
+                                  <span className="review-text">
+                                    ({view_count} <AiFillEye size={25} />)
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="text-description">
+                                <span
+                                  className="text-from-api"
+                                  dangerouslySetInnerHTML={{
+                                    __html: details,
+                                  }}
+                                ></span>
+                              </div>
 
-                            <div className="btn-wrap">
-                              <a  href="#"
-                                onClick={handleClickRemove(id)}
-                                className="button-text width-6 text-pink"
-                              >
-                                Đã thích
-                                <i className="far fa-heart"></i>
-                              </a>
+                              <div className="btn-wrap">
+                                <a
+                                  href="#"
+                                  onClick={handleClickRemove(id)}
+                                  className="button-text width-6 text-pink"
+                                >
+                                  Đã thích
+                                  <i className="far fa-heart"></i>
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                }
-              )}
-            </div>
+                    );
+                  }
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
