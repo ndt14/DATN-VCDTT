@@ -92,7 +92,7 @@ class DashboardController extends Controller
         //chartpie view
         $sort = $request->sort ?? 'view_count';
         $direction = $request->direction ?? 'desc';
-        $tourViewCounts = Tour::select('id', 'name', 'view_count')->orderBy($sort, $direction)->limit(5)->get();
+        $tourViewCounts = Tour::select('id', 'name', 'view_count')->orderBy($sort, $direction)->limit(10)->get();
         $data['tourVC'] = $tourViewCounts;
 
         //chartpie rating
@@ -116,7 +116,7 @@ class DashboardController extends Controller
         });
         $tourRatings = $tourRatings->filter(function ($a) {
             return $a->star > 0;
-        })->slice(0, 5);
+        })->slice(0, 10);
         $data['tourR'] = $tourRatings;
 
         //chart
@@ -179,7 +179,7 @@ class DashboardController extends Controller
             $data['totalViews']->sixDaysBefore += $sixDaysBefore['screenPageViews'];
         }
 
-        //Top 5 tour có doanh thu cao nhất
+        //Top 10 tour có doanh thu cao nhất
         $data['chartTop5ToursBySale'] = Tour::join('purchase_histories', 'tours.name', '=', 'purchase_histories.tour_name')
             ->select(
                 'tours.name',
@@ -189,7 +189,7 @@ class DashboardController extends Controller
             ->where('purchase_histories.purchase_status', 3)
             ->groupBy('tours.name')
             ->orderBy('total_tour_price', 'desc')
-            ->get(5);
+            ->get(10);
 
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.tour', compact('data'));

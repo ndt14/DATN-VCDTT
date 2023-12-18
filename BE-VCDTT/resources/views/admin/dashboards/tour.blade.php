@@ -79,7 +79,9 @@
                         </div>
                     </div>
                 @endif
-                <div class="card border-0 rounded-4 mb-4 col-12">
+
+                {{-- Đây là tab pane --}}
+                {{-- <div class="card border-0 rounded-4 mb-4 col-12">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -240,7 +242,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!--- thêm mới  !-->
                 <div class="card border-0 rounded-4 mb-4">
@@ -298,7 +300,7 @@
                 <!--- end !--->
                 <div class="row">
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 Tour được chú ý nhất</h3>
+                        <h3>5 Tour đáng chú ý nhất</h3>
                         @if ($data->tourVC == [])
                             <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
                         @else
@@ -316,7 +318,7 @@
                 </div>
                 <div class="row">
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 tour có doanh số cao nhất</h3>
+                        <h3>5 Tour có doanh số cao nhất</h3>
                         <div id="chartTourSale" style="min-height: 365px;"></div>
                     </div>
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
@@ -613,6 +615,16 @@
                             return '#A02A24';
                         case 4:
                             return '#AB7DBE';
+                        case 5:
+                            return '#F44336';
+                        case 6:
+                            return '#9C27B0';
+                        case 7:
+                            return '#3F51B5';
+                        case 8:
+                            return '#03A9F4';
+                        case 9:
+                            return '#00BCD4';
                         default:
                             return 0;
                     }
@@ -666,6 +678,16 @@
                             return '#A02A24';
                         case 4:
                             return '#AB7DBE';
+                        case 5:
+                            return '#F44336';
+                        case 6:
+                            return '#9C27B0';
+                        case 7:
+                            return '#3F51B5';
+                        case 8:
+                            return '#03A9F4';
+                        case 9:
+                            return '#00BCD4';
                         default:
                             return 0;
                     }
@@ -723,6 +745,16 @@
                             return '#A02A24';
                         case 4:
                             return '#AB7DBE';
+                        case 5:
+                            return '#F44336';
+                        case 6:
+                            return '#9C27B0';
+                        case 7:
+                            return '#3F51B5';
+                        case 8:
+                            return '#03A9F4';
+                        case 9:
+                            return '#00BCD4';
                         default:
                             return 0;
                     }
