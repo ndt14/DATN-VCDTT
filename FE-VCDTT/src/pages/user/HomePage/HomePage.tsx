@@ -71,7 +71,7 @@ const HomePage = () => {
     ["sale_percentage"],
     ["desc"]
   );
-  console.log(sortedDiscountedTours);
+  // console.log(sortedDiscountedTours);
 
   const saleTours = sortedDiscountedTours.slice(0, 4);
 
@@ -201,6 +201,32 @@ const HomePage = () => {
       <Loader />
 
       <main id="content" className="site-main">
+        {/* <section
+          className="d-block d-md-none"
+          style={{ marginTop: "100px", width: "100%" }}
+        >
+          <h3>zzzz</h3>
+          <div className="">
+            <img
+              src="../../../../assets/images/slider-banner-1.jpg"
+              alt=""
+              style={{ height: "150px" }}
+            />
+            <Carousel autoplay>
+              {dataBanner?.data.banner.map(({ url }: Setting) => {
+                return (
+                  <>
+                    <img
+                      src="../../../../assets/images/slider-banner-1.jpg"
+                      alt=""
+                      style={{ height: "150px" }}
+                    />
+                  </>
+                );
+              })}
+            </Carousel>
+          </div>
+        </section> */}
         {/* <!-- Home slider html start --> */}
         <section className="home-slider-section ">
           <div className="home-slider d-none d-md-block">
@@ -228,7 +254,7 @@ const HomePage = () => {
 
         {/* <!-- slider html start -->
             <!-- Home search field html start --> */}
-        <div className="trip-search-section shape-search-section">
+        <div className="trip-search-section shape-search-section d-none d-md-block">
           <div className="slider-shape"></div>
           <div className="container">
             <div className="trip-search-inner white-bg d-flex">
@@ -255,14 +281,17 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="container d-block d-sm-none">
+        <div
+          className="container d-block d-md-none"
+          style={{ marginTop: "120px" }}
+        >
           <div className="trip-search-inner white-bg d-flex">
             <SearchBar />
           </div>
         </div>
 
         {/*  */}
-        <section className="package-section d-none d-lg-block">
+        <section className="package-section d-none d-md-block">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -491,7 +520,7 @@ const HomePage = () => {
           </div>
         </section>
         {/* Mobile */}
-        <section className="package-section d-block d-sm-none">
+        <section className="package-section d-block d-md-none">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -699,7 +728,7 @@ const HomePage = () => {
         {/*  */}
 
         {/*  */}
-        <section className="special-section d-none d-lg-block">
+        <section className="special-section d-none d-md-block">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">
@@ -939,8 +968,8 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-
-        <section className="special-section d-block d-sm-none">
+        {/* Mobile */}
+        <section className="special-section d-block d-md-none">
           <div className="container">
             <div className="section-heading text-center">
               <div className="row">

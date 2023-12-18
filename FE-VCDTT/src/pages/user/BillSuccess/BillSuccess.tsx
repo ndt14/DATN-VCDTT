@@ -3,30 +3,30 @@ import { useGetBillByIdQuery, useUpdateBillMutation } from "../../../api/bill";
 import { useEffect } from "react";
 import { Bill } from "../../../interfaces/Bill";
 // import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const BillSuccess = () => {
-  const handlePrintPDF = () => {
-    const input = document.getElementById("pdfBill");
-    if (input) {
-      html2canvas(input)
-        .then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF();
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-          pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-          const pdfData = pdf.output("blob");
-          const pdfUrl = URL.createObjectURL(pdfData);
-          window.open(pdfUrl);
-        })
-        .catch((error) => {
-          console.error("Error generating PDF:", error);
-        });
-    }
-  };
+  // const handlePrintPDF = () => {
+  //   const input = document.getElementById("pdfBill");
+  //   if (input) {
+  //     html2canvas(input)
+  //       .then((canvas) => {
+  //         const imgData = canvas.toDataURL("image/png");
+  //         const pdf = new jsPDF();
+  //         const pdfWidth = pdf.internal.pageSize.getWidth();
+  //         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  //         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  //         const pdfData = pdf.output("blob");
+  //         const pdfUrl = URL.createObjectURL(pdfData);
+  //         window.open(pdfUrl);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error generating PDF:", error);
+  //       });
+  //   }
+  // };
 
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
@@ -163,9 +163,9 @@ const BillSuccess = () => {
                 </Link>
               </button>
 
-              <button className="btn-continue" onClick={handlePrintPDF}>
+              {/* <button className="btn-continue" onClick={handlePrintPDF}>
                 Xem đơn PDF
-              </button>
+              </button> */}
             </div>
             <div id="pdfBill">
               <div className="border p-3">
