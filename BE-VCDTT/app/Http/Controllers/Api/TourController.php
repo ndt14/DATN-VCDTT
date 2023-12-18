@@ -176,7 +176,17 @@ class TourController extends Controller
                 ->limit(10)
                 ->get();
         }
-
+        foreach ($toursSameCate as $tour_item) {
+            $listRatings = Rating::where('tour_id', $tour_item->id)->orderBy('id', 'desc')->get();
+            $star = 0;
+            $t = 0;
+            foreach ($listRatings as $c) {
+                $star += $c->star;
+                $t++;
+            }
+            $tour_item->star = $star / ($t == 0 ? 1 : $t);
+            $tour_item->starCount = $t;
+        }
         // get info tour by id
         $tour = Tour::select(
             'id',
