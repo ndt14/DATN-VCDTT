@@ -158,4 +158,6 @@ Route::get('/banner',[ImageController::class,'bannerCall']);
 Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback',[GoogleLoginController::class, 'handleGoogleCallback']);
 
+//load more noti
+Route::get('/get-notifications/{id}',[PurchaseHistoryController::class, 'getNotifications']);
 // Route::get('/test', [PurchaseHistoryController::class, 'test']);

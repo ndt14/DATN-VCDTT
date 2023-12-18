@@ -229,7 +229,7 @@
                                     <td style=" text-align: left;">
                                         <a href="https://vcdtt.online/" target="_blank">
                                             <img src="{{ url('images/logo.jpg') }}" width="200" height="50"
-                                                alt="alt_text" border="0" style="height: auto;">
+                                                alt="VCDTT" border="0" style="height: auto;">
                                         </a>
                                     </td>
                                 </tr>
@@ -248,7 +248,7 @@
                                     <td style="font-size: 15px; line-height: 20px; color: #222222;">
                                         <div
                                             style="margin: 0 0 10px; font-size: 32px; line-height: 30px; color: #222222; font-weight: normal;">
-                                            Xin chào! <span style="color: #0D6EFD;">{{ $name }},</span></div>
+                                            Xin chào <span style="color: #0D6EFD;">{{ $name }}!</span></div>
                                     </td>
                                 </tr>
                             </table>
@@ -439,7 +439,7 @@
                                 <tr style="margin-bottom: 5rem">
                                     <td>
                                         <img src="{{ url('images/logo.jpg') }}" width="128" height="45"
-                                            alt="alt_text" border="0" style="height: auto;">
+                                            alt="VCDTT" border="0" style="height: auto;">
                                     </td>
                                 </tr>
 

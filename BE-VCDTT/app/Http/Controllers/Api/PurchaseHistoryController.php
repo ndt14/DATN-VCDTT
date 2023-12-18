@@ -412,8 +412,10 @@ class PurchaseHistoryController extends Controller
     //     return $pdf->download('Hóa đơn '. $item->name .'.pdf');
     // }
 
-    public function test()
+    public function getNotifications(string $id)
     {
-
+        $user = User::where('id', $id)->first();
+        $notifications = $user->notifications()->paginate(5);
+        return response()->json(['notifications' => $notifications, 'status' => 200]);
     }
 }
