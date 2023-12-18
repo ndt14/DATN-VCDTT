@@ -425,7 +425,7 @@ const Header = () => {
                           return (
                             <li key={id}>
                               <a
-                                href={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                                href={`/search?tours%5BhierarchicalMenu%5D%5Bcategory.lvl0%5D%5B0%5D=${name}`}
                               >
                                 {name}
                               </a>
@@ -861,7 +861,7 @@ const Header = () => {
                           return (
                             <Dropdown.Item key={id}>
                               <a
-                                href={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                                href={`/search?tours%5BhierarchicalMenu%5D%5Bcategory.lvl0%5D%5B0%5D=${name}`}
                               >
                                 {name}
                               </a>
