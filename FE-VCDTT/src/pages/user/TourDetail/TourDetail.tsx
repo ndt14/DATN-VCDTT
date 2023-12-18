@@ -23,13 +23,14 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 import { useUpdateFavoriteMutation } from "../../../api/favorite";
+import { useGetTourFavoriteByIdQuery } from "../../../api/user";
 
 const MySwal = withReactContent(Swal);
 
 const TourDetail = () => {
   const [dateTour, setDateTour] = useState<string>("");
   // const [isDateSelected, setIsDateSelected] = useState(false);
-  const [idArray] = useState<number[]>([]);
+  const [idArray, setIdArray] = useState<number[]>([]);
 
   const [addRating] = useAddRatingMutation();
   // const { id: idRating } = useParams<{ id: string }>();
@@ -42,6 +43,19 @@ const TourDetail = () => {
   const userId = user?.id;
   const { data: TourHistoryData } = useGetBillsWithUserIDQuery(userId || "");
   // console.log(TourHistoryData);
+
+  const { data: favoriteData, refetch } = useGetTourFavoriteByIdQuery(
+    userId || ""
+  );
+  useEffect(() => {
+    if (favoriteData) {
+      // Handle the data when it is available
+      const favoriteTours = favoriteData.data.tours;
+      // Do something with favoriteTours
+      const array = favoriteTours.map((item: Tour) => item.id);
+      setIdArray(array);
+    }
+  }, [favoriteData]);
 
   // const { data: userData } = useGetUserByIdQuery(userId || "");
 
@@ -359,10 +373,11 @@ const TourDetail = () => {
         showConfirmButton: false,
         timer: 4000,
       });
+      refetch();
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Reload the window
-      window.location.reload();
+      // window.location.reload();
     });
   };
 
@@ -380,10 +395,11 @@ const TourDetail = () => {
         showConfirmButton: false,
         timer: 4000,
       });
+      refetch();
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Reload the window
-      window.location.reload();
+      // window.location.reload();
     });
   };
 
@@ -1193,7 +1209,7 @@ const TourDetail = () => {
                                   <a
                                     href="#"
                                     onClick={handleClickRemove(id)}
-                                    className="button-text width-6"
+                                    className="button-text width-6 text-pink"
                                   >
                                     Đã thích
                                     <i className="far fa-heart"></i>
