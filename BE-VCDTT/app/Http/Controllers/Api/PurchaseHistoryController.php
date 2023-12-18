@@ -37,8 +37,7 @@ class PurchaseHistoryController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if (!$request->searchCol) {
-            if (!$request->purchase_status) {
+        if ($request->searchCol==null) {
                 $purchasehistorys = PurchaseHistory::where(function ($query) use ($keyword) {
                     $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
                     foreach ($columns as $column) {
@@ -47,23 +46,12 @@ class PurchaseHistoryController extends Controller
                 })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
                     ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
                     ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            } else {
-                $purchasehistorys = PurchaseHistory::where(function ($query) use ($keyword) {
-                    $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
-                    foreach ($columns as $column) {
-                        $query->orWhere($column, 'like', '%' . $keyword . '%');
-                    }
-                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
-                    ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
-                    ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')
-                    ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            }
         } else {
             $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
-                ->where('payment_status', '%' . $request->payment_status ?? '' . '%')
-                ->where('purchase_status', '%' . $request->purchase_status ?? '' . '%')
-                ->where('tour_status', '%' . $request->tour_status ?? '' . '%')
-                ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+            ->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
+            ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
+            ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')
+            ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
             [
@@ -273,7 +261,7 @@ class PurchaseHistoryController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get(url('') . "/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
