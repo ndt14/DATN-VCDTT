@@ -69,18 +69,7 @@
                                                 </div>
                                                 entries
                                             </div>-->
-                                <div class="ms-auto text-muted">
-                                    <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
-                                            <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" class="form-control"
-                                                placeholder="tên người dùng">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-indigo">Tìm kiếm</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="table table-responsive">
@@ -112,14 +101,14 @@
                                                 <td>
                                                     @foreach ($item->roles as $role)
                                                         <span class="text-white bg-success nameRole"
-                                                            style="position: relative;border-radius: 1px;padding: 13px 10px; margin-right: 5px;"
+                                                            style="position: relative;border-radius: 1px;padding: 13px 30px; margin-right: 5px; border-radius: 30px;"
                                                             @if (!($role->name == 'Admin')) data-bs-toggle="tooltip" title="Click vào x để xóa vai trò này" @endif>
                                                             @if (!($role->name == 'Admin'))
                                                                 <i class="fa-solid fa-x"
                                                                     style="
                                                     position: absolute;
-                                                    top: 0;
-                                                    right: 0;
+                                                    top: 14px;
+                                                    right: 6px;
                                                     padding: 0px 3px;
                                                     border: 1px solid red;
                                                     color: red;"
