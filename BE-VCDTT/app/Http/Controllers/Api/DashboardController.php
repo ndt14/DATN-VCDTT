@@ -102,12 +102,11 @@ class DashboardController extends Controller
         foreach ($tourRatings as $tour) {
             $listRatings = Rating::where('tour_id', $tour->id)->orderBy('id', 'desc')->get();
             $star = 0;
-            $t = 0;
+            $t = count($listRatings);
             foreach ($listRatings as $c) {
                 $star += $c->star;
-                $t++;
             }
-            $tour->star = $star / ($t == 0 ? 1 : $t);
+            $tour->star = round($star / ($t == 0 ? 1 : $t),2);
             $tour->starCount = $t;
         }
         $tourRatings = collect($tourRatings);
@@ -134,6 +133,8 @@ class DashboardController extends Controller
         $data['users'] = User::whereNull('deleted_at')->count();
         // Tổng số bài viết
         $data['blogs'] = Blog::whereNull('deleted_at')->count();
+        $data['tour_count'] = Tour::where('status', 1)->whereNull('deleted_at')->count();
+
 
         //Số lượt xem page
         $date = '2016-08-13';

@@ -4,12 +4,10 @@
 @endSection
 @section('db_css')
     <style>
-        .custom-card {
-            border: 1px solid #3498db;
+        .custom-card text-dark-emphasis {
             /* Màu xanh dương */
             border-radius: 12px;
             padding: 20px;
-            text-align: center;
             color: black;
             /* Màu trắng cho văn bản */
             position: relative;
@@ -60,20 +58,20 @@
             <div class="row row-cards g-3">
                 @if ($data->UVCount && $data->UVCount > 0)
                     <div class="col-12">
-                        <div class="card border-0 bg-yellow shadow-lg  rounded-4 p-1 pt-3 mb-3">
-                            <a class="nav-link text-center text-white" href="/purchase-history?purchase_status=2">
-                                <h3>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M12 9v4" />
-                                        <path
-                                            d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
-                                        <path d="M12 16h.01" />
-                                    </svg>
-                                    Có {{ $data->UVCount }} đơn chờ duyệt
+                        <div class="card border-0 bg-yellow shadow-lg  rounded-4 p-1 py-3 mb-3">
+                            <a class="nav-link text-center text-white align-items-center px-4" href="/purchase-history?purchase_status=2">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-alert-triangle mx-2" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 9v4" />
+                                    <path
+                                        d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+                                    <path d="M12 16h.01" />
+                                </svg>
+                                <h3 class="m-0">
+                                    Có {{ $data->UVCount }} đơn đang chờ xử lý
                                 </h3>
                             </a>
                         </div>
@@ -245,52 +243,83 @@
                 </div> --}}
 
                 <!--- thêm mới  !-->
-                <div class="card border-0 rounded-4 mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="card rounded-4 p-4 pt-3 custom-card">
-                                    <h3>Tổng tất cả tiền</h3>
-                                    <p>{{ money_format($data->total_total) }}</p>
+                <div class="card border-0 rounded-4 mb-4 bg-body">
+                    <div class="row">
+                        <div class="col-lg col-2">
+                            <div class="card rounded-4 p-4 pt-3 custom-card text-dark-emphasis">
+                                <h3>Tổng Doanh Thu</h3>
+                                <div class="row align-items-center">
+                                    <span class="bg-warning text-white avatar col-auto mx-2"><!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart -->
+                                        VNĐ
+                                    </span>
+                                    <p class=" col-auto m-0">{{ money_format($data->total_total) }}</p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-3">
-                                <div class="card rounded-4 p-4 pt-3 custom-card">
-                                    <h3>Tổng số thành viên</h3>
-                                    <p class="show_num_user">{{ $data->users }}</p>
-                                    <!-- Phần tử chứa cả hai ô tròn -->
-                                    <div class="status-dots">
-                                        <!-- Ô tròn xanh -->
-                                        <div class="status-dot status-dot-green btnActive" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Đang hoạt động"></div>
-                                        <!-- Ô tròn xám -->
-                                        <div class="status-dot status-dot-gray btnUnActive" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Không hoạt động"></div>
-                                    </div>
+                        <div class="col-lg col-2">
+                            <div class="card rounded-4 p-4 pt-3 custom-card text-dark-emphasis">
+                                <h3>Tổng Số Người Dùng</h3>
+                                <div class="row align-items-center">
+                                    <span class="bg-primary text-white avatar col-auto mx-2"><!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                                    </span>
+                                    <p class="col-auto m-0 show_num_user">{{ $data->users }} (hoạt động)</p>
+                                </div>
+                                <!-- Phần tử chứa cả hai ô tròn -->
+                                <div class="status-dots">
+                                    <!-- Ô tròn xanh -->
+                                    <div class="status-dot status-dot-green btnActive" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Đang hoạt động"></div>
+                                    <!-- Ô tròn xám -->
+                                    <div class="status-dot status-dot-gray btnUnActive" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Không hoạt động"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-3">
-                                <div class="card rounded-4 p-4 pt-3 custom-card">
-                                    <h3>Tổng số bài viết</h3>
-                                    <p class="show_num_blog">{{ $data->blogs }}</p>
-                                    <!-- Phần tử chứa cả hai ô tròn -->
-                                    <div class="status-dots">
-                                        <!-- Ô tròn xanh -->
-                                        <div class="status-dot status-dot-green btnActive2" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Đang hoạt động"></div>
-                                        <!-- Ô tròn xám -->
-                                        <div class="status-dot status-dot-gray btnUnActive2" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Không hoạt động"></div>
-                                    </div>
+                        <div class="col-lg col-2">
+                            <div class="card rounded-4 p-4 pt-3 custom-card text-dark-emphasis">
+                                <h3>Tổng số Tour hoạt động</h3>
+                                <div class="row align-items-center">
+                                    <span class="bg-indigo text-white avatar col-auto mx-2"><!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gps" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 17l-1 -4l-4 -1l9 -4z" /></svg>
+                                    </span>
+                                    <p class="col-auto m-0">{{ $data->tour_count }} Tour</p>
+                                </div>
+                                <!-- Phần tử chứa cả hai ô tròn -->
+                            </div>
+                        </div>
+
+                        <div class="col-lg col-2">
+                            <div class="card rounded-4 p-4 pt-3 custom-card text-dark-emphasis">
+                                <h3>Tổng số bài viết</h3>
+                                <div class="row align-items-center">
+                                    <span class="bg-purple text-white avatar col-auto mx-2"><!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-ballpen" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 6l7 7l-4 4" /><path d="M5.828 18.172a2.828 2.828 0 0 0 4 0l10.586 -10.586a2 2 0 0 0 0 -2.829l-1.171 -1.171a2 2 0 0 0 -2.829 0l-10.586 10.586a2.828 2.828 0 0 0 0 4z" /><path d="M4 20l1.768 -1.768" /></svg>
+                                    </span>
+                                    <p class="col-auto m-0 show_num_blog">{{ $data->blogs }} (hoạt động)</p>
+                                </div>
+                                <!-- Phần tử chứa cả hai ô tròn -->
+                                <div class="status-dots">
+                                    <!-- Ô tròn xanh -->
+                                    <div class="status-dot status-dot-green btnActive2" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Đang hoạt động"></div>
+                                    <!-- Ô tròn xám -->
+                                    <div class="status-dot status-dot-gray btnUnActive2" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Không hoạt động"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-3">
-                                <div class="card rounded-4 p-4 pt-3 custom-card">
-                                    <h3>Tổng số lượt truy cập</h3>
-                                    <p>{{ $data->totalViews->totalViews }}</p>
+                        <div class="col-lg col-2">
+                            <div class="card rounded-4 p-4 pt-3 custom-card text-dark-emphasis">
+                                <h3>Tổng số lượt truy cập</h3>
+                                <div class="row align-items-center">
+                                    <span class="bg-cyan text-white avatar col-auto mx-2"><!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+                                    </span>
+                                    <p class="col-auto m-0">{{ $data->totalViews->totalViews }} Lượt</p>
                                 </div>
                             </div>
                         </div>
@@ -299,16 +328,16 @@
 
                 <!--- end !--->
                 <div class="row">
-                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 Tour đáng chú ý nhất</h3>
+                    <div class="card rounded-4 mb-4 p-4 col-lg me-lg-4">
+                        <h3>TOP Tour đáng chú ý nhất</h3>
                         @if ($data->tourVC == [])
                             <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
                         @else
                             <div id="chartTop5ToursRemarkable"></div>
                         @endif
                     </div>
-                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
-                        <h3>5 Tour được đánh giá cao nhất</h3>
+                    <div class="card  rounded-4 mb-4 p-4 col-lg">
+                        <h3>TOP Tour được đánh giá cao nhất</h3>
                         @if ($data->tourR == [])
                             <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
                         @else
@@ -317,16 +346,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 Tour có doanh số cao nhất</h3>
+                    <div class="card rounded-4 mb-4 p-4 col-lg me-lg-4">
+                        <h3>TOP Tour có doanh số cao nhất</h3>
                         <div id="chartTourSale" style="min-height: 365px;"></div>
                     </div>
-                    <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
+                    <div class="card  rounded-4 mb-4 p-4 col-lg">
                         <h3>Số lượt truy cập theo ngày</h3>
                         <div id="chartPageViewsByDay" style="min-height: 365px;"></div>
                     </div>
                 </div>
-                <div class="card border-0 rounded-4 mb-4 p-4 pt-3">
+                <div class="card rounded-4 mb-4 p-4 pt-3">
                     <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
                     <div id="chart" style="min-height: 365px;"></div>
                 </div>
