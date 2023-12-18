@@ -38,7 +38,13 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
         //
         $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
-        $this->name = $purchase_history->name;
+        if ($purchase_history->gender == 1) {
+            $this->name = 'ông ' . $purchase_history->name;
+        } elseif ($purchase_history->gender == 2) {
+            $this->name = 'bà ' . $purchase_history->name;
+        } else{
+            $this->name = 'ông/bà ' . $purchase_history->name;
+        }
         $this->email = $purchase_history->email;
         $this->phone_number = $purchase_history->phone_number;
         $this->address = $purchase_history->address;

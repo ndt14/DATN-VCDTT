@@ -45,7 +45,13 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         //
         $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
-        $this->name = $purchase_history->name;
+        if ($purchase_history->gender == 1) {
+            $this->name = 'ông ' . $purchase_history->name;
+        } elseif ($purchase_history->gender == 2) {
+            $this->name = 'bà ' . $purchase_history->name;
+        } else {
+            $this->name = 'ông/bà ' . $purchase_history->name;
+        }
         $this->email = $purchase_history->email;
         $this->phone_number = $purchase_history->phone_number;
         $this->address = $purchase_history->address;
@@ -81,7 +87,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                 $this->status = "Yêu cầu hủy tour " . $purchase_history->tour_name . " của bạn đã được phê duyệt. Vui lòng liên hệ với CSKH để được hoàn tiền";
                 break;
             case '6':
-                $this->status = "Chúng tôi đã hoàn tiền tour ". $purchase_history->tour_name . " cho bạn. Vui lòng kiểm tra tài khoản của bạn. Nếu có gì thắc mắc, vui lòng liên hệ CSKH để được tư vấn";
+                $this->status = "Chúng tôi đã hoàn tiền tour " . $purchase_history->tour_name . " cho bạn. Vui lòng kiểm tra tài khoản của bạn. Nếu có gì thắc mắc, vui lòng liên hệ CSKH để được tư vấn";
                 break;
             case '7':
                 $this->status = "Bạn đã chuyển thiếu tiền cho tour " . $purchase_history->tour_name . ", vui lòng liên hệ cho CSKH để được giúp đỡ";

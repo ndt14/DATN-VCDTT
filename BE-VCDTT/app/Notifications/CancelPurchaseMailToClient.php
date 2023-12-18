@@ -29,7 +29,13 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     {
         //
         $this->user_id = $purchaseHistory->id;
-        $this->name = $purchaseHistory->name;
+        if ($purchaseHistory->gender == 1) {
+            $this->name = 'ông ' . $purchaseHistory->name;
+        } elseif ($purchaseHistory->gender == 2) {
+            $this->name = 'bà ' . $purchaseHistory->name;
+        } else{
+            $this->name = 'ông/bà ' . $purchaseHistory->name;
+        }
         $this->tour_name = $purchaseHistory->tour_name;
         if ($purchaseHistory->payment_status == 1) {
             $this->purchase_status_noti =  '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền';
@@ -54,7 +60,7 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
- 
+
         return (new MailMessage)
             ->subject('Cập nhật trạng thái đơn hàng')
             ->view('mail.client', [
