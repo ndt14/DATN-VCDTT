@@ -34,10 +34,10 @@
             <div id="nav-link-3" class="accordion-collapse collapse {{ $currentController == 'DashboardController' ? 'show' : '' }}" data-bs-parent="#nav-parent">
                 <div class="accordion-body pt-0 ps-3">
                   <a class="nav-link fw-bold" href="{{route('dashboard.tour')}}">
-                    - Thông kế doanh số tour
+                    - Bảng điều khiển
                   </a>
                   <a class="nav-link fw-bold" href="{{route('dashboard.user')}}" rel="noopener">
-                    - Thống kê số liệu user
+                    - Thống kê người dùng
                   </a>
                 </div>
               </div>
