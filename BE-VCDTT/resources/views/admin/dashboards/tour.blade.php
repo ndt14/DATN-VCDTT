@@ -300,7 +300,7 @@
                 <!--- end !--->
                 <div class="row">
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 Tour đáng chú ý nhất</h3>
+                        <h3>Top Tour đáng chú ý nhất</h3>
                         @if ($data->tourVC == [])
                             <p class="text-orange">Có vẻ chưa có ai xem tour nào cả.</p>
                         @else
@@ -308,7 +308,7 @@
                         @endif
                     </div>
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
-                        <h3>5 Tour được đánh giá cao nhất</h3>
+                        <h3>Top Tour được đánh giá cao nhất</h3>
                         @if ($data->tourR == [])
                             <p class="text-orange">Có vẻ chưa có đánh giá cho tour nào cả.</p>
                         @else
@@ -318,7 +318,7 @@
                 </div>
                 <div class="row">
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg me-lg-4">
-                        <h3>5 Tour có doanh số cao nhất</h3>
+                        <h3>Top Tour có doanh số cao nhất</h3>
                         <div id="chartTourSale" style="min-height: 365px;"></div>
                     </div>
                     <div class="card border-0 rounded-4 mb-4 p-4 col-lg">
