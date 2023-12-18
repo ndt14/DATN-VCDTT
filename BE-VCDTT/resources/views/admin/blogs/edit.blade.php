@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                            Overview
-                                                        </div> -->
+                                                                    Overview
+                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý bài viết
                     </h1>
@@ -64,8 +64,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-12 col-md-8 offset-md-2">
-                    <form id="frmAdd" class="card border-0 shadow-lg rounded-4 "
-                        method="POST">
+                    <form id="frmEdit" class="card border-0 shadow-lg rounded-4 " method="POST">
                         <div class="card-header">
                             <h2 class="card-title">
                                 Cập nhật bài viết
@@ -77,16 +76,17 @@
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tiêu đề</label>
                                     <input type="text" name="title" class="form-control" placeholder="Title"
-                                        value="{{$response['title']}}">
-                                        <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
-                                            @error('title')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                        value="{{ $blog->title }}">
+                                    <span class="text-danger d-flex justify-content-start spanError" data-tag="title">
+                                        @error('title')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label class="form-label">Tác giả</label>
-                                    <input type="text" name="author" class="form-control" placeholder="" value="{{$response['author']}}">
+                                    <input type="text" name="author" class="form-control" placeholder=""
+                                        value="{{ $blog->author }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="author">
                                         @error('author')
                                             {{ $message }}
@@ -95,19 +95,61 @@
                                 </div>
 
                             </div>
-                            <div class="mb-3 col-8">
+                            <div class="mb-3 col-12">
+                                <label class="form-label">Lựa chọn danh mục</label>
+                                <select type="text" class="form-select" name="categories_data[]"
+                                    placeholder="Thêm danh mục cho blog" id="select-category" value=""
+                                    multiple></select>
+                            </div>
+                            <div class="row">
                                 <label class="form-label">Ảnh</label>
-                                <input type="text" name="main_img" class="form-control" placeholder="Image"
-                                    value="{{$response['main_img']}}">
+                                <div class="mb-3 col-8">
+                                    <input type="text" name="main_img" class="form-control" placeholder="Image"
+                                        value="{{ $blog->main_img }}">
                                     <span class="text-danger d-flex justify-content-start spanError" data-tag="main_img">
                                         @error('main_img')
                                             {{ $message }}
                                         @enderror
                                     </span>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="/image/dropzone" target="_blank" class="btn btn-icon btn-indigo"
+                                        aria-label="Button">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-upload" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                                            <path d="M7 9l5 -5l5 5"></path>
+                                            <path d="M12 4l0 12"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="javascript: viewImageList();" class="btn btn-icon btn-indigo"
+                                        aria-label="Button">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-photo-search" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M15 8h.01"></path>
+                                            <path
+                                                d="M11.5 21h-5.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5">
+                                            </path>
+                                            <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                            <path d="M20.2 20.2l1.8 1.8"></path>
+                                            <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l2 2"></path>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả ngắn</div>
-                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{$response['short_desc']}}</textarea>
+                                <textarea id="editor-1" name="short_desc" rows="5" type="text" class="form-control">{{ $blog->short_desc }}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="short_desc">
                                     @error('short_desc')
                                         {{ $message }}
@@ -116,7 +158,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-label">Mô tả</div>
-                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{$response['description']}}</textarea>
+                                <textarea id="editor-2" rows="6" class="form-control text-editor ckeditor" name="description">{{ $blog->description }}</textarea>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="description">
                                     @error('description')
                                         {{ $message }}
@@ -127,13 +169,13 @@
                                 <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
-                                        <input type="radio" class="custom-control-input" name="status" @if($response['status'] == 1) checked @endif
-                                            value="1">
+                                        <input type="radio" class="custom-control-input" name="status"
+                                            @if ($blog->status == 1) checked @endif value="1">
                                         <span class="custom-control-label">Hoạt động</span>
                                     </label>
                                     <label class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input" name="status"
-                                            value="0" @if($response['status'] == 0) checked @endif>
+                                        <input type="radio" class="custom-control-input" name="status" value="0"
+                                            @if ($blog->status == 0) checked @endif>
                                         <span class="custom-control-label">Vô hiệu hóa</span>
                                     </label>
 
@@ -146,7 +188,8 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response['id']}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $blog->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -221,10 +264,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            });
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then((response) => {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                });
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -265,13 +313,13 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện cập nhật bài viết',
-                            icon: 'error'
-                        })
-                        .then(function(status) {
-                            location.reload();
-                        })
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện cập nhật bài viết',
+                                icon: 'error'
+                            })
+                            .then(function(status) {
+                                location.reload();
+                            })
                     }
 
                 });
@@ -281,37 +329,109 @@
     <!-- --------------------------------------------- !-->
 @endsection
 @section('page_js')
-    <script type="text/javascript">
-        //     if ($('#frmAdd').length) {
-        //         $('#frmAdd').submit(function() {
-        //             let options = {
-        //                 beforeSubmit: function(formData, jqForm, options) {
-        //                     $('#btnSubmitAdd').addClass('btn-loading');
-        //                     $('#btnSubmitAdd').addClass("disabled");
-        //                 },
-        //                 success: function(response, statusText, xhr, $form) {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     if(response.status == 500){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('danger', response.message, delay = 5000, dismissible = true);
-        //                     }
-        //                     if(response.status == 200){
-        //                         $('#btnSubmitAdd').removeClass("disabled");
-        //                         bs5Utils.Snack.show('success', response.message, delay = 6000, dismissible = true);
-        //                     }
-        //                 },
-        //                 error: function() {
-        //                     $('#btnSubmitAdd').removeClass('btn-loading');
-        //                     $('#btnSubmitAdd').removeClass("disabled");
-        //                     bs5Utils.Snack.show('danger', 'Error, please check your input', delay = 5000, dismissible = true);
-        //                 },
-        //                 dataType: 'json',
-        //                 clearForm: false,
-        //                 resetForm: false
-        //             };
-        //             $(this).ajaxSubmit(options);
-        //             return false;
-        //         });
-        // }
+    <script src="{{ asset('admin/assets/libs/tom-select/dist/js/tom-select.base.min.js') }}" defer></script>
+    <script src="{{ asset('admin/assets/js/vendors/clipboard-polyfill.window-var.promise.es5.js') }}"></script>
+
+    <!-- Thêm blog !-->
+    <script>
+                let viewImageList = function() {
+            axios.get(`/image/image-list`)
+                .then(function(response) {
+                    $('#modalContainer div.modal-content').html(response.data.html);
+                    modalContainer.show();
+                })
+                .catch(function(error) {
+                    bs5Utils.Snack.show('danger', 'Error', delay = 5000, dismissible = true);
+                })
+                .finally(function() {});
+        };
+        Fancybox.bind('[data-fancybox]');
+        $('.btn-copy-url').click(function() {
+            let _self = $(this);
+            let url = _self.attr('data-url');
+            clipboard.writeText(url).then(function() {
+                bs5Utils.Snack.show('success', 'Đã copy đường dẫn thành công!', delay = 5000, dismissible =
+                    true);
+            }, function(err) {
+                bs5Utils.Snack.show('danger', 'Lỗi.', delay = 5000, dismissible = true);
+            });
+        });
+        $(document).ready(function() {
+            modalContainer = new bootstrap.Modal('#modalContainer', {
+                keyboard: true,
+                backdrop: 'static'
+            });
+            var categories_data = <?php echo htmlspecialchars(json_encode($cateIds)); ?>;
+            if ($('#frmEdit').length) {
+                $.ajax({
+                    url: "/api/category",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        //gender category
+                        var selectCatogories = $('#select-category');
+                        $.each(response.data.categoriesParent, function(index, category) {
+                            var id = category.id
+                            id = +id
+                            if (categories_data.includes(id)) {
+                                var option = $('<option selected></option>').val(id).text(
+                                    category.name);
+                            } else {
+                                var option = $('<option></option>').val(id).text(category.name);
+                            }
+                            selectCatogories.append(option);
+                            $.each(category.child, function(index, childCategory) {
+                                var childId = childCategory.id;
+                                childId = +childId;
+                                if (categories_data.includes(childId)) {
+                                    option = $('<option selected></option>').val(
+                                        childId).text(category.name + '-> ' +
+                                        childCategory.name);
+                                } else {
+                                    option = $('<option></option>').val(childId).text(
+                                        category.name + '-> ' + childCategory.name);
+
+                                }
+                                selectCatogories.append(option);
+                            });
+                        });
+
+                        //add to select by tom-select lib
+                        var el;
+                        window.TomSelect && (new TomSelect(el = document.getElementById(
+                            'select-category'), {
+                            copyClassesToDropdown: false,
+                            dropdownParent: 'body',
+                            controlInput: '<input>',
+                            render: {
+                                item: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                                option: function(data, escape) {
+                                    if (data.customProperties) {
+                                        return '<div><span class="dropdown-item-indicator">' +
+                                            data.customProperties + '</span>' + escape(
+                                                data.text) + '</div>';
+                                    }
+                                    return '<div>' + escape(data.text) + '</div>';
+                                },
+                            },
+                        }));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            $('#select-category').change(function() {
+                catogories_data = $(this).val();
+                console.log(catogories_data)
+            });
+        });
     </script>
 @endSection

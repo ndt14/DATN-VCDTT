@@ -35,13 +35,29 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Faq</h3>
+                            <h3 class="card-title">Câu hỏi thường gặp</h3>
                             @if (auth()->user()->is_admin == 1 ||
                                     auth()->user()->can('delete faq'))
                                 <a href="{{ route('faq.trash') }}"
                                     style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span
                                         style="color: black;">|</span> Thùng rác</a>
                             @endif
+
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    <a href="{{ url('/faq') }}" class="btn btn-default d-none d-sm-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left"
+                                            width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M5 12l14 0"></path>
+                                            <path d="M5 12l4 4"></path>
+                                            <path d="M5 12l4 -4"></path>
+                                        </svg>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -64,7 +80,7 @@
                                         </div>
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
-                                            <input type="text" name="keyword" class="form-control" placeholder="Keyword">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -233,6 +249,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
+                    console.log(response.data);
                     if (response.success) {
                         // Hiển thị modal thành công bằng SweetAlert2
                         Swal.fire({

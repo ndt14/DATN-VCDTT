@@ -6,6 +6,6 @@ export interface User {
     gender?:number,
     image?:string,
     date_of_birth?: string,
-    data:any;
-    // user:any;
+    data?:any;
+    status?:any
 }

@@ -4,15 +4,15 @@
 </div>
 <div class="card border-0 shadow-lg rounded-4 ">
     <div class="row g-0">
-        <div class="col d-flex flex-column">
-            <div class="card-body">
+        <div class="col d-flex flex-column" style="height: 35rem;">
+            <div class="card-body card-body-scrollable">
                 <h3 class="card-title">{{ $item['title'] }}</h3>
 
                 <div class="row g-3">
-                    <div class="col-md">
+                    {{-- <div class="col-md">
                         <div class="form-label">Số lượt xem</div>
                         <span class="badge bg-blue me-1 text-light">{{ $item['view_count'] }}</span>
-                    </div>
+                    </div> --}}
                     <div class="col-md">
                         <div class="form-label">Trang thái</div>
                         @if($item['status'] == 0)
@@ -38,7 +38,7 @@
                 </div>
                 <h3 class="card-title mt-4">Mô tả ngắn</h3>
                 <div>
-                    {{ $item['short_desc'] }}
+                    {!! $item['short_desc'] !!}
                 </div>
                 <h3 class="card-title mt-4">Mô tả</h3>
                 <div class="markdown">

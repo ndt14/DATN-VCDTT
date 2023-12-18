@@ -26,6 +26,25 @@ class ImageController extends Controller
                         ->get();
         foreach($data as $item){
             if($item->tour_id){
+                    $item->tour_name = Tour::withTrashed()->find($item->tour_id) ? Tour::withTrashed()->find($item->tour_id)->name : '';
+            } else {
+                $item->tour_name = 'Ảnh tự do';
+            }
+        }
+        $perPage= $request->limit??5;// Số mục trên mỗi trang
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $data->setPath(request()->url())->appends(['limit' => $perPage]);
+        return view('admin.images.list', compact('data'));
+    }
+    public function trash(Request $request)
+    {
+
+        $data = Image::onlyTrashed()->get();
+        foreach($data as $item){
+            if($item->tour_id){
                 $item->tour_name = Tour::find($item->tour_id)->name;
             } else {
                 $item->tour_name = 'Ảnh tự do';
@@ -38,7 +57,38 @@ class ImageController extends Controller
         $data = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
         $data->setPath(request()->url())->appends(['limit' => $perPage]);
 
-        return view('admin.images.list', compact('data'));
+        return view('admin.images.trash', compact('data'));
+    }
+
+    public function restore($id)
+    {
+
+        if ($id) {
+            $data = Image::withTrashed()->find($id);
+            if ($data) {
+                $data->restore();
+            }
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Khôi phục ảnh không thành công']);
+    }
+
+    public function destroyForever(string $id)
+    {
+        $image = Image::withTrashed()->find($id);
+        if ($image) {
+            $delete_image = $image->forceDelete();
+            if ($delete_image) {
+                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
+            } else {
+                return response()->json([
+                    'message' => 'internal server error',
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json(['message' => '404 Not found', 'status' => 500]);
+        }
     }
 
     public function download(Request $request, $id)

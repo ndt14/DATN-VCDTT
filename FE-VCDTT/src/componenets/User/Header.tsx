@@ -22,11 +22,13 @@ import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+// import NavDropdown from "react-bootstrap/NavDropdown";
 import { useGetLogoQuery } from "../../api/setting.js";
 import { Setting } from "../../interfaces/Setting.js";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Dropdown from "react-bootstrap/Dropdown";
+// import DropdownButton from "react-bootstrap/DropdownButton";
 
 const MySwal = withReactContent(Swal);
 
@@ -146,15 +148,21 @@ const Header = () => {
           await MySwal.fire({
             text: "Đăng nhập thành công.",
             icon: "success",
-            confirmButtonText: "OK",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000,
           });
+
           startLogoutTimer();
           navigate("/");
         } else {
           MySwal.fire({
             text: "Đăng nhập thất bại.",
             icon: "warning",
-            confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000,
           });
         }
       } else {
@@ -163,18 +171,34 @@ const Header = () => {
         MySwal.fire({
           text: "Đăng nhập thất bại",
           icon: "warning",
-          confirmButtonText: "OK",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer: 2000,
+          // confirmButtonText: "OK",
         });
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập: ", error);
-      alert("Đăng nhập thất bại. Đã xảy ra lỗi kết nối.");
+      MySwal.fire({
+        text: "Đăng nhập thất bại. Đã xảy ra lỗi kết nối.",
+        icon: "warning",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        // confirmButtonText: "OK",
+      });
     }
   };
 
   const handleSignOut = () => {
     clearLogoutTimer();
-    alert("Đăng xuất thành công");
+    MySwal.fire({
+      text: "Đăng xuất thành công",
+      icon: "success",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000,
+      // confirmButtonText: "OK",
+    });
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("billIdSuccess");
@@ -184,7 +208,14 @@ const Header = () => {
 
   const timeOutSignOut = () => {
     clearLogoutTimer();
-    alert("Hết thời hạn đăng nhập. Vui lòng đăng nhập lại");
+    MySwal.fire({
+      text: "Hết thời hạn đăng nhập. Vui lòng đăng nhập lại",
+      icon: "warning",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000,
+      // confirmButtonText: "OK",
+    });
     setIsLoggedIn(false);
     localStorage.removeItem("user");
     localStorage.removeItem("billIdSuccess");
@@ -202,7 +233,12 @@ const Header = () => {
     };
 
     if (registerPassword !== confirmPassword) {
-      alert("Mật khẩu và xác nhận mật khẩu không khớp!");
+      MySwal.fire({
+        text: "Mật khẩu và xác nhận mật khẩu không khớp!",
+        icon: "warning",
+
+        // confirmButtonText: "OK",
+      });
       return;
     }
 
@@ -217,9 +253,23 @@ const Header = () => {
           setIsLoggedIn(true);
           setShowSignIn(false);
           localStorage.setItem("user", JSON.stringify(userData));
-          alert("Đăng ký thành công");
+          MySwal.fire({
+            text: "Đăng ký thành công",
+            icon: "success",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000,
+            // confirmButtonText: "OK",
+          });
         } else {
-          alert("Đăng ký thất bại");
+          MySwal.fire({
+            text: "Đăng ký thất bại, Email đã tồn tại",
+            icon: "warning",
+            // showCancelButton: false,
+            // showConfirmButton: false,
+            // timer: 2000
+            // confirmButtonText: "OK",
+          });
         }
       } else {
         // Handle error response
@@ -257,25 +307,27 @@ const Header = () => {
   if (typeof preParseUserData === "string") {
     userData = JSON.parse(preParseUserData);
   }
-  console.log(userData);
+  // console.log(userData);
 
   const userName = userData?.name;
-  console.log(userName);
+  // console.log(userName);
 
   const is_admin = userData?.is_admin;
 
   const openWindow = () => {
     window.open("https://admin.vcdtt.online", "_blank");
   };
-
+  const openWindow2 = () => {
+    window.open("https://vcdtt.online/privacy_policy", "_blank");
+  };
   //google login
 
   const { data: dataGoogle } = useGetLoginGoogleQuery();
-  console.log(dataGoogle);
+  // console.log(dataGoogle);
 
   const [, setLoading] = useState(true);
   const [, setError] = useState(null);
-  const [data, setData] = useState<any>({});
+  const [, setData] = useState<any>({});
 
   // Sau khi nhận được dữ liệu từ API Google
   const handleGoogleLoginSuccess = (googleUserData: {
@@ -288,7 +340,14 @@ const Header = () => {
 
     // Đánh dấu người dùng đã đăng nhập thành công
     setIsLoggedIn(true);
-
+    MySwal.fire({
+      text: "Vào hệ thống thành công",
+      icon: "success",
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000,
+      // confirmButtonText: "OK",
+    });
     // Chuyển hướng đến trang người dùng
     navigate("/"); // Đổi thành URL của trang người dùng của bạn
   };
@@ -304,7 +363,7 @@ const Header = () => {
   useEffect(() => {
     if (location && location.search) {
       fetch(
-        `https://admin.vcdtt.online/api/auth/google/callback${location.search}`,
+        `http://be-vcdtt.datn-vcdtt.test/api/auth/google/callback${location.search}`,
         { headers: new Headers({ accept: "application/json" }) }
       )
         .then((response) => {
@@ -327,15 +386,16 @@ const Header = () => {
         });
     }
   }, [location]);
-  console.log("data", data);
+  // console.log("data", data);
 
   //end google
+
   return (
     <>
       <header id="masthead" className="site-header header-primary">
         {/* <!-- header html start --> */}
         <div className="top-header"></div>
-        <div className="bottom-header d-none d-lg-block d-sm-none">
+        <div className="bottom-header d-none d-md-block">
           <div className="container d-flex justify-content-between align-items-center">
             <div className="site-identity">
               <h1 className="site-title">
@@ -351,10 +411,10 @@ const Header = () => {
                 </Link>
               </h1>
             </div>
-            <div className="main-navigation d-none d-lg-block">
+            <div className="main-navigation d-none d-md-block">
               <nav id="navigation" className="navigation">
                 <ul>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to={"/"}>Trang chủ</Link>
                   </li>
                   <li className="menu-item-has-children">
@@ -364,11 +424,11 @@ const Header = () => {
                         ({ id, name }: Category) => {
                           return (
                             <li key={id}>
-                              <Link
-                                to={`/search?tours%5BrefinementList%5D%5Bparent_category%5D%5B0%5D=${name}`}
+                              <a
+                                href={`/search?tours%5BhierarchicalMenu%5D%5Bcategory.lvl0%5D%5B0%5D=${name}`}
                               >
                                 {name}
-                              </Link>
+                              </a>
                               {/* <a href="destination.html"></a> */}
                             </li>
                           );
@@ -376,9 +436,9 @@ const Header = () => {
                       )}
                     </ul>
                   </li>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to="blogs">Bài viết</Link>
-                    <ul>
+                    {/* <ul>
                       <li>
                         <Link to="blogs/1">Bài viết 1</Link>
                       </li>
@@ -388,9 +448,9 @@ const Header = () => {
                       <li>
                         <Link to="blogs/3">Bài viết 3</Link>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
-                  <li className="menu-item-has-children">
+                  <li className="menu-item-has-children none">
                     <Link to="contact">Liên hệ</Link>
                   </li>
                 </ul>
@@ -401,7 +461,7 @@ const Header = () => {
                 <div>
                   {/* Hiển thị tên tài khoản sau khi đăng nhập thành công */}
                   <div className="user-profile">
-                    <div className="main-navigation d-none d-lg-block">
+                    <div className="main-navigation ">
                       <nav id="navigation" className="navigation">
                         <ul>
                           <li className="menu-item-has-children">
@@ -416,9 +476,14 @@ const Header = () => {
                               <li>
                                 <Link to="user/favorite">Tour yêu thích</Link>
                               </li>
+                              <li>
+                                <Link to="user/coupon">Kho mã giảm giá</Link>
+                              </li>
                               {is_admin == 1 || is_admin == 3 ? (
                                 <li>
-                                  <a onClick={openWindow}>Đăng nhập admin</a>
+                                  <Link onClick={openWindow} to={""}>
+                                    Đăng nhập admin
+                                  </Link>
                                 </li>
                               ) : null}
 
@@ -515,7 +580,10 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info">
+                            <button
+                              className="border-0 bg-white text-info"
+                              onClick={handleSwapToSignUpForm}
+                            >
                               Chưa có tài khoản? Đăng ký
                             </button>
                             <button
@@ -647,11 +715,13 @@ const Header = () => {
                                   {registrationFormik.errors.c_password}
                                 </div>
                               )}
-                            <input type="checkbox" />
-                            <span className="ml-2">
-                              Tôi đồng ý với{" "}
-                              <Link to={"/privacy_policy"}>Chính sách</Link> của
-                              trang
+                            {/* <input type="checkbox" /> */}
+                            <span className="ml-2 text-muted">
+                              Bạn bấm vào đăng ký tức là bạn đã đồng ý với{" "}
+                              <Link to={""} onClick={openWindow2}>
+                                Chính sách & quyền riêng tư
+                              </Link>{" "}
+                              của trang
                             </span>
                             <button
                               type="submit"
@@ -661,7 +731,10 @@ const Header = () => {
                             </button>
                           </form>
                           <div className="d-flex justify-content-between">
-                            <button className="border-0 bg-white text-info">
+                            <button
+                              className="border-0 bg-white text-info"
+                              onClick={handleSwapToSignInForm}
+                            >
                               Đã có tài khoản? Đăng nhập
                             </button>
                           </div>
@@ -672,7 +745,7 @@ const Header = () => {
                             <button className="p-2 w-100 border-0 my-2 bg-danger text-white rounded py-3">
                               <BsGoogle />
 
-                              <span className="mx-2">Đăng nhập với Google</span>
+                              <span className="mx-2">Đăng ký với Google</span>
                             </button>
                           </a>
                         </div>
@@ -691,54 +764,114 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className=" d-block d-sm-none bg-white" style={{ zIndex: "99" }}>
+        <div className="d-block d-md-none bg-white" style={{ zIndex: "99" }}>
           <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
               <Navbar.Brand href="/">
-                <img
-                  className="white-logo"
-                  src="../../../assets/images/VCDTT_logo-removebg-preview.png"
-                  alt="logo"
-                  style={{ width: "120px" }}
-                />
+                {dataLogo?.data.keyvalue.map(({ value }: Setting) => {
+                  return (
+                    <>
+                      <img
+                        className="white-logo"
+                        src={value}
+                        alt="logo"
+                        style={{ width: "120px" }}
+                        key={value}
+                      />
+                    </>
+                  );
+                })}
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
+
+              <Navbar.Collapse
+                id="basic-navbar-nav "
+                style={{ textAlign: "right" }}
+                className=""
+              >
+                <Nav
+                  className="me-auto shadow bg-secondary"
+                  style={{ float: "right", width: "50%" }}
+                >
                   {isLoggedIn ? (
-                    <NavDropdown title={userName} id="basic-nav-dropdown">
-                      <NavDropdown.Item href="#action/3.1">
-                        Thông tin cá nhân
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.2">
-                        Tour đã mua
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.3">
-                        Tour yêu thích
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item href="#action/3.4">
-                        Đăng xuất
-                      </NavDropdown.Item>
-                    </NavDropdown>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        className="w-100 text-end bg-white text-primary border-0 fs-3 fw-bold rounded-0"
+                        variant="secondary"
+                        id="dropdown-basic"
+                      >
+                        {userName}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu
+                        className="text-end border-0 rounded-0"
+                        style={{ background: "#DEE2E6" }}
+                      >
+                        <Dropdown.Item>
+                          <Link to={"/user/profile"}>Thông tin cá nhân</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/tours"}>Tour đã mua</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/favorite"}>Tour yêu thích</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link to={"/user/coupon"}> Kho mã giảm giá</Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOut}>
+                          Đăng xuất
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   ) : (
-                    <button className=" border-0" onClick={handleShowSignIn}>
+                    <button
+                      className="border-0 bg-sec button-primary"
+                      onClick={handleShowSignIn}
+                    >
                       Đăng nhập/Đăng ký
                     </button>
                   )}
+                  <hr />
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/`}>Trang chủ</Link>
+                  </button>
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/blogs`}>Bài viết</Link>
+                  </button>
+                  <button className="bg-white border-0 py-2 text-end pr-3 fs-4">
+                    <Link to={`/contact`}>Liên hệ</Link>
+                  </button>
+                  <hr />
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      className="w-100 text-end bg-white text-primary border-0 rounded-0"
+                      variant="secondary"
+                      id="dropdown-basic"
+                    >
+                      Danh mục
+                    </Dropdown.Toggle>
 
-                  <Nav.Link className="text-primary" href="">
-                    Trang chủ
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="#link">
-                    Danh mục
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="#link">
-                    Bài viết
-                  </Nav.Link>
-                  <Nav.Link className="text-primary" href="/contact">
-                    Liên hệ
-                  </Nav.Link>
+                    <Dropdown.Menu
+                      className="shadow text-end text-end border-0 rounded-0"
+                      style={{ background: "#DEE2E6" }}
+                    >
+                      {dataCate?.data.categoriesParent.map(
+                        ({ id, name }: Category) => {
+                          return (
+                            <Dropdown.Item key={id}>
+                              <a
+                                href={`/search?tours%5BhierarchicalMenu%5D%5Bcategory.lvl0%5D%5B0%5D=${name}`}
+                              >
+                                {name}
+                              </a>
+                              {/* <a href="destination.html"></a> */}
+                            </Dropdown.Item>
+                          );
+                        }
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </Nav>
               </Navbar.Collapse>
             </Container>

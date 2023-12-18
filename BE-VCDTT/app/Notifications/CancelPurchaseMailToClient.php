@@ -18,6 +18,9 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $tour_name;
     protected $purchase_status_noti;
+    protected $status;
+    protected $name;
+    protected $user_id;
 
     /**
      * Create a new notification instance.
@@ -25,12 +28,21 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     public function __construct($purchaseHistory)
     {
         //
+        $this->user_id = $purchaseHistory->id;
+        if ($purchaseHistory->gender == 1) {
+            $this->name = 'ông ' . $purchaseHistory->name;
+        } elseif ($purchaseHistory->gender == 2) {
+            $this->name = 'bà ' . $purchaseHistory->name;
+        } else{
+            $this->name = 'ông/bà ' . $purchaseHistory->name;
+        }
         $this->tour_name = $purchaseHistory->tour_name;
         if ($purchaseHistory->payment_status == 1) {
             $this->purchase_status_noti =  '. Vui lòng liên hệ với CSKH của chúng tôi để được hoàn tiền';
         } elseif ($purchaseHistory->purchase_status == 2) {
             $this->purchase_status_noti =  '';
         }
+        $this->status = 'Bạn vừa hủy tour ' . $this->tour_name . $this->purchase_status_noti . ' .Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ';
     }
 
     /**
@@ -49,13 +61,13 @@ class CancelPurchaseMailToClient extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
 
-            return (new MailMessage)
-                ->subject('Hủy Tour ' . $this->tour_name)
-                ->greeting('Xin chào!')
-                ->line('Bạn vừa hủy tour ' . $this->tour_name . $this->purchase_status_noti)
-                ->line('Nếu không phải bạn, hãy liên hệ với chúng tôi để được giúp đỡ')
-                ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
-
+        return (new MailMessage)
+            ->subject('Cập nhật trạng thái đơn hàng')
+            ->view('mail.client', [
+                'status' => $this->status,
+                'user_id' => $this->user_id,
+                'name' => $this->name
+            ]);
     }
 
     /**

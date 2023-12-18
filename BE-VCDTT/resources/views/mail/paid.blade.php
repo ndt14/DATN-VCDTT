@@ -30,6 +30,7 @@
             padding: 0 !important;
             height: 100% !important;
             width: 100% !important;
+            margin-left: 0 !important;
         }
 
         /* What it does: Stops email clients resizing small text. */
@@ -127,6 +128,20 @@
                 min-width: 414px !important;
             }
         }
+
+        .th-left {
+            text-align: left;
+            width: 40%;
+        }
+
+        .th-center {
+            width: 10%;
+        }
+
+        .th-right {
+            text-align: right;
+            width: 40%;
+        }
     </style>
     <!-- CSS Reset : END -->
 
@@ -202,7 +217,7 @@
         class="email-bg">
         <div style="max-width: 700px; margin: 0 auto;" class="email-container">
             <table width="100%"
-                style="margin: auto;  background-image: url({{url('images/top-right-of-email.png')}}); background-position: 100% 0%; background-repeat: no-repeat;">
+                style="margin: auto;  background-image: url({{ url('images/top-right-of-email.png') }}); background-position: 100% 0%; background-repeat: no-repeat;">
                 <tbody>
                     <!-- header -->
 
@@ -213,8 +228,8 @@
                                 <tr style="margin-bottom: 5rem">
                                     <td style=" text-align: left;">
                                         <a href="https://vcdtt.online/" target="_blank">
-                                            <img src="{{url('images/logo.jpg')}}" width="200" height="50" alt="alt_text"
-                                                border="0" style="height: auto;">
+                                            <img src="{{ url('images/logo.jpg') }}" width="200" height="50"
+                                                alt="VCDTT" border="0" style="height: auto;">
                                         </a>
                                     </td>
                                 </tr>
@@ -233,7 +248,7 @@
                                     <td style="font-size: 15px; line-height: 20px; color: #222222;">
                                         <div
                                             style="margin: 0 0 10px; font-size: 32px; line-height: 30px; color: #222222; font-weight: normal;">
-                                            Xin chào! <span style="color: #0D6EFD;">{{ $name }},</span></div>
+                                            Xin chào <span style="color: #0D6EFD;">{{ $name }}!</span></div>
                                     </td>
                                 </tr>
                             </table>
@@ -248,72 +263,139 @@
                                         <div style="margin: 0 0 10px; font-size: 18px;">{{ $status }}</div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0 0 10px; font-size: 18px;">Hóa đơn của bạn:</p>
+                                    </td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="auto"
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="1" width="auto"
                                 class="in-center" style="margin-bottom: 38px;">
                                 <tr>
                                     <td style="padding: 20px 0;">
-                                        <p style="margin: 0 0 10px; font-size: 18px;">Hóa đơn của bạn:</p>
-                                        <table border="1" style="border-color: #878787;">
+                                        <table border="0" style="border-color: #878787;" width="100%">
                                             <tr>
-                                                <th style="padding: 20px;">Thông tin mua hàng</th>
-                                                <th style="padding: 20px;">Địa chỉ nhận hàng</th>
+                                                <th class="th-left">
+                                                    <b style="font-size: 18px">Đơn vị mua hàng</b>
+                                                </th>
+                                                <th class="th-center"></th>
+                                                <th class="th-right"><b style="font-size: 18px">Đơn vị bán hàng</b></th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 20px;">{{ $name }}<br>
-                                                    {{ $email }} <br>
-                                                    {{ $phone_number }}</td>
-                                                <td style="padding: 20px;">{{ $address }}</td>
+                                                <td class="th-left">Họ và tên: {{ $name }}<br>
+                                                <td class="th-center"></td>
+                                                <td class="th-right">VCDTT</td>
                                             </tr>
                                             <tr>
-                                                <th style="padding: 20px;" colspan="2">Phương thức thanh toán</th>
+                                                <td class="th-left">Email: {{ $email }}<br>
+                                                <td class="th-center"></td>
+                                                <td class="th-right">
+                                                    @if ($purchase_method == 'Thanh toán VNPAY')
+                                                        Mã giao dịch: {{ $transaction_id }}
+                                                    @else
+                                                        Chuyển khoản trực tiếp
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
-                                                @if ($payment_status == 1)
-                                                    <td style="padding: 20px;" colspan="2">Chưa thanh toán</td>
-                                                @endif
-                                                @if ($payment_status == 2)
-                                                    <td style="padding: 20px;" colspan="2">{{ $purchase_method }}
-                                                    </td>
-                                                @endif
+                                                <td class="th-left">Số điện thoại:
+                                                    {{ $phone_number }}<br>
+                                                <td class="th-center"></td>
+                                                <td class="th-right"></td>
                                             </tr>
                                             <tr>
-                                                <th style="padding: 20px;" colspan="2">Thông tin đơn hàng</th>
-                                            </tr>
-                                            <tr colspan="2">
-                                                @if ($transaction_id  != null) <td style="padding: 20px;">
-                                                    {{ $transaction_id }}</td>
-                                                @endif
-                                                @if ($payment_status == 2)
-                                                    <div style="padding: 20px"> Đã thanh toán lúc </div><td style="padding: 20px;">{{ $updated_at }}
-                                                    </td>
-                                                @endif
+                                                <td class="th-left">Tên tour: {{ $tour_name }}</td>
                                             </tr>
                                         </table>
                                     </td>
+
+                                </tr>
+                                <tr>
+                                    <table border="1" style="border-color: #878787;" width="100%">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Người lớn</b></td>
+                                            <td style="text-align: right">{{ $adult_count }}</td>
+                                            <td style="text-align: right">{{ $tour_adult_price }}</td>
+                                            <td style="text-align: right">{{ $tour_adult_price * $adult_count }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Trẻ em</b></td>
+                                            <td style="text-align: right">{{ $child_count }}</td>
+                                            <td style="text-align: right">{{ $tour_child_price }}</td>
+                                            <td style="text-align: right">{{ $tour_child_price * $child_count }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tổng</td>
+                                            <td style="border-right: none"></td>
+                                            <td style="border-right: none"></td>
+                                            <td>
+                                                <div style="text-align: right">
+                                                    {{ $tour_adult_price * $adult_count + $tour_child_price * $child_count }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coupon</td>
+                                            <td style="border-right: none"></td>
+                                            <td style="border-right: none"></td>
+                                            <td style="border-right: none"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Giá cuối</td>
+                                            <td style="border-right: none"></td>
+                                            <td style="border-right: none"></td>
+                                            <td>
+                                                <div style="text-align: right">
+                                                    {{ $tour_adult_price * $adult_count + $tour_child_price * $child_count }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </tr>
                             </table>
                         </td>
                     </tr>
+
                     <tr>
-                        <td style="width: 100%;">
-                            <table role="presentation" cellspacing="0" cellpadding="0" width="auto" class="in-center"
-                                border="0" style="margin-bottom: 96px">
+                        @if ($user_id != 0)
+                            <td style="width: 100%;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" width="auto"
+                                    class="in-center" border="0" style="margin-bottom: 30px">
+                                    <tr>
+                                        <td>
+                                            <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
+                                                target="_blank" href="https://vcdtt.online/user/tours">Kiểm tra đơn
+                                                hàng của bạn</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                        @endif
+                        @if ($purchase_status == 3)
+                            <table role="presentation" cellspacing="0" cellpadding="0" width="auto"
+                                class="in-center" border="0" style="margin-bottom: 96px">
                                 <tr>
                                     <td>
                                         <a style="font-size: 15px; line-height: 15px; color: #fff; text-decoration: none; padding: 12px 20px; background-color: #0D6EFD; border-radius: 5px;"
-                                            target="_blank" href="https://vcdtt.online/user/tours">Kiểm tra đơn
-                                            hàng của bạn</a>
+                                            target="_blank"
+                                            href="https://vcdtt.online/user/view-bill/{{ Crypt::encryptString($purchase_history_id) }}">In
+                                            đơn hàng</a>
                                     </td>
                                 </tr>
                             </table>
-
+                        @endif
                         </td>
                     </tr>
+
                     <!-- end content -->
 
                     <!-- footer -->
@@ -356,8 +438,8 @@
                                 width="auto" style="margin-bottom: 37px; margin-left: auto; margin-right: auto;">
                                 <tr style="margin-bottom: 5rem">
                                     <td>
-                                        <img src="{{url('images/logo.jpg')}}" width="128" height="45" alt="alt_text"
-                                            border="0" style="height: auto;">
+                                        <img src="{{ url('images/logo.jpg') }}" width="128" height="45"
+                                            alt="VCDTT" border="0" style="height: auto;">
                                     </td>
                                 </tr>
 

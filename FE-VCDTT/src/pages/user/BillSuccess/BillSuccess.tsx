@@ -3,39 +3,40 @@ import { useGetBillByIdQuery, useUpdateBillMutation } from "../../../api/bill";
 import { useEffect } from "react";
 import { Bill } from "../../../interfaces/Bill";
 // import PDFDocument from "../../../componenets/User/Pdf/PDFDocument";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
 
 const BillSuccess = () => {
-  const handlePrintPDF = () => {
-    const input = document.getElementById("pdfBill");
-    if (input) {
-      html2canvas(input)
-        .then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF();
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-          pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-          const pdfData = pdf.output("blob");
-          const pdfUrl = URL.createObjectURL(pdfData);
-          window.open(pdfUrl);
-        })
-        .catch((error) => {
-          console.error("Error generating PDF:", error);
-        });
-    }
-  };
+  // const handlePrintPDF = () => {
+  //   const input = document.getElementById("pdfBill");
+  //   if (input) {
+  //     html2canvas(input)
+  //       .then((canvas) => {
+  //         const imgData = canvas.toDataURL("image/png");
+  //         const pdf = new jsPDF();
+  //         const pdfWidth = pdf.internal.pageSize.getWidth();
+  //         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  //         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  //         const pdfData = pdf.output("blob");
+  //         const pdfUrl = URL.createObjectURL(pdfData);
+  //         window.open(pdfUrl);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error generating PDF:", error);
+  //       });
+  //   }
+  // };
 
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const transactionStatus = searchParams.get("vnp_TransactionStatus");
   const transactionId = searchParams.get("vnp_TransactionNo");
   console.log(transactionId);
-  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "");
-  const userData = JSON.parse(localStorage.getItem("user") || "");
-  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "");
-  const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "");
+  const billId = JSON.parse(localStorage.getItem("billIdSuccess") || "{}");
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const loginStatus = JSON.parse(localStorage.getItem("isLoggedIn") || "{}");
+  const tempUserData = JSON.parse(localStorage.getItem("tempUser") || "{}");
   const userName = loginStatus == true ? userData.name : tempUserData.name;
   // const userAddress = loginStatus == true? userData.address: tempUserData.address
   const userEmail = loginStatus == true ? userData.email : tempUserData.email;
@@ -146,25 +147,11 @@ const BillSuccess = () => {
   //   phone: "Số điện thoại:",
   // };
 
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
-
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
-  };
-
+  const dataTitle = "Tình trạng thanh toán";
   return (
     <div>
-      <section className="inner-banner-wrap">
-        <div className="inner-baner-container" style={containerStyle}>
-          <div className="container">
-            <div className="inner-banner-content">
-              <h1 className="inner-title">Tình trạng thanh toán</h1>
-            </div>
-          </div>
-        </div>
-        <div className="inner-shape"></div>
-      </section>
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <div className="container">
         {transactionStatus === "00" ? (
           <div>
@@ -176,9 +163,9 @@ const BillSuccess = () => {
                 </Link>
               </button>
 
-              <button className="btn-continue" onClick={handlePrintPDF}>
+              {/* <button className="btn-continue" onClick={handlePrintPDF}>
                 Xem đơn PDF
-              </button>
+              </button> */}
             </div>
             <div id="pdfBill">
               <div className="border p-3">

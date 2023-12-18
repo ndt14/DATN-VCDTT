@@ -157,6 +157,9 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
 
     //Image
     Route::get('/image', [ImageController::class, 'index'])->name('image.list');
+    Route::get('/image/trash', [ImageController::class, 'trash'])->name('image.trash');
+    Route::get('/image/restore/{id}', [ImageController::class, 'restore'])->name('image.restore');
+    Route::delete('/image/destroy-forever/{id}', [ImageController::class, 'destroyForever'])->name('image.forever');
     Route::get('/image/image-list', [ImageController::class, 'imageList']);
     Route::get('/image/image-show', [ImageController::class, 'imageShow']);
     Route::get('/image/banner-edit', [ImageController::class, 'bannerEdit']);
@@ -189,11 +192,13 @@ Route::middleware(['auth', 'check.admin'])->group(function () {
     });
     Route::match(['GET', 'POST'],'/dashboard',[DashboardController::class,'totalEarnDashboard'])->name('dashboard.tour');
     Route::match(['GET', 'POST'],'/dashboard/user',[DashboardController::class,'userDashboard'])->name('dashboard.user');
+    Route::get('/get-user-by-status', [DashboardController::class, 'get_users_by_status'])->name('dashboard.user.getData');
+    Route::get('/get-blog-by-status', [DashboardController::class, 'get_blogs_by_status'])->name('dashboard.blog.getData');
 
     Route::get('/printInvoice/{id}', [PurchaseHistoryController::class, 'printInvoice'])->name('printInvoice');
 });
 
-// Route::get('/test', [PurchaseHistoryController::class, 'test']);
+Route::get('/test', [PurchaseHistoryController::class, 'test']);
 
 
 

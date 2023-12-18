@@ -138,8 +138,8 @@ Route::delete('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('r
 Route::delete('/allocation-destroy/{id}', [AllocationController::class, 'destroy'])->name('allocation.delete');
 
 
-Route::get('/purchase-history/mark-as-read/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
-Route::get('/purchase-history/mark-all-as-read', [PurchaseHistoryController::class, 'purchaseHistoryMarkAllAsRead']);
+Route::get('/purchase-history/mark-as-read/{user_id}/{id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAsRead']);
+Route::get('/purchase-history/mark-all-as-read/{user_id}', [PurchaseHistoryController::class, 'purchaseHistoryMarkAllAsRead']);
 
 //Page
 Route::get('/page', [TermAndPrivacyController::class, 'index']);
@@ -158,4 +158,6 @@ Route::get('/banner',[ImageController::class,'bannerCall']);
 Route::get('/auth/google',[GoogleLoginController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback',[GoogleLoginController::class, 'handleGoogleCallback']);
 
+//load more noti
+Route::get('/get-notifications/{id}',[PurchaseHistoryController::class, 'getNotifications']);
 // Route::get('/test', [PurchaseHistoryController::class, 'test']);

@@ -236,7 +236,7 @@ class TourController extends Controller
         $categoriesArray = [];
         $imgArray = $request->input('imgArray');
         $categoriesArray = $request->input('categories_data'); // ở đây thêm category
-        $input = $request->all();
+        $input = $request->except('_token');
 
         $tour = Tour::find($id);
         if (!$tour) {

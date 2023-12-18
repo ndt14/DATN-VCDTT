@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                Overview
-                            </div> -->
+                                    Overview
+                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý mã giảm giá
                     </h1>
@@ -72,7 +72,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Tên/mô tả</label>
                                 <input type="text" name="name" class="form-control" placeholder="Nhập tên mã giảm giá"
-                                    value="{{$response->name}}">
+                                    value="{{ $response->name }}">
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="name">
                                     @error('name')
                                         {{ $message }}
@@ -82,7 +82,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
                                 <input type="text" name="code" class="form-control" placeholder="Nhập mã code"
-                                    value="{{$response->code}}" data-tag="code">
+                                    value="{{ $response->code }}" data-tag="code">
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="code">
                                     @error('code')
                                         {{ $message }}
@@ -93,8 +93,11 @@
                                 <label class="form-label">Giảm phần trăm/cố định</label>
                                 <select class="form-select" name="type" id="">
                                     <option value="">Lựa chọn loại giảm giá</option>
-                                    <option {{ $response->percentage_price!=null?'selected':'' }} value="1">Phần trăm</option>
-                                    <option {{ $response->percentage_price==null?$response->fixed_price!=null?'selected':'':'' }} value="2">Cố định</option>
+                                    <option {{ $response->percentage_price != null ? 'selected' : '' }} value="1">Phần trăm
+                                    </option>
+                                    <option
+                                        {{ $response->percentage_price == null ? ($response->fixed_price != null ? 'selected' : '') : '' }}
+                                        value="2">Cố định</option>
                                 </select>
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="type">
                                     @error('type')
@@ -103,7 +106,8 @@
                                 </span>
                                 <br>
                                 <input type="text" name="price" class="form-control"
-                                    placeholder="Nhập giá giá tiền hoặc số % tương ứng" value="{{$response->fixed_price}}">
+                                    placeholder="Nhập giá giá tiền hoặc số % tương ứng"
+                                    value="{{ $response->percentage_price == null ? ($response->fixed_price != null ? $response->fixed_price : '') : $response->percentage_price }}">
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="price">
                                     @error('price')
                                         {{ $message }}
@@ -113,7 +117,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Ngày hoạt động</label>
                                 <input type="date" name="start_date" class="form-control"
-                                    placeholder="Nhập ngày hoạt động" value="{{$response->start_date}}">
+                                    placeholder="Nhập ngày hoạt động" value="{{ $response->start_date }}">
                                 <span class="text-danger d-flex justify-content-start spanError" data-tag="start_date">
                                     @error('start_date')
                                         {{ $message }}
@@ -123,7 +127,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Ngày hết hạn</label>
                                 <input type="date" name="expiration_date" class="form-control"
-                                    placeholder="Nhập ngày kết thúc" value="{{$response->expiration_date}}">
+                                    placeholder="Nhập ngày kết thúc" value="{{ $response->expiration_date }}">
                                 <span class="text-danger d-flex justify-content-start spanError"
                                     data-tag="expiration_date">
                                     @error('expiration_date')
@@ -132,7 +136,8 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <div class="form-label">Trạng thái</div>
+                                <input type="hidden" name="status" value="1">
+                                {{-- <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio custom-control-inline me-2">
                                         <input type="radio" class="custom-control-input"
@@ -152,13 +157,14 @@
                                             {{ $message }}
                                         @enderror
                                     </span>
-                                </div>
+                                </div> --}}
                             </div>
                             {{-- Cho danh muc - tour --}}
 
                         </div>
                         <div class="card-footer text-right">
-                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo" data-id="{{$response->id}}">Cập nhật</button>
+                            <button id="btnSubmitAdd" type="button" class="btn btn-indigo"
+                                data-id="{{ $response->id }}">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -185,7 +191,8 @@
                 // thực hiện Ajax
                 $.ajax({
 
-                    url: "{{ route('coupon.edit', ['id' => ':id']) }}".replace(':id', this.dataset.id),
+                    url: "{{ route('coupon.edit', ['id' => ':id']) }}".replace(':id', this.dataset
+                        .id),
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -247,15 +254,15 @@
                         });
 
                         Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi thực hiện thêm mã giảm giá',
-                            icon: 'error'
-                        })
-                        .then(function(response) {
-                            if(response) {
-                                location.reload();
-                            }
-                        })
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi thực hiện thêm mã giảm giá',
+                                icon: 'error'
+                            })
+                            .then(function(response) {
+                                if (response) {
+                                    location.reload();
+                                }
+                            })
                     }
 
                 });
@@ -264,4 +271,3 @@
     </script>
     <!-- --------------------------------------------- !-->
 @endSection
-

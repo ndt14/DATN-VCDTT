@@ -1,19 +1,30 @@
 import Loader from "../../../componenets/User/Loader";
 import { useGetBlogByIdQuery } from "../../../api/blogs";
 import { useParams } from "react-router-dom";
+import moment from "moment";
+import { useGetSubBannerQuery } from "../../../api/setting";
+import { Setting } from "../../../interfaces/Setting";
 
 const BlogDetail = () => {
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
+  const { data: dataBanner } = useGetSubBannerQuery();
+  let backgroundImageUrl = ''; // Define the variable outside the map function
+
+  if (dataBanner?.data.keyvalue) {
+      backgroundImageUrl = dataBanner.data.keyvalue.map(({ value }: Setting) => {
+          return value;
+      })[0]; // Assuming you want the first value, adjust as needed
+  }
 
   const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
+      background: `url(${backgroundImageUrl})`,
+      backgroundSize: 'cover',
   };
   const { id } = useParams<{ id: string }>();
 
   const { data: blogData } = useGetBlogByIdQuery(id || "");
   console.log(blogData);
-
+const date = blogData?.data?.blog.created_at;
+const content =  blogData?.data?.blog.description;
   return (
     <>
       <Loader />
@@ -24,16 +35,19 @@ const BlogDetail = () => {
             <div className="inner-baner-container" style={containerStyle}>
               <div className="container" key={id}>
                 <div className="inner-banner-content">
-                  <h1 className="inner-title">{blogData?.data?.blog.title}</h1>
+                  <h2 className="inner-title">{blogData?.data?.blog.title}</h2>
                   <div className="entry-meta">
                     <span className="byline">
-                      <a href="#">Demoteam</a>
+                      <a href="#">{blogData?.data?.blog.author}</a>
                     </span>
                     <span className="posted-on">
-                      <a href="#">August 17, 2021</a>
+                      <a href="#">
+                      {moment(date).format(
+                                                "DD/MM/YYYY"
+                                              )}</a>
                     </span>
                     <span className="comments-link">
-                      <a href="#">No Comments</a>
+                      {/* <a href="#">No Comments</a> */}
                     </span>
                   </div>
                 </div>
@@ -53,8 +67,14 @@ const BlogDetail = () => {
                     </figure>
                     <article className="single-content-wrap">
                       <h3></h3>
-                      <p>{blogData?.data?.blog.description}</p>
-                      <blockquote>
+                      <p
+                                            className=""
+                                            dangerouslySetInnerHTML={{
+                                              __html: content||""
+                                            }}
+                                          ></p>
+                      
+                      {/* <blockquote>
                         <p>
                           Sagittis perferendis? Leo nobis irure egestas
                           excepturi ipsam nascetur elementum, montes. Torquent,
@@ -67,9 +87,9 @@ const BlogDetail = () => {
                         quis enim ut est dapibus luctus quis quis enim. Ut
                         bibendum ultricies nisl ut aliquam. Ut in arcu id nunc
                         elementum ultricies eu eget lacus nam at neque lorem.
-                      </p>
+                      </p> */}
                     </article>
-                    <div className="meta-wrap">
+                    {/* <div className="meta-wrap">
                       <div className="tag-links">
                         <a href="#">Destination</a>,<a href="#">hiking</a>,
                         <a href="#">Travel Dairies</a>,
@@ -128,7 +148,7 @@ const BlogDetail = () => {
                           VIEW ALL POSTS{" "}
                         </a>
                       </div>
-                    </div>
+                    </div> */}
                     {/* <!-- post comment html -->
                          
                           <!-- blog post item html end --> */}

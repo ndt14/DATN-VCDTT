@@ -57,10 +57,12 @@
                                 </path>
                                 <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
                             </svg>
+                            @php $count = 0 @endphp
                             @foreach ($user->unreadNotifications as $notification)
-                                @if ($notification)
+                                @while ($notification && $count == 0)
+                                    @php $count++ @endphp
                                     <span class="badge bg-red" id="notificationDot"></span>
-                                @endif
+                                @endwhile
                             @endforeach
                         </a>
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card  ">
@@ -144,7 +146,6 @@
                                     @else
                                         <span class="col text-truncate">Không có thông báo</span>
                                     @endif
-
                                 </div>
                             </div>
                         </div>
@@ -203,7 +204,7 @@
 </div>
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
-    let backendBaseUrl = "{{ url('')}}";
+    let backendBaseUrl = "{{ url('') }}";
     var user = <?php echo $user; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1",
@@ -219,7 +220,11 @@
     channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
         var id = data.id;
         if (data.purchase_method == 2) {
-            var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.transaction_id;
+            if (data.transaction_id == null) {
+                var purchaseMethodText = 'Mã giao dịch VN Pay:';
+            } else {
+                var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.transaction_id;
+            }
         } else {
             var purchaseMethodText = 'Khách hàng chuyển khoản online:';
         }
@@ -232,7 +237,7 @@
                         data-bs-placement="top"
                         data-bs-title="Chưa đọc"></span>
                     </div>
-                    <div class="col text-truncate " style="max-width:850px; width: 850px">
+                    <div class="col text-truncate " style="width:925px; max-width: 925px">
                         <a onclick="markAsRead('` + id + `')"
                         href="javascript: viewPurchaseHistoryDetail(${data.purchase_history_id});"
                             class="text-body d-block">
@@ -274,7 +279,7 @@
     });
 
     let markAsRead = function(id) {
-        axios.get(`/api/purchase-history/mark-as-read/${id}`)
+        axios.get(`/api/purchase-history/mark-as-read/${user.id}/${id}`)
             .then(function(response) {
                 readNoti(id);
             })
@@ -297,7 +302,7 @@
     };
 
     let markAllAsRead = function() {
-        axios.get(`/api/purchase-history/mark-all-as-read`)
+        axios.get(`/api/purchase-history/mark-all-as-read/${user.id}`)
             .then(function(response) {
                 document.getElementsByName('notification-unread').forEach(
                     (element) => {

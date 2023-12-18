@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogRequest;
 use App\Http\Resources\BlogResource;
+use App\Http\Resources\BlogToCategoryResource;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ImageResource;
+use App\Models\Category;
 use App\Models\Image;
+use App\Models\BlogToCategory;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -46,10 +50,11 @@ class BlogController extends Controller
 
     public function add()
     {
-        $images = Image::select('name', 'type', 'url', 'tour_id')->get();
+        $listCate = Category::select('id', 'name', 'parent_id')
+        ->get();
         return response()->json([
             'data' => [
-                'images' => ImageResource::collection($images),
+                'categories' => CategoryResource::collection($listCate),
             ],
             'message' => 'OK',
             'status' => 200,
@@ -60,13 +65,27 @@ class BlogController extends Controller
      */
     public function store(BlogRequest $request)
     {
+        $categoriesArray = [];
+        $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $blog = Blog::create($request->all());
 
         if ($blog->id) {
-
+            if (!empty($categoriesArray)) {
+                $categories = [];
+                foreach ($categoriesArray as $cate) {
+                    $data = [
+                        'cate_id' => $cate,
+                        'blog_id' => $blog->id
+                    ];
+                    $newCate = BlogToCategory::create($data);
+                    $categories[] = $newCate;
+                }
+            }
             return response()->json([
                 'data' => [
-                    'blog' => new BlogResource($blog)
+                    'blog' => new BlogResource($blog),
+                    'blogCategories' => !empty($categories) ? $categories : 'No category added',
+
                 ],
                 'message' => 'Add success',
                 'status' => 200
@@ -85,9 +104,38 @@ class BlogController extends Controller
     public function show(string $id)
     {
         // mình chỉnh sửa lại của bạn để nó hoạt động theo yêu cầu chung
-        try {
+            // get all data from table catalog
+            $listCate = Category::select('id', 'name')
+            ->get();
             // get all data from table images
             $images = Image::select('name', 'type', 'url')->where('blog_id', '=', $id)->get();
+            // Get all cate for blog id
+            $listBlogToCate = BlogToCategory::select('id', 'cate_id')->where('blog_id', '=', $id)
+            ->get();
+
+            $firstBlogToCate = BlogToCategory::select('id', 'cate_id')
+            ->where('blog_id', '=', $id)
+            ->get();
+
+            if ($firstBlogToCate->isNotEmpty()) {
+                $cateIds = $firstBlogToCate->pluck('cate_id')->toArray();
+    
+                $query = Blog::select('blogs.id', 'blogs.title','blogs.author','blogs.short_desc', 'blogs.description','blogs.status',  'blogs.created_at', 'blogs.updated_at')
+                    ->join('blogs_to_categories', 'blogs.id', '=', 'blogs_to_categories.blog_id')
+                    ->where('blogs.id', '<>', $id)
+                    ->whereIn('blogs_to_categories.cate_id', $cateIds)
+                    ->groupBy('blogs.id')
+                    ->orderBy('blogs.id', 'ASC');
+    
+                $blogsSameCate = $query->get();
+            } else {
+                $blogsSameCate = Blog::select('blogs.*')
+                    ->orderBy('id', 'DESC')
+                    ->limit(10)
+                    ->get();
+            }
+
+
             // get info blog by id
             $blog = Blog::withTrashed()->select(
                 'id',
@@ -101,20 +149,24 @@ class BlogController extends Controller
                 'created_at',
                 'updated_at'
             )->findOrFail($id);
-
+        if(!$blog){
+            return response()->json(['message' => '404 Not found', 'status' => 404]);
+        } else {
             return response()->json(
                 [
                     'data' => [
                         'blog' => new BlogResource($blog),
+                        'categories' => new CategoryResource($listCate),
                         'images' => new ImageResource($images),
+                        'blogToCategories' => new BlogToCategoryResource($listBlogToCate),
+                        'blogsSameCate' => new BlogResource($blogsSameCate),
                     ],
                     'message' => 'OK',
                     'status' => 200
                 ],
             );
-        } catch (Exception $e) {
-            return response()->json(['message' => '404 Not found', 'status' => 404]);
         }
+
     }
 
     /**
@@ -122,6 +174,9 @@ class BlogController extends Controller
      */
     public function update(BlogRequest $request, string $id)
     {
+        $categoriesArray = [];
+        $imgArray = $request->input('imgArray');
+        $categoriesArray = $request->input('categories_data'); // ở đây thêm category
         $input = $request->except('_token');
 
         $blog = Blog::find($id);
@@ -130,7 +185,18 @@ class BlogController extends Controller
         }
 
         $blog->fill($input);
-
+        if (!empty($categoriesArray)) {
+            $categories = [];
+            BlogToCategory::where('blog_id', $blog->id)->delete();
+            foreach ($categoriesArray as $cate) {
+                $data = [
+                    'cate_id' => $cate,
+                    'blog_id' => $blog->id
+                ];
+                $newCate = BlogToCategory::create($data);
+                $categories[] = $newCate;
+            }
+        }
         if ($blog->save()) {
             $updatedBlog = Blog::find($id);
             return response()->json(['message' => 'Edit success', 'status' => 200, 'object' => $updatedBlog]);
@@ -164,6 +230,7 @@ class BlogController extends Controller
     {
         $blog = Blog::withTrashed()->find($id);
         if ($blog) {
+            $delete_to_blog = BlogToCategory::where('blog_id', $blog->id)->forceDelete();
             $delete_blog = $blog->forceDelete();
             if ($delete_blog) {
                 return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
@@ -255,7 +322,14 @@ class BlogController extends Controller
 
     public function blogManagementEdit(BlogRequest $request, $id)
     {
-        $response = Http::get(url('') . '/api/blog-show/' . $request->id)['data']['blog'];
+        $response = Http::get(url('') . '/api/blog-show/' . $request->id)['data'];
+        $blog = json_decode(json_encode($response['blog']), false);
+        $blogToCate = $response['blogToCategories'];
+        $cateIds = [];
+        // dd($blogToCate);
+        foreach ($blogToCate as $item) {
+            $cateIds[] = $item['cate_id'];
+        }
         if ($request->isMethod('POST')) {
             $data = $request->except('_token', 'btnSubmit');
             $response = Http::put(url('') . '/api/blog-edit/' . $id, $data);
@@ -266,7 +340,7 @@ class BlogController extends Controller
                 return response()->json(['success' => false, 'message' => 'Lỗi khi cập nhật bài viết', 'status' => 500]);
             }
         }
-        return view('admin.blogs.edit', compact('response'));
+        return view('admin.blogs.edit', compact('blog', 'cateIds'));
     }
 
     public function blogManagementDetail(Request $request)

@@ -34,11 +34,11 @@ class CouponRequest extends FormRequest
                     case 'couponManagementAdd':
                         $rule = [
                             'name' => 'required',
-                            'code' => 'required',
+                            'code' => 'required|unique:coupons',
                             'type' => 'required',
                             'price' => 'required',
                             'start_date' => 'required',
-                            'expiration_date' => 'required',
+                            'expiration_date' => 'required|date|after:start_date',
                             // 'percentage_price' => 'required',
                             // 'fixed_price' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
@@ -53,11 +53,11 @@ class CouponRequest extends FormRequest
                     case 'couponManagementEdit':
                         $rule = [
                             'name' => 'required',
-                            'code' => 'required',
+                            'code' => 'required|unique:coupons',
                             'type' => 'required',
                             'price' => 'required',
                             'start_date' => 'required',
-                            'expiration_date' => 'required',
+                            'expiration_date' => 'required|date|after:start_date',
                             // 'percentage_price' => 'required',
                             // 'fixed_price' => 'required',
                             // 'tour_id' => ['nullable', Rule::requiredIf(function () {
@@ -79,10 +79,13 @@ class CouponRequest extends FormRequest
         return [
             'name.required' => 'Tên coupon không được trống',
             'code.required' => 'Mã giảm giá không được trống',
+            'code.unique' => 'Mã này đã tồn tại',
             'start_date.required' => 'Ngày bắt đầu coupon không được trống',
             'expiration_date.required' => 'Ngày kết thúc coupon không được trống',
             'type.required' => 'Loại giảm giá không được trống',
-            'price' => 'Giá giảm tương ứng không được trống'
+            'price' => 'Giá giảm tương ứng không được trống',
+            'start_date.after' => 'Ngày hoạt động phải từ hôm nay chở đi',
+            'expiration_date.after' => 'Ngày hết hạn phải sau ngày hoạt động ít nhất 1 ngày.',
         ];
     }
 

@@ -39,7 +39,7 @@
                             <h3 class="card-title">Danh mục</h3>
                             @if (auth()->user()->is_admin == 1 ||
                                     auth()->user()->can('delete category'))
-                                <a href="{{ route('cate.trash') }}" style="padding-left: 5px; text-decoration: none;"><span
+                                <a href="{{ route('cate.trash') }}" style="padding-left: 5px; text-decoration: none; color: black;"><span
                                         style="color: black;">|</span> Thùng rác</a>
                             @endif
                             @if (auth()->user()->can('add category') || auth()->user()->is_admin == 1)
@@ -107,7 +107,7 @@
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword"
                                                 value="{{ request()->query('keyword') }}" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -355,7 +355,7 @@
                     removeButton: {
                         text: 'Được rồi!',
                         btnClass: 'btn-danger',
-                        action: function() {
+                        action: function(response) {
                             axios.delete(`/api/category-destroy/${id}`).then(function(response) {
                                 Swal.fire({
                                         title: 'Thành công!',

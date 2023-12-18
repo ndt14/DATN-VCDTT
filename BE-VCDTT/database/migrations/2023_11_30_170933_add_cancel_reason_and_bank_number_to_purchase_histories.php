@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('purchase_histories', function (Blueprint $table) {
             //
             $table->longText('cancel_reason')->nullable();
-            $table->integer('bank_number')->nullable();
+            $table->text('bank_number')->nullable();
         });
     }
 

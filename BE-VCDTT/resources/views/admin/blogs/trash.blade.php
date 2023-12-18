@@ -36,19 +36,37 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Blog</h3> <a href="{{ route('blog.trash') }}"
+                            <h3 class="card-title">Bài viết</h3> <a href="{{ route('blog.trash') }}"
                                 style="padding-left: 5px; text-decoration: none; color: black; font-weight: 700;"><span
                                     style="color: black;">|</span> Thùng rác</a>
+
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list">
+                                    <a href="{{ url('/blog') }}" class="btn btn-default d-none d-sm-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M5 12l14 0"></path>
+                                            <path d="M5 12l4 4"></path>
+                                            <path d="M5 12l4 -4"></path>
+                                        </svg>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                    </div>
-                                    entries
-                                </div>-->
+                                            Show
+                                            <div class="mx-2 d-inline-block">
+                                                <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                            </div>
+                                            entries
+                                        </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -62,13 +80,14 @@
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">Tìm</button>
                                         </div>
                                     </form>
                                 </div>
+
                             </div>
                         </div>
                         <div class="table table-responsive">
@@ -99,7 +118,7 @@
                                                     {{ $item->author }}
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->short_desc, 50) }}
+                                                    {!! string_truncate($item->short_desc, 50) !!}
                                                 </td>
                                                 <td>
                                                     {{ $item->view_count }}
@@ -124,10 +143,10 @@
                                                         <button class="btn btn-icon btn-outline-green"
                                                             onclick="restoreBlog({{ $item->id }})">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
-                                                                class="icon icon-tabler icon-tabler-clock-up" width="24"
-                                                                height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                                stroke-linejoin="round">
+                                                                class="icon icon-tabler icon-tabler-clock-up"
+                                                                width="24" height="24" viewBox="0 0 24 24"
+                                                                stroke-width="2" stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none">
                                                                 </path>
                                                                 <path d="M20.983 12.548a9 9 0 1 0 -8.45 8.436"></path>
@@ -183,7 +202,8 @@
 
                             <p class="m-0 text-secondary">Hiển thị <span>{{ $data->currentPage() }}</span> trên
                                 <span>{{ $data->lastPage() }}</span> của <span>{{ $data->total() }}</span>
-                                bản ghi</p>
+                                bản ghi
+                            </p>
 
                             <ul class="pagination m-0 ms-auto">
                                 <li class="page-item {{ $data->currentPage() != 1 ? '' : 'disabled' }}">
@@ -261,9 +281,10 @@
                                 text: 'Khôi phục blog thành công',
                                 icon: 'success'
                             })
-                            .then(() => {
-                                // Chuyển hướng sau khi hiển thị modal
-                                window.location.href = '/blog/trash'; // Thay đổi đúng route của bạn
+                            .then((response) => {
+                                if (response) {
+                                    location.reload();
+                                }
                             });
                     } else {
                         // Xử lý trường hợp lỗi (nếu cần)

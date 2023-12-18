@@ -75,7 +75,7 @@ class KeyValueSeeder extends Seeder
                 'value' => ''
             ],
             [
-                'name' => 'Nội dung chung khi khác chuyển khoản',
+                'name' => 'Nội dung chung khi khách chuyển khoản',
                 'key' => 'bankingContent',
                 'value' => ''
             ],
@@ -100,18 +100,8 @@ class KeyValueSeeder extends Seeder
                 'value' => ''
             ],
             [
-                'name' => 'Tác giả meta (Meta author)',
-                'key' => 'metaAuthor',
-                'value' => ''
-            ],
-            [
                 'name' => 'Mô tả meta (Meta description)',
                 'key' => 'metaDescription',
-                'value' => ''
-            ],
-            [
-                'name' => 'Từ khóa meta (Meta keyword)',
-                'key' => 'metaKeyword',
                 'value' => ''
             ],
             [

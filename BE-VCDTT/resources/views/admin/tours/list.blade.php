@@ -71,12 +71,12 @@
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                                 <!--<div class="text-muted">
-                                            Show
-                                            <div class="mx-2 d-inline-block">
-                                                <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
-                                            </div>
-                                            entries
-                                        </div>-->
+                                                Show
+                                                <div class="mx-2 d-inline-block">
+                                                    <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                                </div>
+                                                entries
+                                            </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
                                         <div class="col-auto">
@@ -123,7 +123,7 @@
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword"
                                                 value="{{ request()->query('keyword') }}" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -174,10 +174,10 @@
                                                 <td class="text-center">
                                                     @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                            data-bs-placement="top" data-bs-title="Hoạt động"></span>
                                                     @else
                                                         <span class="badge bg-danger" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                            data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                                     @endif
                                                 </td>
                                                 <td class="text-end">
@@ -283,16 +283,16 @@
                                         <a class="page-link" href="{{ $data->url($page) }}">{{ $page }}</a>
                                     </li>
                                 @endfor
-                                @if ( $data->currentPage() < $data->lastPage() - 3)
+                                @if ($data->currentPage() < $data->lastPage() - 3)
                                     <li class="page-item">
                                         ...
                                     </li>
                                 @endif
                                 @if ($data->lastPage() != 1 && $data->currentPage() < $data->lastPage() - 2)
-                                <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link"
-                                        href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
-                                </li>
+                                    <li class="page-item {{ $page == $data->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link"
+                                            href="{{ $data->url($data->lastPage()) }}">{{ $data->lastPage() }}</a>
+                                    </li>
                                 @endif
                                 <li class="page-item {{ $data->currentPage() != $data->lastPage() ? '' : 'disabled' }}">
                                     <a class="page-link" href="{{ $data->nextPageUrl() }}">Next
@@ -347,11 +347,16 @@
                             axios.delete(`/api/tour-destroy/${id}`).then(function(response) {
 
                                 Swal.fire({
-                                    title: 'Thành công!',
-                                    text: 'Di chuyển vào thùng thành công',
-                                    icon: 'success'
-                                });
-                                location.reload();
+                                        title: 'Thành công!',
+                                        text: 'Di chuyển vào thùng thành công',
+                                        icon: 'success'
+                                    })
+                                    .then((response) => {
+                                        if (response) {
+                                            location.reload();
+                                        }
+                                    });
+
                             });
                         }
                     },

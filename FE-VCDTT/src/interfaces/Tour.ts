@@ -16,4 +16,5 @@ export interface Tour {
     status: string;
     star:number;
     data:any;
+    includes:string;
 }

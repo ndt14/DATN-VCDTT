@@ -15,6 +15,7 @@ import {
   PrivacyPolicy,
   Search,
   UserCoupon,
+  ServicePage,
 } from "../pages/user";
 import TourSearch from "../pages/user/TourSearch/TourSearch";
 import UserProfile from "../pages/user/UserProfile/UserProfile";
@@ -25,6 +26,7 @@ import ResetPasswordModal from "../componenets/User/Modal/ResetPasswordModal";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import UserPolicy from "../pages/user/UserPolicy/UserPolicy";
+import BillPrint from "../pages/user/BillPrint/BillPrint";
 
 function ScrollToTopOnNavigation() {
   const { pathname } = useLocation();
@@ -45,7 +47,7 @@ const PublicRoutes = () => {
           <Route path="tours" element={<HomePage />} />
           <Route path="tours/:id" element={<TourDetail />} />
           <Route
-            path="check_order_information/:id"
+            path="check_order_information/:id?"
             element={<PurchasingInformation />}
           />
           <Route path="vnpay?" element={<BillSuccess />} />
@@ -76,7 +78,9 @@ const PublicRoutes = () => {
         <Route path="reset-password/:token" element={<ResetPasswordModal />} />
         <Route path="*" element={<NotFoundPage />}></Route>
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
+        <Route path="service_account" element={<ServicePage />} />
         <Route path="user/policy/:id" element={<UserPolicy />} />
+        <Route path="user/view-bill/:id" element={<BillPrint />} />
       </Routes>
     </>
   );

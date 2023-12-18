@@ -33,9 +33,9 @@ class Coupon extends Model
             $now = time();
 
             if ($coupon->start_date && $now < strtotime($coupon->start_date)) {
-                $coupon->status = 2;
-            } elseif ($coupon->expiration_date && $now >= strtotime($coupon->start_date) && $now <= strtotime($coupon->expiration_date)) {
                 $coupon->status = 1;
+            } elseif ($coupon->expiration_date && $now >= strtotime($coupon->start_date) && $now <= strtotime($coupon->expiration_date)) {
+                $coupon->status = 2;
             } elseif ($coupon->expiration_date && $now > strtotime($coupon->expiration_date)) {
                 $coupon->status = 3;
             }

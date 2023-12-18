@@ -1885,7 +1885,10 @@ input[type=submit]:focus {
   -o-transition: transform 0.4s;
   transition: transform 0.4s;
 }
-
+.main-navigation ul li.menu-item-has-children.none>a:after {
+  display: none;
+ 
+}
 .main-navigation ul li.menu-item-has-children li:hover>a,
 .main-navigation ul li.menu-item-has-children li:focus>a {
   background-color: #30C5F7;

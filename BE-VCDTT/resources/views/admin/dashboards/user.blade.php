@@ -1,32 +1,12 @@
 @extends('admin.common.layout')
 @section('meta_title')
-Thống kê người dùng
+    Thống kê người dùng
 @endSection
 @section('content')
     <div class="page-body">
         <div class="container-xl">
             <div class="row">
                 <div class="card">
-                    {{-- <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a href="#tabs-daily-5" class="nav-link active" data-bs-toggle="tab" aria-selected="false"
-                                    role="tab" tabindex="-1">Ngày hôm nay</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a href="#tabs-weekly-5" class="nav-link" data-bs-toggle="tab" aria-selected="false"
-                                    role="tab" tabindex="-1">Tuần này</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a href="#tabs-monthly-5" class="nav-link" data-bs-toggle="tab" aria-selected="false"
-                                    role="tab" tabindex="-1">Tháng này</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a href="#tabs-yearly-5" class="nav-link" data-bs-toggle="tab" aria-selected="false"
-                                    role="tab" tabindex="-1">Năm này</a>
-                            </li>
-                        </ul>
-                    </div> --}}
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-daily-5" role="tabpanel">
@@ -48,43 +28,59 @@ Thống kê người dùng
                         </div>
                     </div>
                 </div>
-                <div class="row  shadow-lg rounded-4 p-4 pt-3 mt-4">
-                    <div class="col-6 card border-0 shadow-lg rounded-4 p-4 pt-3">
+            </div>
+            <div class="row shadow-lg rounded-4 p-4 pt-3 mt-4">
+                <div class="col">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
                         <h3>Giới tính người dùng sử dụng web</h3>
-                        <div id="chartpie"></div>
-                    </div>
-                    <div class="col-6 card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>Độ tuổi người dùng sử dụng web</h3>
-                        <div id="chartpie2"></div>
+                        @if ($data->genderDP == [0, 0, 0])
+                            <p class="text-orange">Có vẻ chưa người dùng nào nhập đủ thông tin cho hệ thống.</p>
+                        @else
+                            <div id="chartpie"></div>
+                        @endif
                     </div>
                 </div>
-                {{-- <div class="col-12 mt-4">
+                <div class="col">
                     <div class="card border-0 shadow-lg rounded-4 p-4 pt-3">
-                        <h3>Bảng thống kê so sánh tiền thu được hàng tháng</h3>
-                        <div id="chart" style="min-height: 365px;"></div>
-                    </div>
-                </div> --}}
-            </div>
-            {{-- Hiển thị chi tiết từ thông báo, vui lòng không xóa đi --}}
-            <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
+                        <h3>Độ tuổi người dùng sử dụng web</h3>
+                        @php
+                            $ageDP = $data->ageDP;
+                            $allZero = true;
+                            foreach ($ageDP as $value) {
+                                if ($value != 0) {
+                                    $allZero = false;
+                                    break;
+                                }
+                            }
+                        @endphp
+                        @if ($allZero)
+                            <p class="text-orange">Có vẻ chưa người dùng nào nhập đủ thông tin cho hệ thống.</p>
+                        @else
+                            <div id="chartpie2"></div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{-- Hiển thị chi tiết từ thông báo, vui lòng không xóa đi --}}
+    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
 @endsection
 @section('page_js')
     <script>
-        // Apexjs tôi đã để bên javascript là js chung cho tất cả rồi nha, ông không cần gọi lại nó nữa đâu
-
         var chartPieInfo = @json($data).genderDP;
         // console.log(chartPieInfo);
         var options = {
             series: chartPieInfo,
             chart: {
-                width: 400,
+                height: 300,
                 type: 'pie',
             },
             labels: ['Nam', 'Nữ', 'Khác'],
@@ -110,7 +106,7 @@ Thống kê người dùng
         var options2 = {
             series: valueschart2,
             chart: {
-                width: 400,
+                height: 300,
                 type: 'pie',
             },
             labels: keyschart2,

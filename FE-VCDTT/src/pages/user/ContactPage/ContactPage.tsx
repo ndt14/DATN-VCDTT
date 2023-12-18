@@ -1,17 +1,19 @@
 import Loader from '../../../componenets/User/Loader';
 import { useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-import { useGetAddressQuery, useGetEmailWebQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
+import { useGetAddressQuery, useGetEmailWebQuery, useGetLinkFacebookQuery, useGetWebPhoneNumber1Query } from '../../../api/setting';
 import { Setting } from '../../../interfaces/Setting';
+import SecondaryBanner from '../../../componenets/User/SecondaryBanner';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { Link } from 'react-router-dom';
+
+
+const MySwal = withReactContent(Swal);
 
 
 const ContactPage = () => {
-    const backgroundImageUrl = '../../../../assets/images/inner-banner.jpg'; 
-
-    const containerStyle = {
-      background: `url(${backgroundImageUrl})`,
-      backgroundSize: 'cover', 
-    }
+    
     const form = useRef<HTMLFormElement>(null!);
 
     const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,19 +34,35 @@ const ContactPage = () => {
     
       // Email sending logic
       emailjs.sendForm('service_16qayq1', 'template_k4djrti', form.current, 'Fxm2qPKfOG7-dvxv8')
-        .then((result) => {
-          console.log(result.text);
-          alert('liên hệ thành công');
+        .then(() => {
+         //  console.log(result.text);
+         MySwal.fire({
+            text: "Liên hệ thành công.",
+            icon: "success",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
         })
-        .catch((error) => {
-          console.log(error.text);
-          alert('liên hệ không thành công');
+        .catch(() => {
+          
+          MySwal.fire({
+            text: "Liên hệ không thành công.",
+            icon: "warning",
+            // confirmButtonText: "OK",
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 2000
+          });
+         
         });
     };
     
     const {data: dataPhone} = useGetWebPhoneNumber1Query()
     const {data: dataEmail} = useGetEmailWebQuery()
     const {data: dataAddress} = useGetAddressQuery()
+    const {data: dataLinkFb} = useGetLinkFacebookQuery()
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
@@ -61,7 +79,16 @@ const ContactPage = () => {
         });
       }
     }, [dataAddress]);
-   
+    const dataTitle = "Liên hệ chúng tôi"
+   //link fb
+  const value= dataLinkFb?.data.keyvalue.map(({value}:Setting)=>{
+      
+     return value
+   })
+   const openWindow = () => {
+      window.open(value, "_blank");
+    };
+
   return (
    <>
    <Loader/>
@@ -69,16 +96,9 @@ const ContactPage = () => {
         
         <main id="content" className="site-main">
            {/* <!-- Inner Banner html start--> */}
-           <section className="inner-banner-wrap">
-              <div className="inner-baner-container" style={containerStyle}>
-                 <div className="container">
-                    <div className="inner-banner-content">
-                       <h1 className="inner-title">Liên hệ chúng tôi</h1>
-                    </div>
-                 </div>
-              </div>
-              <div className="inner-shape"></div>
-           </section>
+          <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
+          
            {/* <!-- Inner Banner html end-->
            <!-- contact form html start --> */}
            <div className="contact-page-section">
@@ -114,7 +134,7 @@ const ContactPage = () => {
                                          <i className="fas fa-map-signs"></i>
                                       </span>
                                       <div className="details-content">
-                                         <h4>ĐỊa chỉ</h4>
+                                         <h4>Địa chỉ</h4>
                                          {dataAddress?.data.keyvalue.map(({id,value}:Setting)=>{
                                             return(
                                              <span key={id}>{value}</span>
@@ -153,11 +173,11 @@ const ContactPage = () => {
                              </div>
                              <div className="contct-social social-links">
                                 <h3>Theo dõi chúng tôi trên mạng xã hội</h3>
-                                <ul>
-                                   <li><a href="#"><i className="fab fa-facebook-f" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-instagram" aria-hidden="true"></i></a></li>
-                                   <li><a href="#"><i className="fab fa-linkedin" aria-hidden="true"></i></a></li>
+                                <ul >
+
+                               
+                                   <li><Link to={""} className="text-primary" onClick={openWindow}><i className="fab fa-facebook-f" aria-hidden="true"></i></Link></li>
+                                  
                                 </ul>
                              </div>
                           </div>

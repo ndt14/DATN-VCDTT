@@ -79,7 +79,6 @@ class RoleController extends Controller
           if (count(array_map('intval', $data['permission'])) > count($role_has_permissions_before)) {
             // sự khác biệt khi tăng quyền (thêm)
             $compare_arrays = array_diff(array_map('intval', $data['permission']), $role_has_permissions_before);
-
             foreach ($user as $user_id) {
 
               $user_item = User::find($user_id);
@@ -88,6 +87,7 @@ class RoleController extends Controller
                 if (!$check_user_has_permission) {
                   $give_permission_user = DB::table('model_has_permissions')->insert(['permission_id' => $permission_want_add, 'model_type' => 'App\Models\User', 'model_id' => $user_id]);
                 }
+                
               }
             }
           } else {
@@ -97,8 +97,9 @@ class RoleController extends Controller
               // lấy list role từ user hiện tại (trừ role hiện tại)
               // lặp list role trong lúc lặp lấy các quyền từ các role
               // kiểm tra xem có quyền hiện tại hay không. Có => thôi, không => xóa
-
-              $user_has_roles = DB::table('model_has_roles')->where('model_id', $user_id)->where('role_id', '<>', $id)->select('role_id')->get()->pluck('role_id')->toArray();
+              
+              $user_has_roles = DB::table('model_has_roles')->where('model_id', $user_id)->where('role_id', $id)->select('role_id')->get()->pluck('role_id')->toArray();
+              // ở dòng này đã có sự sửa từ role_id <> thành = như dòng trên
               if (!empty($user_has_roles)) {
 
                 foreach ($user_has_roles as $role) {
@@ -106,9 +107,9 @@ class RoleController extends Controller
                   if (!empty($role_has_permissions)) {
 
                     foreach ($compare_arrays as $permission_want_del) {
-
                       if (!in_array($permission_want_del, $role_has_permissions)) {
                         $delete_permission_user = DB::table('model_has_permissions')->where('model_id', $user_id)->where('permission_id', $permission_want_del)->delete();
+                       
                       }
                     }
                   }

@@ -93,7 +93,7 @@
                                         <div class="col-auto">
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword" value="{{ request()->query('keyword') }}"
-                                                class="form-control" placeholder="Keyword">
+                                                class="form-control" placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -129,7 +129,7 @@
                                                         title="Show Detail">{{ string_truncate($item->title, 70) }}</a>
                                                 </td>
                                                 <td>
-                                                    {{ string_truncate($item->content, 70) }}
+                                                    {!! string_truncate($item->content, 70) !!}
                                                 </td>
                                                 <td>
                                                     {{ $item->type == 1 ? 'Điều khoản ' : ($item->type == 2 ? 'Điều khoản bảo mật' : 'Khác') }}
@@ -137,10 +137,10 @@
                                                 <td class="text-center">
                                                     @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                            data-bs-placement="top" data-bs-title="Đang hoạt động"></span>
                                                     @else
                                                         <span class="badge bg-red" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                            data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -251,6 +251,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modalContainer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
             </div>
         </div>
     </div>

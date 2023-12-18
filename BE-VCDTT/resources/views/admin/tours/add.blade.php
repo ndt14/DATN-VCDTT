@@ -23,8 +23,8 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <!-- <div class="page-pretitle">
-                                                                                Overview
-                                                                            </div> -->
+                                                                                    Overview
+                                                                                </div> -->
                     <h1 class="text-indigo mb-4" style="font-size: 36px;">
                         Quản lý tour
                     </h1>
@@ -447,10 +447,14 @@
                     success: function(response) {
                         //gender category
                         let selectCatogories = $('#select-category');
+
                         $.each(response.data.categoriesParent, function(index, category) {
                             let id = category.id
                             id = +id
                             let option = $('<option></option>').val(id).text(category.name);
+                            if(category.child.length > 0){
+                                option.prop('disabled', true);
+                            }
                             selectCatogories.append(option);
                             $.each(category.child, function(index, childCategory) {
                                 let chlidId = childCategory.id;
@@ -523,10 +527,15 @@
 
                             // Hiển thị SweetAlert khi thành công
                             Swal.fire({
-                                title: 'Thành công!',
-                                text: response.message,
-                                icon: 'success'
-                            });
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                })
+                                .then((response) => {
+                                    if (response) {
+                                        location.reload();
+                                    }
+                                });
                         } else {
                             Swal.fire({
                                 title: 'Lỗi!',

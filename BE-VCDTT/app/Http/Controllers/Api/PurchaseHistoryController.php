@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\PurchaseHistoryRequest;
 use PDF;
 use Carbon\Carbon;
 use Pusher\Pusher;
@@ -10,6 +11,7 @@ use App\Models\Coupon;
 use App\Models\UsedCoupon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Spatie\Analytics\Period;
 use App\Models\TermAndPrivacy;
 use App\Models\PurchaseHistory;
 use Illuminate\Support\Collection;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\CouponResource;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Analytics\Facades\Analytics;
 use App\Notifications\ComfirmPaymentAdmin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CancelNotificationAdmin;
@@ -35,8 +38,7 @@ class PurchaseHistoryController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword ? trim($request->keyword) : '';
-        if (!$request->searchCol) {
-            if (!$request->purchase_status) {
+        if ($request->searchCol==null) {
                 $purchasehistorys = PurchaseHistory::where(function ($query) use ($keyword) {
                     $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
                     foreach ($columns as $column) {
@@ -45,23 +47,12 @@ class PurchaseHistoryController extends Controller
                 })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
                     ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
                     ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            } else {
-                $purchasehistorys = PurchaseHistory::where(function ($query) use ($keyword) {
-                    $columns = Schema::getColumnListing((new PurchaseHistory())->getTable());
-                    foreach ($columns as $column) {
-                        $query->orWhere($column, 'like', '%' . $keyword . '%');
-                    }
-                })->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
-                    ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
-                    ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')
-                    ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
-            }
         } else {
             $purchasehistorys = PurchaseHistory::where($request->searchCol, 'LIKE', '%' . $keyword . '%')
-                ->where('payment_status', '%' . $request->payment_status ?? '' . '%')
-                ->where('purchase_status',  '%' . $request->purchase_status ?? '' . '%')
-                ->where('tour_status', '%' . $request->tour_status ?? '' . '%')
-                ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
+            ->where('payment_status', 'LIKE', '%' . $request->payment_status ?? '' . '%')
+            ->where('purchase_status', 'LIKE', '%' . $request->purchase_status ?? '' . '%')
+            ->where('tour_status', 'LIKE', '%' . $request->tour_status ?? '' . '%')
+            ->orderBy($request->sort ?? 'created_at', $request->direction ?? 'desc')->get();
         }
         return response()->json(
             [
@@ -251,15 +242,11 @@ class PurchaseHistoryController extends Controller
     {
         $purchaseHistory = PurchaseHistory::withTrashed()->find($id);
         if ($purchaseHistory) {
-            $delete_purchaseHistory =  $purchaseHistory->forceDelete();
-            if ($delete_purchaseHistory) {
-                return response()->json(['message' => 'Xóa thành công', 'status' => 200]);
-            } else {
-                return response()->json([
-                    'message' => 'internal server error',
-                    'status' => 500
-                ]);
+            $delete_purchaseHistory = $purchaseHistory->forceDelete();
+            if (!$delete_purchaseHistory) {
+                return response()->json(['message' => 'internal server error', 'status' => 500]);
             }
+            return response()->json(['message' => 'OK', 'status' => 200]);
         } else {
             return response()->json(['message' => '404 Not found', 'status' => 500]);
         }
@@ -275,7 +262,7 @@ class PurchaseHistoryController extends Controller
         $data['sortDirection'] = $sortDirection = $request->direction ?? '';
         $data['searchCol'] = $searchCol = $request->searchCol ?? '';
         $data['keyword'] = $keyword = $request->keyword ?? '';
-        $response = Http::get(url('') . "/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
+        $response = Http::get(url('')."/api/purchase-history?sort=$sortField&direction=$sortDirection&payment_status=$payment_status&purchase_status=$purchase_status&tour_status=$tour_status&searchCol=$searchCol&keyword=$keyword");
         if ($response->status() == 200) {
             $data = json_decode(json_encode($response->json()['data']['purchase_history']), false);
             $perPage = $request->limit ?? 5; // Số mục trên mỗi trang
@@ -300,13 +287,13 @@ class PurchaseHistoryController extends Controller
         return view('admin.purchase_histories.list', compact('data'));
     }
 
-    public function purchaseHistoryManagementEdit(Request $request, string $id)
+    public function purchaseHistoryManagementEdit(PurchaseHistoryRequest $request, string $id)
     {
         $items = Http::get(url('') . '/api/purchase-history-show/' . $request->id)['data']['purchase_history'];
         if ($request->isMethod('POST')) {
             $data = json_decode(json_encode($request->except('_token', 'btnSubmit')));
             $response = Http::put(url('') . '/api/purchase-history-edit/' . $id, $data);
-            if (isset($data->purchase_status) && isset($items['purchase_status'])  && ($data->purchase_status != $items['purchase_status'])) {
+            if (isset($data->purchase_status) && isset($items['purchase_status']) && ($data->purchase_status != $items['purchase_status'])) {
                 $users = User::where('is_admin', 1)->get();
                 $responseData = json_decode(json_encode($response['data']['purchase_history']));
 
@@ -340,18 +327,18 @@ class PurchaseHistoryController extends Controller
         return response()->json(['html' => $html, 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAsRead(string $id)
+    public function purchaseHistoryMarkAsRead(string $user_id, string $id)
     {
-        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        $user = User::where('id', $user_id)->first(); //lúc sau đổi thành tìm theo role
         $notification = $user->notifications->where('id', $id)->first();
         $notification->markAsRead();
         // return redirect()->back();
         return response()->json(['message' => 'Đã đọc', 'status' => 200]);
     }
 
-    public function purchaseHistoryMarkAllAsRead()
+    public function purchaseHistoryMarkAllAsRead(string $user_id)
     {
-        $user = User::where('is_admin', 1)->first(); //lúc sau đổi thành tìm theo role
+        $user = User::where('id', $user_id)->first(); //lúc sau đổi thành tìm theo role
         foreach ($user->unreadnotifications as $notification) {
             $notification->markAsRead();
         }
@@ -370,6 +357,9 @@ class PurchaseHistoryController extends Controller
                         return response()->json(['message' => 'Bạn đã dùng mã này cho 1 đơn khác', 'status' => 500]);
                     } else {
                         $coupon = Coupon::where('code', $code)->first();
+                        if ($coupon->status == 1) {
+                            return response()->json(['message' => 'Vui lòng đợi đến ngày mã hoạt động', 'status' => 500]);
+                        }
                         if ($coupon->status == 3) {
                             return response()->json(['message' => 'Mã này đã hết hạn', 'status' => 500]);
                         }
@@ -410,9 +400,9 @@ class PurchaseHistoryController extends Controller
             if ($data) {
                 $data->restore();
             }
-            return redirect()->route('purchase_histories.trash')->with('success', 'Khôi phục đơn đặt thành công');
+            return response()->json(['success' => true]);
         }
-        return redirect()->route('purchase_histories.trash');
+        return response()->json(['success' => false, 'message' => 'Khôi phục hóa đơn không thành công']);
     }
 
     // public function printInvoice(Request $request)
@@ -422,23 +412,10 @@ class PurchaseHistoryController extends Controller
     //     return $pdf->download('Hóa đơn '. $item->name .'.pdf');
     // }
 
-    // public function test()
-    // {
-    //     $purchaseHistoriesOutdated = PurchaseHistory::select('id', 'payment_status', 'purchase_status', 'tour_status', 'created_at')->where('payment_status', '=', 1)->whereDate('created_at', '<=', Carbon::today()->subDays(1)->toDateString())->get();
-    //     echo $purchaseHistoriesOutdated;
-    //     // if ($purchaseHistoriesOutdated) {
-    //     //     $count = 0;
-    //     //     foreach ($purchaseHistoriesOutdated as $purchaseHistory) {
-    //     //         $purchaseHistory->update([
-    //     //             'purchase_status' => 1,
-    //     //             'tour_status' => 5
-    //     //         ]);
-    //     //         if($count == 1){
-    //     //         echo ($purchaseHistory);
-    //     //         }
-    //     //         $count++;
-
-    //     //     }
-    //     // }
-    // }
+    public function getNotifications(string $id)
+    {
+        $user = User::where('id', $id)->first();
+        $notifications = $user->notifications()->paginate(5);
+        return response()->json(['notifications' => $notifications, 'status' => 200]);
+    }
 }

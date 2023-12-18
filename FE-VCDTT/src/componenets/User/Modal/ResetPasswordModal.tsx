@@ -3,39 +3,51 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResetPasswordWithTokenMutation } from '../../../api/auth';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+
+const MySwal = withReactContent(Swal);
 
 const ResetPasswordModal = () => {
   const [resetPasswordWithToken] = useResetPasswordWithTokenMutation();
   const { token } = useParams();
-  const [show, setShow] = useState(true); // Show the modal initially
+  const [show, setShow] = useState(true);
   const [password, setPassword] = useState('');
-const navigate = useNavigate()
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
+
   const handleResetPasswordWithToken = async () => {
     try {
-      const newPassword = password; // Get the new password from the state
+      if (!password || password.length < 8 || password !== confirmPassword) {
+        // Kiểm tra mật khẩu có rỗng, ít hơn 8 kí tự hoặc không trùng khớp không
+        MySwal.fire({
+          text: password !== confirmPassword ? "Mật khẩu xác nhận không khớp" : "Mật khẩu phải có ít nhất 8 kí tự",
+          icon: "error",
+        });
+        return;
+      }
+
+      const newPassword = password;
       const response = await resetPasswordWithToken({ token, newPassword });
       if (response) {
-        // Handle successful password reset
-        // console.log('Password reset successful:', response.data);
-        // You can redirect the user to a success page or perform other actions
-        // For example, you can close the modal and show a success message.
-        alert("đổi mật khẩu thành công")
-        setShow(false); // Close the modal
-        navigate('/')
+        MySwal.fire({
+          text: "Đổi mật khẩu thành công",
+          icon: "success",
+        });
+        setShow(false);
+        navigate('/');
       } else {
-        // Handle password reset request error
-        console.error('Password reset request failed:');
-        // You can display an error message to the user.
+        console.error('Yêu cầu đổi mật khẩu thất bại:');
       }
     } catch (error) {
-      // Handle network or other errors
-      console.error('Password reset request failed:', error);
+      console.error('Yêu cầu đổi mật khẩu thất bại:', error);
     }
   };
 
   return (
     <Modal show={show}>
-      <Modal.Header closeButton>
+      <Modal.Header >
         <Modal.Title>Đổi mật khẩu mới</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -51,11 +63,23 @@ const navigate = useNavigate()
             placeholder="Nhập mật khẩu mới"
           />
         </div>
+        <div className="form-group mt-2">
+          <label htmlFor="confirmPassword">Xác nhận mật khẩu mới</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="form-control"
+            placeholder="Xác nhận mật khẩu mới"
+          />
+        </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShow(false)}>
+        {/* <Button variant="secondary" onClick={() => setShow(false)}>
           Đóng
-        </Button>
+        </Button> */}
         <Button variant="primary" onClick={handleResetPasswordWithToken}>
           Đổi mật khẩu
         </Button>
@@ -65,3 +89,6 @@ const navigate = useNavigate()
 };
 
 export default ResetPasswordModal;
+
+
+

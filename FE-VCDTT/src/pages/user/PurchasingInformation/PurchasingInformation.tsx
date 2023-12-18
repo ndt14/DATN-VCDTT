@@ -1,13 +1,13 @@
 import React, { useState, useEffect, FormEvent, useRef } from "react";
 import "./PurchasingInformation.css";
-import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAddBillMutation } from "../../../api/bill";
 import { useCheckCouponMutation } from "../../../api/coupon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ChangeEvent } from "react";
 // import { useNavigate } from "react-router-dom";
-
+import { useGetTourByIdQuery } from "../../../api/tours";
 import CashPaymentModal from "../../../componenets/User/Modal/CashPaymentModal";
 import { useGetBillsWithUserIDQuery } from "../../../api/bill";
 import { useGetUserByIdQuery } from "../../../api/user";
@@ -15,11 +15,15 @@ import { useGetUserByIdQuery } from "../../../api/user";
 import { Spin } from "antd";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+
 // import { setTimeout } from "timers/promises";
 
 // type Props = {};
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+
+import { useParams } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
@@ -28,35 +32,64 @@ const PurchasingInformation = () => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = userData?.id;
 
-  //dữ liệu từ tourDetail
-  const location = useLocation();
-  const {
-    tourData,
-    productNumber,
-    productChildNumber,
-    price,
-    childPrice,
-    formattedResultPrice,
-    dateTour,
-    tourName,
-    tourLocation,
-    tourPrice,
-    tourChildPrice,
-    tourId,
-    exact_location,
-    tourDuration,
-    main_img,
-    lastPrice,
-  } = location.state;
-  console.log(tourDuration);
+  //api
+  const { id } = useParams<{ id: string }>();
+  const split = id?.split("-");
+  let tourId: number | undefined = undefined;
+  if (split && split.length >= 1) {
+    tourId = parseInt(split[0]);
+  }
+  // console.log(tourId);
 
-  // xử lý lấy tour_end_date
-  const parts = dateTour.split("-");
-  const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  console.log(formattedDate);
+  const { data: tourData } = useGetTourByIdQuery(tourId || "");
+  const tour_sale = tourData?.data.tour.sale_percentage;
+  const price = (tourData?.data.tour.adult_price * (100 - tour_sale)) / 100;
+  const childPrice =
+    (tourData?.data.tour.child_price * (100 - tour_sale)) / 100;
+  const productNumber = localStorage.getItem("adult");
+  const productChildNumber = localStorage.getItem("child");
+  // console.log(typeof productNumber);
+  const adult_count = parseInt(productNumber !== null ? productNumber : "", 10);
+  const child_count = parseInt(
+    productChildNumber !== null ? productChildNumber : "",
+    10
+  );
+  const totalAdultPrice = price * adult_count;
+  const totalChildPrice = childPrice * child_count;
+  const lastPrice = totalAdultPrice + totalChildPrice;
+  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(totalAdultPrice);
+  const formattedTourChildPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(totalChildPrice);
+  const tourName = tourData?.data.tour.name;
+  const tourLocation = tourData?.data.tour.location;
+  const main_img = tourData?.data.tour.main_img;
+  const exact_location = tourData?.data.tour.exact_location;
 
+  const tourDuration = tourData?.data.tour.duration;
+
+  const dateTour = localStorage.getItem("start_date");
+  const splitDate = dateTour?.substring(1, 11);
+  const formattedResultPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(lastPrice);
+  // console.log(productNumber);
+  const parts = splitDate?.split("-");
+  let formattedDate = "";
+  if (parts && parts.length === 3) {
+    const day = parts[2];
+    const month = parts[1];
+    const year = parts[0];
+    formattedDate = `${day}-${month}-${year}`;
+  } else {
+    formattedDate = "Invalid date";
+  }
   const duration = parseInt(tourDuration);
-  console.log(typeof duration);
 
   const [day, month, year] = formattedDate.split("-");
   const startDateObject = new Date(`${year}-${month}-${day}`);
@@ -66,31 +99,37 @@ const PurchasingInformation = () => {
   const endDate = endDateObject.toLocaleDateString("en-GB");
   const parts2 = endDate.split("/");
   const formattedEndDate = `${parts2[0]}-${parts2[1]}-${parts2[2]}`;
-  console.log(formattedEndDate);
+  // console.log(formattedEndDate);
 
   //
 
   // Check số tour người dùng đã đặt
-  const { data: TourData } = useGetBillsWithUserIDQuery(userId || "");
+  const { data: TourData, refetch } = useGetBillsWithUserIDQuery(userId || "");
+
+  console.log(TourData);
+
   const [idArray, setIdArray] = useState<number[]>([]);
   useEffect(() => {
     if (TourData) {
       const tourIdPurchased = TourData.data.purchase_history;
-
       const array = tourIdPurchased.map(
-        (item: { tour_id: number }) => item.tour_id
+        (item: { purchase_status: number }) => item.purchase_status
       );
       setIdArray(array);
     }
-  }, []);
+  }, [TourData]);
   console.log(idArray);
-  const count = idArray.reduce((accumulator, currentValue) => {
-    if (currentValue === tourId) {
-      return accumulator + 1;
+  let count = 0;
+  for (let i = 0; i < idArray.length; i++) {
+    if (idArray[i] === 2) {
+      count++;
     }
-    return accumulator;
-  }, 0);
+  }
   console.log(count);
+
+  //Kiểm tra số tour có trạng thái là admin chưa duyệt thanh toán
+
+  //
 
   //validate
   interface FormValues {
@@ -106,7 +145,7 @@ const PurchasingInformation = () => {
   //
   const [isChecked, setIsChecked] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(loading);
+  // console.log(loading);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -124,7 +163,7 @@ const PurchasingInformation = () => {
   const [addBill] = useAddBillMutation();
 
   const { data: userAPIData } = useGetUserByIdQuery(userId || "");
-  console.log(userAPIData?.data.user.name);
+  // console.log(userAPIData?.data.user.name);
   const userName = userAPIData?.data.user.name;
   const userEmail = userAPIData?.data.user.email;
   const phoneNumber = userAPIData?.data.user.phone_number;
@@ -132,6 +171,7 @@ const PurchasingInformation = () => {
   const userGender = userAPIData?.data.user.gender;
   const userLogIn = localStorage.getItem("isLoggedIn");
 
+  const phoneRegExp = /^0\d{9}$/;
   const formik = useFormik<FormValues>({
     initialValues: {
       name: userName || "",
@@ -143,12 +183,17 @@ const PurchasingInformation = () => {
       method: null,
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Nhập tên"),
+      name: Yup.string()
+        .required("Nhập tên")
+        .min(5, "Tên phải chứa ít nhất 5 ký tự")
+        .max(30, "Tên không được vượt quá 30 ký tự"),
       email: Yup.string()
         .email("Sai định dạng email")
         .required("Email không được để trống"),
-      phone_number: Yup.string().required("Nhập số điện thoại"),
-      honorific: Yup.string().required("Please select an option"),
+      phone_number: Yup.string()
+        .required("Nhập số điện thoại")
+        .matches(phoneRegExp, "Sai định dạng số điện thoại"),
+      honorific: Yup.string().required("Chọn giới tính"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -168,6 +213,8 @@ const PurchasingInformation = () => {
     }
   }, [userAPIData]);
   const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  // console.log(Object.keys(formik.errors).length);
+
   // Coupon
   const [couponData, setCouponData] = useState<{
     percentage: number | null;
@@ -182,7 +229,13 @@ const PurchasingInformation = () => {
     couponName: "",
     couponCode: "",
   });
-  console.log(couponData);
+
+  useEffect(() => {
+    setCouponData((prevData) => ({
+      ...prevData,
+      finalPrice: lastPrice,
+    }));
+  }, [lastPrice]);
 
   const [formCoupon, setFormCoupon] = useState({
     user_id: userId ? userId : "",
@@ -190,7 +243,9 @@ const PurchasingInformation = () => {
   });
 
   useEffect(() => {
-    let FPrice = childPrice + price;
+    let FPrice = totalAdultPrice + totalChildPrice;
+    // console.log(FPrice);
+
     if (couponData.percentage && couponData.percentage > 0) {
       FPrice = FPrice - (FPrice / 100) * couponData.percentage;
       setCouponData((prevData) => ({
@@ -216,13 +271,23 @@ const PurchasingInformation = () => {
     style: "currency",
     currency: "VND",
   }).format(couponData.finalPrice);
+  // console.log(couponData);
+
   const handleCouponSubmit = (e: FormEvent) => {
     e.preventDefault();
     console.log(formCoupon);
     checkCoupon(formCoupon)
       .then((response) => {
         if ("data" in response) {
-          alert(response?.data?.message);
+          MySwal.fire({
+            text: response?.data?.message,
+            icon:
+              response?.data?.message == "Mã giảm giá hợp lệ"
+                ? "success"
+                : "warning",
+            // confirmButtonText: "OK",
+          });
+          // alert(response?.data?.message);
 
           const discountPercent = response?.data?.coupon.percentage_price;
           const discountFixed = response?.data?.coupon.fixed_price;
@@ -254,7 +319,7 @@ const PurchasingInformation = () => {
 
   //
   const [paymentMethod, setPaymentMethod] = useState("1");
-  console.log(paymentMethod);
+  // console.log(paymentMethod);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   // const [showInfoModal, setShowInfoModal] = useState(false);
@@ -288,13 +353,14 @@ const PurchasingInformation = () => {
       user_id: userId,
       tour_name: tourName,
       tour_id: tourId,
-      child_count: productChildNumber,
-      adult_count: productNumber,
+      child_count:
+        productChildNumber !== null ? parseInt(productChildNumber) : undefined,
+      adult_count: productNumber !== null ? parseInt(productNumber) : undefined,
       tour_start_time: formattedDate,
       tour_end_time: formattedEndDate,
       tour_location: tourLocation,
-      tour_child_price: tourChildPrice,
-      tour_adult_price: tourPrice,
+      tour_child_price: childPrice,
+      tour_adult_price: price,
       tour_image: main_img,
       email: formik.values.email,
       phone_number: formik.values.phone_number,
@@ -323,23 +389,19 @@ const PurchasingInformation = () => {
     console.log(couponData.couponName);
 
     let billID: number | undefined = undefined;
+
     try {
       const response = await addBill(variables);
+
       if ("data" in response) {
         billID = response.data.data.purchase_history.id;
         // Continue handling the successful response
       }
       localStorage.setItem("billIdSuccess", JSON.stringify(billID));
-
+      refetch();
       if (paymentMethod === "1") {
         setLoading(false);
         try {
-          await MySwal.fire({
-            title: "Chuyển khoản",
-            text: "Đặt tour thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
           hideConfirmTourFormModal();
           setShowPaymentModal(true);
         } catch (error) {
@@ -348,12 +410,12 @@ const PurchasingInformation = () => {
       } else if (paymentMethod === "2") {
         setLoading(false);
         try {
-          await MySwal.fire({
-            title: "VNPAY",
-            text: "Đặt tour thành công",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
+          // await MySwal.fire({
+          //   title: "VNPAY",
+          //   text: "Đặt tour thành công",
+          //   icon: "success",
+          //   confirmButtonText: "OK",
+          // });
           const VnpayURL = `http://be-vcdtt.datn-vcdtt.test/api/vnpay-payment/${billID}`;
           window.location.href = VnpayURL;
         } catch (error) {
@@ -375,8 +437,8 @@ const PurchasingInformation = () => {
     adult_count: productNumber,
     tour_start_time: formattedDate,
     tour_location: tourLocation,
-    tour_child_price: tourChildPrice,
-    tour_adult_price: tourPrice,
+    tour_child_price: childPrice,
+    tour_adult_price: price,
     email: formik.values.email,
     phone_number: formik.values.phone_number,
     suggestion: formik.values.message,
@@ -400,14 +462,7 @@ const PurchasingInformation = () => {
   // console.log(onChange);
 
   // Xử ký format giá tiền
-  const formattedTourPrice = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(price);
-  const formattedTourChildPrice = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(childPrice);
+
   const formattedFixedPrice =
     couponData.fixed !== null
       ? new Intl.NumberFormat("vi-VN", {
@@ -432,29 +487,27 @@ const PurchasingInformation = () => {
     titleElement.innerText = "Xác nhận thông tin";
   }
   //
-  const backgroundImageUrl = "../../../../assets/images/inner-banner.jpg";
+  //
 
-  const containerStyle = {
-    background: `url(${backgroundImageUrl})`,
-    backgroundSize: "cover",
+  const showCouponPage = () => {
+    window.open("https://vcdtt.online/user/coupon", "_blank");
   };
+
   const openWindow = () => {
     window.open("https://vcdtt.online/privacy_policy", "_blank");
   };
+  const openWindow2 = () => {
+    window.open("https://vcdtt.online/service_account", "_blank");
+  };
+  //banner
+  const dataTitle = "Thanh toán";
+
   return (
     <>
       <main id="content" className="site-main">
         {/* <!-- Inner Banner html start--> */}
-        <section className="inner-banner-wrap">
-          <div className="inner-baner-container" style={containerStyle}>
-            <div className="container">
-              <div className="inner-banner-content">
-                <h1 className="inner-title">Thanh toán</h1>
-              </div>
-            </div>
-          </div>
-          <div className="inner-shape"></div>
-        </section>
+        <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
         {/* <!-- Inner Banner html end--> */}
 
         {/*  */}
@@ -468,7 +521,10 @@ const PurchasingInformation = () => {
                     <div className="row">
                       <div className="col-sm-4">
                         <div className="form-group">
-                          <label>Danh xưng</label>
+                          <label>
+                            Danh xưng{" "}
+                            <span className=" ml-1 text-danger">*</span>
+                          </label>
                           <select
                             className="input-border"
                             name="honorific"
@@ -483,7 +539,7 @@ const PurchasingInformation = () => {
                           </select>
                           {formik.touched.honorific &&
                             formik.errors.honorific && (
-                              <p className="text-danger">
+                              <p className="text-danger mt-2">
                                 {formik.errors.honorific}
                               </p>
                             )}
@@ -505,7 +561,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.name && formik.errors.name && (
-                            <p className="text-danger">{formik.errors.name}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.name}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -526,7 +584,7 @@ const PurchasingInformation = () => {
                           />
                           {formik.touched.phone_number &&
                             formik.errors.phone_number && (
-                              <p className="text-danger">
+                              <p className="mt-2 text-danger">
                                 {formik.errors.phone_number}
                               </p>
                             )}
@@ -548,7 +606,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.email && formik.errors.email && (
-                            <p className="text-danger">{formik.errors.email}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.email}
+                            </p>
                           )}
                         </div>
                         {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
@@ -566,7 +626,9 @@ const PurchasingInformation = () => {
                             className="input-border"
                           />
                           {formik.touched.email && formik.errors.email && (
-                            <p className="text-danger">{formik.errors.email}</p>
+                            <p className="text-danger mt-2">
+                              {formik.errors.email}
+                            </p>
                           )}
                         </div>
                         {/* {emailError && <div className="validation-error text-danger">{emailError}</div>} */}
@@ -599,17 +661,9 @@ const PurchasingInformation = () => {
 
                     <h3 className="mt-4">Thanh toán</h3>
                     <div className="row mt-2">
-                      <div className="col-sm-6">
-                        <p>Giá bạn phải trả</p>
-                      </div>
-
-                      <div className="col-sm-6">
-                        <p>{formattedResultPrice}</p>
-                      </div>
-
-                      <div className="col-sm-6">
+                      <div className="col-6">
                         <p>Trẻ em({productChildNumber}x)</p>
-                        <p>Người lớn({productNumber}x)</p>
+                        <p>Người lớn ({productNumber}x)</p>
                         {lastPrice !== couponData.finalPrice ? (
                           <p>Coupon giảm giá: </p>
                         ) : (
@@ -617,8 +671,8 @@ const PurchasingInformation = () => {
                         )}
                       </div>
 
-                      <div className="col-sm-6">
-                        <p> {formattedTourChildPrice}</p>
+                      <div className="col-6">
+                        <p>{formattedTourChildPrice}</p>
                         <p>{formattedTourPrice}</p>
                         {formattedFinalPrice !== formattedResultPrice ? (
                           <div>
@@ -635,7 +689,13 @@ const PurchasingInformation = () => {
                         )}
                         <div></div>
                       </div>
+                      <div className="col-6">
+                        <p>Giá bạn phải trả</p>
+                      </div>
 
+                      <div className="col-6">
+                        <p>{formattedResultPrice}</p>
+                      </div>
                       {userLogIn == "true" &&
                       lastPrice !== couponData.finalPrice ? (
                         <div className="col-sm-6">
@@ -653,7 +713,7 @@ const PurchasingInformation = () => {
                     {/* Button trigger modal xác nhận thông tin */}
                     {isSubmitDisabled ? (
                       <div>
-                        <button
+                        <Button
                           type="button"
                           data-toggle="modal"
                           data-target="#confirmTourForm"
@@ -661,29 +721,37 @@ const PurchasingInformation = () => {
                           disabled
                         >
                           Tiếp tục
-                        </button>
+                        </Button>
                         <p className="text-danger mt-2">
                           Hãy nhập đủ thông tin để tiếp tục
                         </p>
                       </div>
                     ) : (
                       <div>
-                        {count >= 100 ? (
+                        {count >= 3 ? (
                           <div>
                             <Button
                               variant="primary"
                               onClick={handleShow}
                               disabled
+                              className="btn-continue"
                             >
                               Tiếp tục
                             </Button>
                             <p className="text-danger mt-2">
-                              Bạn đã vượt quá giới hạn số lần đặt tour này
+                              Số lượng tour chưa thanh toán / chưa được duyêt
+                              thanh toán của bạn đã vượt quá giới hạn. Vui lòng
+                              thanh toán và đợi chúng tôi xét duyệt để tiếp tục
+                              đặt được tour
                             </p>
                           </div>
                         ) : (
                           <div>
-                            <Button variant="primary" onClick={handleShow}>
+                            <Button
+                              variant="primary"
+                              onClick={handleShow}
+                              className="btn-continue"
+                            >
                               Tiếp tục
                             </Button>
                           </div>
@@ -700,204 +768,6 @@ const PurchasingInformation = () => {
                       referrerPolicy="no-referrer-when-downgrade"
                     ></iframe>
                   </form>
-                  {/* Modal xác nhận thông tin */}
-
-                  {/* <div className="">
-                    <div
-                      className="modal fade"
-                      id="confirmTourForm"
-                      role="dialog"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                              Xác nhận thông tin
-                            </h5>
-                            <button
-                              type="button"
-                              className="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            <form onSubmit={handleSubmit}>
-                              <div className="row">
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Họ và tên</label>
-                                  <input
-                                    type="text"
-                                    name="name"
-                                    value={formik.values.name}
-                                    disabled
-                                  />{" "}
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số điện thoại</label>
-                                  <input
-                                    type="text"
-                                    name="phone_number"
-                                    value={formik.values.phone_number}
-                                    disabled
-                                  />{" "}
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Email</label>
-                                  <input
-                                    type="email"
-                                    name="email"
-                                    value={formik.values.email}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Ngày đặt tour</label>
-                                  <input
-                                    type="text"
-                                    name="tour_start_time"
-                                    value={formattedDate}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">
-                                    Ngày kết thúc tour (dự kiến)
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="tour_start_time"
-                                    value={formattedEndDate}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Giá tour</label>
-                                  <input
-                                    type="text"
-                                    name="created_at"
-                                    value={formattedResultPrice}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số lượng trẻ em</label>
-                                  <input
-                                    type="text"
-                                    name="child_count"
-                                    value={productChildNumber}
-                                    disabled
-                                  />
-                                </div>
-                                <div className="form-group col-6">
-                                  <label htmlFor="">Số lượng người lớn</label>
-                                  <input
-                                    type="text"
-                                    name="adult_count"
-                                    value={productNumber}
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-
-                              {formattedResultPrice == formattedFinalPrice ? (
-                                <div></div>
-                              ) : (
-                                <div className="form-group">
-                                  <label htmlFor="">
-                                    Giá tour sau khi nhập coupon
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="created_at"
-                                    value={formattedFinalPrice}
-                                    disabled
-                                  />
-                                </div>
-                              )}
-
-                              <div className="form-group">
-                                <label htmlFor="">Phương thức thanh toán</label>
-                                <div className="mr-3">
-                                  <input
-                                    type="radio"
-                                    name="purchase_method"
-                                    value="1"
-                                    className="mr-2"
-                                    onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === "1"}
-                                  />
-                                  Thanh toán online (chuyển khoản ngân hàng)
-                                </div>
-                                <div>
-                                  <input
-                                    type="radio"
-                                    name="purchase_method"
-                                    value="2"
-                                    className="mr-2"
-                                    onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === "2"}
-                                  />
-                                  VNPAY
-                                </div>
-                              </div>
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={handleCheckboxChange}
-                              />
-                              <span className="ml-2">
-                                Tôi đồng ý với{" "}
-                                <Link to={"/privacy_policy"}>Chính sách</Link>{" "}
-                                của trang
-                              </span>
-                              <br />
-                              <br />
-                              {!isChecked ? (
-                                <button
-                                  type="submit"
-                                  disabled
-                                  className="btn btn-primary"
-                                >
-                                  Xác nhận thanh toán
-                                </button>
-                              ) : (
-                                <div>
-                                  <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    // disabled={loading}
-                                  >
-                                    Xác nhận thanh toán
-                                    {loading == true ? (
-                                      <Spin className="ml-2" />
-                                    ) : (
-                                      <span></span>
-                                    )}
-                                  </button>
-                                </div>
-                              )}
-                            </form>
-                          </div>
-                          <div className="modal-footer">
-                            <button
-                              aria-label="Close"
-                              // disabled={isChecked == false}
-                              type="button"
-                              className="btn btn-secondary"
-                              data-dismiss="modal"
-                            >
-                              Close
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
 
                   <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
@@ -967,7 +837,11 @@ const PurchasingInformation = () => {
                             <input
                               type="text"
                               name="child_count"
-                              value={productChildNumber}
+                              value={
+                                productChildNumber !== null
+                                  ? productChildNumber
+                                  : ""
+                              }
                               disabled
                             />
                           </div>
@@ -976,7 +850,9 @@ const PurchasingInformation = () => {
                             <input
                               type="text"
                               name="adult_count"
-                              value={productNumber}
+                              value={
+                                productNumber !== null ? productNumber : ""
+                              }
                               disabled
                             />
                           </div>
@@ -1030,9 +906,21 @@ const PurchasingInformation = () => {
                         />
                         <span className="ml-2">
                           Tôi đồng ý với{" "}
-                          <a className="text-primary" onClick={openWindow}>
-                            chính sách
-                          </a>{" "}
+                          <Link
+                            to={""}
+                            className="text-primary"
+                            onClick={openWindow}
+                          >
+                            Chính sách
+                          </Link>{" "}
+                          và&ensp;
+                          <Link
+                            to={""}
+                            className="text-primary"
+                            onClick={openWindow2}
+                          >
+                            Điều khoản
+                          </Link>{" "}
                           của trang
                         </span>
                         <br />
@@ -1041,9 +929,9 @@ const PurchasingInformation = () => {
                           <button
                             type="submit"
                             disabled
-                            className="btn btn-primary"
+                            className="btn btn-secondary"
                           >
-                            Xác nhận thanh toán
+                            Thanh toán
                           </button>
                         ) : (
                           <div>
@@ -1052,7 +940,7 @@ const PurchasingInformation = () => {
                               className="btn btn-primary"
                               // disabled={loading}
                             >
-                              Xác nhận thanh toán
+                              Thanh toán
                               {loading == true ? (
                                 <Spin className="ml-2" />
                               ) : (
@@ -1065,7 +953,7 @@ const PurchasingInformation = () => {
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleClose}>
-                        Close
+                        Đóng
                       </Button>
                     </Modal.Footer>
                   </Modal>
@@ -1115,27 +1003,46 @@ const PurchasingInformation = () => {
                     </div>
                   </div>
                   <div className="coupon-field">
-                    <h4>Nhập coupon</h4>
+                    <h4>Nhập mã giảm giá</h4>
                     {userLogIn == "true" ? (
-                      <form onSubmit={handleCouponSubmit}>
-                        <div className="form-group row">
-                          <input
-                            type="text"
-                            name="coupon_code"
-                            placeholder="Nhập mã giảm giá"
-                            className="input-border col-8"
-                            value={formCoupon.coupon_code}
-                            onChange={handleCouponChange}
-                          />
-                          <input
-                            type="hidden"
-                            name="user_id"
-                            className="input-border"
-                            value={formCoupon.user_id}
-                          />
-                          <button className="btn-continue col-4" type="submit">
-                            Submit
-                          </button>
+                      <form className="" onSubmit={handleCouponSubmit}>
+                        <div className="form-group row justify-content-center">
+                          <div className="col-sm-8 position-relative">
+                            <input
+                              type="text"
+                              name="coupon_code"
+                              placeholder="Nhập mã giảm giá"
+                              className="input-border"
+                              value={formCoupon.coupon_code}
+                              onChange={handleCouponChange}
+                            />
+                            <input
+                              type="hidden"
+                              name="user_id"
+                              className="input-border"
+                              value={formCoupon.user_id}
+                            />
+                            <button
+                              type="button"
+                              className="btn text-danger position-absolute"
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="Ấn vào để xem danh sách coupon của bạn ở Kho Mã Giảm Giá "
+                              style={{
+                                width: "48px",
+                                height: "48px",
+                                right: "15px",
+                              }}
+                              onClick={showCouponPage}
+                            >
+                              !!!
+                            </button>
+                          </div>
+                          <div className="col-sm-4">
+                            <button className="btn-continue" type="submit">
+                              Xác nhận
+                            </button>
+                          </div>
                         </div>
                       </form>
                     ) : (

@@ -8,32 +8,34 @@ import {
   useUpdatePasswordMutation,
 } from "../../../api/user";
 import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import moment from "moment";
-import { message } from "antd";
 import { Skeleton } from "antd";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import "moment/locale/vi";
 import { User } from "../../../interfaces/User";
+import SecondaryBanner from "../../../componenets/User/SecondaryBanner";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 dayjs.locale("vi");
 moment.locale("vi");
+
+const MySwal = withReactContent(Swal);
 
 const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = user?.id;
-  const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
-  //
+  const userPassword = user?.password;
+  console.log(userPassword);
 
-  // const userName = userData?.data?.user.name;
-  // const userDateOfBirth = userData?.data?.user.date_of_birth;
-  // const userEmail = userData?.data?.user.email;
-  // const phoneNumber = userData?.data?.user.phone_number;
-  // const userAddress = userData?.data?.user.address;
-  // const userGender = userData?.data?.user.gender;
+  const { data: userData, isLoading } = useGetUserByIdQuery(userId || "");
+
   const {
     name: userName,
     email: userEmail,
@@ -55,54 +57,98 @@ const UserProfile = () => {
     address: "",
     phone_number: "",
     date_of_birth: "",
-    gender: undefined,
-    data: undefined,
   });
-  console.log(formValues);
+
+  interface FormValues {
+    id: number;
+    name: string;
+    email: string;
+    phone_number: string;
+    date_of_birth: string;
+    gender: number;
+    address: string;
+  }
+
+  const phoneRegExp = /^0\d{9}$/;
+  const formik = useFormik<FormValues>({
+    initialValues: {
+      id: userId,
+      name: userName || "",
+      email: userEmail ? userEmail : "",
+      phone_number: phoneNumber ? phoneNumber : "",
+      gender: userGender ? userGender : "",
+      address: userAddress ? userAddress : "",
+      date_of_birth: userDateOfBirth ? userDateOfBirth : "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Nhập tên")
+        .min(5, "Tên phải chứa ít nhất 5 ký tự")
+        .max(30, "Tên không được vượt quá 30 ký tự"),
+      email: Yup.string()
+        .email("Sai định dạng email")
+        .required("Email không được để trống"),
+      phone_number: Yup.string()
+        .required("Nhập số điện thoại")
+        .matches(phoneRegExp, "Sai định dạng số điện thoại"),
+      gender: Yup.string().required("Chọn giới tính"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+    validateOnMount: true,
+  });
+  // console.log(formik.values);
 
   useEffect(() => {
-    if (userData) {
-      const { name, email, phone_number, address, date_of_birth, gender } =
-        userData.data.user;
+    if (userData && userData.data.user.name) {
+      formik.setValues((prevValues) => ({
+        ...prevValues,
+        name: userData.data.user.name,
+        phone_number: userData.data.user.phone_number,
+        address: userData.data.user.address,
+        email: userData.data.user.email,
+        gender: userData.data.user.gender,
+        date_of_birth: userData.data.user.date_of_birth || "",
+      }));
       setFormValues({
         ...formValues,
-        name: name || "",
-        email: email || "",
-        address: address || "",
-        phone_number: phone_number || "",
-        date_of_birth: date_of_birth || "",
-        gender: gender || "",
+        date_of_birth: userData.data.user.date_of_birth || "",
       });
     }
   }, [userData]);
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
+  const isSubmitDisabled = Object.keys(formik.errors).length > 0;
+  console.log(Object.keys(formik.errors).length);
+
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formValues);
-    editUser(formValues)
+    console.log(formik.values);
+    const variables = {
+      id: userId,
+      name: formik.values.name,
+      phone_number: formik.values.phone_number,
+      address: formik.values.address,
+      email: formik.values.email,
+      gender: formik.values.gender,
+      date_of_birth: formValues.date_of_birth,
+    };
+    console.log(variables);
+    editUser(variables)
       .then(() => {
-        message.success("Cập nhật thông tin thành công");
+        MySwal.fire({
+          text: "Sửa thông tin thành công",
+          icon: "success",
+          // confirmButtonText: "OK",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer: 2000,
+        });
       })
       .catch((error) => {
         // Handle any errors here
         console.error(error);
       });
   };
-  // const handleDateChange = (date: moment.Moment | null) => {
-  //   const newDateOfBirth = date ? date.format("YYYY-MM-DD") : null;
-  //   setFormValues((prevValues) => ({
-  //     ...prevValues,
-  //     date_of_birth: newDateOfBirth,
-  //   }));
-  // };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDateChange = (date: Dayjs | null, _dateString: string) => {
@@ -118,6 +164,8 @@ const UserProfile = () => {
     new_password: "",
     confirmNewPassword: "",
   });
+  console.log(passwordFormValues);
+
   const handlePasswordInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -136,21 +184,6 @@ const UserProfile = () => {
     // Define the properties of the SerializedError object
   }
 
-  // interface SuccessResponse {
-  //   status: number;
-  //   // Add other properties as needed
-  // }
-
-  // interface ErrorResponse {
-  //   status: number;
-  //   // Add other properties as needed
-  // }
-
-  // // Update the type according to the actual response structure
-  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // type UpdatePasswordResponse = SuccessResponse | ErrorResponse;
-
-  // Update the type according to the actual response structure
   type UpdatePasswordResult =
     | { data: User }
     | { error: FetchBaseQueryError | SerializedError };
@@ -161,9 +194,15 @@ const UserProfile = () => {
     if (
       passwordFormValues.new_password !== passwordFormValues.confirmNewPassword
     ) {
-      message.warning(
-        "Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp."
-      );
+      MySwal.fire({
+        text: "Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp.",
+        icon: "warning",
+        // confirmButtonText: "OK",
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
       return;
     }
 
@@ -177,20 +216,27 @@ const UserProfile = () => {
     updatePassword(updatedPassword)
       .then((response: UpdatePasswordResult) => {
         if ("data" in response) {
-          // Handle success case
-          // const responseData = response.data;
-          // Process responseData
-          message.success("Đổi mật khẩu thành công");
-        } else if ("error" in response) {
-          // Handle error case
-          // const errorData = response.error;
-          // Process errorData
-          message.warning("Sai mật khẩu");
+          if (response.data.status == 200) {
+            MySwal.fire({
+              text: "Đổi mật khẩu thành công",
+              icon: "success",
+              // confirmButtonText: "OK",
+              showCancelButton: false,
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          } else if (response.data?.status == 404) {
+            MySwal.fire({
+              text: "Sai mật khẩu",
+              icon: "warning",
+              // confirmButtonText: "OK",
+              showCancelButton: false,
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          }
         }
 
-        console.log(response);
-
-        // Xóa các trường mật khẩu sau khi thay đổi thành công
         setPasswordFormValues({
           old_password: "",
           new_password: "",
@@ -216,27 +262,36 @@ const UserProfile = () => {
   if (titleElement) {
     titleElement.innerText = "Thông tin người dùng";
   }
+  const dataTitle = "Thông tin tài khoản";
+
+  // const decryptPassword = (password: string) => {
+  //   const key = "i47Mm0anr583zFb0SdXHCjX19rETnZ85kBkOQlRpH78";
+  //   const decodedEncrypted = atob(password);
+  //   const parsedEncrypted = JSON.parse(decodedEncrypted);
+  //   // console.log("Laravel encryption result", parsedEncrypted);
+  //   // IV is base64 encoded in Laravel, expected as WordArray in cryptojs
+  //   const iv = CryptoJS.enc.Base64.parse(parsedEncrypted.iv);
+  //   // Value (cipher text) is also base64 encoded in Laravel, same in cryptojs
+  //   const value = parsedEncrypted.value;
+  //   // Key is base64 encoded in Laravel, WordArray expected in cryptojs
+  //   const parsedKey = CryptoJS.enc.Base64.parse(key);
+  //   const decrypted = CryptoJS.AES.decrypt(value, parsedKey, {
+  //     iv: iv,
+  //   });
+  //   const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+  //   console.log(decryptedText);
+  //   return decryptedText;
+  // };
+  // const decryptedPassword = decryptPassword(userPassword || "");
+  // console.log(decryptedPassword);
 
   return (
     <div>
-      <section className="inner-banner-wrap">
-        <div
-          className="inner-baner-container"
-          style={{
-            backgroundImage: `url(../../../../assets/images/bg/bg1.jpg)`,
-          }}
-        >
-          <div className="container">
-            <div className="inner-banner-content">
-              <h1 className="inner-title">Thông tin tài khoản</h1>
-            </div>
-          </div>
-        </div>
-        <div className="inner-shape"></div>
-      </section>
+      <SecondaryBanner>{dataTitle}</SecondaryBanner>
+
       <section className="container" style={{ marginBottom: "200px" }}>
         <div className="row">
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="border">
               {isLoading ? (
                 <Skeleton active />
@@ -281,13 +336,16 @@ const UserProfile = () => {
                   >
                     <IoPersonOutline /> Thông tin cá nhân
                   </Link>
-                  <Link className="nav-link active" to={"/user/tours"}>
+                  <Link
+                    className="nav-link active text-black"
+                    to={"/user/tours"}
+                  >
                     <FaRegListAlt /> Tour đã đặt
                   </Link>
-                  <Link className="nav-link" to={"/user/favorite"}>
+                  <Link className="nav-link text-black" to={"/user/favorite"}>
                     <FaRegHeart /> Tour yêu thích
                   </Link>
-                  <Link className="nav-link" to={"/user/coupon"}>
+                  <Link className="nav-link text-black" to={"/user/coupon"}>
                     <FaRegListAlt /> Mã Giảm giá
                   </Link>
                 </nav>
@@ -318,15 +376,28 @@ const UserProfile = () => {
                     Email: <span className="fw-bold">{userEmail}</span>
                   </p>
                   <p>
-                    Địa chỉ: <span className="fw-bold">{userAddress}</span>
+                    Địa chỉ:{" "}
+                    {userAddress ? (
+                      <span className="fw-bold">{userAddress}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Số điện thoại:{" "}
-                    <span className="fw-bold">{phoneNumber}</span>
+                    {phoneNumber ? (
+                      <span className="fw-bold">{phoneNumber}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Ngày tháng năm sinh:{" "}
-                    <span className="fw-bold">{formattedDate}</span>
+                    {userDateOfBirth ? (
+                      <span className="fw-bold">{formattedDate}</span>
+                    ) : (
+                      <span className="fw-bold">Chưa có</span>
+                    )}
                   </p>
                   <p>
                     Giới tính: <span className="fw-bold">{gender}</span>
@@ -344,9 +415,15 @@ const UserProfile = () => {
                             type="text"
                             name="name"
                             className="input-border"
-                            value={formValues.name}
-                            onChange={handleInputChange}
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
+                          {formik.touched.name && formik.errors.name && (
+                            <p className="text-danger mt-2">
+                              {formik.errors.name}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -358,9 +435,15 @@ const UserProfile = () => {
                             type="text"
                             name="email"
                             className="input-border"
-                            value={formValues.email}
-                            onChange={handleInputChange}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
+                          {formik.touched.email && formik.errors.email && (
+                            <p className="mt-2 text-danger">
+                              {formik.errors.email}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -373,30 +456,20 @@ const UserProfile = () => {
                             type="text"
                             name="phone_number"
                             className="input-border"
-                            value={formValues.phone_number}
-                            onChange={handleInputChange}
+                            value={formik.values.phone_number}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
+                          {formik.touched.phone_number &&
+                            formik.errors.phone_number && (
+                              <p className="mt-2 text-danger">
+                                {formik.errors.phone_number}
+                              </p>
+                            )}
                         </div>
                       </div>
-                      <div className="col-sm-6">
-                        <div className="form-group">
-                          <label className="d-inline-flex block">
-                            Ngày sinh <div className=" ml-1 text-danger">*</div>
-                          </label>{" "}
-                          <br />
-                          <DatePicker
-                            className="input-border"
-                            name="date_of_birth"
-                            value={
-                              formValues.date_of_birth
-                                ? dayjs(formValues.date_of_birth)
-                                : null
-                            }
-                            onChange={handleDateChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
+
+                      <div className="col-sm-3">
                         <div className="form-group">
                           <label className="d-inline-flex">
                             Giới tính <div className=" ml-1 text-danger">*</div>
@@ -412,34 +485,72 @@ const UserProfile = () => {
                             name="gender"
                             id=""
                             className="input-border"
-                            value={formValues.gender}
-                            onChange={handleInputChange}
+                            value={formik.values.gender}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           >
+                            <option value="">--Chọn giới tính--</option>
                             <option value="1">Nam</option>
                             <option value="2">Nữ</option>
                             <option value="3">Khác</option>
                           </select>
+                          {formik.touched.gender && formik.errors.gender && (
+                            <p className="text-danger mt-2">
+                              {formik.errors.gender}
+                            </p>
+                          )}
                         </div>
                       </div>
+                      <div className="col-sm-3">
+                        <div className="form-group">
+                          <label className="d-inline-flex block">
+                            Ngày sinh
+                          </label>{" "}
+                          <br />
+                          <DatePicker
+                            className="input-border"
+                            name="date_of_birth"
+                            value={
+                              formValues.date_of_birth
+                                ? dayjs(formValues.date_of_birth)
+                                : null
+                            }
+                            onChange={handleDateChange}
+                            // onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                          {/* {formik.touched.date_of_birth &&
+                            formik.errors.date_of_birth && (
+                              <p className="text-danger">
+                                {formik.errors.phone_number}
+                              </p>
+                            )} */}
+                        </div>
+                      </div>
+
                       <div className="col-sm-12">
                         <div className="form-group">
-                          <label className="d-inline-flex">
-                            Địa chỉ <div className=" ml-1 text-danger">*</div>
-                          </label>
+                          <label className="d-inline-flex">Địa chỉ</label>
                           <input
                             type="text"
                             name="address"
                             className="input-border"
-                            value={formValues.address}
-                            onChange={handleInputChange}
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
                         </div>
                       </div>
                     </div>
-
-                    <button type="submit" className="btn-continue">
-                      Chỉnh sửa
-                    </button>
+                    {isSubmitDisabled ? (
+                      <button type="submit" disabled className="btn-continue">
+                        Chỉnh sửa
+                      </button>
+                    ) : (
+                      <button type="submit" className="btn-continue">
+                        Chỉnh sửa
+                      </button>
+                    )}
                   </form>
                 </TabPane>
                 <TabPane tab="Thay đổi mật khẩu" key="3">
@@ -451,6 +562,7 @@ const UserProfile = () => {
                       <input
                         type="password"
                         name="old_password"
+                        className="input-border"
                         // value={passwordFormValues?.oldPassword}
                         onChange={handlePasswordInputChange}
                       />
@@ -462,6 +574,7 @@ const UserProfile = () => {
                       <input
                         type="password"
                         name="new_password"
+                        className="input-border"
                         // value={passwordFormValues?.newPassword}
                         onChange={handlePasswordInputChange}
                       />
@@ -475,10 +588,19 @@ const UserProfile = () => {
                         type="password"
                         name="confirmNewPassword"
                         value={passwordFormValues.confirmNewPassword}
+                        className="input-border"
                         onChange={handlePasswordInputChange}
                       />
                     </div>
-                    <button type="submit" className="btn-continue">
+                    <button
+                      type="submit"
+                      disabled={
+                        passwordFormValues.confirmNewPassword == "" &&
+                        passwordFormValues.new_password == "" &&
+                        passwordFormValues.old_password == ""
+                      }
+                      className="btn-continue"
+                    >
                       Đổi mật khẩu
                     </button>
                   </form>

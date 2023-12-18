@@ -83,3 +83,45 @@ em {
 
 
 
+.ais-RatingMenu-starIcon--full {
+  fill: #fadb14;
+}
+
+.ais-RatingMenu-starIcon--empty {
+  fill: rgba(0, 0, 0, 0.08);
+}
+
+.ais-RatingMenu{
+  color: #21243d;
+  font-size: 0.75rem;
+}
+
+/* RatingMenu */
+
+.ais-RatingMenu-item:not(.ais-RatingMenu-item--selected) {
+  opacity: 0.5;
+}
+
+.ais-RatingMenu-starIcon {
+  margin-right: 0.5rem;
+}
+
+.ais-RatingMenu-item{
+  margin-top: 10px;
+}
+
+.hits-empty-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 300px;
+}
+
+.hits-empty-state-title {
+  /* font-family: Hind; */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+}

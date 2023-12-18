@@ -27,6 +27,7 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
     protected $name;
     protected $purchase_method;
     protected $admin_id;
+    protected $line;
 
     /**
      * Create a new notification instance.
@@ -41,6 +42,7 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
         $this->payment_status = $purchaseHistory->payment_status;
         $this->purchase_method = $purchaseHistory->purchase_method;
         $this->admin_id = $admin_id;
+        $this->line = "Bạn có đơn đặt hàng mới từ khách hàng " . $this->name .". Vui lòng kiểm tra trong đơn hàng của bạn";
     }
 
     /**
@@ -60,10 +62,10 @@ class PurchaseNotificationAdmin extends Notification implements ShouldQueue, Sho
     {
         return (new MailMessage)
             ->subject('Thông báo đặt hàng')
-            ->greeting('Xin chào!')
-            ->line('Bạn có đơn đặt hàng mới từ khách hàng ' . $this->name)
-            ->line('Vui lòng kiểm tra trong đơn hàng của bạn')
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+            ->view('mail.admin', [
+                'line' => $this->line
+            ])
+;
     }
 
     /**

@@ -37,7 +37,7 @@
                 <div class="col-12">
                     <div class="card border-0 shadow-lg rounded-4 ">
                         <div class="card-header">
-                            <h3 class="card-title">Blog</h3>
+                            <h3 class="card-title">Bài viết</h3>
                             @if (auth()->user()->is_admin == 1 ||
                                     auth()->user()->can('delete post'))
                                 <a href="{{ route('blog.trash') }}"
@@ -100,7 +100,7 @@
                                                 'title' => 'Tiêu đề',
                                                 'author' => 'Tác giả',
                                                 'short_desc' => 'Mô tả ngắn',
-                                                'view_count' => 'Số lượt xem',
+                                                // 'view_count' => 'Số lượt xem',
                                                 'created_at' => 'Ngày tạo',
                                                 'updated_at' => 'Ngày sửa',
                                             ];
@@ -124,7 +124,7 @@
                                             <label class="visually-hidden" for="autoSizingInput">Từ khóa</label>
                                             <input type="text" name="keyword"
                                                 value="{{ request()->query('keyword') }}" class="form-control"
-                                                placeholder="Keyword">
+                                                placeholder="Từ khóa">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-indigo">Tìm</button>
@@ -166,9 +166,9 @@
                                                 <td>
                                                     {!! string_truncate($item->short_desc, 50) !!}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     {{ $item->view_count }}
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     {{ time_format($item->created_at) }}
                                                 </td>
@@ -176,12 +176,12 @@
                                                     {{ time_format($item->updated_at) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status == 2)
+                                                    @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Activated"></span>
+                                                            data-bs-placement="top" data-bs-title="Hoạt động"></span>
                                                     @else
                                                         <span class="badge bg-secondary" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" data-bs-title="Unactivated"></span>
+                                                            data-bs-placement="top" data-bs-title="Không hoạt động"></span>
                                                     @endif
                                                 </td>
                                                 <td class="text-end">

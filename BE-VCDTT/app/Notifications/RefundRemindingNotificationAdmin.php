@@ -14,7 +14,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue,ShouldBroadcast
+class RefundRemindingNotificationAdmin extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable, Dispatchable, InteractsWithSockets, SerializesModels;
     protected $purchaseHistoryID;
@@ -23,11 +23,12 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
     protected $name;
     protected $purchase_method;
     protected $admin_id;
+    protected $line;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($purchaseHistory,$admin_id)
+    public function __construct($purchaseHistory, $admin_id)
     {
         //
         $this->purchaseHistoryID = $purchaseHistory->id;
@@ -36,6 +37,7 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
         $this->name = $purchaseHistory->name;
         $this->purchase_method = $purchaseHistory->purchase_method;
         $this->admin_id = $admin_id;
+        $this->line = 'Bạn vừa phê duyệt hủy tour ' . $this->tour_name . ' .Vui lòng hoàn tiền cho khách hàng ' . $this->name;
     }
 
     /**
@@ -45,7 +47,7 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
      */
     public function via(object $notifiable): array
     {
-        return ['mail','database','broadcast'];
+        return ['mail', 'database', 'broadcast'];
     }
 
     /**
@@ -55,10 +57,9 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
     {
         return (new MailMessage)
             ->subject('Nhắc nhở hoàn tiền')
-            ->greeting('Xin chào!')
-            ->line('Bạn vừa phê duyệt hủy tour ' . $this->tour_name)
-            ->line('Vui lòng hoàn tiền cho khách hàng ' . $this->name)
-            ->salutation(new HtmlString('Trân trọng, <br> VCDTT'));
+            ->view('mail.admin', [
+                'line' => $this->line
+            ]);
     }
 
     /**
@@ -79,6 +80,6 @@ class RefundRemindingNotificationAdmin extends Notification implements ShouldQue
 
     public function broadcastOn()
     {
-        return new PrivateChannel('datn-vcdtt-development.'.$this->admin_id);
+        return new PrivateChannel('datn-vcdtt-development.' . $this->admin_id);
     }
 }
