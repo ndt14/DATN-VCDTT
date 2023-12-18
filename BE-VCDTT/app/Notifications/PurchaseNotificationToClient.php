@@ -29,6 +29,7 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
     protected $tour_adult_price;
     protected $adult_count;
     protected $tour_name;
+    protected $gender;
 
     /**
      * Create a new notification instance.
@@ -38,12 +39,13 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
         //
         $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
+        $this->name = $purchase_history->name;
         if ($purchase_history->gender == 1) {
-            $this->name = 'ông ' . $purchase_history->name;
+            $this->gender = 'ông ';
         } elseif ($purchase_history->gender == 2) {
-            $this->name = 'bà ' . $purchase_history->name;
+            $this->gender = 'bà ';
         } else{
-            $this->name = 'ông/bà ' . $purchase_history->name;
+            $this->gender = 'ông/bà ';
         }
         $this->email = $purchase_history->email;
         $this->phone_number = $purchase_history->phone_number;
@@ -101,7 +103,8 @@ class PurchaseNotificationToClient extends Notification implements ShouldQueue
                 'tour_adult_price' => $this->tour_adult_price,
                 'adult_count' => $this->adult_count,
                 'user_id' => $this->user_id,
-                'purchase_status' => $this->purchase_status
+                'purchase_status' => $this->purchase_status,
+                'gender' => $this->gender
             ]);
     }
 

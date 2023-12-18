@@ -36,6 +36,7 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
     protected $adult_count;
     protected $tour_name;
     protected $purchase_history_id;
+    protected $gender;
 
     /**
      * Create a new notification instance.
@@ -45,12 +46,13 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
         //
         $this->purchase_history = $purchase_history;
         $this->purchase_status = $purchase_history->purchase_status;
+        $this->name = $purchase_history->name;
         if ($purchase_history->gender == 1) {
-            $this->name = 'ông ' . $purchase_history->name;
+            $this->gender = 'ông ';
         } elseif ($purchase_history->gender == 2) {
-            $this->name = 'bà ' . $purchase_history->name;
+            $this->gender = 'bà ';
         } else {
-            $this->name = 'ông/bà ' . $purchase_history->name;
+            $this->gender = 'ông/bà ';
         }
         $this->email = $purchase_history->email;
         $this->phone_number = $purchase_history->phone_number;
@@ -135,7 +137,8 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                     'adult_count' => $this->adult_count,
                     'purchase_status' => $this->purchase_status,
                     'purchase_history_id' => $this->purchase_history_id,
-                    'user_id' => $this->user_id
+                    'user_id' => $this->user_id,
+                    'gender' => $this->gender
                 ]);
         } else {
             return (new MailMessage)
@@ -143,7 +146,8 @@ class SendMailToClientWhenPaid extends Notification implements ShouldQueue
                 ->view('mail.client', [
                     'status' => $this->status,
                     'user_id' => $this->user_id,
-                    'name' => $this->name
+                    'name' => $this->name,
+                    'gender' => $this->gender
                 ]);
         }
     }
