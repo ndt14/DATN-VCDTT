@@ -205,7 +205,7 @@
 </div>
 <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
 <script type="text/javascript">
-    let backendBaseUrl = "{{ url('')}}";
+    let backendBaseUrl = "{{ url('') }}";
     var user = <?php echo $user; ?>;
     var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
         cluster: "ap1",
@@ -221,7 +221,11 @@
     channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
         var id = data.id;
         if (data.purchase_method == 2) {
-            var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.transaction_id;
+            if (data.transaction_id == null) {
+                var purchaseMethodText = 'Mã giao dịch VN Pay:';
+            } else {
+                var purchaseMethodText = 'Mã giao dịch VN Pay:' + data.transaction_id;
+            }
         } else {
             var purchaseMethodText = 'Khách hàng chuyển khoản online:';
         }
