@@ -302,7 +302,7 @@
                                         placeholder="" class="form-control" readonly disabled>
                                 </div>
                             </div>
-                            <div class="mb-3 col-md-12">
+                            <div class="mb-3 col-md-12 d-none">
                                 <div class="form-label">Trạng thái</div>
                                 <div class="custom-controls-stacked">
                                     <div class="" style="padding: 9px;">

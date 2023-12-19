@@ -79,7 +79,7 @@
                                             </div>-->
                                 <div class="ms-auto text-muted">
                                     <form method="get" action="" class="row gy-2 gx-3 align-items-center">
-                                        <div class="col-auto">
+                                        <div class="col-auto d-none">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="status">
                                                 @if (!request()->query('status'))
@@ -104,7 +104,7 @@
                                                 'created_at' => 'Ngày tạo',
                                             ];
                                         @endphp
-                                        <div class="col-auto">
+                                        <div class="col-auto d-none">
                                             <label class="visually-hidden" for="autoSizingSelect">Trạng thái</label>
                                             <select class="form-select" name="searchCol">
                                                 @if (!request()->query('searchCol'))
@@ -140,7 +140,7 @@
                                         @foreach ($tableCols as $key => $value)
                                             <th>@sortablelink($key, $value)</th>
                                         @endforeach
-                                        <th>Trạng thái</th>
+                                        <th class="d-none">Trạng thái</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -171,7 +171,7 @@
                                                 <td>
                                                     {{ time_format($item->created_at) }}
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="text-center d-none">
                                                     @if ($item->status == 1)
                                                         <span class="badge bg-success" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" data-bs-title="Hoạt động"></span>
