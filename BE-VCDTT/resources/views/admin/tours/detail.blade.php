@@ -17,7 +17,7 @@
                         <div class="form-label">Ngày sửa</div>
                         {{ time_format($item['updated_at']) }}
                     </div>
-                    <div class="col-md">
+                    <div class="col-md d-none">
                         <div class="form-label">Hoạt động</div>
                         @if($item['status'] == 0)
                             <span class="badge bg-muted me-1 text-light">Not active</span>

@@ -163,7 +163,14 @@ class CouponController extends Controller
 
         // $input['start_at'] = Carbon::createFromFormat('d/m/Y', $input['start_at'])->format('Y-m-d H:i:s');
         // $input['end_at'] = Carbon::createFromFormat('d/m/Y', $input['end_at'])->format('Y-m-d H:i:s');
+        $check_code = Coupon::where('code', $input['code'])->whereNull('deleted_at')->get();
         $input['code'] = Str::upper($input['code']);
+        // if($check_code->id && Str::upper($check_code->code) != $input['code']){
+        //     return response()->json([
+        //         'message' => 'Mã đã tồn tại',
+        //         'status' => 500
+        //     ]);
+        // }
         if ($request->type != 1) {
             $input['percentage_price'] = null;
             $input['fixed_price'] = $request->price;
