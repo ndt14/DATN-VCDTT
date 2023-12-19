@@ -51,9 +51,13 @@ class CouponRequest extends FormRequest
                         break;
 
                     case 'couponManagementEdit':
+                        $couponId = $this->route('id');
                         $rule = [
                             'name' => 'required',
-                            'code' => 'required|unique:coupons',
+                            'code' => [
+                                'required',
+                                Rule::unique('coupons')->ignore($couponId, 'id'),
+                            ],
                             'type' => 'required',
                             'price' => 'required',
                             'start_date' => 'required',
