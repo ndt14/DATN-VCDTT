@@ -30,11 +30,11 @@ class DashboardController extends Controller
         $data['UVCount'] = Count(PurchaseHistory::where('purchase_status', 2)->get());
 
         //
-        $purchaseHistory = PurchaseHistory::where('payment_status', 2)->where('purchase_status', 3)->whereIn('tour_status', [2, 3])->get();
+        $purchaseHistory = PurchaseHistory::whereNull('deleted_at')->where('payment_status', 2)->where('purchase_status', 3)->whereIn('tour_status', [2, 3])->get();
         $total = [];
         foreach ($purchaseHistory as $purchaseHistory) {
             $final['price'] = $purchaseHistory->tour_child_price * $purchaseHistory->child_count + $purchaseHistory->tour_adult_price * $purchaseHistory->adult_count;
-            $final['price'] = $final['price'] - ($purchaseHistory->coupon_percentage == null ? ($purchaseHistory->coupon_fixed ?? 0) : 0) - ($final['price'] / 100 * ($purchaseHistory->coupon_percentage ?? 0 + $purchaseHistory->tour_sale_percentage ?? 0));
+            $final['price'] = $final['price'] - ($purchaseHistory->coupon_percentage == null || $purchaseHistory->coupon_percentage == 0 ? ($purchaseHistory->coupon_fixed ?? 0) : 0) - ($final['price'] / 100 * ($purchaseHistory->coupon_percentage == '' || $purchaseHistory->coupon_percentage == 0 ? 0 : $purchaseHistory->coupon_percentage ));
             $final['time'] = date("d-m-Y", strtotime($purchaseHistory->created_at));
             array_push($total, $final);
         }
@@ -181,17 +181,20 @@ class DashboardController extends Controller
         }
 
         //Top 10 tour có doanh thu cao nhất
-        $data['chartTop5ToursBySale'] = Tour::join('purchase_histories', 'tours.name', '=', 'purchase_histories.tour_name')
-            ->select(
-                'tours.name',
-                DB::raw('SUM((purchase_histories.child_count * tours.child_price) + (purchase_histories.adult_count * tours.adult_price)) as total_tour_price')
-            )
-            ->where('purchase_histories.payment_status', 2)
-            ->where('purchase_histories.purchase_status', 3)
-            ->groupBy('tours.name')
-            ->orderBy('total_tour_price', 'desc')
-            ->get(10);
-
+        $data['chartTop5ToursBySale'] = Tour::join('purchase_histories', 'tours.id', '=', 'purchase_histories.tour_id')
+        ->selectRaw('tours.*, 
+                     SUM(tour_child_price * child_count + tour_adult_price * adult_count - 
+                         IFNULL(coupon_fixed, 0) - 
+                         (IFNULL(coupon_percentage, 0) + IFNULL(tour_sale_percentage, 0)) / 100) AS total_tour_price')
+        ->where('payment_status', 2)
+        ->where('purchase_status', 3)
+        ->whereNull('purchase_histories.deleted_at')
+        ->whereNull('tours.deleted_at')
+        ->whereIn('tour_status', [2, 3])
+        ->groupBy('tours.id')
+        ->orderByDesc('total_tour_price')
+        ->take(10)
+        ->get();
         $data = json_decode(json_encode($data));
         return view('admin.dashboards.tour', compact('data'));
     }

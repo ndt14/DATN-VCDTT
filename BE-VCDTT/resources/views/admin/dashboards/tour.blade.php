@@ -563,7 +563,7 @@
             },
             yaxis: {
                 title: {
-                    text: '(Triệu VNĐ)'
+                    text: '(VNĐ)'
                 }
             },
             fill: {
@@ -572,7 +572,7 @@
             tooltip: {
                 y: {
                     formatter: function(val) {
-                        return val + " Triệu VNĐ"
+                        return val + " VNĐ"
                     }
                 }
             },
